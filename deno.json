@@ -50,7 +50,7 @@
   "tasks": {
     "fmt": "deno fmt",
     "lint": "deno lint",
-    "run": "deno run --allow-read --allow-env --allow-net --allow-ffi --watch source/main.ts"
+    "run": "deno run -A --watch source/main.ts"
   },
   "imports": {
     "bcrypt": "npm:bcrypt@^5.1.1",
