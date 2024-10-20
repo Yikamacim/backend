@@ -1,0 +1,16 @@
+import pg from "pg";
+import { EnvironmentHelper } from "../helpers/EnvironmentHelper.ts";
+import type { IConstants } from "../interfaces/IConstants.ts";
+
+export class DbConstants implements IConstants {
+  public static readonly POOL = new pg.Pool({
+    user: EnvironmentHelper.get().poolUser,
+    host: EnvironmentHelper.get().poolHost,
+    database: EnvironmentHelper.get().poolDatabase,
+    password: EnvironmentHelper.get().poolPassword,
+    port: EnvironmentHelper.get().poolPort,
+  });
+  public static readonly BEGIN: string = "BEGIN";
+  public static readonly COMMIT: string = "COMMIT";
+  public static readonly ROLLBACK: string = "ROLLBACK";
+}

@@ -1,0 +1,63 @@
+{
+  "name": "@yikamacim/backend",
+  "version": "0.0.1",
+  "license": "PROPRIETARY",
+  "exports": "./source/main.ts",
+  "nodeModulesDir": "auto",
+  "compilerOptions": {
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "fmt": {
+    "include": ["source/"],
+    "lineWidth": 100
+  },
+  "lint": {
+    "include": ["source/"],
+    "rules": {
+      "tags": ["recommended"],
+      "include": [
+        "ban-untagged-todo",
+        "eqeqeq",
+        "explicit-function-return-type",
+        "explicit-module-boundary-types",
+        "guard-for-in",
+        "no-await-in-loop",
+        "no-const-assign",
+        "no-eval",
+        "no-external-import",
+        "no-implicit-declare-namespace-export",
+        "no-inferrable-types",
+        "no-non-null-asserted-optional-chain",
+        "no-self-compare",
+        "no-sparse-arrays",
+        "no-sync-fn-in-async-fn",
+        "no-throw-literal",
+        "no-top-level-await",
+        "no-undef",
+        "no-unused-vars",
+        "prefer-ascii",
+        "single-var-declarator",
+        "triple-slash-reference",
+        "verbatim-module-syntax"
+      ],
+      "exclude": ["no-empty-interface"]
+    }
+  },
+  "tasks": {
+    "fmt": "deno fmt",
+    "lint": "deno lint",
+    "run": "deno run --allow-read --allow-env --allow-net --allow-ffi --watch source/main.ts"
+  },
+  "imports": {
+    "bcrypt": "npm:bcrypt@^5.1.1",
+    "buffer": "npm:buffer@^6.0.3",
+    "dotenv": "npm:dotenv@^16.4.5",
+    "express": "npm:express@^4.21.1",
+    "jsonwebtoken": "npm:jsonwebtoken@^9.0.2",
+    "pg": "npm:pg@^8.13.0"
+  }
+}
