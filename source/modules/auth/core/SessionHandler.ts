@@ -88,7 +88,7 @@ export class SessionHandler implements IHandler {
     // Create payload
     const payload: TokenPayload = {
       accountId: tokenData.accountId,
-      membership: tokenData.membership,
+      accountType: tokenData.accountType,
       sessionId: session.sessionId,
     };
     // Generate tokens
@@ -124,7 +124,7 @@ export class SessionHandler implements IHandler {
     // Create payload
     const payload: TokenPayload = {
       accountId: tokenData.accountId,
-      membership: tokenData.membership,
+      accountType: tokenData.accountType,
       sessionId: session.sessionId,
     };
     // Generate tokens

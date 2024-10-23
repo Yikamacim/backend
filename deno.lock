@@ -1,13 +1,18 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@std/encoding@^1.0.5": "1.0.5",
     "npm:@types/node@*": "22.5.4",
     "npm:bcrypt@^5.1.1": "5.1.1",
-    "npm:buffer@^6.0.3": "6.0.3",
     "npm:dotenv@^16.4.5": "16.4.5",
     "npm:express@^4.21.1": "4.21.1",
     "npm:jsonwebtoken@^9.0.2": "9.0.2",
     "npm:pg@^8.13.0": "8.13.0"
+  },
+  "jsr": {
+    "@std/encoding@1.0.5": {
+      "integrity": "ecf363d4fc25bd85bd915ff6733a7e79b67e0e7806334af15f4645c569fefc04"
+    }
   },
   "npm": {
     "@mapbox/node-pre-gyp@1.0.11": {
@@ -65,9 +70,6 @@
     "balanced-match@1.0.2": {
       "integrity": "sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw=="
     },
-    "base64-js@1.5.1": {
-      "integrity": "sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA=="
-    },
     "bcrypt@5.1.1": {
       "integrity": "sha512-AGBHOG5hPYZ5Xl9KXzU5iKq9516yEmvCKDg3ecP5kX2aB6UqTeXZxk2ELnDgDm6BQSMlLt9rDB4LoSMx0rYwww==",
       "dependencies": [
@@ -101,13 +103,6 @@
     },
     "buffer-equal-constant-time@1.0.1": {
       "integrity": "sha512-zRpUiDwd/xk6ADqPMATG8vc9VPrkck7T07OIx0gnjmJAnHnTVXNQG3vfvWNuiZIkwu9KrKdA1iJKfsfTVxE6NA=="
-    },
-    "buffer@6.0.3": {
-      "integrity": "sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==",
-      "dependencies": [
-        "base64-js",
-        "ieee754"
-      ]
     },
     "bytes@3.1.2": {
       "integrity": "sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg=="
@@ -367,9 +362,6 @@
       "dependencies": [
         "safer-buffer"
       ]
-    },
-    "ieee754@1.2.1": {
-      "integrity": "sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA=="
     },
     "inflight@1.0.6": {
       "integrity": "sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==",
@@ -810,8 +802,8 @@
   },
   "workspace": {
     "dependencies": [
+      "jsr:@std/encoding@^1.0.5",
       "npm:bcrypt@^5.1.1",
-      "npm:buffer@^6.0.3",
       "npm:dotenv@^16.4.5",
       "npm:express@^4.21.1",
       "npm:jsonwebtoken@^9.0.2",

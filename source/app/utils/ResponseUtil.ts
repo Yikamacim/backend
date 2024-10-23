@@ -6,6 +6,7 @@ import type {
 } from "../../@types/responses.d.ts";
 import type { Tokens } from "../../@types/tokens.d.ts";
 import { DbConstants } from "../constants/DbConstants.ts";
+import { ConsoleHelper } from "../helpers/ConsoleHelper.ts";
 import type { IModel } from "../interfaces/IModel.ts";
 import type { IResponse } from "../interfaces/IResponse.ts";
 import type { IUtil } from "../interfaces/IUtil.ts";
@@ -27,13 +28,16 @@ export class ResponseUtil implements IUtil {
     data: D,
     tokens: T,
   ): ControllerResponse<DO, TO> {
-    return res.status(httpStatus.code).send({
+    const body = {
       httpStatus,
       serverError,
       clientErrors,
       data,
       tokens,
-    });
+    };
+    ConsoleHelper.log("Response was:");
+    ConsoleHelper.detail(JSON.stringify(body), 1);
+    return res.status(httpStatus.code).send(body);
   }
 
   public static middlewareResponse(
@@ -63,6 +67,8 @@ export class ResponseUtil implements IUtil {
     data: D,
   ): Promise<ProviderResponse<D>> {
     await DbConstants.POOL.query(DbConstants.COMMIT);
+    ConsoleHelper.log("Provider response was:");
+    ConsoleHelper.log(JSON.stringify({ data }));
     return {
       data,
     };

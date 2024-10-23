@@ -1,5 +1,5 @@
 import type { TokenPayload } from "../../../../@types/tokens.d.ts";
-import { Membership } from "../../../../app/enums/Membership.ts";
+import { AccountType } from "../../../../app/enums/AccountType.ts";
 import type { IHelper } from "../../../../app/interfaces/IHelper.ts";
 
 export class PayloadHelper implements IHelper {
@@ -10,7 +10,7 @@ export class PayloadHelper implements IHelper {
     const payload: TokenPayload = obj as TokenPayload;
     return (
       typeof payload.accountId === "number" &&
-      Object.values(Membership).includes(payload.membership as Membership) &&
+      Object.values(AccountType).includes(payload.accountType as AccountType) &&
       typeof payload.sessionId === "number"
     );
   }

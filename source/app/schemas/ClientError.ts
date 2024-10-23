@@ -82,7 +82,7 @@ const clientErrorMessages: ClientErrorCodeMap<string> = {
   [ClientErrorCode.INVALID_SESSION_KEY_CONTENT]: "Provided session key was invalid.",
   //  *  5XXXX: Permission errors
   [ClientErrorCode.FORBIDDEN_ACCESS]:
-    "Provided membership doesn't have the necessary permissions to access this resource.",
+    "Provided account type doesn't have the necessary permissions to access this resource.",
 
   // VALIDATION ERRORS (6XXXX - 7XXXX)
   //  *  6XXXX: Length errors

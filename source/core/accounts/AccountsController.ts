@@ -24,7 +24,7 @@ export class AccountsController implements IController {
     try {
       const preliminaryData: unknown = req.params["username"];
       // V1: Existence validation
-      if (ProtoUtil.isProtovalid(preliminaryData)) {
+      if (!ProtoUtil.isProtovalid(preliminaryData)) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),

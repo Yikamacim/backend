@@ -10,6 +10,6 @@ export class StringUtil implements IUtil {
   }
 
   public static canBeParsedToInt(str: string): boolean {
-    return !isNaN(parseInt(str));
+    return !Number.isNaN(parseInt(str));
   }
 }

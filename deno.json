@@ -50,11 +50,12 @@
   "tasks": {
     "fmt": "deno fmt",
     "lint": "deno lint",
-    "run": "deno run -A --watch source/main.ts"
+    "run-devt": "deno run -A --watch source/main.ts",
+    "run-prod": "deno run -A --watch source/main.ts --production"
   },
   "imports": {
+    "@std/encoding": "jsr:@std/encoding@^1.0.5",
     "bcrypt": "npm:bcrypt@^5.1.1",
-    "buffer": "npm:buffer@^6.0.3",
     "dotenv": "npm:dotenv@^16.4.5",
     "express": "npm:express@^4.21.1",
     "jsonwebtoken": "npm:jsonwebtoken@^9.0.2",

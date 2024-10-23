@@ -1,4 +1,4 @@
-import type { Membership } from "../enums/Membership.ts";
+import type { AccountType } from "../enums/AccountType.ts";
 import type { IModel } from "../interfaces/IModel.ts";
 import { ModelMismatchError, UnexpectedQueryResultError } from "../schemas/ServerError.ts";
 
@@ -7,7 +7,7 @@ export class AccountModel implements IModel {
     public readonly accountId: number,
     public readonly username: string,
     public readonly password: string,
-    public readonly membership: Membership,
+    public readonly accountType: AccountType,
   ) {}
 
   public static fromRecord(record: unknown): AccountModel {
@@ -17,7 +17,7 @@ export class AccountModel implements IModel {
     if (!this.isValidModel(record)) {
       throw new ModelMismatchError(record);
     }
-    return new AccountModel(record.accountId, record.username, record.password, record.membership);
+    return new AccountModel(record.accountId, record.username, record.password, record.accountType);
   }
 
   public static fromRecords(records: unknown[]): AccountModel[] {
@@ -36,7 +36,7 @@ export class AccountModel implements IModel {
       typeof model.accountId === "number" &&
       typeof model.username === "string" &&
       typeof model.password === "string" &&
-      Object.values(AccountModel).includes(model.membership)
+      Object.values(AccountModel).includes(model.accountType)
     );
   }
 

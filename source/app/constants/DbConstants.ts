@@ -7,7 +7,6 @@ export class DbConstants implements IConstants {
     user: EnvironmentHelper.get().poolUser,
     host: EnvironmentHelper.get().poolHost,
     database: EnvironmentHelper.get().poolDatabase,
-    password: EnvironmentHelper.get().poolPassword,
     port: EnvironmentHelper.get().poolPort,
   });
   public static readonly BEGIN: string = "BEGIN";

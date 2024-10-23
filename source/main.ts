@@ -1,10 +1,12 @@
 import express, { type Express } from "express";
 import { ConfigConstants } from "./app/constants/ConfigConstants.ts";
+import { ConsoleHelper } from "./app/helpers/ConsoleHelper.ts";
 import { EnvironmentHelper } from "./app/helpers/EnvironmentHelper.ts";
 import { CatcherMiddleware } from "./app/middlewares/CatcherMiddleware.ts";
 import { FailureMiddleware } from "./app/middlewares/FailureMiddleware.ts";
 import { LoggerMiddleware } from "./app/middlewares/LoggerMiddleware.ts";
 import { MethodMiddleware } from "./app/middlewares/MethodMiddleware.ts";
+import { PoolTest } from "./app/tests/PoolTest.ts";
 import { AccountsBuilder } from "./core/accounts/AccountsBuilder.ts";
 import { LoginBuilder } from "./core/login/LoginBuilder.ts";
 import { SignupBuilder } from "./core/signup/SignupBuilder.ts";
@@ -32,7 +34,10 @@ app.use("*", MethodMiddleware.methodNotAllowed);
 app.use("*", CatcherMiddleware.resourceNotFound);
 app.use(FailureMiddleware.serverFailure);
 
+// Tests
+PoolTest.run();
+
 // Server
 app.listen(ConfigConstants.PORT, (): void => {
-  console.info(`Server listening on port ${ConfigConstants.PORT}`);
+  ConsoleHelper.progress(`Server listening on port ${ConfigConstants.PORT}...`);
 });

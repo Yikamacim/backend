@@ -26,7 +26,7 @@ export class SignupController implements IController {
     try {
       const preliminaryData: unknown = req.body;
       // V1: Existence validation
-      if (ProtoUtil.isProtovalid(preliminaryData)) {
+      if (!ProtoUtil.isProtovalid(preliminaryData)) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
@@ -85,7 +85,7 @@ export class SignupController implements IController {
         tokens: await AuthModule.instance
           .withData({
             accountId: managerResponse.data.accountId,
-            membership: managerResponse.data.membership,
+            accountType: managerResponse.data.accountType,
             sessionKey: req.body.sessionKey,
           })
           .generateTokens(),

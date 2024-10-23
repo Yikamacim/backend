@@ -1,4 +1,4 @@
-import type { Membership } from "../app/enums/Membership.ts";
+import type { AccountType } from "../app/enums/AccountType.ts";
 
 export type Token = string;
 
@@ -9,12 +9,12 @@ export type Tokens = {
 
 export type TokenPayload = {
   accountId: number;
-  membership: Membership;
+  accountType: AccountType;
   sessionId: number;
 };
 
 export type RawTokenData = {
   accountId: number;
-  membership: Membership;
+  accountType: AccountType;
   sessionKey: string;
 };
