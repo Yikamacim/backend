@@ -35,6 +35,8 @@ export enum ClientErrorCode {
   //  *  4XXXX: Session errors
   INVALID_SESSION_KEY_LENGTH = 40000,
   INVALID_SESSION_KEY_CONTENT = 40001,
+  INVALID_DEVICE_NAME_LENGTH = 40002,
+  INVALID_DEVICE_NAME_CONTENT = 40003,
   //  *  5XXXX: Permission errors
   FORBIDDEN_ACCESS = 50000,
 
@@ -78,8 +80,11 @@ const clientErrorMessages: ClientErrorCodeMap<string> = {
   [ClientErrorCode.EXPIRED_TOKEN]: "Provided token has expired.",
   //  *  4XXXX: Session errors
   [ClientErrorCode.INVALID_SESSION_KEY_LENGTH]:
-    `Provided session key wasn't in the length range of ${SessionRules.SESSION_KEY_MIN_LENGTH} to ${SessionRules.SESSION_KEY_MAX_LENGTH}.`,
+    `Provided session key wasn't in the length of ${SessionRules.SESSION_KEY_LENGTH}.`,
   [ClientErrorCode.INVALID_SESSION_KEY_CONTENT]: "Provided session key was invalid.",
+  [ClientErrorCode.INVALID_DEVICE_NAME_LENGTH]:
+    `Provided device name wasn't in the length range of ${SessionRules.DEVICE_NAME_MIN_LENGTH} to ${SessionRules.DEVICE_NAME_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_DEVICE_NAME_CONTENT]: "Provided device name was invalid.",
   //  *  5XXXX: Permission errors
   [ClientErrorCode.FORBIDDEN_ACCESS]:
     "Provided account type doesn't have the necessary permissions to access this resource.",

@@ -1,19 +1,19 @@
-import type { IRequest } from "../../../app/interfaces/IRequest.ts";
+import type { IParams } from "../../../app/interfaces/IParams.ts";
 import type { ClientError } from "../../../app/schemas/ClientError.ts";
 import { UsernameValidator } from "../../../app/validators/UsernameValidator.ts";
 
-export class AccountsRequest implements IRequest {
+export class AccountsParams implements IParams {
   private constructor(public readonly username: string) {}
 
-  public static isBlueprint(data: unknown): data is AccountsRequest {
+  public static isBlueprint(data: unknown): data is AccountsParams {
     if (typeof data !== "object" || data === null) {
       return false;
     }
-    const blueprint: AccountsRequest = data as AccountsRequest;
+    const blueprint: AccountsParams = data as AccountsParams;
     return typeof blueprint.username === "string";
   }
 
-  public static getValidationErrors(blueprintData: AccountsRequest): ClientError[] {
+  public static getValidationErrors(blueprintData: AccountsParams): ClientError[] {
     const validationErrors: ClientError[] = new Array<ClientError>();
     UsernameValidator.validate(blueprintData.username, validationErrors);
     return validationErrors;

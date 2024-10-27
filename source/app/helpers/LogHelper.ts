@@ -1,12 +1,16 @@
 import type { IHelper } from "../interfaces/IHelper.ts";
 
-export class ConsoleHelper implements IHelper {
+export class LogHelper implements IHelper {
+  public static getRecords(): string[] {
+    return this.records;
+  }
+
   public static log(message: string): void {
     const time = `[${this.getTime(new Date())}]`;
     const content = `[=]: ${message}`;
     this.records.push(`${time} ${content}`);
     console.log(
-      `${this.BEGIN}${this.FG_BR_CYAN}${this.END}${time}${this.BEGIN}${this.FG_DEFAULT}${this.END} ${content}${this.RESET}`
+      `${this.BEGIN}${this.FG_BR_CYAN}${this.END}${time}${this.BEGIN}${this.FG_DEFAULT}${this.END} ${content}${this.RESET}`,
     );
   }
 
@@ -15,7 +19,7 @@ export class ConsoleHelper implements IHelper {
     const content = `${"     ".repeat(level)}[-]: ${message}`;
     this.records.push(`${time} ${content}`);
     console.log(
-      `${this.BEGIN}${this.FG_BR_CYAN}${this.END}${time}${this.BEGIN}${this.FG_DEFAULT};${this.DIM}${this.END} ${content}${this.RESET}`
+      `${this.BEGIN}${this.FG_BR_CYAN}${this.END}${time}${this.BEGIN}${this.FG_DEFAULT};${this.DIM}${this.END} ${content}${this.RESET}`,
     );
   }
 
@@ -24,7 +28,7 @@ export class ConsoleHelper implements IHelper {
     const content = `[>]: ${message}`;
     this.records.push(`${time} ${content}`);
     console.log(
-      `${this.BEGIN}${this.FG_BR_CYAN}${this.END}${time}${this.BEGIN}${this.FG_MAGENTA}${this.END} ${content}${this.RESET}`
+      `${this.BEGIN}${this.FG_BR_CYAN}${this.END}${time}${this.BEGIN}${this.FG_MAGENTA}${this.END} ${content}${this.RESET}`,
     );
   }
 
@@ -33,7 +37,7 @@ export class ConsoleHelper implements IHelper {
     const content = `[~]: ${message}`;
     this.records.push(`${time} ${content}`);
     console.log(
-      `${this.BEGIN}${this.FG_BR_CYAN}${this.END}${time}${this.BEGIN}${this.FG_CYAN}${this.END} ${content}${this.RESET}`
+      `${this.BEGIN}${this.FG_BR_CYAN}${this.END}${time}${this.BEGIN}${this.FG_CYAN}${this.END} ${content}${this.RESET}`,
     );
   }
 
@@ -42,7 +46,7 @@ export class ConsoleHelper implements IHelper {
     const content = `[+]: ${message}`;
     this.records.push(`${time} ${content}`);
     console.log(
-      `${this.BEGIN}${this.FG_BR_CYAN}${this.END}${time}${this.BEGIN}${this.FG_GREEN}${this.END} ${content}${this.RESET}`
+      `${this.BEGIN}${this.FG_BR_CYAN}${this.END}${time}${this.BEGIN}${this.FG_GREEN}${this.END} ${content}${this.RESET}`,
     );
   }
 
@@ -51,7 +55,7 @@ export class ConsoleHelper implements IHelper {
     const content = `[i]: ${message}`;
     this.records.push(`${time} ${content}`);
     console.info(
-      `${this.BEGIN}${this.FG_BR_CYAN}${this.END}${time}${this.BEGIN}${this.FG_BLUE}${this.END} ${content}${this.RESET}`
+      `${this.BEGIN}${this.FG_BR_CYAN}${this.END}${time}${this.BEGIN}${this.FG_BLUE}${this.END} ${content}${this.RESET}`,
     );
   }
 
@@ -60,16 +64,16 @@ export class ConsoleHelper implements IHelper {
     const content = `[!]: ${message}`;
     this.records.push(`${time} ${content}`);
     console.warn(
-      `${this.BEGIN}${this.FG_BR_CYAN}${this.END}${time}${this.BEGIN}${this.FG_YELLOW}${this.END} ${content}${this.RESET}`
+      `${this.BEGIN}${this.FG_BR_CYAN}${this.END}${time}${this.BEGIN}${this.FG_YELLOW}${this.END} ${content}${this.RESET}`,
     );
   }
 
-  public static failure(name: string, message: string): void {
+  public static failure(name: string, message: string | null): void {
     const time = `[${this.getTime(new Date())}]`;
-    const content = `[x]: ${name} - ${message}`;
+    const content = message === null ? `[x]: ${name}` : `[x]: ${name} - ${message}`;
     this.records.push(`${time} ${content}`);
     console.error(
-      `${this.BEGIN}${this.FG_BR_CYAN}${this.END}${time}${this.BEGIN}${this.FG_RED}${this.END} ${content}${this.RESET}`
+      `${this.BEGIN}${this.FG_BR_CYAN}${this.END}${time}${this.BEGIN}${this.FG_RED}${this.END} ${content}${this.RESET}`,
     );
   }
 

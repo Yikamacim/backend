@@ -6,7 +6,7 @@ import type {
 } from "../../@types/responses.d.ts";
 import type { Tokens } from "../../@types/tokens.d.ts";
 import { DbConstants } from "../constants/DbConstants.ts";
-import { ConsoleHelper } from "../helpers/ConsoleHelper.ts";
+import { LogHelper } from "../helpers/LogHelper.ts";
 import type { IModel } from "../interfaces/IModel.ts";
 import type { IResponse } from "../interfaces/IResponse.ts";
 import type { IUtil } from "../interfaces/IUtil.ts";
@@ -27,6 +27,7 @@ export class ResponseUtil implements IUtil {
     clientErrors: ClientError[],
     data: D,
     tokens: T,
+    log = true,
   ): ControllerResponse<DO, TO> {
     const body = {
       httpStatus,
@@ -35,8 +36,16 @@ export class ResponseUtil implements IUtil {
       data,
       tokens,
     };
-    ConsoleHelper.log("Response was:");
-    ConsoleHelper.detail(JSON.stringify(body), 1);
+    if (log) {
+      if (body.clientErrors.length > 0) {
+        LogHelper.warning("(Client) Errors occurred:");
+        body.clientErrors.forEach((error) => {
+          LogHelper.detail(`${error.code} - ${error.message}`, 1);
+        });
+      }
+      LogHelper.log("Response was:");
+      LogHelper.detail(JSON.stringify(body, null, 2), 1);
+    }
     return res.status(httpStatus.code).send(body);
   }
 
@@ -65,10 +74,13 @@ export class ResponseUtil implements IUtil {
 
   public static async providerResponse<D extends IModel | boolean | null>(
     data: D,
+    log = true,
   ): Promise<ProviderResponse<D>> {
     await DbConstants.POOL.query(DbConstants.COMMIT);
-    ConsoleHelper.log("Provider response was:");
-    ConsoleHelper.log(JSON.stringify({ data }));
+    if (log) {
+      LogHelper.log("Provider response was:");
+      LogHelper.detail(JSON.stringify(data, null, 2), 1);
+    }
     return {
       data,
     };

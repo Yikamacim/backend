@@ -6,7 +6,7 @@ import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus.ts";
 import { ProtoUtil } from "../../app/utils/ProtoUtil.ts";
 import { ResponseUtil } from "../../app/utils/ResponseUtil.ts";
 import { AccountsManager } from "./AccountsManager.ts";
-import { AccountsRequest } from "./schemas/AccountsRequest.ts";
+import { AccountsParams } from "./schemas/AccountsParams.ts";
 import type { AccountsResponse } from "./schemas/AccountsResponse.ts";
 
 export class AccountsController implements IController {
@@ -36,7 +36,7 @@ export class AccountsController implements IController {
       }
       const protovalidData: unknown = { username: preliminaryData };
       // V2: Schematic validation
-      if (!AccountsRequest.isBlueprint(protovalidData)) {
+      if (!AccountsParams.isBlueprint(protovalidData)) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
@@ -46,9 +46,9 @@ export class AccountsController implements IController {
           null,
         );
       }
-      const blueprintData: AccountsRequest = protovalidData;
+      const blueprintData: AccountsParams = protovalidData;
       // V3: Physical validation
-      const validationErrors: ClientError[] = AccountsRequest.getValidationErrors(blueprintData);
+      const validationErrors: ClientError[] = AccountsParams.getValidationErrors(blueprintData);
       if (validationErrors.length > 0) {
         return ResponseUtil.controllerResponse(
           res,
@@ -59,7 +59,7 @@ export class AccountsController implements IController {
           null,
         );
       }
-      const validatedData: AccountsRequest = blueprintData;
+      const validatedData: AccountsParams = blueprintData;
       // HAND OVER TO MANAGER
       const managerResponse: ManagerResponse<AccountsResponse | null> = await this.mManager
         .getAccount(validatedData);

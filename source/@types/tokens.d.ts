@@ -12,9 +12,3 @@ export type TokenPayload = {
   accountType: AccountType;
   sessionId: number;
 };
-
-export type RawTokenData = {
-  accountId: number;
-  accountType: AccountType;
-  sessionKey: string;
-};

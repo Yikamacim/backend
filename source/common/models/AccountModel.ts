@@ -1,6 +1,6 @@
-import type { AccountType } from "../enums/AccountType.ts";
-import type { IModel } from "../interfaces/IModel.ts";
-import { ModelMismatchError, UnexpectedQueryResultError } from "../schemas/ServerError.ts";
+import { AccountType } from "../../app/enums/AccountType.ts";
+import type { IModel } from "../../app/interfaces/IModel.ts";
+import { ModelMismatchError, UnexpectedQueryResultError } from "../../app/schemas/ServerError.ts";
 
 export class AccountModel implements IModel {
   private constructor(
@@ -36,7 +36,7 @@ export class AccountModel implements IModel {
       typeof model.accountId === "number" &&
       typeof model.username === "string" &&
       typeof model.password === "string" &&
-      Object.values(AccountModel).includes(model.accountType)
+      Object.values(AccountType).includes(model.accountType)
     );
   }
 

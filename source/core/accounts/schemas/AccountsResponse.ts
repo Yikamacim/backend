@@ -1,6 +1,6 @@
 import type { AccountType } from "../../../app/enums/AccountType.ts";
 import type { IResponse } from "../../../app/interfaces/IResponse.ts";
-import type { AccountModel } from "../../../app/models/AccountModel.ts";
+import type { AccountModel } from "../../../common/models/AccountModel.ts";
 
 export class AccountsResponse implements IResponse {
   private constructor(

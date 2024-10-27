@@ -14,7 +14,7 @@ export class MethodMiddleware implements IMiddleware {
     res: MiddlewareResponse,
     next: ExpressNextFunction,
   ): MiddlewareResponse | void {
-    const routeMethods: Method[] | null = RouteHelper.getMethods(req.path);
+    const routeMethods: Method[] | null = RouteHelper.getMethods(req.originalUrl);
     if (!routeMethods) {
       return next();
     }

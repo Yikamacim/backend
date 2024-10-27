@@ -1,7 +1,7 @@
 import type { ManagerResponse, ProviderResponse } from "../../@types/responses.d.ts";
 import { EncryptionHelper } from "../../app/helpers/EncryptionHelper.ts";
 import type { IManager } from "../../app/interfaces/IManager.ts";
-import { AccountModel } from "../../app/models/AccountModel.ts";
+import { AccountModel } from "../../common/models/AccountModel.ts";
 import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError.ts";
 import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus.ts";
 import { ResponseUtil } from "../../app/utils/ResponseUtil.ts";

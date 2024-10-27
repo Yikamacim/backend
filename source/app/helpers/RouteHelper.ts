@@ -6,6 +6,7 @@ import type {
   ExpressRequest,
   ExpressRouter,
 } from "../../@types/wrappers.d.ts";
+import { ConfigConstants } from "../constants/ConfigConstants.ts";
 import { Method } from "../enums/Method.ts";
 import type { IHelper } from "../interfaces/IHelper.ts";
 import type { IResponse } from "../interfaces/IResponse.ts";
@@ -57,9 +58,39 @@ export class RouteHelper implements IHelper {
     }
   }
 
-  public static getMethods(route: string): Method[] | null {
-    const routeMethods: Method[] | undefined = RouteHelper.routeMethodMap.get(route);
-    return routeMethods ? routeMethods : null;
+  public static getEndpoints(): string[] {
+    const endpoints: string[] = [];
+    RouteHelper.routeMethodMap.forEach((methods: Method[], route: string) => {
+      const methodsList = methods.map((method) => `"${method}"`).join(", ");
+      endpoints.push(`Route: "${ConfigConstants.API_PREFIX}/${route}" | Methods: [${methodsList}]`);
+    });
+    return endpoints;
+  }
+
+  public static getMethods(url: string): Method[] | null {
+    const route: string = url.replace(`${ConfigConstants.API_PREFIX}/`, "");
+    const routeParts: string[] = route.split("/");
+    let methods: Method[] | null = null;
+    this.routeMethodMap.forEach((apiMethods: Method[], apiRoute: string) => {
+      const apiRouteParts: string[] = apiRoute.split("/").filter((part: string) => part !== "");
+      if (apiRouteParts.length !== routeParts.length) {
+        return;
+      }
+      let isMatch = true;
+      apiRouteParts.forEach((apiRoutePart: string, index: number) => {
+        if (apiRoutePart !== routeParts[index]) {
+          if (!apiRoutePart.startsWith(":")) {
+            isMatch = false;
+            return;
+          }
+        }
+      });
+      if (isMatch) {
+        methods = apiMethods;
+        return;
+      }
+    });
+    return methods;
   }
 
   private static concatRoute(fullRoute: FullRoute): string {

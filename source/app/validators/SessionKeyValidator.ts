@@ -5,13 +5,7 @@ import { StringUtil } from "../utils/StringUtil.ts";
 
 export class SessionKeyValidator implements IValidator {
   public static validate(data: string, validationErrors: ClientError[]): void {
-    if (
-      !StringUtil.isInLengthRange(
-        data,
-        SessionRules.SESSION_KEY_MIN_LENGTH,
-        SessionRules.SESSION_KEY_MAX_LENGTH,
-      )
-    ) {
+    if (data.length !== SessionRules.SESSION_KEY_LENGTH) {
       validationErrors.push(new ClientError(ClientErrorCode.INVALID_SESSION_KEY_LENGTH));
     }
     if (!StringUtil.matchesRegex(data, SessionRules.SESSION_KEY_REGEX)) {

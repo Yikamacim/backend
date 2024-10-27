@@ -69,28 +69,31 @@ export class LoginController implements IController {
       // Check manager response
       if (!managerResponse.httpStatus.isSuccess() || !managerResponse.data) {
         // Respond without token
-        return res.status(managerResponse.httpStatus.code).send({
-          httpStatus: managerResponse.httpStatus,
-          serverError: managerResponse.serverError,
-          clientErrors: managerResponse.clientErrors,
-          data: null,
-          tokens: null,
-        });
+        return ResponseUtil.controllerResponse(
+          res,
+          managerResponse.httpStatus,
+          managerResponse.serverError,
+          managerResponse.clientErrors,
+          managerResponse.data,
+          null,
+        );
       }
       // Respond with token
-      return res.status(managerResponse.httpStatus.code).send({
-        httpStatus: managerResponse.httpStatus,
-        serverError: managerResponse.serverError,
-        clientErrors: managerResponse.clientErrors,
-        data: managerResponse.data,
-        tokens: await AuthModule.instance
+      return ResponseUtil.controllerResponse(
+        res,
+        managerResponse.httpStatus,
+        managerResponse.serverError,
+        managerResponse.clientErrors,
+        managerResponse.data,
+        await AuthModule.instance
           .withData({
             accountId: managerResponse.data.accountId,
             accountType: managerResponse.data.accountType,
+            deviceName: req.body.deviceName,
             sessionKey: req.body.sessionKey,
           })
           .generateTokens(),
-      });
+      );
     } catch (error) {
       return next(error);
     }

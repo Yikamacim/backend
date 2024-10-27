@@ -1,11 +1,11 @@
 import type { ManagerResponse, ProviderResponse } from "../../@types/responses.d.ts";
 import type { IManager } from "../../app/interfaces/IManager.ts";
-import type { AccountModel } from "../../app/models/AccountModel.ts";
+import type { AccountModel } from "../../common/models/AccountModel.ts";
 import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError.ts";
 import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus.ts";
 import { ResponseUtil } from "../../app/utils/ResponseUtil.ts";
 import { AccountsProvider } from "./AccountsProvider.ts";
-import type { AccountsRequest } from "./schemas/AccountsRequest.ts";
+import type { AccountsParams } from "./schemas/AccountsParams.ts";
 import { AccountsResponse } from "./schemas/AccountsResponse.ts";
 
 export class AccountsManager implements IManager {
@@ -16,7 +16,7 @@ export class AccountsManager implements IManager {
   }
 
   public async getAccount(
-    validatedData: AccountsRequest,
+    validatedData: AccountsParams,
   ): Promise<ManagerResponse<AccountsResponse | null>> {
     // Try to get the account
     const providerResponse: ProviderResponse<AccountModel | null> = await this.mProvider.getAccount(

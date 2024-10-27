@@ -1,5 +1,5 @@
 export enum AccountType {
-  USER,
-  BUSINESS,
-  EMPLOYEE,
+  USER = "USER",
+  BUSINESS = "BUSINESS",
+  EMPLOYEE = "EMPLOYEE",
 }
