@@ -51,7 +51,7 @@
     "fmt": "deno fmt",
     "lint": "deno lint",
     "db-out": "pg_dump --username=UYikamacim --host=localhost --dbname=DYikamacim --port=5432 --verbose --format=plain --blobs --file=./dumps/db/db_dump.sql",
-    "db-in": "psql --username=UYikamacim --host=rds-yikamacim.czggso0ksewe.eu-central-1.rds.amazonaws.com --dbname=postgres --port=5432  --command=\"DROP DATABASE IF EXISTS DYikamacim;\" && psql --username=UYikamacim --host=rds-yikamacim.czggso0ksewe.eu-central-1.rds.amazonaws.com --dbname=postgres --port=5432 --command=\"CREATE DATABASE DYikamacim;\" && psql --username=UYikamacim --host=rds-yikamacim.czggso0ksewe.eu-central-1.rds.amazonaws.com --dbname=DYikamacim --port=5432 --file=./dumps/db/db_dump.sql",
+    "db-in": "psql --username=UYikamacim --host=rds-yikamacim.czggso0ksewe.eu-central-1.rds.amazonaws.com --dbname=postgres --port=5432  --command=\"DROP DATABASE IF EXISTS \"DYikamacim\";\" && psql --username=UYikamacim --host=rds-yikamacim.czggso0ksewe.eu-central-1.rds.amazonaws.com --dbname=postgres --port=5432 --command=\"CREATE DATABASE \"DYikamacim\";\" && psql --username=UYikamacim --host=rds-yikamacim.czggso0ksewe.eu-central-1.rds.amazonaws.com --dbname=DYikamacim --port=5432 --file=./dumps/db/db_dump.sql",
     "run-devt": "deno run -A --watch source/main.ts",
     "run-prod": "deno run -A --watch source/main.ts --production"
   },
