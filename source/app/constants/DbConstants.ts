@@ -8,9 +8,6 @@ export class DbConstants implements IConstants {
     host: EnvironmentHelper.get().poolHost,
     database: EnvironmentHelper.get().poolDatabase,
     port: EnvironmentHelper.get().poolPort,
-    ssl: {
-      rejectUnauthorized: false,
-    },
   });
   public static readonly BEGIN: string = "BEGIN";
   public static readonly COMMIT: string = "COMMIT";
