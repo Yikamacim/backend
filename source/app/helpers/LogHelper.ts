@@ -1,4 +1,4 @@
-import type { IHelper } from "../interfaces/IHelper.ts";
+import type { IHelper } from "../interfaces/IHelper";
 
 export class LogHelper implements IHelper {
   public static getRecords(): string[] {

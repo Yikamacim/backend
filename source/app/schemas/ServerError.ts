@@ -1,4 +1,4 @@
-import type { IResponse } from "../interfaces/IResponse.ts";
+import type { IResponse } from "../interfaces/IResponse";
 
 export class ServerError implements IResponse {
   public readonly name: string;
@@ -22,9 +22,11 @@ export class UnexpectedQueryResultError extends Error {
 export class ModelMismatchError extends Error {
   constructor(public readonly model: unknown) {
     super(
-      `Server and database are not agreeing on model. The model was: \n${
-        JSON.stringify(model, null, 2)
-      }`,
+      `Server and database are not agreeing on model. The model was: \n${JSON.stringify(
+        model,
+        null,
+        2,
+      )}`,
     );
     this.name = "ModelMismatchError";
   }

@@ -1,4 +1,4 @@
-import type { IUtil } from "../interfaces/IUtil.ts";
+import type { IUtil } from "../interfaces/IUtil";
 
 export class StringUtil implements IUtil {
   public static isInLengthRange(str: string, minLength: number, maxLength: number): boolean {

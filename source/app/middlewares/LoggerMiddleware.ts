@@ -1,9 +1,9 @@
-import type { MiddlewareResponse } from "../../@types/responses.d.ts";
-import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers.d.ts";
-import { RecordsBuilder } from "../../core/records/RecordsBuilder.ts";
-import { ConfigConstants } from "../constants/ConfigConstants.ts";
-import { LogHelper } from "../helpers/LogHelper.ts";
-import type { IMiddleware } from "../interfaces/IMiddleware.ts";
+import type { MiddlewareResponse } from "../../@types/responses";
+import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers";
+import { RecordsBuilder } from "../../core/records/RecordsBuilder";
+import { ConfigConstants } from "../constants/ConfigConstants";
+import { LogHelper } from "../helpers/LogHelper";
+import type { IMiddleware } from "../interfaces/IMiddleware";
 
 export class LoggerMiddleware implements IMiddleware {
   public static log(

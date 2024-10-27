@@ -1,13 +1,13 @@
-import type { ManagerResponse, ProviderResponse } from "../../@types/responses.d.ts";
-import { EncryptionHelper } from "../../app/helpers/EncryptionHelper.ts";
-import type { IManager } from "../../app/interfaces/IManager.ts";
-import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError.ts";
-import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus.ts";
-import { ResponseUtil } from "../../app/utils/ResponseUtil.ts";
-import type { AccountModel } from "../../common/models/AccountModel.ts";
-import { SignupProvider } from "./SignupProvider.ts";
-import type { SignupRequest } from "./schemas/SignupRequest.ts";
-import { SignupResponse } from "./schemas/SignupResponse.ts";
+import type { ManagerResponse, ProviderResponse } from "../../@types/responses";
+import { EncryptionHelper } from "../../app/helpers/EncryptionHelper";
+import type { IManager } from "../../app/interfaces/IManager";
+import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
+import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
+import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import type { AccountModel } from "../../common/models/AccountModel";
+import { SignupProvider } from "./SignupProvider";
+import type { SignupRequest } from "./schemas/SignupRequest";
+import { SignupResponse } from "./schemas/SignupResponse";
 
 export class SignupManager implements IManager {
   private readonly mProvider: SignupProvider;

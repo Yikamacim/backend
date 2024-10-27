@@ -1,15 +1,15 @@
-import type { ControllerResponse, ManagerResponse } from "../../@types/responses.d.ts";
-import type { Tokens } from "../../@types/tokens.d.ts";
-import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers.d.ts";
-import type { IController } from "../../app/interfaces/IController.ts";
-import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError.ts";
-import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus.ts";
-import { ProtoUtil } from "../../app/utils/ProtoUtil.ts";
-import { ResponseUtil } from "../../app/utils/ResponseUtil.ts";
-import { AuthModule } from "../../modules/auth/module.ts";
-import { SignupManager } from "./SignupManager.ts";
-import { SignupRequest } from "./schemas/SignupRequest.ts";
-import type { SignupResponse } from "./schemas/SignupResponse.ts";
+import type { ControllerResponse, ManagerResponse } from "../../@types/responses";
+import type { Tokens } from "../../@types/tokens";
+import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers";
+import type { IController } from "../../app/interfaces/IController";
+import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
+import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
+import { ProtoUtil } from "../../app/utils/ProtoUtil";
+import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import { AuthModule } from "../../modules/auth/module";
+import { SignupManager } from "./SignupManager";
+import { SignupRequest } from "./schemas/SignupRequest";
+import type { SignupResponse } from "./schemas/SignupResponse";
 
 export class SignupController implements IController {
   private readonly mManager: SignupManager;
@@ -63,8 +63,8 @@ export class SignupController implements IController {
       }
       const validatedData: SignupRequest = blueprintData;
       // HAND OVER TO MANAGER
-      const managerResponse: ManagerResponse<SignupResponse | null> = await this.mManager
-        .postSignup(validatedData);
+      const managerResponse: ManagerResponse<SignupResponse | null> =
+        await this.mManager.postSignup(validatedData);
       // Check manager response
       if (!managerResponse.httpStatus.isSuccess() || !managerResponse.data) {
         // Respond without token

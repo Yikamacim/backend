@@ -1,6 +1,6 @@
-import type { AccountType } from "../../../app/enums/AccountType.ts";
-import type { IResponse } from "../../../app/interfaces/IResponse.ts";
-import type { AccountModel } from "../../../common/models/AccountModel.ts";
+import type { AccountType } from "../../../app/enums/AccountType";
+import type { IResponse } from "../../../app/interfaces/IResponse";
+import type { AccountModel } from "../../../common/models/AccountModel";
 
 export class SignupResponse implements IResponse {
   constructor(

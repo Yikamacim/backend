@@ -1,9 +1,8 @@
 {
-  "[typescript]": {
-    "editor.defaultFormatter": "denoland.vscode-deno"
-  },
   "cSpell.words": [
     "ACTP",
+    "brcypt",
+    "codepaths",
     "czggso",
     "dbname",
     "devt",
@@ -21,6 +20,7 @@
     "JXCQ",
     "JYQQ",
     "ksewe",
+    "outfile",
     "PDXA",
     "PFBR",
     "PIXI",
@@ -43,18 +43,20 @@
     "SHRD",
     "SKEY",
     "SXWY",
+    "tsbuildinfo",
     "UGGO",
     "UVFJ",
     "Vlpa",
     "Wxob",
     "Xlpa",
     "yikamacim",
+    "Yıkamacım",
     "Yjhl"
   ],
   "deno.codeLens.implementations": false,
   "deno.codeLens.references": false,
   "deno.codeLens.referencesAllFunctions": false,
   "deno.codeLens.test": false,
-  "deno.enable": true,
+  "deno.enable": false,
   "deno.lint": true
 }

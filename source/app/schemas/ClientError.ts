@@ -1,7 +1,7 @@
-import type { ClientErrorCodeMap } from "../../@types/maps.d.ts";
-import type { IResponse } from "../interfaces/IResponse.ts";
-import { AccountRules } from "../rules/AccountRules.ts";
-import { SessionRules } from "../rules/SessionRules.ts";
+import type { ClientErrorCodeMap } from "../../@types/maps";
+import type { IResponse } from "../interfaces/IResponse";
+import { AccountRules } from "../rules/AccountRules";
+import { SessionRules } from "../rules/SessionRules";
 
 export class ClientError implements IResponse {
   public readonly code: number;
@@ -79,11 +79,9 @@ const clientErrorMessages: ClientErrorCodeMap<string> = {
   [ClientErrorCode.INVALID_TOKEN]: "Provided token was invalid.",
   [ClientErrorCode.EXPIRED_TOKEN]: "Provided token has expired.",
   //  *  4XXXX: Session errors
-  [ClientErrorCode.INVALID_SESSION_KEY_LENGTH]:
-    `Provided session key wasn't in the length of ${SessionRules.SESSION_KEY_LENGTH}.`,
+  [ClientErrorCode.INVALID_SESSION_KEY_LENGTH]: `Provided session key wasn't in the length of ${SessionRules.SESSION_KEY_LENGTH}.`,
   [ClientErrorCode.INVALID_SESSION_KEY_CONTENT]: "Provided session key was invalid.",
-  [ClientErrorCode.INVALID_DEVICE_NAME_LENGTH]:
-    `Provided device name wasn't in the length range of ${SessionRules.DEVICE_NAME_MIN_LENGTH} to ${SessionRules.DEVICE_NAME_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_DEVICE_NAME_LENGTH]: `Provided device name wasn't in the length range of ${SessionRules.DEVICE_NAME_MIN_LENGTH} to ${SessionRules.DEVICE_NAME_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_DEVICE_NAME_CONTENT]: "Provided device name was invalid.",
   //  *  5XXXX: Permission errors
   [ClientErrorCode.FORBIDDEN_ACCESS]:
@@ -91,10 +89,8 @@ const clientErrorMessages: ClientErrorCodeMap<string> = {
 
   // VALIDATION ERRORS (6XXXX - 7XXXX)
   //  *  6XXXX: Length errors
-  [ClientErrorCode.INVALID_USERNAME_LENGTH]:
-    `Provided username wasn't in the length range of ${AccountRules.USERNAME_MIN_LENGTH} to ${AccountRules.USERNAME_MAX_LENGTH}.`,
-  [ClientErrorCode.INVALID_PASSWORD_LENGTH]:
-    `Provided password wasn't in the length range of ${AccountRules.PASSWORD_MIN_LENGTH} to ${AccountRules.PASSWORD_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_USERNAME_LENGTH]: `Provided username wasn't in the length range of ${AccountRules.USERNAME_MIN_LENGTH} to ${AccountRules.USERNAME_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_PASSWORD_LENGTH]: `Provided password wasn't in the length range of ${AccountRules.PASSWORD_MIN_LENGTH} to ${AccountRules.PASSWORD_MAX_LENGTH}.`,
   //  *  7XXXX: Content errors
   [ClientErrorCode.INVALID_USERNAME_CONTENT]: "Provided username contained invalid characters.",
   [ClientErrorCode.INVALID_PASSWORD_CONTENT]:

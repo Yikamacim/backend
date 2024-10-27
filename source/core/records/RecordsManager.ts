@@ -1,9 +1,9 @@
-import type { ManagerResponse, ProviderResponse } from "../../@types/responses.d.ts";
-import type { IManager } from "../../app/interfaces/IManager.ts";
-import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus.ts";
-import { ResponseUtil } from "../../app/utils/ResponseUtil.ts";
-import { RecordsProvider } from "./RecordsProvider.ts";
-import type { RecordsResponse } from "./schemas/RecordsResponse.ts";
+import type { ManagerResponse, ProviderResponse } from "../../@types/responses";
+import type { IManager } from "../../app/interfaces/IManager";
+import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
+import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import { RecordsProvider } from "./RecordsProvider";
+import type { RecordsResponse } from "./schemas/RecordsResponse";
 
 export class RecordsManager implements IManager {
   private readonly mProvider: RecordsProvider;

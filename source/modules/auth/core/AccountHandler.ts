@@ -1,11 +1,11 @@
 import type { QueryResult } from "pg";
-import type { TokenPayload } from "../../../@types/tokens.d.ts";
-import { DbConstants } from "../../../app/constants/DbConstants.ts";
-import { AccountModel } from "../../../common/models/AccountModel.ts";
-import { AccountQueries } from "../../../common/queries/AccountQueries.ts";
-import type { HandlerResponse } from "../@types/responses.d.ts";
-import type { IHandler } from "../app/interfaces/IHandler.ts";
-import { AuthResponseUtil } from "../app/utils/AuthResponseUtil.ts";
+import type { TokenPayload } from "../../../@types/tokens";
+import { DbConstants } from "../../../app/constants/DbConstants";
+import { AccountModel } from "../../../common/models/AccountModel";
+import { AccountQueries } from "../../../common/queries/AccountQueries";
+import type { HandlerResponse } from "../@types/responses";
+import type { IHandler } from "../app/interfaces/IHandler";
+import { AuthResponseUtil } from "../app/utils/AuthResponseUtil";
 
 export class AccountHandler implements IHandler {
   public static async verifyAccount(tokenPayload: TokenPayload): Promise<HandlerResponse<boolean>> {

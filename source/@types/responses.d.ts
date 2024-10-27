@@ -1,10 +1,10 @@
-import type { IModel } from "../app/interfaces/IModel.ts";
-import type { IResponse } from "../app/interfaces/IResponse.ts";
-import type { ClientError } from "../app/schemas/ClientError.ts";
-import type { HttpStatus } from "../app/schemas/HttpStatus.ts";
-import type { ServerError } from "../app/schemas/ServerError.ts";
-import type { Tokens } from "./tokens.d.ts";
-import type { ExpressResponse } from "./wrappers.d.ts";
+import type { IModel } from "../app/interfaces/IModel";
+import type { IResponse } from "../app/interfaces/IResponse";
+import type { ClientError } from "../app/schemas/ClientError";
+import type { HttpStatus } from "../app/schemas/HttpStatus";
+import type { ServerError } from "../app/schemas/ServerError";
+import type { Tokens } from "./tokens.d";
+import type { ExpressResponse } from "./wrappers.d";
 
 export type ControllerResponse<
   D extends IResponse | null,

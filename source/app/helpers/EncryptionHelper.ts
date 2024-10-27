@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import type { IHelper } from "../interfaces/IHelper.ts";
+import type { IHelper } from "../interfaces/IHelper";
 
 export class EncryptionHelper implements IHelper {
   public static async encrypt(data: string): Promise<Promise<string>> {

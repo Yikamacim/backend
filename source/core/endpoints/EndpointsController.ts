@@ -1,9 +1,9 @@
-import type { ControllerResponse, ManagerResponse } from "../../@types/responses.d.ts";
-import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers.d.ts";
-import type { IController } from "../../app/interfaces/IController.ts";
-import { ResponseUtil } from "../../app/utils/ResponseUtil.ts";
-import { EndpointsManager } from "./EndpointsManager.ts";
-import type { EndpointsResponse } from "./schemas/EndpointsResponse.ts";
+import type { ControllerResponse, ManagerResponse } from "../../@types/responses";
+import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers";
+import type { IController } from "../../app/interfaces/IController";
+import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import { EndpointsManager } from "./EndpointsManager";
+import type { EndpointsResponse } from "./schemas/EndpointsResponse";
 
 export class EndpointsController implements IController {
   private readonly mManager: EndpointsManager;
@@ -19,8 +19,8 @@ export class EndpointsController implements IController {
   ): Promise<ControllerResponse<EndpointsResponse | null, null> | void> {
     try {
       // HAND OVER TO MANAGER
-      const managerResponse: ManagerResponse<EndpointsResponse | null> = await this.mManager
-        .getEndpoints();
+      const managerResponse: ManagerResponse<EndpointsResponse | null> =
+        await this.mManager.getEndpoints();
       // Check manager response
       if (!managerResponse.httpStatus.isSuccess() || !managerResponse.data) {
         // Unsuccessful response

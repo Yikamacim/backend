@@ -1,12 +1,12 @@
-import type { ManagerResponse, ProviderResponse } from "../../@types/responses.d.ts";
-import type { IManager } from "../../app/interfaces/IManager.ts";
-import type { AccountModel } from "../../common/models/AccountModel.ts";
-import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError.ts";
-import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus.ts";
-import { ResponseUtil } from "../../app/utils/ResponseUtil.ts";
-import { AccountsProvider } from "./AccountsProvider.ts";
-import type { AccountsParams } from "./schemas/AccountsParams.ts";
-import { AccountsResponse } from "./schemas/AccountsResponse.ts";
+import type { ManagerResponse, ProviderResponse } from "../../@types/responses";
+import type { IManager } from "../../app/interfaces/IManager";
+import type { AccountModel } from "../../common/models/AccountModel";
+import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
+import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
+import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import { AccountsProvider } from "./AccountsProvider";
+import type { AccountsParams } from "./schemas/AccountsParams";
+import { AccountsResponse } from "./schemas/AccountsResponse";
 
 export class AccountsManager implements IManager {
   private readonly mProvider: AccountsProvider;

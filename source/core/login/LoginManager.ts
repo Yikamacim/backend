@@ -1,13 +1,13 @@
-import type { ManagerResponse, ProviderResponse } from "../../@types/responses.d.ts";
-import { EncryptionHelper } from "../../app/helpers/EncryptionHelper.ts";
-import type { IManager } from "../../app/interfaces/IManager.ts";
-import { AccountModel } from "../../common/models/AccountModel.ts";
-import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError.ts";
-import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus.ts";
-import { ResponseUtil } from "../../app/utils/ResponseUtil.ts";
-import { LoginProvider } from "./LoginProvider.ts";
-import type { LoginRequest } from "./schemas/LoginRequest.ts";
-import type { LoginResponse } from "./schemas/LoginResponse.ts";
+import type { ManagerResponse, ProviderResponse } from "../../@types/responses";
+import { EncryptionHelper } from "../../app/helpers/EncryptionHelper";
+import type { IManager } from "../../app/interfaces/IManager";
+import { AccountModel } from "../../common/models/AccountModel";
+import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
+import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
+import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import { LoginProvider } from "./LoginProvider";
+import type { LoginRequest } from "./schemas/LoginRequest";
+import type { LoginResponse } from "./schemas/LoginResponse";
 
 export class LoginManager implements IManager {
   private readonly mProvider: LoginProvider;

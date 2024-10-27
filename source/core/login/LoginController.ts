@@ -1,15 +1,15 @@
-import type { ControllerResponse, ManagerResponse } from "../../@types/responses.d.ts";
-import type { Tokens } from "../../@types/tokens.d.ts";
-import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers.d.ts";
-import type { IController } from "../../app/interfaces/IController.ts";
-import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError.ts";
-import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus.ts";
-import { ProtoUtil } from "../../app/utils/ProtoUtil.ts";
-import { ResponseUtil } from "../../app/utils/ResponseUtil.ts";
-import { AuthModule } from "../../modules/auth/module.ts";
-import { LoginManager } from "./LoginManager.ts";
-import { LoginRequest } from "./schemas/LoginRequest.ts";
-import type { LoginResponse } from "./schemas/LoginResponse.ts";
+import type { ControllerResponse, ManagerResponse } from "../../@types/responses";
+import type { Tokens } from "../../@types/tokens";
+import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers";
+import type { IController } from "../../app/interfaces/IController";
+import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
+import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
+import { ProtoUtil } from "../../app/utils/ProtoUtil";
+import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import { AuthModule } from "../../modules/auth/module";
+import { LoginManager } from "./LoginManager";
+import { LoginRequest } from "./schemas/LoginRequest";
+import type { LoginResponse } from "./schemas/LoginResponse";
 
 export class LoginController implements IController {
   private readonly mManager: LoginManager;
@@ -63,9 +63,8 @@ export class LoginController implements IController {
       }
       const validatedData: LoginRequest = blueprintData;
       // HAND OVER TO MANAGER
-      const managerResponse: ManagerResponse<LoginResponse | null> = await this.mManager.postLogin(
-        validatedData,
-      );
+      const managerResponse: ManagerResponse<LoginResponse | null> =
+        await this.mManager.postLogin(validatedData);
       // Check manager response
       if (!managerResponse.httpStatus.isSuccess() || !managerResponse.data) {
         // Respond without token

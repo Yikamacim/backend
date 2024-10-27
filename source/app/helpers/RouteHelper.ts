@@ -1,15 +1,11 @@
-import type { ControllerResponse } from "../../@types/responses.d.ts";
-import type { Tokens } from "../../@types/tokens.d.ts";
-import type { FullRoute } from "../../@types/utils.d.ts";
-import type {
-  ExpressNextFunction,
-  ExpressRequest,
-  ExpressRouter,
-} from "../../@types/wrappers.d.ts";
-import { ConfigConstants } from "../constants/ConfigConstants.ts";
-import { Method } from "../enums/Method.ts";
-import type { IHelper } from "../interfaces/IHelper.ts";
-import type { IResponse } from "../interfaces/IResponse.ts";
+import type { ControllerResponse } from "../../@types/responses";
+import type { Tokens } from "../../@types/tokens";
+import type { FullRoute } from "../../@types/utils";
+import type { ExpressNextFunction, ExpressRequest, ExpressRouter } from "../../@types/wrappers";
+import { ConfigConstants } from "../constants/ConfigConstants";
+import { Method } from "../enums/Method";
+import type { IHelper } from "../interfaces/IHelper";
+import type { IResponse } from "../interfaces/IResponse";
 
 export class RouteHelper implements IHelper {
   private static routeMethodMap: Map<string, Method[]> = new Map<string, Method[]>();

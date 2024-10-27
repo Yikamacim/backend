@@ -1,12 +1,12 @@
-import type { MiddlewareResponse } from "../../@types/responses.d.ts";
-import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers.d.ts";
-import { Method } from "../enums/Method.ts";
-import { RouteHelper } from "../helpers/RouteHelper.ts";
-import type { IMiddleware } from "../interfaces/IMiddleware.ts";
-import { ClientError, ClientErrorCode } from "../schemas/ClientError.ts";
-import { HttpStatus, HttpStatusCode } from "../schemas/HttpStatus.ts";
-import { UnexpectedMethodError } from "../schemas/ServerError.ts";
-import { ResponseUtil } from "../utils/ResponseUtil.ts";
+import type { MiddlewareResponse } from "../../@types/responses";
+import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers";
+import { Method } from "../enums/Method";
+import { RouteHelper } from "../helpers/RouteHelper";
+import type { IMiddleware } from "../interfaces/IMiddleware";
+import { ClientError, ClientErrorCode } from "../schemas/ClientError";
+import { HttpStatus, HttpStatusCode } from "../schemas/HttpStatus";
+import { UnexpectedMethodError } from "../schemas/ServerError";
+import { ResponseUtil } from "../utils/ResponseUtil";
 
 export class MethodMiddleware implements IMiddleware {
   public static methodNotAllowed(
