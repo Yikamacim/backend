@@ -1,10 +1,10 @@
 import type { QueryResult } from "pg";
-import type { ProviderResponse } from "../../@types/responses.d.ts";
-import { DbConstants } from "../../app/constants/DbConstants.ts";
-import type { IProvider } from "../../app/interfaces/IProvider.ts";
-import { ResponseUtil } from "../../app/utils/ResponseUtil.ts";
-import { AccountModel } from "../../common/models/AccountModel.ts";
-import { AccountQueries } from "../../common/queries/AccountQueries.ts";
+import type { ProviderResponse } from "../../@types/responses";
+import { DbConstants } from "../../app/constants/DbConstants";
+import type { IProvider } from "../../app/interfaces/IProvider";
+import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import { AccountModel } from "../../common/models/AccountModel";
+import { AccountQueries } from "../../common/queries/AccountQueries";
 
 export class AccountsProvider implements IProvider {
   public async getAccount(username: string): Promise<ProviderResponse<AccountModel | null>> {

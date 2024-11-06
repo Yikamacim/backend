@@ -1,9 +1,9 @@
-import type { MiddlewareResponse } from "../../@types/responses.d.ts";
-import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers.d.ts";
-import type { IMiddleware } from "../interfaces/IMiddleware.ts";
-import { ClientError, ClientErrorCode } from "../schemas/ClientError.ts";
-import { HttpStatus, HttpStatusCode } from "../schemas/HttpStatus.ts";
-import { ResponseUtil } from "../utils/ResponseUtil.ts";
+import type { MiddlewareResponse } from "../../@types/responses";
+import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers";
+import type { IMiddleware } from "../interfaces/IMiddleware";
+import { ClientError, ClientErrorCode } from "../schemas/ClientError";
+import { HttpStatus, HttpStatusCode } from "../schemas/HttpStatus";
+import { ResponseUtil } from "../utils/ResponseUtil";
 
 export class CatcherMiddleware implements IMiddleware {
   public static resourceNotFound(

@@ -1,11 +1,11 @@
 import jwt, { type JwtPayload, type Secret } from "jsonwebtoken";
-import type { Token, TokenPayload } from "../../../@types/tokens.d.ts";
-import { EnvironmentHelper } from "../../../app/helpers/EnvironmentHelper.ts";
-import type { HandlerResponse } from "../@types/responses.d.ts";
-import { PayloadHelper } from "../app/helpers/PayloadHelper.ts";
-import type { IVerifier } from "../app/interfaces/IVerifier.ts";
-import { AccountHandler } from "./AccountHandler.ts";
-import { SessionHandler } from "./SessionHandler.ts";
+import type { Token, TokenPayload } from "../../../@types/tokens";
+import { EnvironmentHelper } from "../../../app/helpers/EnvironmentHelper";
+import type { HandlerResponse } from "../@types/responses";
+import { PayloadHelper } from "../app/helpers/PayloadHelper";
+import type { IVerifier } from "../app/interfaces/IVerifier";
+import { AccountHandler } from "./AccountHandler";
+import { SessionHandler } from "./SessionHandler";
 
 export class TokenVerifier implements IVerifier {
   private readonly mToken: Token;
@@ -20,9 +20,8 @@ export class TokenVerifier implements IVerifier {
     if (!PayloadHelper.isValidPayload(tokenPayload)) {
       return false;
     }
-    const accountVerified: HandlerResponse<boolean> = await AccountHandler.verifyAccount(
-      tokenPayload,
-    );
+    const accountVerified: HandlerResponse<boolean> =
+      await AccountHandler.verifyAccount(tokenPayload);
     if (!isRefreshToken) {
       return accountVerified.data;
     } else {

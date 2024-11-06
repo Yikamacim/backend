@@ -1,6 +1,6 @@
 import pg from "pg";
-import { EnvironmentHelper } from "../helpers/EnvironmentHelper.ts";
-import type { IConstants } from "../interfaces/IConstants.ts";
+import { EnvironmentHelper } from "../helpers/EnvironmentHelper";
+import type { IConstants } from "../interfaces/IConstants";
 
 export class DbConstants implements IConstants {
   public static readonly POOL = new pg.Pool({

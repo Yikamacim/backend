@@ -1,4 +1,4 @@
-import type { IConstants } from "../interfaces/IConstants.ts";
+import type { IConstants } from "../interfaces/IConstants";
 
 export class ConfigConstants implements IConstants {
   public static readonly API_PREFIX: string = "/api";

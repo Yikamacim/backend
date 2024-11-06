@@ -1,5 +1,5 @@
-import type { IModel } from "../../../../app/interfaces/IModel.ts";
-import { ModelMismatchError } from "../../../../app/schemas/ServerError.ts";
+import type { IModel } from "../../../../app/interfaces/IModel";
+import { ModelMismatchError } from "../../../../app/schemas/ServerError";
 
 export class SessionModel implements IModel {
   constructor(

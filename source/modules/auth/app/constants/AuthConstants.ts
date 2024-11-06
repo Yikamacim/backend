@@ -1,4 +1,4 @@
-import type { IConstants } from "../../../../app/interfaces/IConstants.ts";
+import type { IConstants } from "../../../../app/interfaces/IConstants";
 
 export class AuthConstants implements IConstants {
   public static readonly ACCESS_TOKEN_EXPIRATION_TIME: string = "15m";

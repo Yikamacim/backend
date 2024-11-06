@@ -1,9 +1,9 @@
-import type { IRequest } from "../../../app/interfaces/IRequest.ts";
-import type { ClientError } from "../../../app/schemas/ClientError.ts";
-import { DeviceNameValidator } from "../../../app/validators/DeviceNameValidator.ts";
-import { PasswordValidator } from "../../../app/validators/PasswordValidator.ts";
-import { SessionKeyValidator } from "../../../app/validators/SessionKeyValidator.ts";
-import { UsernameValidator } from "../../../app/validators/UsernameValidator.ts";
+import type { IRequest } from "../../../app/interfaces/IRequest";
+import type { ClientError } from "../../../app/schemas/ClientError";
+import { DeviceNameValidator } from "../../../app/validators/DeviceNameValidator";
+import { PasswordValidator } from "../../../app/validators/PasswordValidator";
+import { SessionKeyValidator } from "../../../app/validators/SessionKeyValidator";
+import { UsernameValidator } from "../../../app/validators/UsernameValidator";
 
 export class LoginRequest implements IRequest {
   constructor(

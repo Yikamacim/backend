@@ -1,6 +1,6 @@
-import { DbConstants } from "../constants/DbConstants.ts";
-import { LogHelper } from "../helpers/LogHelper.ts";
-import type { ITest } from "../interfaces/ITest.ts";
+import { DbConstants } from "../constants/DbConstants";
+import { LogHelper } from "../helpers/LogHelper";
+import type { ITest } from "../interfaces/ITest";
 
 export class PoolTest implements ITest {
   public static async run(): Promise<void> {

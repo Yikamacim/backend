@@ -1,7 +1,6 @@
-import { decodeBase64Url } from "@std/encoding";
 import dotenv from "dotenv";
 import type { Secret } from "jsonwebtoken";
-import type { IHelper } from "../interfaces/IHelper.ts";
+import type { IHelper } from "../interfaces/IHelper";
 
 export class EnvironmentHelper implements IHelper {
   private static sInstance: EnvironmentHelper;
@@ -19,7 +18,7 @@ export class EnvironmentHelper implements IHelper {
   }
 
   public static isProduction(): boolean {
-    return Deno.args.includes("--production") || Deno.args.includes("-p");
+    return process.argv.includes("--production") || process.argv.includes("-p");
   }
 
   public get jwtSecret(): Secret {
@@ -54,7 +53,7 @@ export class EnvironmentHelper implements IHelper {
     const prefix = isShared ? "SHRD" : EnvironmentHelper.isProduction() ? "PROD" : "DEVT";
     let envValue = "";
     for (const keyPart of keyParts) {
-      const valuePart = Deno.env.get(`${prefix}_${keyPart}`);
+      const valuePart = process.env[`${prefix}_${keyPart}`];
       if (!valuePart) {
         throw new Error(`Environment variable "${prefix}_${keyPart}" is not defined!`);
       }
@@ -64,33 +63,30 @@ export class EnvironmentHelper implements IHelper {
   }
 
   private loadJwtSecret(): Secret {
-    const encoded = this.getEnvValue([
-      "JXCQ_SBWR",
-      "JQXE_SBPN",
-      "JBAX_SFBI",
-      "JYQQ_SXWY",
-      "JRGM_SGXD",
-    ], true);
-    return new TextDecoder("utf-8").decode(decodeBase64Url(encoded));
+    const encoded = this.getEnvValue(
+      ["JXCQ_SBWR", "JQXE_SBPN", "JBAX_SFBI", "JYQQ_SXWY", "JRGM_SGXD"],
+      true,
+    );
+    return Buffer.from(encoded, "base64url").toString("utf-8");
   }
 
   private loadPoolUser(): string {
     const encoded = this.getEnvValue(["PXED_UGGO", "PIXI_UVFJ"], false);
-    return new TextDecoder("utf-8").decode(decodeBase64Url(encoded));
+    return Buffer.from(encoded, "base64url").toString("utf-8");
   }
 
   private loadPoolHost(): string {
     const encoded = this.getEnvValue(["PXVL_HCMN", "PYXI_HCDU"], false);
-    return new TextDecoder("utf-8").decode(decodeBase64Url(encoded));
+    return Buffer.from(encoded, "base64url").toString("utf-8");
   }
 
   private loadPoolDatabase(): string {
     const encoded = this.getEnvValue(["PXCU_DILF", "PQXG_DWEK"], false);
-    return new TextDecoder("utf-8").decode(decodeBase64Url(encoded));
+    return Buffer.from(encoded, "base64url").toString("utf-8");
   }
 
   private loadPoolPort(): number {
     const encoded = this.getEnvValue(["PXAS_PFBR", "PDXA_PJTY"], false);
-    return parseInt(new TextDecoder("utf-8").decode(decodeBase64Url(encoded)));
+    return parseInt(Buffer.from(encoded, "base64url").toString("utf-8"));
   }
 }

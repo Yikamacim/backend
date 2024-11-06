@@ -1,6 +1,6 @@
-import type { TokenPayload } from "../../../../@types/tokens.d.ts";
-import { AccountType } from "../../../../app/enums/AccountType.ts";
-import type { IHelper } from "../../../../app/interfaces/IHelper.ts";
+import type { TokenPayload } from "../../../../@types/tokens";
+import { AccountType } from "../../../../app/enums/AccountType";
+import type { IHelper } from "../../../../app/interfaces/IHelper";
 
 export class PayloadHelper implements IHelper {
   public static isValidPayload(obj: unknown): obj is TokenPayload {

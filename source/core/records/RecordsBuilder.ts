@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { Method } from "../../app/enums/Method.ts";
-import { RouteHelper } from "../../app/helpers/RouteHelper.ts";
-import type { IBuilder } from "../../app/interfaces/IBuilder.ts";
-import { RecordsController } from "./RecordsController.ts";
+import { Method } from "../../app/enums/Method";
+import { RouteHelper } from "../../app/helpers/RouteHelper";
+import type { IBuilder } from "../../app/interfaces/IBuilder";
+import { RecordsController } from "./RecordsController";
 
 export class RecordsBuilder implements IBuilder {
   public static readonly BASE_ROUTE: string = "records";

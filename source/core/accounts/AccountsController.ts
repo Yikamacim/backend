@@ -1,13 +1,13 @@
-import type { ControllerResponse, ManagerResponse } from "../../@types/responses.d.ts";
-import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers.d.ts";
-import type { IController } from "../../app/interfaces/IController.ts";
-import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError.ts";
-import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus.ts";
-import { ProtoUtil } from "../../app/utils/ProtoUtil.ts";
-import { ResponseUtil } from "../../app/utils/ResponseUtil.ts";
-import { AccountsManager } from "./AccountsManager.ts";
-import { AccountsParams } from "./schemas/AccountsParams.ts";
-import type { AccountsResponse } from "./schemas/AccountsResponse.ts";
+import type { ControllerResponse, ManagerResponse } from "../../@types/responses";
+import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers";
+import type { IController } from "../../app/interfaces/IController";
+import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
+import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
+import { ProtoUtil } from "../../app/utils/ProtoUtil";
+import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import { AccountsManager } from "./AccountsManager";
+import { AccountsParams } from "./schemas/AccountsParams";
+import type { AccountsResponse } from "./schemas/AccountsResponse";
 
 export class AccountsController implements IController {
   private readonly mManager: AccountsManager;
@@ -61,8 +61,8 @@ export class AccountsController implements IController {
       }
       const validatedData: AccountsParams = blueprintData;
       // HAND OVER TO MANAGER
-      const managerResponse: ManagerResponse<AccountsResponse | null> = await this.mManager
-        .getAccount(validatedData);
+      const managerResponse: ManagerResponse<AccountsResponse | null> =
+        await this.mManager.getAccount(validatedData);
       // Check manager response
       if (!managerResponse.httpStatus.isSuccess() || !managerResponse.data) {
         // Unsuccessful response

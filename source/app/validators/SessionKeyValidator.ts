@@ -1,7 +1,7 @@
-import type { IValidator } from "../interfaces/IValidator.ts";
-import { SessionRules } from "../rules/SessionRules.ts";
-import { ClientError, ClientErrorCode } from "../schemas/ClientError.ts";
-import { StringUtil } from "../utils/StringUtil.ts";
+import type { IValidator } from "../interfaces/IValidator";
+import { SessionRules } from "../rules/SessionRules";
+import { ClientError, ClientErrorCode } from "../schemas/ClientError";
+import { StringUtil } from "../utils/StringUtil";
 
 export class SessionKeyValidator implements IValidator {
   public static validate(data: string, validationErrors: ClientError[]): void {

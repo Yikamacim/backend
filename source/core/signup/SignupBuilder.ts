@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { Method } from "../../app/enums/Method.ts";
-import { RouteHelper } from "../../app/helpers/RouteHelper.ts";
-import type { IBuilder } from "../../app/interfaces/IBuilder.ts";
-import { SignupController } from "./SignupController.ts";
+import { Method } from "../../app/enums/Method";
+import { RouteHelper } from "../../app/helpers/RouteHelper";
+import type { IBuilder } from "../../app/interfaces/IBuilder";
+import { SignupController } from "./SignupController";
 
 export class SignupBuilder implements IBuilder {
   public static readonly BASE_ROUTE: string = "signup";

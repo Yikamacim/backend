@@ -1,4 +1,4 @@
-import type { AccountType } from "../app/enums/AccountType.ts";
+import type { AccountType } from "../app/enums/AccountType";
 
 export type Token = string;
 

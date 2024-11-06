@@ -1,12 +1,12 @@
 import type { QueryResult } from "pg";
-import type { ProviderResponse } from "../../@types/responses.d.ts";
-import { DbConstants } from "../../app/constants/DbConstants.ts";
-import type { AccountType } from "../../app/enums/AccountType.ts";
-import type { IProvider } from "../../app/interfaces/IProvider.ts";
-import { UnexpectedQueryResultError } from "../../app/schemas/ServerError.ts";
-import { ResponseUtil } from "../../app/utils/ResponseUtil.ts";
-import { AccountModel } from "../../common/models/AccountModel.ts";
-import { AccountQueries } from "../../common/queries/AccountQueries.ts";
+import type { ProviderResponse } from "../../@types/responses";
+import { DbConstants } from "../../app/constants/DbConstants";
+import type { AccountType } from "../../app/enums/AccountType";
+import type { IProvider } from "../../app/interfaces/IProvider";
+import { UnexpectedQueryResultError } from "../../app/schemas/ServerError";
+import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import { AccountModel } from "../../common/models/AccountModel";
+import { AccountQueries } from "../../common/queries/AccountQueries";
 
 export class SignupProvider implements IProvider {
   public async doesAccountExist(username: string): Promise<ProviderResponse<boolean>> {
@@ -25,7 +25,7 @@ export class SignupProvider implements IProvider {
       throw error;
     }
   }
-  
+
   public async createAccount(
     username: string,
     password: string,

@@ -1,8 +1,8 @@
-import type { ProviderResponse } from "../../@types/responses.d.ts";
-import { LogHelper } from "../../app/helpers/LogHelper.ts";
-import type { IProvider } from "../../app/interfaces/IProvider.ts";
-import { ResponseUtil } from "../../app/utils/ResponseUtil.ts";
-import type { RecordsResponse } from "./schemas/RecordsResponse.ts";
+import type { ProviderResponse } from "../../@types/responses";
+import { LogHelper } from "../../app/helpers/LogHelper";
+import type { IProvider } from "../../app/interfaces/IProvider";
+import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import type { RecordsResponse } from "./schemas/RecordsResponse";
 
 export class RecordsProvider implements IProvider {
   public getRecords(): Promise<ProviderResponse<RecordsResponse>> {

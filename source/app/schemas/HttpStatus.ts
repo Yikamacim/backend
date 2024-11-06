@@ -1,5 +1,5 @@
-import type { HttpStatusCodeMap } from "../../@types/maps.d.ts";
-import type { IResponse } from "../interfaces/IResponse.ts";
+import type { HttpStatusCodeMap } from "../../@types/maps";
+import type { IResponse } from "../interfaces/IResponse";
 
 export class HttpStatus implements IResponse {
   public readonly code: number;

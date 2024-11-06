@@ -1,4 +1,4 @@
-import type { ProviderResponse } from "../../../@types/responses.d.ts";
-import type { IModel } from "../../../app/interfaces/IModel.ts";
+import type { ProviderResponse } from "../../../@types/responses";
+import type { IModel } from "../../../app/interfaces/IModel";
 
 export type HandlerResponse<D extends IModel | boolean | null> = ProviderResponse<D>;

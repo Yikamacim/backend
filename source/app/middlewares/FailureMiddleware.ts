@@ -1,10 +1,10 @@
-import type { MiddlewareResponse } from "../../@types/responses.d.ts";
-import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers.d.ts";
-import { LogHelper } from "../helpers/LogHelper.ts";
-import type { IMiddleware } from "../interfaces/IMiddleware.ts";
-import { HttpStatus, HttpStatusCode } from "../schemas/HttpStatus.ts";
-import { ServerError } from "../schemas/ServerError.ts";
-import { ResponseUtil } from "../utils/ResponseUtil.ts";
+import type { MiddlewareResponse } from "../../@types/responses";
+import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers";
+import { LogHelper } from "../helpers/LogHelper";
+import type { IMiddleware } from "../interfaces/IMiddleware";
+import { HttpStatus, HttpStatusCode } from "../schemas/HttpStatus";
+import { ServerError } from "../schemas/ServerError";
+import { ResponseUtil } from "../utils/ResponseUtil";
 
 export class FailureMiddleware implements IMiddleware {
   public static serverFailure(

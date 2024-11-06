@@ -1,6 +1,6 @@
-import type { IParams } from "../../../app/interfaces/IParams.ts";
-import type { ClientError } from "../../../app/schemas/ClientError.ts";
-import { UsernameValidator } from "../../../app/validators/UsernameValidator.ts";
+import type { IParams } from "../../../app/interfaces/IParams";
+import type { ClientError } from "../../../app/schemas/ClientError";
+import { UsernameValidator } from "../../../app/validators/UsernameValidator";
 
 export class AccountsParams implements IParams {
   private constructor(public readonly username: string) {}

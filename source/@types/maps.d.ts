@@ -1,5 +1,5 @@
-import type { ClientErrorCode } from "../app/schemas/ClientError.ts";
-import type { HttpStatusCode } from "../app/schemas/HttpStatus.ts";
+import type { ClientErrorCode } from "../app/schemas/ClientError";
+import type { HttpStatusCode } from "../app/schemas/HttpStatus";
 
 export type HttpStatusCodeMap<T> = {
   [key in HttpStatusCode]: T;

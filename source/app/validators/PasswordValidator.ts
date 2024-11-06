@@ -1,7 +1,7 @@
-import type { IValidator } from "../interfaces/IValidator.ts";
-import { AccountRules } from "../rules/AccountRules.ts";
-import { ClientError, ClientErrorCode } from "../schemas/ClientError.ts";
-import { StringUtil } from "../utils/StringUtil.ts";
+import type { IValidator } from "../interfaces/IValidator";
+import { AccountRules } from "../rules/AccountRules";
+import { ClientError, ClientErrorCode } from "../schemas/ClientError";
+import { StringUtil } from "../utils/StringUtil";
 
 export class PasswordValidator implements IValidator {
   public static validate(data: string, validationErrors: ClientError[]): void {

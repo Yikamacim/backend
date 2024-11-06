@@ -1,15 +1,15 @@
 import type { QueryResult } from "pg";
-import type { SessionData } from "../../../@types/sessions.d.ts";
-import type { Token, TokenPayload, Tokens } from "../../../@types/tokens.d.ts";
-import { DbConstants } from "../../../app/constants/DbConstants.ts";
-import { UnexpectedQueryResultError } from "../../../app/schemas/ServerError.ts";
-import type { HandlerResponse } from "../@types/responses.d.ts";
-import { SessionConstants } from "../app/constants/SessionConstants.ts";
-import type { IHandler } from "../app/interfaces/IHandler.ts";
-import { AuthResponseUtil } from "../app/utils/AuthResponseUtil.ts";
-import { SessionModel } from "../common/models/SessionModel.ts";
-import { SessionQueries } from "../common/queries/SessionQueries.ts";
-import { TokenHandler } from "./TokenHandler.ts";
+import type { SessionData } from "../../../@types/sessions";
+import type { Token, TokenPayload, Tokens } from "../../../@types/tokens";
+import { DbConstants } from "../../../app/constants/DbConstants";
+import { UnexpectedQueryResultError } from "../../../app/schemas/ServerError";
+import type { HandlerResponse } from "../@types/responses";
+import { SessionConstants } from "../app/constants/SessionConstants";
+import type { IHandler } from "../app/interfaces/IHandler";
+import { AuthResponseUtil } from "../app/utils/AuthResponseUtil";
+import { SessionModel } from "../common/models/SessionModel";
+import { SessionQueries } from "../common/queries/SessionQueries";
+import { TokenHandler } from "./TokenHandler";
 
 export class SessionHandler implements IHandler {
   public static async verifySession(
@@ -20,9 +20,7 @@ export class SessionHandler implements IHandler {
     try {
       const sessionResults: QueryResult = await DbConstants.POOL.query(
         SessionQueries.GET_SESSION_$SSID,
-        [
-          tokenPayload.sessionId,
-        ],
+        [tokenPayload.sessionId],
       );
       const sessionRecord: unknown = sessionResults.rows[0];
       if (!sessionRecord) {
@@ -45,9 +43,7 @@ export class SessionHandler implements IHandler {
     try {
       const sessionResults: QueryResult = await DbConstants.POOL.query(
         SessionQueries.GET_SESSIONS_$ACID,
-        [
-          sessionData.accountId,
-        ],
+        [sessionData.accountId],
       );
       const sessionRecords: unknown[] = sessionResults.rows;
       if (!sessionRecords) {

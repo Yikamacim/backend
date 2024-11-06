@@ -1,7 +1,7 @@
-import { DbConstants } from "../../../../app/constants/DbConstants.ts";
-import type { IModel } from "../../../../app/interfaces/IModel.ts";
-import type { IUtil } from "../../../../app/interfaces/IUtil.ts";
-import type { HandlerResponse } from "../../@types/responses.d.ts";
+import { DbConstants } from "../../../../app/constants/DbConstants";
+import type { IModel } from "../../../../app/interfaces/IModel";
+import type { IUtil } from "../../../../app/interfaces/IUtil";
+import type { HandlerResponse } from "../../@types/responses";
 
 export class AuthResponseUtil implements IUtil {
   public static async handlerResponse<D extends IModel | boolean | null>(

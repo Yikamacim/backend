@@ -2,39 +2,17 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "request": "launch",
-      "name": "Debug (DEVT)",
+      "name": "Start Server",
       "type": "node",
-      "program": "${workspaceFolder}/main.ts",
-      "cwd": "${workspaceFolder}",
-      "env": {},
-      "runtimeExecutable": "/opt/homebrew/bin/deno",
-      "runtimeArgs": [
-        "run",
-        "--unstable",
-        "--inspect-wait",
-        "--allow-all",
-        "source/main.ts"
-      ],
-      "attachSimplePort": 9229
-    },
-    {
+      "runtimeExecutable": "fish",
+      "runtimeArgs": ["-c", "node ${workspaceFolder}/out/main.js"],
       "request": "launch",
-      "name": "Debug (PROD)",
-      "type": "node",
-      "program": "${workspaceFolder}/main.ts",
-      "cwd": "${workspaceFolder}",
-      "env": {},
-      "runtimeExecutable": "/opt/homebrew/bin/deno",
-      "runtimeArgs": [
-        "run",
-        "--unstable",
-        "--inspect-wait",
-        "--allow-all",
-        "source/main.ts",
-        "--production"
-      ],
-      "attachSimplePort": 9229
+      "skipFiles": ["<node_internals>/**"],
+      "preLaunchTask": "tsc: build - tsconfig.json",
+      "sourceMaps": true,
+      "smartStep": true,
+      "internalConsoleOptions": "openOnSessionStart",
+      "outFiles": ["${workspaceFolder}/out/**/*.js"]
     }
   ]
 }

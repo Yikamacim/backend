@@ -3,16 +3,16 @@ import type {
   ManagerResponse,
   MiddlewareResponse,
   ProviderResponse,
-} from "../../@types/responses.d.ts";
-import type { Tokens } from "../../@types/tokens.d.ts";
-import { DbConstants } from "../constants/DbConstants.ts";
-import { LogHelper } from "../helpers/LogHelper.ts";
-import type { IModel } from "../interfaces/IModel.ts";
-import type { IResponse } from "../interfaces/IResponse.ts";
-import type { IUtil } from "../interfaces/IUtil.ts";
-import type { ClientError } from "../schemas/ClientError.ts";
-import type { HttpStatus } from "../schemas/HttpStatus.ts";
-import type { ServerError } from "../schemas/ServerError.ts";
+} from "../../@types/responses";
+import type { Tokens } from "../../@types/tokens";
+import { DbConstants } from "../constants/DbConstants";
+import { LogHelper } from "../helpers/LogHelper";
+import type { IModel } from "../interfaces/IModel";
+import type { IResponse } from "../interfaces/IResponse";
+import type { IUtil } from "../interfaces/IUtil";
+import type { ClientError } from "../schemas/ClientError";
+import type { HttpStatus } from "../schemas/HttpStatus";
+import type { ServerError } from "../schemas/ServerError";
 
 export class ResponseUtil implements IUtil {
   public static controllerResponse<

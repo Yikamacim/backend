@@ -1,7 +1,7 @@
-import type { SessionData } from "../../../@types/sessions.d.ts";
-import type { Tokens } from "../../../@types/tokens.d.ts";
-import type { IGenerator } from "../app/interfaces/IGenerator.ts";
-import { SessionHandler } from "./SessionHandler.ts";
+import type { SessionData } from "../../../@types/sessions";
+import type { Tokens } from "../../../@types/tokens";
+import type { IGenerator } from "../app/interfaces/IGenerator";
+import { SessionHandler } from "./SessionHandler";
 
 export class TokenGenerator implements IGenerator {
   private readonly mData: SessionData;

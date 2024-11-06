@@ -5,7 +5,7 @@
 -- Dumped from database version 17.0 (Postgres.app)
 -- Dumped by pg_dump version 17.0 (Postgres.app)
 
--- Started on 2024-10-27 11:30:10 +03
+-- Started on 2024-10-27 18:50:27 +03
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -256,7 +256,7 @@ ALTER TABLE ONLY public."Session"
     ADD CONSTRAINT "Session_Account_fk" FOREIGN KEY ("accountId") REFERENCES public."Account"("accountId");
 
 
--- Completed on 2024-10-27 11:30:10 +03
+-- Completed on 2024-10-27 18:50:27 +03
 
 --
 -- PostgreSQL database dump complete
