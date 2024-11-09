@@ -1,4 +1,4 @@
-import type { IRules } from "../interfaces/IRules";
+import type { IRules } from "../../app/interfaces/IRules";
 
 export class AccountRules implements IRules {
   public static readonly USERNAME_MIN_LENGTH: number = 2;

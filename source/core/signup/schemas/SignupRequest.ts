@@ -1,10 +1,10 @@
 import { AccountType } from "../../../app/enums/AccountType";
 import type { IRequest } from "../../../app/interfaces/IRequest";
 import type { ClientError } from "../../../app/schemas/ClientError";
-import { DeviceNameValidator } from "../../../app/validators/DeviceNameValidator";
-import { PasswordValidator } from "../../../app/validators/PasswordValidator";
-import { SessionKeyValidator } from "../../../app/validators/SessionKeyValidator";
-import { UsernameValidator } from "../../../app/validators/UsernameValidator";
+import { DeviceNameValidator } from "../../../common/validators/DeviceNameValidator";
+import { PasswordValidator } from "../../../common/validators/PasswordValidator";
+import { SessionKeyValidator } from "../../../common/validators/SessionKeyValidator";
+import { UsernameValidator } from "../../../common/validators/UsernameValidator";
 
 export class SignupRequest implements IRequest {
   constructor(
