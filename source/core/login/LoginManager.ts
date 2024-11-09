@@ -7,7 +7,7 @@ import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
 import { LoginProvider } from "./LoginProvider";
 import type { LoginRequest } from "./schemas/LoginRequest";
-import type { LoginResponse } from "./schemas/LoginResponse";
+import { LoginResponse } from "./schemas/LoginResponse";
 
 export class LoginManager implements IManager {
   private readonly mProvider: LoginProvider;
@@ -48,7 +48,7 @@ export class LoginManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      AccountModel.fromRecord(providerResponse.data),
+      LoginResponse.fromModel(providerResponse.data),
     );
   }
 }
