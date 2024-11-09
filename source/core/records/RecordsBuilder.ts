@@ -24,5 +24,11 @@ export class RecordsBuilder implements IBuilder {
       Method.GET,
       this.mController.getRecords.bind(this.mController),
     );
+    RouteHelper.buildRoute(
+      this.router,
+      { baseRoute: RecordsBuilder.BASE_ROUTE, route: "/" },
+      Method.DELETE,
+      this.mController.deleteRecords.bind(this.mController),
+    );
   }
 }

@@ -8,4 +8,9 @@ export class RecordsProvider implements IProvider {
   public getRecords(): Promise<ProviderResponse<RecordsResponse>> {
     return ResponseUtil.providerResponse(LogHelper.getRecords(), false);
   }
+
+  public deleteRecords(): Promise<ProviderResponse<null>> {
+    LogHelper.deleteRecords();
+    return ResponseUtil.providerResponse(null, false);
+  }
 }

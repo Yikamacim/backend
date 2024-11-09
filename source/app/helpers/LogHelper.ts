@@ -5,6 +5,10 @@ export class LogHelper implements IHelper {
     return this.records;
   }
 
+  public static deleteRecords(): void {
+    this.records = [];
+  }
+
   public static log(message: string): void {
     const time = `[${this.getTime(new Date())}]`;
     const content = `[=]: ${message}`;

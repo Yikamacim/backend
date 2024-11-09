@@ -47,4 +47,39 @@ export class RecordsController implements IController {
       return next(error);
     }
   }
+
+  public async deleteRecords(
+    _req: ExpressRequest,
+    res: ControllerResponse<null, null>,
+    next: ExpressNextFunction,
+  ): Promise<ControllerResponse<null, null> | void> {
+    try {
+      // HAND OVER TO MANAGER
+      const managerResponse: ManagerResponse<null> = await this.mManager.deleteRecords();
+      // Check manager response
+      if (!managerResponse.httpStatus.isSuccess()) {
+        // Unsuccessful response
+        return ResponseUtil.controllerResponse(
+          res,
+          managerResponse.httpStatus,
+          managerResponse.serverError,
+          managerResponse.clientErrors,
+          null,
+          null,
+        );
+      }
+      // Successful response
+      return ResponseUtil.controllerResponse(
+        res,
+        managerResponse.httpStatus,
+        managerResponse.serverError,
+        managerResponse.clientErrors,
+        null,
+        null,
+        false,
+      );
+    } catch (error) {
+      return next(error);
+    }
+  }
 }

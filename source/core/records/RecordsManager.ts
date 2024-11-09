@@ -22,4 +22,15 @@ export class RecordsManager implements IManager {
       providerResponse.data,
     );
   }
+
+  public async deleteRecords(): Promise<ManagerResponse<null>> {
+    // HAND OVER TO PROVIDER
+    const providerResponse: ProviderResponse<null> = await this.mProvider.deleteRecords();
+    return ResponseUtil.managerResponse(
+      new HttpStatus(HttpStatusCode.NO_CONTENT),
+      null,
+      [],
+      providerResponse.data,
+    );
+  }
 }
