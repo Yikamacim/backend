@@ -1,7 +1,7 @@
-import type { IValidator } from "../interfaces/IValidator";
+import type { IValidator } from "../../app/interfaces/IValidator";
+import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
+import { StringUtil } from "../../app/utils/StringUtil";
 import { SessionRules } from "../rules/SessionRules";
-import { ClientError, ClientErrorCode } from "../schemas/ClientError";
-import { StringUtil } from "../utils/StringUtil";
 
 export class DeviceNameValidator implements IValidator {
   public static validate(data: string, validationErrors: ClientError[]): void {

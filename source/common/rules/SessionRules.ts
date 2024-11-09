@@ -1,4 +1,4 @@
-import type { IRules } from "../interfaces/IRules";
+import type { IRules } from "../../app/interfaces/IRules";
 
 export class SessionRules implements IRules {
   public static readonly SESSION_KEY_LENGTH: number = 64;

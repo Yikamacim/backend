@@ -9,7 +9,7 @@ export class StringUtil implements IUtil {
     return regex.test(str);
   }
 
-  public static canBeParsedToInt(str: string): boolean {
+  public static isIntParsable(str: string): boolean {
     return !Number.isNaN(parseInt(str));
   }
 }

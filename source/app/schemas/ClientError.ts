@@ -1,7 +1,7 @@
 import type { ClientErrorCodeMap } from "../../@types/maps";
+import { AccountRules } from "../../common/rules/AccountRules";
+import { SessionRules } from "../../common/rules/SessionRules";
 import type { IResponse } from "../interfaces/IResponse";
-import { AccountRules } from "../rules/AccountRules";
-import { SessionRules } from "../rules/SessionRules";
 
 export class ClientError implements IResponse {
   public readonly code: number;
