@@ -1,13 +1,14 @@
-import type { IModel } from "../../../../app/interfaces/IModel";
-import { ModelMismatchError } from "../../../../app/schemas/ServerError";
+import type { IModel } from "../../app/interfaces/IModel";
+import { ModelMismatchError } from "../../app/schemas/ServerError";
 
 export class SessionModel implements IModel {
-  constructor(
-    readonly sessionId: number,
-    readonly accountId: number,
-    readonly sessionKey: string,
-    readonly refreshToken: string,
-    readonly lastActivityDate: Date,
+  public constructor(
+    public readonly sessionId: number,
+    public readonly accountId: number,
+    public readonly deviceName: string,
+    public readonly sessionKey: string,
+    public readonly refreshToken: string,
+    public readonly lastActivityDate: Date,
   ) {}
 
   public static fromRecord(record: unknown): SessionModel {
@@ -17,6 +18,7 @@ export class SessionModel implements IModel {
     return new SessionModel(
       record.sessionId,
       record.accountId,
+      record.deviceName,
       record.sessionKey,
       record.refreshToken,
       record.lastActivityDate,
@@ -34,10 +36,11 @@ export class SessionModel implements IModel {
     if (typeof obj !== "object" || obj === null) {
       return false;
     }
-    const model: SessionModel = obj as SessionModel;
+    const model = obj as SessionModel;
     return (
       typeof model.sessionId === "number" &&
       typeof model.accountId === "number" &&
+      typeof model.deviceName === "string" &&
       typeof model.sessionKey === "string" &&
       typeof model.refreshToken === "string" &&
       model.lastActivityDate instanceof Date

@@ -8,7 +8,7 @@ import type { IHelper } from "../interfaces/IHelper";
 import type { IResponse } from "../interfaces/IResponse";
 
 export class RouteHelper implements IHelper {
-  private static routeMethodMap: Map<string, Method[]> = new Map<string, Method[]>();
+  private static readonly routeMethodMap = new Map<string, Method[]>();
 
   public static buildRoute<D extends IResponse | null, T extends Tokens | null>(
     router: ExpressRouter,

@@ -9,12 +9,12 @@ export class AccountsParams implements IParams {
     if (typeof data !== "object" || data === null) {
       return false;
     }
-    const blueprint: AccountsParams = data as AccountsParams;
+    const blueprint = data as AccountsParams;
     return typeof blueprint.username === "string";
   }
 
   public static getValidationErrors(blueprintData: AccountsParams): ClientError[] {
-    const validationErrors: ClientError[] = new Array<ClientError>();
+    const validationErrors = new Array<ClientError>();
     UsernameValidator.validate(blueprintData.username, validationErrors);
     return validationErrors;
   }

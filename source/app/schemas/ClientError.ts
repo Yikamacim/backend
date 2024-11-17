@@ -1,13 +1,13 @@
-import type { ClientErrorCodeMap } from "../../@types/maps";
 import { AccountRules } from "../../common/rules/AccountRules";
 import { SessionRules } from "../../common/rules/SessionRules";
+import { AuthConstants } from "../constants/AuthConstants";
 import type { IResponse } from "../interfaces/IResponse";
 
 export class ClientError implements IResponse {
   public readonly code: number;
   public readonly message: string;
 
-  constructor(clientErrorCode: ClientErrorCode) {
+  public constructor(clientErrorCode: ClientErrorCode) {
     this.code = clientErrorCode;
     this.message = clientErrorMessages[clientErrorCode];
   }
@@ -16,22 +16,27 @@ export class ClientError implements IResponse {
 export enum ClientErrorCode {
   // CONTRACT ERRORS (1XXXX - 2XXXX)
   //  *  1XXXX: Schema errors
-  //  *  *  100XX: Body errors
-  MISSING_BODY = 10000,
-  INVALID_BODY = 10001,
-  //  *  *  101XX: Parameter errors
-  MISSING_PARAMETER = 10100,
-  INVALID_PARAMETER = 10101,
-  //  *  *  102XX: Query errors
-  MISSING_QUERY = 10200,
-  INVALID_QUERY = 10201,
-  //  *  2XXXX: Method errors
+  //  *  *  100XX: Header errors
+  MISSING_HEADERS = 10000,
+  INVALID_HEADERS = 10001,
+  //  *  *  101XX: Body errors
+  MISSING_BODY = 10100,
+  INVALID_BODY = 10101,
+  //  *  *  102XX: Parameter errors
+  MISSING_PARAMETER = 10200,
+  INVALID_PARAMETER = 10201,
+  //  *  *  103XX: Query errors
+  MISSING_QUERY = 10300,
+  INVALID_QUERY = 10301,
+  //  *  2XXXX: Address errors
+  //  *  *  200XX: Method errors
   METHOD_NOT_ALLOWED = 20000,
 
   // AUTHORIZATION ERRORS (3XXXX - 5XXXX)
   //  *  3XXXX: Token errors
-  INVALID_TOKEN = 30000,
-  EXPIRED_TOKEN = 30001,
+  INVALID_AUTHORIZATION_HEADER = 30000,
+  INVALID_TOKEN = 30001,
+  EXPIRED_TOKEN = 30002,
   //  *  4XXXX: Session errors
   INVALID_SESSION_KEY_LENGTH = 40000,
   INVALID_SESSION_KEY_CONTENT = 40001,
@@ -55,27 +60,35 @@ export enum ClientErrorCode {
   INCORRECT_PASSWORD = 80005,
   //  *  *  801XX: /signup errors
   ACCOUNT_ALREADY_EXISTS = 80104,
+  //  *  *  802XX: /my/sessions errors
+  SESSION_NOT_FOUND = 80200,
+  CANNOT_DELETE_CURRENT_SESSION = 80201,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
 
-const clientErrorMessages: ClientErrorCodeMap<string> = {
+const clientErrorMessages: Record<ClientErrorCode, string> = {
   // CONTRACT ERRORS (1XXXX - 2XXXX)
   //  *  1XXXX: Schema errors
-  //  *  *  100XX: Body errors
+  //  *  *  100XX: Header errors
+  [ClientErrorCode.MISSING_HEADERS]: "Request headers were not provided.",
+  [ClientErrorCode.INVALID_HEADERS]: "Provided request headers were invalid.",
+  //  *  *  101XX: Body errors
   [ClientErrorCode.MISSING_BODY]: "Request body was not provided.",
   [ClientErrorCode.INVALID_BODY]: "Provided request body was invalid.",
-  //  *  *  101XX: Parameter errors
+  //  *  *  102XX: Parameter errors
   [ClientErrorCode.MISSING_PARAMETER]: "Required parameter was not provided.",
   [ClientErrorCode.INVALID_PARAMETER]: "Provided parameter was invalid.",
-  //  *  *  102XX: Query errors
+  //  *  *  103XX: Query errors
   [ClientErrorCode.MISSING_QUERY]: "Required query was not provided.",
   [ClientErrorCode.INVALID_QUERY]: "Provided query was invalid.",
-  //  *  2XXXX: Method errors
+  //  *  2XXXX: Address errors
+  //  *  *  200XX: Method errors
   [ClientErrorCode.METHOD_NOT_ALLOWED]: "Requested method is not allowed.",
 
   // AUTHORIZATION ERRORS (3XXXX - 5XXXX)
   //  *  3XXXX: Token errors
+  [ClientErrorCode.INVALID_AUTHORIZATION_HEADER]: `Authorization header was invalid. It must be in the format '${AuthConstants.TOKEN_PREFIX}<token>'.`,
   [ClientErrorCode.INVALID_TOKEN]: "Provided token was invalid.",
   [ClientErrorCode.EXPIRED_TOKEN]: "Provided token has expired.",
   //  *  4XXXX: Session errors
@@ -103,6 +116,10 @@ const clientErrorMessages: ClientErrorCodeMap<string> = {
   [ClientErrorCode.INCORRECT_PASSWORD]: "Provided password was incorrect.",
   //  *  *  801XX: /signup errors
   [ClientErrorCode.ACCOUNT_ALREADY_EXISTS]: "An account already exists with the provided username.",
+  //  *  *  802XX: /my/sessions errors
+  [ClientErrorCode.SESSION_NOT_FOUND]:
+    "Account doesn't have a session with the provided session id.",
+  [ClientErrorCode.CANNOT_DELETE_CURRENT_SESSION]: "Current session can't be deleted.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

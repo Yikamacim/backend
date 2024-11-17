@@ -14,22 +14,26 @@ export class MethodMiddleware implements IMiddleware {
     res: MiddlewareResponse,
     next: ExpressNextFunction,
   ): MiddlewareResponse | void {
-    const routeMethods: Method[] | null = RouteHelper.getMethods(req.originalUrl);
-    if (!routeMethods) {
-      return next();
-    }
-    if (!Object.values(Method).includes(req.method.toUpperCase() as Method)) {
-      throw new UnexpectedMethodError(req.method);
-    }
-    if (!routeMethods.includes(req.method as Method)) {
-      return ResponseUtil.middlewareResponse(
-        res,
-        new HttpStatus(HttpStatusCode.METHOD_NOT_ALLOWED),
-        null,
-        [new ClientError(ClientErrorCode.METHOD_NOT_ALLOWED)],
-      );
-    } else {
-      return next();
+    try {
+      const routeMethods = RouteHelper.getMethods(req.originalUrl);
+      if (!routeMethods) {
+        return next();
+      }
+      if (!Object.values(Method).includes(req.method.toUpperCase() as Method)) {
+        throw new UnexpectedMethodError(req.method);
+      }
+      if (!routeMethods.includes(req.method as Method)) {
+        return ResponseUtil.middlewareResponse(
+          res,
+          new HttpStatus(HttpStatusCode.METHOD_NOT_ALLOWED),
+          null,
+          [new ClientError(ClientErrorCode.METHOD_NOT_ALLOWED)],
+        );
+      } else {
+        return next();
+      }
+    } catch (error) {
+      return next(error);
     }
   }
 }

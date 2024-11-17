@@ -1,4 +1,4 @@
-import type { ControllerResponse, ManagerResponse } from "../../@types/responses";
+import type { ControllerResponse } from "../../@types/responses";
 import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers";
 import type { IController } from "../../app/interfaces/IController";
 import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
@@ -10,11 +10,7 @@ import { AccountsParams } from "./schemas/AccountsParams";
 import type { AccountsResponse } from "./schemas/AccountsResponse";
 
 export class AccountsController implements IController {
-  private readonly mManager: AccountsManager;
-
-  constructor() {
-    this.mManager = new AccountsManager();
-  }
+  public constructor(private readonly manager = new AccountsManager()) {}
 
   public async getAccount(
     req: ExpressRequest,
@@ -48,7 +44,7 @@ export class AccountsController implements IController {
       }
       const blueprintData: AccountsParams = protovalidData;
       // V3: Physical validation
-      const validationErrors: ClientError[] = AccountsParams.getValidationErrors(blueprintData);
+      const validationErrors = AccountsParams.getValidationErrors(blueprintData);
       if (validationErrors.length > 0) {
         return ResponseUtil.controllerResponse(
           res,
@@ -59,18 +55,17 @@ export class AccountsController implements IController {
           null,
         );
       }
-      const validatedData: AccountsParams = blueprintData;
-      // HAND OVER TO MANAGER
-      const managerResponse: ManagerResponse<AccountsResponse | null> =
-        await this.mManager.getAccount(validatedData);
+      const validatedData = blueprintData;
+      // >----------< HAND OVER TO MANAGER >----------<
+      const mrGetAccount = await this.manager.getAccount(validatedData);
       // Check manager response
-      if (!managerResponse.httpStatus.isSuccess() || !managerResponse.data) {
+      if (!mrGetAccount.httpStatus.isSuccess()) {
         // Unsuccessful response
         return ResponseUtil.controllerResponse(
           res,
-          managerResponse.httpStatus,
-          managerResponse.serverError,
-          managerResponse.clientErrors,
+          mrGetAccount.httpStatus,
+          mrGetAccount.serverError,
+          mrGetAccount.clientErrors,
           null,
           null,
         );
@@ -78,10 +73,10 @@ export class AccountsController implements IController {
       // Successful response
       return ResponseUtil.controllerResponse(
         res,
-        managerResponse.httpStatus,
-        managerResponse.serverError,
-        managerResponse.clientErrors,
-        managerResponse.data,
+        mrGetAccount.httpStatus,
+        mrGetAccount.serverError,
+        mrGetAccount.clientErrors,
+        mrGetAccount.data,
         null,
       );
     } catch (error) {

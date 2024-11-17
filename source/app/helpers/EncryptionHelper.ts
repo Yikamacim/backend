@@ -3,7 +3,7 @@ import type { IHelper } from "../interfaces/IHelper";
 
 export class EncryptionHelper implements IHelper {
   public static async encrypt(data: string): Promise<Promise<string>> {
-    const salt: string = await bcrypt.genSalt();
+    const salt = await bcrypt.genSalt();
     return await bcrypt.hash(data, salt);
   }
 

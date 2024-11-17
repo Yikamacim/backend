@@ -14,6 +14,6 @@ export class AccountsResponse implements IResponse {
   }
 
   public static fromModels(models: AccountModel[]): AccountsResponse[] {
-    return models.map((model: AccountModel): AccountsResponse => AccountsResponse.fromModel(model));
+    return models.map((model: AccountModel) => AccountsResponse.fromModel(model));
   }
 }

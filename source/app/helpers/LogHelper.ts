@@ -1,6 +1,8 @@
 import type { IHelper } from "../interfaces/IHelper";
 
 export class LogHelper implements IHelper {
+  private static records: string[] = [];
+
   public static getRecords(): string[] {
     return this.records;
   }
@@ -85,8 +87,7 @@ export class LogHelper implements IHelper {
     return date.toISOString().split(".")[0] + "Z";
   }
 
-  // Records
-  private static records: string[] = [];
+  // >---------------------------------------< ASCII CODES >---------------------------------------<
 
   // ASCII Fundamental Codes
   private static readonly BEGIN = "\x1b[";

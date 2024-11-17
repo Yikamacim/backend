@@ -5,7 +5,7 @@ export class ServerError implements IResponse {
   public readonly message: string;
   public readonly stackTrace: string | null;
 
-  constructor(e: Error) {
+  public constructor(e: Error) {
     this.name = e.name;
     this.message = e.message;
     this.stackTrace = e.stack || null;
@@ -13,14 +13,14 @@ export class ServerError implements IResponse {
 }
 
 export class UnexpectedQueryResultError extends Error {
-  constructor() {
+  public constructor() {
     super("Query result was unexpected. Contact with the developers.");
     this.name = "UnexpectedQueryResultError";
   }
 }
 
 export class ModelMismatchError extends Error {
-  constructor(public readonly model: unknown) {
+  public constructor(public readonly model: unknown) {
     super(
       `Server and database are not agreeing on model. The model was: \n${JSON.stringify(
         model,
@@ -33,8 +33,15 @@ export class ModelMismatchError extends Error {
 }
 
 export class UnexpectedMethodError extends Error {
-  constructor(public readonly method: string) {
+  public constructor(public readonly method: string) {
     super(`Method "${method}" is not expected. Contact with the developers.`);
     this.name = "UnexpectedMethodError";
+  }
+}
+
+export class UnexpectedAuthError extends Error {
+  public constructor() {
+    super("Authentication failed unexpectedly. Contact with the developers.");
+    this.name = "UnexpectedAuthError";
   }
 }

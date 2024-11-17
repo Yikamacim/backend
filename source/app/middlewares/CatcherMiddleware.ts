@@ -7,12 +7,16 @@ import { ResponseUtil } from "../utils/ResponseUtil";
 
 export class CatcherMiddleware implements IMiddleware {
   public static resourceNotFound(
-    _req: ExpressRequest,
+    _: ExpressRequest,
     res: MiddlewareResponse,
-    _next: ExpressNextFunction,
+    next: ExpressNextFunction,
   ): MiddlewareResponse | void {
-    return ResponseUtil.middlewareResponse(res, new HttpStatus(HttpStatusCode.NOT_FOUND), null, [
-      new ClientError(ClientErrorCode.RESOURCE_NOT_FOUND),
-    ]);
+    try {
+      return ResponseUtil.middlewareResponse(res, new HttpStatus(HttpStatusCode.NOT_FOUND), null, [
+        new ClientError(ClientErrorCode.RESOURCE_NOT_FOUND),
+      ]);
+    } catch (error) {
+      return next(error);
+    }
   }
 }

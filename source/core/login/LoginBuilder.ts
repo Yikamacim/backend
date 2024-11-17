@@ -5,15 +5,12 @@ import type { IBuilder } from "../../app/interfaces/IBuilder";
 import { LoginController } from "./LoginController";
 
 export class LoginBuilder implements IBuilder {
-  public static readonly BASE_ROUTE: string = "login";
+  public static readonly BASE_ROUTE = "login";
 
-  public readonly router: Router;
-
-  private readonly mController: LoginController;
-
-  constructor() {
-    this.router = Router();
-    this.mController = new LoginController();
+  public constructor(
+    public readonly router = Router(),
+    private readonly controller = new LoginController(),
+  ) {
     this.buildRoutes();
   }
 
@@ -22,7 +19,7 @@ export class LoginBuilder implements IBuilder {
       this.router,
       { baseRoute: LoginBuilder.BASE_ROUTE, route: "/" },
       Method.POST,
-      this.mController.postLogin.bind(this.mController),
+      this.controller.postLogin.bind(this.controller),
     );
   }
 }

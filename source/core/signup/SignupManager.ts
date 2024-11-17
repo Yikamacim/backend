@@ -1,26 +1,23 @@
-import type { ManagerResponse, ProviderResponse } from "../../@types/responses";
+import type { ManagerResponse } from "../../@types/responses";
 import { EncryptionHelper } from "../../app/helpers/EncryptionHelper";
 import type { IManager } from "../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
-import type { AccountModel } from "../../common/models/AccountModel";
 import { SignupProvider } from "./SignupProvider";
 import type { SignupRequest } from "./schemas/SignupRequest";
 import { SignupResponse } from "./schemas/SignupResponse";
 
 export class SignupManager implements IManager {
-  private readonly mProvider: SignupProvider;
-
-  constructor() {
-    this.mProvider = new SignupProvider();
-  }
+  public constructor(private readonly provider = new SignupProvider()) {}
 
   public async postSignup(
     validatedData: SignupRequest,
   ): Promise<ManagerResponse<SignupResponse | null>> {
-    // Check if account with username already exists
-    if ((await this.mProvider.doesAccountExist(validatedData.username)).data) {
+    // Try to get account
+    const prGetAccount = await this.provider.getAccount(validatedData.username);
+    // Account exists with username, return conflict
+    if (prGetAccount.data) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -28,8 +25,8 @@ export class SignupManager implements IManager {
         null,
       );
     }
-    // Account not found, create one
-    const providerResponse: ProviderResponse<AccountModel> = await this.mProvider.createAccount(
+    // Create account
+    const prCreateAccount = await this.provider.createAccount(
       validatedData.username,
       await EncryptionHelper.encrypt(validatedData.password),
       validatedData.accountType,
@@ -38,7 +35,7 @@ export class SignupManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      SignupResponse.fromModel(providerResponse.data),
+      SignupResponse.fromModel(prCreateAccount.data),
     );
   }
 }

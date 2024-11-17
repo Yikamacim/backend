@@ -12,3 +12,7 @@ export type TokenPayload = {
   accountType: AccountType;
   sessionId: number;
 };
+
+export type AccessTokenPayload = TokenPayload & {
+  isAccessToken: true;
+};

@@ -1,16 +1,19 @@
 import express, { type Express } from "express";
 import { ConfigConstants } from "./app/constants/ConfigConstants";
+import { AccountType } from "./app/enums/AccountType";
 import { EnvironmentHelper } from "./app/helpers/EnvironmentHelper";
 import { LogHelper } from "./app/helpers/LogHelper";
+import { AuthMiddleware } from "./app/middlewares/AuthMiddleware";
 import { CatcherMiddleware } from "./app/middlewares/CatcherMiddleware";
 import { FailureMiddleware } from "./app/middlewares/FailureMiddleware";
 import { LoggerMiddleware } from "./app/middlewares/LoggerMiddleware";
 import { MethodMiddleware } from "./app/middlewares/MethodMiddleware";
 import { PoolTest } from "./app/tests/PoolTest";
+import { EndpointsBuilder } from "./core/_internal/endpoints/EndpointsBuilder";
+import { RecordsBuilder } from "./core/_internal/records/RecordsBuilder";
 import { AccountsBuilder } from "./core/accounts/AccountsBuilder";
-import { EndpointsBuilder } from "./core/endpoints/EndpointsBuilder";
 import { LoginBuilder } from "./core/login/LoginBuilder";
-import { RecordsBuilder } from "./core/records/RecordsBuilder";
+import { MySessionsBuilder } from "./core/my/sessions/MySessionsBuilder";
 import { SignupBuilder } from "./core/signup/SignupBuilder";
 
 // App
@@ -21,28 +24,58 @@ EnvironmentHelper.load();
 
 // Pre-Middlewares
 app.use(express.json());
-app.use(LoggerMiddleware.log);
+app.use(LoggerMiddleware.log.bind(LoggerMiddleware));
 
-// Routes without authentication
+// >-----------------------------------------< ROUTES >-----------------------------------------< //
+
+// AUTHENTICATING ROUTES
 app.use(
+  // api/login
+  `${ConfigConstants.API_PREFIX}/${LoginBuilder.BASE_ROUTE}`,
+  new LoginBuilder().router,
+);
+app.use(
+  // api/signup
+  `${ConfigConstants.API_PREFIX}/${SignupBuilder.BASE_ROUTE}`,
+  new SignupBuilder().router,
+);
+
+// PRIVATE ROUTES
+app.use(
+  // api/my/sessions
+  `${ConfigConstants.API_PREFIX}/${MySessionsBuilder.BASE_ROUTE}`,
+  AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
+  new MySessionsBuilder().router,
+);
+
+// PUBLIC ROUTES
+app.use(
+  // api/accounts
   `${ConfigConstants.API_PREFIX}/${AccountsBuilder.BASE_ROUTE}`,
   new AccountsBuilder().router,
 );
+
+// INTERNAL ROUTES
 app.use(
+  // api/_internal/endpoints
   `${ConfigConstants.API_PREFIX}/${EndpointsBuilder.BASE_ROUTE}`,
   new EndpointsBuilder().router,
 );
-app.use(`${ConfigConstants.API_PREFIX}/${LoginBuilder.BASE_ROUTE}`, new LoginBuilder().router);
-app.use(`${ConfigConstants.API_PREFIX}/${RecordsBuilder.BASE_ROUTE}`, new RecordsBuilder().router);
-app.use(`${ConfigConstants.API_PREFIX}/${SignupBuilder.BASE_ROUTE}`, new SignupBuilder().router);
+app.use(
+  // api/_internal/records
+  `${ConfigConstants.API_PREFIX}/${RecordsBuilder.BASE_ROUTE}`,
+  new RecordsBuilder().router,
+);
+
+// >-----------------------------------------< ROUTES >-----------------------------------------< //
 
 // Post-Middlewares
-app.use("*", MethodMiddleware.methodNotAllowed);
-app.use("*", CatcherMiddleware.resourceNotFound);
-app.use(FailureMiddleware.serverFailure);
+app.use("*", MethodMiddleware.methodNotAllowed.bind(MethodMiddleware));
+app.use("*", CatcherMiddleware.resourceNotFound.bind(CatcherMiddleware));
+app.use(FailureMiddleware.serverFailure.bind(FailureMiddleware));
 
 // Tests
-PoolTest.run();
+void PoolTest.run();
 
 // Server
 app.listen(ConfigConstants.PORT, (): void => {

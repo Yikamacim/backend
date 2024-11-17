@@ -1,7 +1,6 @@
-import type { ManagerResponse, ProviderResponse } from "../../@types/responses";
+import type { ManagerResponse } from "../../@types/responses";
 import { EncryptionHelper } from "../../app/helpers/EncryptionHelper";
 import type { IManager } from "../../app/interfaces/IManager";
-import { AccountModel } from "../../common/models/AccountModel";
 import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
@@ -10,22 +9,16 @@ import type { LoginRequest } from "./schemas/LoginRequest";
 import { LoginResponse } from "./schemas/LoginResponse";
 
 export class LoginManager implements IManager {
-  private readonly mProvider: LoginProvider;
-
-  constructor() {
-    this.mProvider = new LoginProvider();
-  }
+  public constructor(private readonly provider = new LoginProvider()) {}
 
   public async postLogin(
     validatedData: LoginRequest,
   ): Promise<ManagerResponse<LoginResponse | null>> {
     // Try to get account
-    const providerResponse: ProviderResponse<AccountModel | null> = await this.mProvider.getAccount(
-      validatedData.username,
-    );
-    // Check response
+    const providerResponse = await this.provider.getAccount(validatedData.username);
+    // If no account found
     if (!providerResponse.data) {
-      // No account found
+      // Return with error
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,

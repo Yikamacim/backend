@@ -42,11 +42,11 @@ export class EnvironmentHelper implements IHelper {
   }
 
   private constructor(
-    private readonly mJwtSecret: Secret = this.loadJwtSecret(),
-    private readonly mPoolUser: string = this.loadPoolUser(),
-    private readonly mPoolHost: string = this.loadPoolHost(),
-    private readonly mPoolDatabase: string = this.loadPoolDatabase(),
-    private readonly mPoolPort: number = this.loadPoolPort(),
+    private readonly mJwtSecret = this.loadJwtSecret(),
+    private readonly mPoolUser = this.loadPoolUser(),
+    private readonly mPoolHost = this.loadPoolHost(),
+    private readonly mPoolDatabase = this.loadPoolDatabase(),
+    private readonly mPoolPort = this.loadPoolPort(),
   ) {}
 
   private getEnvValue(keyParts: string[], isShared: boolean): string {

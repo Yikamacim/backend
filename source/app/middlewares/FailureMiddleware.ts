@@ -9,16 +9,20 @@ import { ResponseUtil } from "../utils/ResponseUtil";
 export class FailureMiddleware implements IMiddleware {
   public static serverFailure(
     error: Error,
-    _req: ExpressRequest,
+    _: ExpressRequest,
     res: MiddlewareResponse,
-    _next: ExpressNextFunction,
+    next: ExpressNextFunction,
   ): MiddlewareResponse | void {
-    LogHelper.failure(`(Server) ${error.name}`, error.message);
-    return ResponseUtil.middlewareResponse(
-      res,
-      new HttpStatus(HttpStatusCode.INTERNAL_SERVER_ERROR),
-      new ServerError(error),
-      [],
-    );
+    try {
+      LogHelper.failure(`(Server) ${error.name}`, error.message);
+      return ResponseUtil.middlewareResponse(
+        res,
+        new HttpStatus(HttpStatusCode.INTERNAL_SERVER_ERROR),
+        new ServerError(error),
+        [],
+      );
+    } catch (error) {
+      return next(error);
+    }
   }
 }

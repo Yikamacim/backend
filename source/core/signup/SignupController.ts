@@ -1,4 +1,4 @@
-import type { ControllerResponse, ManagerResponse } from "../../@types/responses";
+import type { ControllerResponse } from "../../@types/responses";
 import type { Tokens } from "../../@types/tokens";
 import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers";
 import type { IController } from "../../app/interfaces/IController";
@@ -12,11 +12,7 @@ import { SignupRequest } from "./schemas/SignupRequest";
 import type { SignupResponse } from "./schemas/SignupResponse";
 
 export class SignupController implements IController {
-  private readonly mManager: SignupManager;
-
-  constructor() {
-    this.mManager = new SignupManager();
-  }
+  public constructor(private readonly manager = new SignupManager()) {}
 
   public async postSignup(
     req: ExpressRequest,
@@ -61,37 +57,34 @@ export class SignupController implements IController {
           null,
         );
       }
-      const validatedData: SignupRequest = blueprintData;
-      // HAND OVER TO MANAGER
-      const managerResponse: ManagerResponse<SignupResponse | null> =
-        await this.mManager.postSignup(validatedData);
+      const validatedData = blueprintData;
+      // >-----------< HAND OVER TO MANAGER >-----------<
+      const mrPostSignup = await this.manager.postSignup(validatedData);
       // Check manager response
-      if (!managerResponse.httpStatus.isSuccess() || !managerResponse.data) {
+      if (!mrPostSignup.httpStatus.isSuccess() || !mrPostSignup.data) {
         // Respond without token
         return ResponseUtil.controllerResponse(
           res,
-          managerResponse.httpStatus,
-          managerResponse.serverError,
-          managerResponse.clientErrors,
-          managerResponse.data,
+          mrPostSignup.httpStatus,
+          mrPostSignup.serverError,
+          mrPostSignup.clientErrors,
+          mrPostSignup.data,
           null,
         );
       }
       // Respond with token
       return ResponseUtil.controllerResponse(
         res,
-        managerResponse.httpStatus,
-        managerResponse.serverError,
-        managerResponse.clientErrors,
-        managerResponse.data,
-        await AuthModule.instance
-          .withData({
-            accountId: managerResponse.data.accountId,
-            accountType: managerResponse.data.accountType,
-            deviceName: validatedData.deviceName,
-            sessionKey: validatedData.sessionKey,
-          })
-          .generateTokens(),
+        mrPostSignup.httpStatus,
+        mrPostSignup.serverError,
+        mrPostSignup.clientErrors,
+        mrPostSignup.data,
+        await AuthModule.instance.generate({
+          accountId: mrPostSignup.data.accountId,
+          accountType: mrPostSignup.data.accountType,
+          deviceName: validatedData.deviceName,
+          sessionKey: validatedData.sessionKey,
+        }),
       );
     } catch (error) {
       return next(error);

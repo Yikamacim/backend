@@ -1,45 +1,30 @@
-import type { ControllerResponse, ManagerResponse } from "../../@types/responses";
-import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers";
-import type { IController } from "../../app/interfaces/IController";
-import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import type { ControllerResponse } from "../../../@types/responses";
+import type { ExpressNextFunction, ExpressRequest } from "../../../@types/wrappers";
+import type { IController } from "../../../app/interfaces/IController";
+import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { RecordsManager } from "./RecordsManager";
 import type { RecordsResponse } from "./schemas/RecordsResponse";
 
 export class RecordsController implements IController {
-  private readonly mManager: RecordsManager;
-
-  constructor() {
-    this.mManager = new RecordsManager();
+  public constructor(private readonly manager = new RecordsManager()) {
+    this.manager = new RecordsManager();
   }
 
   public async getRecords(
-    _req: ExpressRequest,
-    res: ControllerResponse<RecordsResponse | null, null>,
+    _: ExpressRequest,
+    res: ControllerResponse<RecordsResponse, null>,
     next: ExpressNextFunction,
-  ): Promise<ControllerResponse<RecordsResponse | null, null> | void> {
+  ): Promise<ControllerResponse<RecordsResponse, null> | void> {
     try {
-      // HAND OVER TO MANAGER
-      const managerResponse: ManagerResponse<RecordsResponse | null> =
-        await this.mManager.getRecords();
-      // Check manager response
-      if (!managerResponse.httpStatus.isSuccess() || !managerResponse.data) {
-        // Unsuccessful response
-        return ResponseUtil.controllerResponse(
-          res,
-          managerResponse.httpStatus,
-          managerResponse.serverError,
-          managerResponse.clientErrors,
-          null,
-          null,
-        );
-      }
+      // >-----------< HAND OVER TO MANAGER >-----------<
+      const mrGetRecords = await this.manager.getRecords();
       // Successful response
       return ResponseUtil.controllerResponse(
         res,
-        managerResponse.httpStatus,
-        managerResponse.serverError,
-        managerResponse.clientErrors,
-        managerResponse.data,
+        mrGetRecords.httpStatus,
+        mrGetRecords.serverError,
+        mrGetRecords.clientErrors,
+        mrGetRecords.data,
         null,
         false,
       );
@@ -55,7 +40,7 @@ export class RecordsController implements IController {
   ): Promise<ControllerResponse<null, null> | void> {
     try {
       // HAND OVER TO MANAGER
-      const managerResponse: ManagerResponse<null> = await this.mManager.deleteRecords();
+      const managerResponse = await this.manager.deleteRecords();
       // Check manager response
       if (!managerResponse.httpStatus.isSuccess()) {
         // Unsuccessful response

@@ -3,7 +3,7 @@ import type { IResponse } from "../../../app/interfaces/IResponse";
 import type { AccountModel } from "../../../common/models/AccountModel";
 
 export class LoginResponse implements IResponse {
-  constructor(
+  public constructor(
     public readonly accountId: number,
     public readonly username: string,
     public readonly accountType: AccountType,
@@ -14,6 +14,6 @@ export class LoginResponse implements IResponse {
   }
 
   public static fromModels(models: AccountModel[]): LoginResponse[] {
-    return models.map((model: AccountModel): LoginResponse => LoginResponse.fromModel(model));
+    return models.map((model: AccountModel) => LoginResponse.fromModel(model));
   }
 }

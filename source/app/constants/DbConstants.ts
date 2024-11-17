@@ -9,7 +9,7 @@ export class DbConstants implements IConstants {
     database: EnvironmentHelper.get().poolDatabase,
     port: EnvironmentHelper.get().poolPort,
   });
-  public static readonly BEGIN: string = "BEGIN";
-  public static readonly COMMIT: string = "COMMIT";
-  public static readonly ROLLBACK: string = "ROLLBACK";
+  public static readonly BEGIN = "BEGIN";
+  public static readonly COMMIT = "COMMIT";
+  public static readonly ROLLBACK = "ROLLBACK";
 }

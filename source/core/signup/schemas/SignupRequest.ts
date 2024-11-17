@@ -7,7 +7,7 @@ import { SessionKeyValidator } from "../../../common/validators/SessionKeyValida
 import { UsernameValidator } from "../../../common/validators/UsernameValidator";
 
 export class SignupRequest implements IRequest {
-  constructor(
+  public constructor(
     public readonly username: string,
     public readonly password: string,
     public readonly accountType: AccountType,
@@ -19,7 +19,7 @@ export class SignupRequest implements IRequest {
     if (typeof obj !== "object" || obj === null) {
       return false;
     }
-    const blueprint: SignupRequest = obj as SignupRequest;
+    const blueprint = obj as SignupRequest;
     return (
       typeof blueprint.username === "string" &&
       typeof blueprint.password === "string" &&
@@ -30,7 +30,7 @@ export class SignupRequest implements IRequest {
   }
 
   public static getValidationErrors(blueprintData: SignupRequest): ClientError[] {
-    const validationErrors: ClientError[] = new Array<ClientError>();
+    const validationErrors = new Array<ClientError>();
     UsernameValidator.validate(blueprintData.username, validationErrors);
     PasswordValidator.validate(blueprintData.password, validationErrors);
     DeviceNameValidator.validate(blueprintData.deviceName, validationErrors);

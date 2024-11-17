@@ -5,15 +5,12 @@ import type { IBuilder } from "../../app/interfaces/IBuilder";
 import { SignupController } from "./SignupController";
 
 export class SignupBuilder implements IBuilder {
-  public static readonly BASE_ROUTE: string = "signup";
+  public static readonly BASE_ROUTE = "signup";
 
-  public readonly router: Router;
-
-  private readonly mController: SignupController;
-
-  constructor() {
-    this.router = Router();
-    this.mController = new SignupController();
+  public constructor(
+    public readonly router = Router(),
+    private readonly controller = new SignupController(),
+  ) {
     this.buildRoutes();
   }
 
@@ -22,7 +19,7 @@ export class SignupBuilder implements IBuilder {
       this.router,
       { baseRoute: SignupBuilder.BASE_ROUTE, route: "/" },
       Method.POST,
-      this.mController.postSignup.bind(this.mController),
+      this.controller.postSignup.bind(this.controller),
     );
   }
 }

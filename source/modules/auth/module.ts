@@ -1,8 +1,5 @@
-import type { SessionData } from "../../@types/sessions";
-import type { Token } from "../../@types/tokens";
 import type { IModule } from "../../app/interfaces/IModule";
-import { TokenGenerator } from "./core/TokenGenerator";
-import { TokenVerifier } from "./core/TokenVerifier";
+import { AuthHandler } from "./core/AuthHandler";
 
 export class AuthModule implements IModule {
   private static sInstance: AuthModule;
@@ -14,13 +11,15 @@ export class AuthModule implements IModule {
     return AuthModule.sInstance;
   }
 
-  private constructor() {}
-
-  public withData(data: SessionData): TokenGenerator {
-    return new TokenGenerator(data);
+  private constructor(private readonly handler = new AuthHandler()) {
+    this.verify = this.handler.verify.bind(this.handler);
+    this.getPayload = this.handler.getPayload.bind(this.handler);
+    this.generate = this.handler.generate.bind(this.handler);
+    this.refresh = this.handler.refresh.bind(this.handler);
   }
 
-  public withToken(token: Token): TokenVerifier {
-    return new TokenVerifier(token);
-  }
+  public verify: typeof this.handler.verify;
+  public getPayload: typeof this.handler.getPayload;
+  public generate: typeof this.handler.generate;
+  public refresh: typeof this.handler.refresh;
 }

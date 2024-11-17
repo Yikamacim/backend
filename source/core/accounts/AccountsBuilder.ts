@@ -5,15 +5,12 @@ import type { IBuilder } from "../../app/interfaces/IBuilder";
 import { AccountsController } from "./AccountsController";
 
 export class AccountsBuilder implements IBuilder {
-  public static readonly BASE_ROUTE: string = "accounts";
+  public static readonly BASE_ROUTE = "accounts";
 
-  public readonly router: Router;
-
-  private readonly mController: AccountsController;
-
-  constructor() {
-    this.router = Router();
-    this.mController = new AccountsController();
+  public constructor(
+    public readonly router = Router(),
+    private readonly controller = new AccountsController(),
+  ) {
     this.buildRoutes();
   }
 
@@ -22,7 +19,7 @@ export class AccountsBuilder implements IBuilder {
       this.router,
       { baseRoute: AccountsBuilder.BASE_ROUTE, route: "/:username" },
       Method.GET,
-      this.mController.getAccount.bind(this.mController),
+      this.controller.getAccount.bind(this.controller),
     );
   }
 }

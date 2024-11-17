@@ -1,4 +1,3 @@
-import type { QueryResult } from "pg";
 import type { ProviderResponse } from "../../@types/responses";
 import { DbConstants } from "../../app/constants/DbConstants";
 import type { AccountType } from "../../app/enums/AccountType";
@@ -6,25 +5,15 @@ import type { IProvider } from "../../app/interfaces/IProvider";
 import { UnexpectedQueryResultError } from "../../app/schemas/ServerError";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
 import { AccountModel } from "../../common/models/AccountModel";
+import { AccountProvider } from "../../common/providers/AccountProvider";
 import { AccountQueries } from "../../common/queries/AccountQueries";
 
 export class SignupProvider implements IProvider {
-  public async doesAccountExist(username: string): Promise<ProviderResponse<boolean>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      const results: QueryResult = await DbConstants.POOL.query(AccountQueries.GET_ACCOUNT_$UNAME, [
-        username,
-      ]);
-      const record: unknown = results.rows[0];
-      if (!record) {
-        return await ResponseUtil.providerResponse(false);
-      }
-      return await ResponseUtil.providerResponse(AccountModel.fromRecord(record) ? true : false);
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
-    }
+  public constructor(private readonly accountProvider = new AccountProvider()) {
+    this.getAccount = this.accountProvider.getAccountByUsername.bind(this.accountProvider);
   }
+
+  public getAccount: typeof this.accountProvider.getAccountByUsername;
 
   public async createAccount(
     username: string,
@@ -33,8 +22,8 @@ export class SignupProvider implements IProvider {
   ): Promise<ProviderResponse<AccountModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results: QueryResult = await DbConstants.POOL.query(
-        AccountQueries.CREATE_ACCOUNT_RT_$UNAME_$PSWRD_$ACTP,
+      const results = await DbConstants.POOL.query(
+        AccountQueries.INSERT_ACCOUNT_RT_$UNAME_$PSWRD_$ACTP,
         [username, password, accountType],
       );
       const record: unknown = results.rows[0];

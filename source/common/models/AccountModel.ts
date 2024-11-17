@@ -31,7 +31,7 @@ export class AccountModel implements IModel {
     if (typeof data !== "object" || data === null) {
       return false;
     }
-    const model: AccountModel = data as AccountModel;
+    const model = data as AccountModel;
     return (
       typeof model.accountId === "number" &&
       typeof model.username === "string" &&
