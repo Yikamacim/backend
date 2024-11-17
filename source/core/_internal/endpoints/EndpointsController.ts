@@ -12,7 +12,7 @@ export class EndpointsController implements IController {
     _: ExpressRequest,
     res: ControllerResponse<EndpointsResponse, null>,
     next: ExpressNextFunction,
-  ): Promise<ControllerResponse<EndpointsResponse, null> | void> {
+  ): Promise<typeof res | void> {
     try {
       // >-----------< HAND OVER TO MANAGER >-----------<
       const mrGetEndpoints = await this.manager.getEndpoints();

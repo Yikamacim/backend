@@ -26,34 +26,7 @@ EnvironmentHelper.load();
 app.use(express.json());
 app.use(LoggerMiddleware.log.bind(LoggerMiddleware));
 
-// >-----------------------------------------< ROUTES >-----------------------------------------< //
-
-// AUTHENTICATING ROUTES
-app.use(
-  // api/login
-  `${ConfigConstants.API_PREFIX}/${LoginBuilder.BASE_ROUTE}`,
-  new LoginBuilder().router,
-);
-app.use(
-  // api/signup
-  `${ConfigConstants.API_PREFIX}/${SignupBuilder.BASE_ROUTE}`,
-  new SignupBuilder().router,
-);
-
-// PRIVATE ROUTES
-app.use(
-  // api/my/sessions
-  `${ConfigConstants.API_PREFIX}/${MySessionsBuilder.BASE_ROUTE}`,
-  AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
-  new MySessionsBuilder().router,
-);
-
-// PUBLIC ROUTES
-app.use(
-  // api/accounts
-  `${ConfigConstants.API_PREFIX}/${AccountsBuilder.BASE_ROUTE}`,
-  new AccountsBuilder().router,
-);
+// >--------------------------------------< ROUTES START >--------------------------------------< //
 
 // INTERNAL ROUTES
 app.use(
@@ -67,7 +40,34 @@ app.use(
   new RecordsBuilder().router,
 );
 
-// >-----------------------------------------< ROUTES >-----------------------------------------< //
+// AUTHENTICATING ROUTES
+app.use(
+  // api/login
+  `${ConfigConstants.API_PREFIX}/${LoginBuilder.BASE_ROUTE}`,
+  new LoginBuilder().router,
+);
+app.use(
+  // api/signup
+  `${ConfigConstants.API_PREFIX}/${SignupBuilder.BASE_ROUTE}`,
+  new SignupBuilder().router,
+);
+
+// PUBLIC ROUTES
+app.use(
+  // api/accounts
+  `${ConfigConstants.API_PREFIX}/${AccountsBuilder.BASE_ROUTE}`,
+  new AccountsBuilder().router,
+);
+
+// PRIVATE ROUTES
+app.use(
+  // api/my/sessions
+  `${ConfigConstants.API_PREFIX}/${MySessionsBuilder.BASE_ROUTE}`,
+  AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
+  new MySessionsBuilder().router,
+);
+
+// >---------------------------------------< ROUTES END >---------------------------------------< //
 
 // Post-Middlewares
 app.use("*", MethodMiddleware.methodNotAllowed.bind(MethodMiddleware));

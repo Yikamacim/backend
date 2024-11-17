@@ -10,7 +10,7 @@ export class CatcherMiddleware implements IMiddleware {
     _: ExpressRequest,
     res: MiddlewareResponse,
     next: ExpressNextFunction,
-  ): MiddlewareResponse | void {
+  ): typeof res | void {
     try {
       return ResponseUtil.middlewareResponse(res, new HttpStatus(HttpStatusCode.NOT_FOUND), null, [
         new ClientError(ClientErrorCode.RESOURCE_NOT_FOUND),

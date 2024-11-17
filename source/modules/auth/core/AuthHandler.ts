@@ -13,9 +13,8 @@ export class AuthHandler implements IHandler {
   public constructor(private readonly provider = new AuthProvider()) {}
 
   public async verify(token: Token): Promise<ClientError[]> {
-    const JWT_SECRET = EnvironmentHelper.get().jwtSecret;
     try {
-      const tokenPayload = jwt.verify(token, JWT_SECRET);
+      const tokenPayload = jwt.verify(token, EnvironmentHelper.get().jwtSecret);
       if (!PayloadHelper.isValidPayload(tokenPayload)) {
         return [new ClientError(ClientErrorCode.INVALID_TOKEN)];
       }
@@ -67,8 +66,7 @@ export class AuthHandler implements IHandler {
    * Call AuthHandler.verify before calling this method.
    */
   public getPayload(token: Token): TokenPayload {
-    const JWT_SECRET = EnvironmentHelper.get().jwtSecret;
-    return jwt.verify(token, JWT_SECRET) as TokenPayload;
+    return jwt.verify(token, EnvironmentHelper.get().jwtSecret) as TokenPayload;
   }
 
   public async generate(sessionData: SessionData): Promise<Tokens> {

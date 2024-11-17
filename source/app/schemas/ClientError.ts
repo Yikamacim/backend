@@ -38,10 +38,11 @@ export enum ClientErrorCode {
   INVALID_TOKEN = 30001,
   EXPIRED_TOKEN = 30002,
   //  *  4XXXX: Session errors
-  INVALID_SESSION_KEY_LENGTH = 40000,
-  INVALID_SESSION_KEY_CONTENT = 40001,
-  INVALID_DEVICE_NAME_LENGTH = 40002,
-  INVALID_DEVICE_NAME_CONTENT = 40003,
+  INVALID_SESSION_ID = 40000,
+  INVALID_SESSION_KEY_LENGTH = 40001,
+  INVALID_SESSION_KEY_CONTENT = 40002,
+  INVALID_DEVICE_NAME_LENGTH = 40003,
+  INVALID_DEVICE_NAME_CONTENT = 40004,
   //  *  5XXXX: Permission errors
   FORBIDDEN_ACCESS = 50000,
 
@@ -92,6 +93,7 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_TOKEN]: "Provided token was invalid.",
   [ClientErrorCode.EXPIRED_TOKEN]: "Provided token has expired.",
   //  *  4XXXX: Session errors
+  [ClientErrorCode.INVALID_SESSION_ID]: "Provided session id was invalid.",
   [ClientErrorCode.INVALID_SESSION_KEY_LENGTH]: `Provided session key wasn't in the length of ${SessionRules.SESSION_KEY_LENGTH}.`,
   [ClientErrorCode.INVALID_SESSION_KEY_CONTENT]: "Provided session key was invalid.",
   [ClientErrorCode.INVALID_DEVICE_NAME_LENGTH]: `Provided device name wasn't in the length range of ${SessionRules.DEVICE_NAME_MIN_LENGTH} to ${SessionRules.DEVICE_NAME_MAX_LENGTH}.`,
@@ -119,7 +121,8 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   //  *  *  802XX: /my/sessions errors
   [ClientErrorCode.SESSION_NOT_FOUND]:
     "Account doesn't have a session with the provided session id.",
-  [ClientErrorCode.CANNOT_DELETE_CURRENT_SESSION]: "Current session can't be deleted.",
+  [ClientErrorCode.CANNOT_DELETE_CURRENT_SESSION]:
+    "Current session can't be deleted. Use logout instead.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

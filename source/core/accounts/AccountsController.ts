@@ -16,8 +16,9 @@ export class AccountsController implements IController {
     req: ExpressRequest,
     res: ControllerResponse<AccountsResponse | null, null>,
     next: ExpressNextFunction,
-  ): Promise<ControllerResponse<AccountsResponse | null, null> | void> {
+  ): Promise<typeof res | void> {
     try {
+      // >----------< REQUEST VALIDATION >----------<
       const preliminaryData: unknown = req.params["username"];
       // V1: Existence validation
       if (!ProtoUtil.isProtovalid(preliminaryData)) {

@@ -12,7 +12,7 @@ export class FailureMiddleware implements IMiddleware {
     _: ExpressRequest,
     res: MiddlewareResponse,
     next: ExpressNextFunction,
-  ): MiddlewareResponse | void {
+  ): typeof res | void {
     try {
       LogHelper.failure(`(Server) ${error.name}`, error.message);
       return ResponseUtil.middlewareResponse(

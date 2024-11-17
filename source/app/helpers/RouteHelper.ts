@@ -1,18 +1,21 @@
 import type { ControllerResponse } from "../../@types/responses";
 import type { Tokens } from "../../@types/tokens";
-import type { FullRoute } from "../../@types/utils";
+import type { FullRoute, Pair } from "../../@types/utils";
 import type { ExpressNextFunction, ExpressRequest, ExpressRouter } from "../../@types/wrappers";
 import { ConfigConstants } from "../constants/ConfigConstants";
 import { Method } from "../enums/Method";
+import { RouteType } from "../enums/RouteType";
 import type { IHelper } from "../interfaces/IHelper";
 import type { IResponse } from "../interfaces/IResponse";
+import { CorruptedRouteInfoError } from "../schemas/ServerError";
 
 export class RouteHelper implements IHelper {
-  private static readonly routeMethodMap = new Map<string, Method[]>();
+  private static readonly routeInfo = new Map<string, Pair<RouteType, Method[]>>();
 
   public static buildRoute<D extends IResponse | null, T extends Tokens | null>(
     router: ExpressRouter,
     fullRoute: FullRoute,
+    type: RouteType,
     method: Method,
     handler: (
       req: ExpressRequest,
@@ -20,55 +23,59 @@ export class RouteHelper implements IHelper {
       next: ExpressNextFunction,
     ) => Promise<ControllerResponse<D, T> | void>,
   ): void {
-    RouteHelper.addRoute(this.concatRoute(fullRoute));
+    const apiRoute = this.concatRoute(fullRoute);
+    if (!RouteHelper.routeInfo.has(apiRoute)) {
+      RouteHelper.addRoute(apiRoute, type);
+    }
     switch (method) {
       case Method.GET:
         router.get(fullRoute.route, handler);
-        RouteHelper.addMethod(this.concatRoute(fullRoute), Method.GET);
+        RouteHelper.addMethod(apiRoute, Method.GET);
         break;
       case Method.POST:
         router.post(fullRoute.route, handler);
-        RouteHelper.addMethod(this.concatRoute(fullRoute), Method.POST);
+        RouteHelper.addMethod(apiRoute, Method.POST);
         break;
       case Method.PUT:
         router.put(fullRoute.route, handler);
-        RouteHelper.addMethod(this.concatRoute(fullRoute), Method.PUT);
+        RouteHelper.addMethod(apiRoute, Method.PUT);
         break;
       case Method.DELETE:
         router.delete(fullRoute.route, handler);
-        RouteHelper.addMethod(this.concatRoute(fullRoute), Method.DELETE);
+        RouteHelper.addMethod(apiRoute, Method.DELETE);
         break;
     }
   }
 
-  public static addRoute(route: string): void {
-    RouteHelper.routeMethodMap.set(route, []);
+  public static addRoute(route: string, type: RouteType): void {
+    RouteHelper.routeInfo.set(route, [type, []]);
   }
 
   public static addMethod(route: string, method: Method): void {
-    const routeMethods: Method[] | undefined = RouteHelper.routeMethodMap.get(route);
-    if (!routeMethods) {
-      RouteHelper.routeMethodMap.set(route, []).get(route)!.push(method);
-    } else {
-      routeMethods.push(method);
+    const routeMethods = RouteHelper.routeInfo.get(route);
+    if (!routeMethods || routeMethods.length !== 2) {
+      throw new CorruptedRouteInfoError(route);
     }
+    routeMethods[1].push(method);
   }
 
   public static getEndpoints(): string[] {
     const endpoints: string[] = [];
-    RouteHelper.routeMethodMap.forEach((methods: Method[], route: string) => {
-      const methodsList = methods.map((method) => `"${method}"`).join(", ");
-      endpoints.push(`Route: "${ConfigConstants.API_PREFIX}/${route}" | Methods: [${methodsList}]`);
+    RouteHelper.routeInfo.forEach((info: Pair<string, Method[]>, route: string) => {
+      const methodsList = info[1].map((method) => `"${method}"`).join(", ");
+      endpoints.push(
+        `Route: "${ConfigConstants.API_PREFIX}/${route}" | Type: ${info[0]} | Methods: [${methodsList}]`,
+      );
     });
     return endpoints;
   }
 
   public static getMethods(url: string): Method[] | null {
-    const route: string = url.replace(`${ConfigConstants.API_PREFIX}/`, "");
-    const routeParts: string[] = route.split("/");
+    const route = url.replace(`${ConfigConstants.API_PREFIX}/`, "");
+    const routeParts = route.split("/");
     let methods: Method[] | null = null;
-    this.routeMethodMap.forEach((apiMethods: Method[], apiRoute: string) => {
-      const apiRouteParts: string[] = apiRoute.split("/").filter((part: string) => part !== "");
+    this.routeInfo.forEach((info: Pair<string, Method[]>, apiRoute: string) => {
+      const apiRouteParts = apiRoute.split("/").filter((part: string) => part !== "");
       if (apiRouteParts.length !== routeParts.length) {
         return;
       }
@@ -82,7 +89,7 @@ export class RouteHelper implements IHelper {
         }
       });
       if (isMatch) {
-        methods = apiMethods;
+        methods = info[1];
         return;
       }
     });

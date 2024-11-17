@@ -14,7 +14,7 @@ export class RecordsController implements IController {
     _: ExpressRequest,
     res: ControllerResponse<RecordsResponse, null>,
     next: ExpressNextFunction,
-  ): Promise<ControllerResponse<RecordsResponse, null> | void> {
+  ): Promise<typeof res | void> {
     try {
       // >-----------< HAND OVER TO MANAGER >-----------<
       const mrGetRecords = await this.manager.getRecords();
@@ -37,9 +37,9 @@ export class RecordsController implements IController {
     _req: ExpressRequest,
     res: ControllerResponse<null, null>,
     next: ExpressNextFunction,
-  ): Promise<ControllerResponse<null, null> | void> {
+  ): Promise<typeof res | void> {
     try {
-      // HAND OVER TO MANAGER
+      // >-----------< HAND OVER TO MANAGER >-----------<
       const managerResponse = await this.manager.deleteRecords();
       // Check manager response
       if (!managerResponse.httpStatus.isSuccess()) {

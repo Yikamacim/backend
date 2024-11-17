@@ -26,8 +26,18 @@ export class MySessionsManager implements IManager {
 
   public async deleteMySessions(
     accountId: number,
+    currentSessionId: number,
     sessionId: number,
   ): Promise<ManagerResponse<null>> {
+    // Check if session is the current session
+    if (sessionId === currentSessionId) {
+      return ResponseUtil.managerResponse(
+        new HttpStatus(HttpStatusCode.CONFLICT),
+        null,
+        [new ClientError(ClientErrorCode.CANNOT_DELETE_CURRENT_SESSION)],
+        null,
+      );
+    }
     // Try to get the account
     const prGetMySession = await this.provider.getMySession(accountId, sessionId);
     // Check if session exists
@@ -36,15 +46,6 @@ export class MySessionsManager implements IManager {
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
         [new ClientError(ClientErrorCode.SESSION_NOT_FOUND)],
-        null,
-      );
-    }
-    // Check if session is the current session
-    if (prGetMySession.data.sessionId === sessionId) {
-      return ResponseUtil.managerResponse(
-        new HttpStatus(HttpStatusCode.CONFLICT),
-        null,
-        [new ClientError(ClientErrorCode.CANNOT_DELETE_CURRENT_SESSION)],
         null,
       );
     }

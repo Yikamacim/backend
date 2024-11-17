@@ -1,0 +1,6 @@
+export enum RouteType {
+  AUTHENTICATING = "AUTHENTICATING",
+  PRIVATE = "PRIVATE",
+  PUBLIC = "PUBLIC",
+  INTERNAL = "INTERNAL",
+}

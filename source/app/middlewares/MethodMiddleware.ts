@@ -13,7 +13,7 @@ export class MethodMiddleware implements IMiddleware {
     req: ExpressRequest,
     res: MiddlewareResponse,
     next: ExpressNextFunction,
-  ): MiddlewareResponse | void {
+  ): typeof res | void {
     try {
       const routeMethods = RouteHelper.getMethods(req.originalUrl);
       if (!routeMethods) {

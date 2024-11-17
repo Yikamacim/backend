@@ -7,15 +7,14 @@ import { AuthConstants } from "../constants/AuthConstants";
 
 export class TokenHelper implements IHelper {
   public static generateTokens(payload: TokenPayload): Tokens {
-    const JWT_SECRET = EnvironmentHelper.get().jwtSecret;
     const accessTokenPayload: AccessTokenPayload = {
       ...payload,
       isAccessToken: true,
     };
-    const accessToken = jwt.sign(accessTokenPayload, JWT_SECRET, {
+    const accessToken = jwt.sign(accessTokenPayload, EnvironmentHelper.get().jwtSecret, {
       expiresIn: AuthConstants.ACCESS_TOKEN_EXPIRATION_TIME,
     });
-    const refreshToken = jwt.sign(payload, JWT_SECRET, {
+    const refreshToken = jwt.sign(payload, EnvironmentHelper.get().jwtSecret, {
       expiresIn: AuthConstants.REFRESH_TOKEN_EXPIRATION_TIME,
     });
     return {

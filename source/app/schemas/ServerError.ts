@@ -45,3 +45,10 @@ export class UnexpectedAuthError extends Error {
     this.name = "UnexpectedAuthError";
   }
 }
+
+export class CorruptedRouteInfoError extends Error {
+  public constructor(public readonly route: string) {
+    super(`Information about route "${route}" is corrupted. Contact with the developers.`);
+    this.name = "CorruptedRouteInfoError";
+  }
+}

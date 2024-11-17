@@ -15,8 +15,9 @@ export class AuthMiddleware {
       req: ExpressRequest,
       res: MiddlewareResponse,
       next: ExpressNextFunction,
-    ): Promise<MiddlewareResponse | void> => {
+    ): Promise<typeof res | void> => {
       try {
+        // >----------< REQUEST VALIDATION >----------<
         const preliminaryData: unknown = req.headers;
         // V1: Existence validation
         if (!ProtoUtil.isProtovalid(preliminaryData)) {
@@ -39,7 +40,7 @@ export class AuthMiddleware {
         }
         const blueprintData: string = protovalidData.authorization!;
         // V3: Physical validation
-        const validationErrors: ClientError[] = HeadersUtil.getAuthValidationErrors(blueprintData);
+        const validationErrors = HeadersUtil.getAuthValidationErrors(blueprintData);
         if (validationErrors.length > 0) {
           return ResponseUtil.middlewareResponse(
             res,

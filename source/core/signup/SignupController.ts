@@ -18,8 +18,9 @@ export class SignupController implements IController {
     req: ExpressRequest,
     res: ControllerResponse<SignupResponse | null, Tokens | null>,
     next: ExpressNextFunction,
-  ): Promise<ControllerResponse<SignupResponse | null, Tokens | null> | void> {
+  ): Promise<typeof res | void> {
     try {
+      // >----------< REQUEST VALIDATION >----------<
       const preliminaryData: unknown = req.body;
       // V1: Existence validation
       if (!ProtoUtil.isProtovalid(preliminaryData)) {

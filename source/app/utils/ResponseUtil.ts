@@ -28,7 +28,7 @@ export class ResponseUtil implements IUtil {
     data: D,
     tokens: T,
     log = true,
-  ): ControllerResponse<DO, TO> {
+  ): typeof res {
     const body = {
       httpStatus,
       serverError,
@@ -54,7 +54,7 @@ export class ResponseUtil implements IUtil {
     httpStatus: HttpStatus,
     serverError: ServerError | null,
     clientErrors: ClientError[],
-  ): MiddlewareResponse {
+  ): typeof res {
     return this.controllerResponse(res, httpStatus, serverError, clientErrors, null, null);
   }
 

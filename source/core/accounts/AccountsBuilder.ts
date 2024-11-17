@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { Method } from "../../app/enums/Method";
+import { RouteType } from "../../app/enums/RouteType";
 import { RouteHelper } from "../../app/helpers/RouteHelper";
 import type { IBuilder } from "../../app/interfaces/IBuilder";
 import { AccountsController } from "./AccountsController";
@@ -18,6 +19,7 @@ export class AccountsBuilder implements IBuilder {
     RouteHelper.buildRoute(
       this.router,
       { baseRoute: AccountsBuilder.BASE_ROUTE, route: "/:username" },
+      RouteType.PUBLIC,
       Method.GET,
       this.controller.getAccount.bind(this.controller),
     );

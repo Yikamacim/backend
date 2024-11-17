@@ -18,8 +18,9 @@ export class LoginController implements IController {
     req: ExpressRequest,
     res: ControllerResponse<LoginResponse | null, Tokens | null>,
     next: ExpressNextFunction,
-  ): Promise<ControllerResponse<LoginResponse | null, Tokens | null> | void> {
+  ): Promise<typeof res | void> {
     try {
+      // >----------< REQUEST VALIDATION >----------<
       const preliminaryData: unknown = req.body;
       // V1: Existence validation
       if (!ProtoUtil.isProtovalid(preliminaryData)) {
