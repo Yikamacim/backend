@@ -5,7 +5,7 @@
 -- Dumped from database version 17.0 (Postgres.app)
 -- Dumped by pg_dump version 17.0 (Postgres.app)
 
--- Started on 2024-10-27 18:50:27 +03
+-- Started on 2024-11-17 17:35:09 +03
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -175,8 +175,7 @@ ALTER TABLE ONLY public."Session" ALTER COLUMN "accountId" SET DEFAULT nextval('
 --
 
 COPY public."Account" ("accountId", username, password, "accountType") FROM stdin;
-8	emrecan	$2b$10$R1aTl8wRg9sxGDRDOp1N6OjkjoXwxe4KgPTpfCq6KM9TI.LWyvebC	USER
-9	emrecans	$2b$10$0mOYAvaWroxPabbEpzSxp.gpMB1vo6hv4jwmq0FLC9sUDpuBu/d/W	USER
+10	postman	$2b$10$rolxLEZMP7ELLZfW/VpCcOyB4gqU1GeoDWXjLdIi2q4w1ik6w3ZtK	USER
 \.
 
 
@@ -187,9 +186,7 @@ COPY public."Account" ("accountId", username, password, "accountType") FROM stdi
 --
 
 COPY public."Session" ("sessionId", "accountId", "deviceName", "sessionKey", "refreshToken", "lastActivityDate") FROM stdin;
-5	9	Mac Studio	01876e626dae1931ede393903b8af7de327b828c52b37113ac3a24f373c1f0c5	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjksImFjY291bnRUeXBlIjoiVVNFUiIsInNlc3Npb25JZCI6NSwiaWF0IjoxNzI5OTY0NzM1LCJleHAiOjE3MzI1NTY3MzV9.FbgO6lQ-JT6yyC9jYzqlzPak0_t0ey45zYKwOg3ezMY	2024-10-26
-4	8	Mac Studio	01876e626dae1931ede393903b8af7de327b828c52b37113ac3a24f373c1f0c5	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjgsImFjY291bnRUeXBlIjoiVVNFUiIsInNlc3Npb25JZCI6NCwiaWF0IjoxNzI5OTY0NzQwLCJleHAiOjE3MzI1NTY3NDB9.fuAGYUs1Q8l1LO5zeUQSqRKOCgop4vVDOiGXpFSrJeE	2024-10-26
-6	8	Mac Studiko	01876e626dae1931ede393903b8af7de327b828c52b37113ac3a24f373c1f0c6	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjgsImFjY291bnRUeXBlIjoiVVNFUiIsInNlc3Npb25JZCI6NiwiaWF0IjoxNzI5OTY0NzcyLCJleHAiOjE3MzI1NTY3NzJ9.H99OLfb4PE9TewRhyPWjf8o_DN5JAoSmEm9WnpiEK0A	2024-10-26
+8	10	Postman Client	01876e626dae1931ede393903b8af7de327b828c52b37113ac3a24f373c1f0c5	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjEwLCJhY2NvdW50VHlwZSI6IlVTRVIiLCJzZXNzaW9uSWQiOjgsImlhdCI6MTczMTg1MzQwMSwiZXhwIjoxNzM0NDQ1NDAxfQ.FtUPXWfpwMEYuans23U4TqjnXeNIDxhNDfDfd6IbG5c	2024-11-17
 \.
 
 
@@ -199,7 +196,7 @@ COPY public."Session" ("sessionId", "accountId", "deviceName", "sessionKey", "re
 -- Name: Account_accountId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
-SELECT pg_catalog.setval('public."Account_accountId_seq"', 9, true);
+SELECT pg_catalog.setval('public."Account_accountId_seq"', 10, true);
 
 
 --
@@ -217,7 +214,7 @@ SELECT pg_catalog.setval('public."Session_accountId_seq"', 1, false);
 -- Name: Session_sessionId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
-SELECT pg_catalog.setval('public."Session_sessionId_seq"', 6, true);
+SELECT pg_catalog.setval('public."Session_sessionId_seq"', 8, true);
 
 
 --
@@ -256,7 +253,7 @@ ALTER TABLE ONLY public."Session"
     ADD CONSTRAINT "Session_Account_fk" FOREIGN KEY ("accountId") REFERENCES public."Account"("accountId");
 
 
--- Completed on 2024-10-27 18:50:27 +03
+-- Completed on 2024-11-17 17:35:10 +03
 
 --
 -- PostgreSQL database dump complete
