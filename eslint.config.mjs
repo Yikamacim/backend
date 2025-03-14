@@ -83,6 +83,7 @@ export default [
         },
       ],
       "@typescript-eslint/prefer-readonly": "error",
+      "@typescript-eslint/consistent-indexed-object-style": "off", // Buna bak
       // ESLint
       curly: "error",
       eqeqeq: "error",
