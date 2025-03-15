@@ -2,18 +2,18 @@ import type { AccountType } from "../../../app/enums/AccountType";
 import type { IResponse } from "../../../app/interfaces/IResponse";
 import type { AccountModel } from "../../../common/models/AccountModel";
 
-export class AccountsResponse implements IResponse {
-  private constructor(
+export class VerifyResponse implements IResponse {
+  public constructor(
     public readonly accountId: number,
     public readonly phone: string,
     public readonly name: string,
     public readonly surname: string,
-    public readonly type: AccountType,
+    public readonly accountType: AccountType,
     public readonly isVerified: boolean,
   ) {}
 
-  public static fromModel(model: AccountModel): AccountsResponse {
-    return new AccountsResponse(
+  public static fromModel(model: AccountModel): VerifyResponse {
+    return new VerifyResponse(
       model.accountId,
       model.phone,
       model.name,
@@ -23,7 +23,7 @@ export class AccountsResponse implements IResponse {
     );
   }
 
-  public static fromModels(models: AccountModel[]): AccountsResponse[] {
-    return models.map((model: AccountModel) => AccountsResponse.fromModel(model));
+  public static fromModels(models: AccountModel[]): VerifyResponse[] {
+    return models.map((model: AccountModel) => VerifyResponse.fromModel(model));
   }
 }

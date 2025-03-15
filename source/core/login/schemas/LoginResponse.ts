@@ -5,12 +5,13 @@ import type { AccountModel } from "../../../common/models/AccountModel";
 export class LoginResponse implements IResponse {
   public constructor(
     public readonly accountId: number,
-    public readonly username: string,
+    public readonly phone: string,
     public readonly accountType: AccountType,
+    public readonly isVerified: boolean,
   ) {}
 
   public static fromModel(model: AccountModel): LoginResponse {
-    return new LoginResponse(model.accountId, model.username, model.accountType);
+    return new LoginResponse(model.accountId, model.phone, model.accountType, model.isVerified);
   }
 
   public static fromModels(models: AccountModel[]): LoginResponse[] {

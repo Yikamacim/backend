@@ -10,21 +10,23 @@ import { AccountQueries } from "../../common/queries/AccountQueries";
 
 export class SignupProvider implements IProvider {
   public constructor(private readonly accountProvider = new AccountProvider()) {
-    this.getAccount = this.accountProvider.getAccountByUsername.bind(this.accountProvider);
+    this.getAccount = this.accountProvider.getAccountByPhone.bind(this.accountProvider);
   }
 
-  public getAccount: typeof this.accountProvider.getAccountByUsername;
+  public getAccount: typeof this.accountProvider.getAccountByPhone;
 
   public async createAccount(
-    username: string,
+    phone: string,
     password: string,
+    name: string,
+    surname: string,
     accountType: AccountType,
   ): Promise<ProviderResponse<AccountModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(
-        AccountQueries.INSERT_ACCOUNT_RT_$UNAME_$PSWRD_$ACTP,
-        [username, password, accountType],
+        AccountQueries.INSERT_ACCOUNT_RT_$PHONE_$PSWRD_$NAME_$SNAME_$ACTP,
+        [phone, password, name, surname, accountType],
       );
       const record: unknown = results.rows[0];
       if (!record) {

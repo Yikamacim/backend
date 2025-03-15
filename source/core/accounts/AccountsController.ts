@@ -19,7 +19,7 @@ export class AccountsController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >----------< REQUEST VALIDATION >----------<
-      const preliminaryData: unknown = req.params["username"];
+      const preliminaryData: unknown = req.params["phone"];
       // V1: Existence validation
       if (!ProtoUtil.isProtovalid(preliminaryData)) {
         return ResponseUtil.controllerResponse(

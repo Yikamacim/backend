@@ -15,7 +15,7 @@ export class SignupManager implements IManager {
     validatedData: SignupRequest,
   ): Promise<ManagerResponse<SignupResponse | null>> {
     // Try to get account
-    const prGetAccount = await this.provider.getAccount(validatedData.username);
+    const prGetAccount = await this.provider.getAccount(validatedData.phone);
     // Account exists with username, return conflict
     if (prGetAccount.data) {
       return ResponseUtil.managerResponse(
@@ -27,8 +27,10 @@ export class SignupManager implements IManager {
     }
     // Create account
     const prCreateAccount = await this.provider.createAccount(
-      validatedData.username,
+      validatedData.phone,
       await EncryptionHelper.encrypt(validatedData.password),
+      validatedData.name,
+      validatedData.surname,
       validatedData.accountType,
     );
     return ResponseUtil.managerResponse(

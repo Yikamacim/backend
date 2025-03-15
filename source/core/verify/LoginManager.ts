@@ -5,15 +5,15 @@ import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
 import { LoginProvider } from "./LoginProvider";
-import type { LoginRequest } from "./schemas/LoginRequest";
-import { LoginResponse } from "./schemas/LoginResponse";
+import type { VerifyRequest } from "./schemas/VerifyRequest";
+import { VerifyResponse } from "./schemas/VerifyResponse";
 
 export class LoginManager implements IManager {
   public constructor(private readonly provider = new LoginProvider()) {}
 
   public async postLogin(
-    validatedData: LoginRequest,
-  ): Promise<ManagerResponse<LoginResponse | null>> {
+    validatedData: VerifyRequest,
+  ): Promise<ManagerResponse<VerifyResponse | null>> {
     // Try to get account
     const providerResponse = await this.provider.getAccount(validatedData.phone);
     // If no account found
@@ -27,7 +27,7 @@ export class LoginManager implements IManager {
       );
     }
     // Account found, check password
-    if (!(await EncryptionHelper.compare(validatedData.password, providerResponse.data.password))) {
+    if (!(await EncryptionHelper.compare(validatedData.code, providerResponse.data.password))) {
       // Passwords don't match
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.UNAUTHORIZED),
@@ -41,7 +41,7 @@ export class LoginManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      LoginResponse.fromModel(providerResponse.data),
+      VerifyResponse.fromModel(providerResponse.data),
     );
   }
 }

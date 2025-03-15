@@ -2,8 +2,8 @@ import type { ProviderResponse } from "../../@types/responses";
 import { DbConstants } from "../../app/constants/DbConstants";
 import type { IProvider } from "../../app/interfaces/IProvider";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
-import { AccountModel } from "../../common/models/AccountModel";
 import { AccountQueries } from "../../common/queries/AccountQueries";
+import { AccountModel } from "../models/AccountModel";
 
 export class AccountProvider implements IProvider {
   public async getAccountById(accountId: number): Promise<ProviderResponse<AccountModel | null>> {
@@ -21,12 +21,10 @@ export class AccountProvider implements IProvider {
     }
   }
 
-  public async getAccountByUsername(
-    username: string,
-  ): Promise<ProviderResponse<AccountModel | null>> {
+  public async getAccountByPhone(phone: string): Promise<ProviderResponse<AccountModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(AccountQueries.GET_ACCOUNT_$UNAME, [username]);
+      const results = await DbConstants.POOL.query(AccountQueries.GET_ACCOUNT_$PHONE, [phone]);
       const record: unknown = results.rows[0];
       if (!record) {
         return await ResponseUtil.providerResponse(null);

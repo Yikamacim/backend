@@ -14,7 +14,7 @@ export class AccountsManager implements IManager {
     validatedData: AccountsParams,
   ): Promise<ManagerResponse<AccountsResponse | null>> {
     // Try to get the account
-    const prGetAccount = await this.provider.getAccount(validatedData.username);
+    const prGetAccount = await this.provider.getAccount(validatedData.phone);
     // If no account found
     if (!prGetAccount.data) {
       // Return with error

@@ -5,9 +5,12 @@ import { ModelMismatchError, UnexpectedQueryResultError } from "../../app/schema
 export class AccountModel implements IModel {
   private constructor(
     public readonly accountId: number,
-    public readonly username: string,
+    public readonly phone: string,
     public readonly password: string,
+    public readonly name: string,
+    public readonly surname: string,
     public readonly accountType: AccountType,
+    public readonly isVerified: boolean,
   ) {}
 
   public static fromRecord(record: unknown): AccountModel {
@@ -17,7 +20,15 @@ export class AccountModel implements IModel {
     if (!this.isValidModel(record)) {
       throw new ModelMismatchError(record);
     }
-    return new AccountModel(record.accountId, record.username, record.password, record.accountType);
+    return new AccountModel(
+      record.accountId,
+      record.phone,
+      record.password,
+      record.name,
+      record.surname,
+      record.accountType,
+      record.isVerified,
+    );
   }
 
   public static fromRecords(records: unknown[]): AccountModel[] {
@@ -34,9 +45,12 @@ export class AccountModel implements IModel {
     const model = data as AccountModel;
     return (
       typeof model.accountId === "number" &&
-      typeof model.username === "string" &&
+      typeof model.phone === "string" &&
       typeof model.password === "string" &&
-      Object.values(AccountType).includes(model.accountType)
+      typeof model.name === "string" &&
+      typeof model.surname === "string" &&
+      Object.values(AccountType).includes(model.accountType) &&
+      typeof model.isVerified === "boolean"
     );
   }
 

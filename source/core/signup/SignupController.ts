@@ -73,19 +73,21 @@ export class SignupController implements IController {
           null,
         );
       }
-      // Respond with token
+      // Respond with or without token
       return ResponseUtil.controllerResponse(
         res,
         mrPostSignup.httpStatus,
         mrPostSignup.serverError,
         mrPostSignup.clientErrors,
         mrPostSignup.data,
-        await AuthModule.instance.generate({
-          accountId: mrPostSignup.data.accountId,
-          accountType: mrPostSignup.data.accountType,
-          deviceName: validatedData.deviceName,
-          sessionKey: validatedData.sessionKey,
-        }),
+        mrPostSignup.data.isVerified
+          ? await AuthModule.instance.generate({
+              accountId: mrPostSignup.data.accountId,
+              accountType: mrPostSignup.data.accountType,
+              deviceName: validatedData.deviceName,
+              sessionKey: validatedData.sessionKey,
+            })
+          : null,
       );
     } catch (error) {
       return next(error);

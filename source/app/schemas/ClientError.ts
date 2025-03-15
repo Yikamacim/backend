@@ -1,5 +1,6 @@
 import { AccountRules } from "../../common/rules/AccountRules";
 import { SessionRules } from "../../common/rules/SessionRules";
+import { VerificationRules } from "../../common/rules/VerificationRules";
 import { AuthConstants } from "../constants/AuthConstants";
 import type { IResponse } from "../interfaces/IResponse";
 
@@ -48,11 +49,17 @@ export enum ClientErrorCode {
 
   // VALIDATION ERRORS (6XXXX - 7XXXX)
   //  *  6XXXX: Length errors
-  INVALID_USERNAME_LENGTH = 60000,
+  INVALID_PHONE_LENGTH = 60000,
   INVALID_PASSWORD_LENGTH = 60001,
+  INVALID_NAME_LENGTH = 60002,
+  INVALID_SURNAME_LENGTH = 60003,
+  INVALID_CODE_LENGTH = 60004,
   //  *  7XXXX: Content errors
-  INVALID_USERNAME_CONTENT = 70002,
+  INVALID_PHONE_CONTENT = 70002,
   INVALID_PASSWORD_CONTENT = 70003,
+  INVALID_NAME_CONTENT = 70004,
+  INVALID_SURNAME_CONTENT = 70005,
+  INVALID_CODE_CONTENT = 70006,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -104,20 +111,26 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
 
   // VALIDATION ERRORS (6XXXX - 7XXXX)
   //  *  6XXXX: Length errors
-  [ClientErrorCode.INVALID_USERNAME_LENGTH]: `Provided username wasn't in the length range of ${AccountRules.USERNAME_MIN_LENGTH} to ${AccountRules.USERNAME_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_PHONE_LENGTH]: `Provided phone wasn't in the length range of ${AccountRules.PHONE_MIN_LENGTH} to ${AccountRules.PHONE_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_PASSWORD_LENGTH]: `Provided password wasn't in the length range of ${AccountRules.PASSWORD_MIN_LENGTH} to ${AccountRules.PASSWORD_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_NAME_LENGTH]: `Provided name wasn't in the length range of ${AccountRules.NAME_MIN_LENGTH} to ${AccountRules.NAME_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_SURNAME_LENGTH]: `Provided surname wasn't in the length range of ${AccountRules.SURNAME_MIN_LENGTH} to ${AccountRules.SURNAME_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_CODE_LENGTH]: `Provided code's length wasn't ${VerificationRules.CODE_LENGTH}.`,
   //  *  7XXXX: Content errors
-  [ClientErrorCode.INVALID_USERNAME_CONTENT]: "Provided username contained invalid characters.",
+  [ClientErrorCode.INVALID_PHONE_CONTENT]: "Provided phone contained invalid characters.",
   [ClientErrorCode.INVALID_PASSWORD_CONTENT]:
     "Provided password didn't satisfy the requirements. A password must contain at least one lowercase letter, one uppercase letter, one digit and one special character.",
+  [ClientErrorCode.INVALID_NAME_CONTENT]: "Provided name contained invalid characters.",
+  [ClientErrorCode.INVALID_SURNAME_CONTENT]: "Provided surname contained invalid characters.",
+  [ClientErrorCode.INVALID_CODE_CONTENT]: "Provided code contained invalid characters.",
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
   //  *  *  800XX: /login errors
-  [ClientErrorCode.NO_ACCOUNT_FOUND]: "No account was found with the provided username.",
+  [ClientErrorCode.NO_ACCOUNT_FOUND]: "No account was found with the provided phone.",
   [ClientErrorCode.INCORRECT_PASSWORD]: "Provided password was incorrect.",
   //  *  *  801XX: /signup errors
-  [ClientErrorCode.ACCOUNT_ALREADY_EXISTS]: "An account already exists with the provided username.",
+  [ClientErrorCode.ACCOUNT_ALREADY_EXISTS]: "An account already exists with the provided phone.",
   //  *  *  802XX: /my/sessions errors
   [ClientErrorCode.SESSION_NOT_FOUND]:
     "Account doesn't have a session with the provided session id.",
