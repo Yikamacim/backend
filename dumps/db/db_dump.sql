@@ -2,15 +2,14 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 17.0 (Postgres.app)
--- Dumped by pg_dump version 17.0 (Postgres.app)
+-- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
+-- Dumped by pg_dump version 16.8 (Debian 16.8-1.pgdg120+1)
 
--- Started on 2024-11-17 17:35:09 +03
+-- Started on 2025-03-15 13:04:50 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -20,7 +19,7 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 853 (class 1247 OID 16406)
+-- TOC entry 846 (class 1247 OID 16387)
 -- Name: AccountType; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
@@ -38,22 +37,25 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 217 (class 1259 OID 16392)
+-- TOC entry 215 (class 1259 OID 16393)
 -- Name: Account; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
 CREATE TABLE public."Account" (
     "accountId" integer NOT NULL,
-    username character varying(16) NOT NULL,
+    phone character varying(15) NOT NULL,
     password character varying(60) NOT NULL,
-    "accountType" public."AccountType" NOT NULL
+    name character varying(50) NOT NULL,
+    surname character varying(50) NOT NULL,
+    "accountType" public."AccountType" NOT NULL,
+    "isVerified" boolean DEFAULT false NOT NULL
 );
 
 
 ALTER TABLE public."Account" OWNER TO "UYikamacim";
 
 --
--- TOC entry 218 (class 1259 OID 16395)
+-- TOC entry 216 (class 1259 OID 16396)
 -- Name: Account_accountId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -69,8 +71,8 @@ CREATE SEQUENCE public."Account_accountId_seq"
 ALTER SEQUENCE public."Account_accountId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3694 (class 0 OID 0)
--- Dependencies: 218
+-- TOC entry 3390 (class 0 OID 0)
+-- Dependencies: 216
 -- Name: Account_accountId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -78,7 +80,7 @@ ALTER SEQUENCE public."Account_accountId_seq" OWNED BY public."Account"."account
 
 
 --
--- TOC entry 221 (class 1259 OID 16429)
+-- TOC entry 217 (class 1259 OID 16397)
 -- Name: Session; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -95,7 +97,7 @@ CREATE TABLE public."Session" (
 ALTER TABLE public."Session" OWNER TO "UYikamacim";
 
 --
--- TOC entry 220 (class 1259 OID 16428)
+-- TOC entry 218 (class 1259 OID 16402)
 -- Name: Session_accountId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -111,8 +113,8 @@ CREATE SEQUENCE public."Session_accountId_seq"
 ALTER SEQUENCE public."Session_accountId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3695 (class 0 OID 0)
--- Dependencies: 220
+-- TOC entry 3391 (class 0 OID 0)
+-- Dependencies: 218
 -- Name: Session_accountId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -120,7 +122,7 @@ ALTER SEQUENCE public."Session_accountId_seq" OWNED BY public."Session"."account
 
 
 --
--- TOC entry 219 (class 1259 OID 16427)
+-- TOC entry 219 (class 1259 OID 16403)
 -- Name: Session_sessionId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -136,7 +138,7 @@ CREATE SEQUENCE public."Session_sessionId_seq"
 ALTER SEQUENCE public."Session_sessionId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3696 (class 0 OID 0)
+-- TOC entry 3392 (class 0 OID 0)
 -- Dependencies: 219
 -- Name: Session_sessionId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
@@ -145,7 +147,46 @@ ALTER SEQUENCE public."Session_sessionId_seq" OWNED BY public."Session"."session
 
 
 --
--- TOC entry 3527 (class 2604 OID 16396)
+-- TOC entry 221 (class 1259 OID 16430)
+-- Name: VerificationCode; Type: TABLE; Schema: public; Owner: UYikamacim
+--
+
+CREATE TABLE public."VerificationCode" (
+    "verificationId" integer NOT NULL,
+    phone character varying(15) NOT NULL,
+    code character varying(6) NOT NULL
+);
+
+
+ALTER TABLE public."VerificationCode" OWNER TO "UYikamacim";
+
+--
+-- TOC entry 220 (class 1259 OID 16429)
+-- Name: verification_verificationid_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
+--
+
+CREATE SEQUENCE public.verification_verificationid_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.verification_verificationid_seq OWNER TO "UYikamacim";
+
+--
+-- TOC entry 3393 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: verification_verificationid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
+--
+
+ALTER SEQUENCE public.verification_verificationid_seq OWNED BY public."VerificationCode"."verificationId";
+
+
+--
+-- TOC entry 3217 (class 2604 OID 16404)
 -- Name: Account accountId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -153,7 +194,7 @@ ALTER TABLE ONLY public."Account" ALTER COLUMN "accountId" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3528 (class 2604 OID 16432)
+-- TOC entry 3219 (class 2604 OID 16405)
 -- Name: Session sessionId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -161,7 +202,7 @@ ALTER TABLE ONLY public."Session" ALTER COLUMN "sessionId" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3529 (class 2604 OID 16433)
+-- TOC entry 3220 (class 2604 OID 16406)
 -- Name: Session accountId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -169,30 +210,46 @@ ALTER TABLE ONLY public."Session" ALTER COLUMN "accountId" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3684 (class 0 OID 16392)
--- Dependencies: 217
+-- TOC entry 3223 (class 2604 OID 16433)
+-- Name: VerificationCode verificationId; Type: DEFAULT; Schema: public; Owner: UYikamacim
+--
+
+ALTER TABLE ONLY public."VerificationCode" ALTER COLUMN "verificationId" SET DEFAULT nextval('public.verification_verificationid_seq'::regclass);
+
+
+--
+-- TOC entry 3378 (class 0 OID 16393)
+-- Dependencies: 215
 -- Data for Name: Account; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
-COPY public."Account" ("accountId", username, password, "accountType") FROM stdin;
-10	postman	$2b$10$rolxLEZMP7ELLZfW/VpCcOyB4gqU1GeoDWXjLdIi2q4w1ik6w3ZtK	USER
+COPY public."Account" ("accountId", phone, password, name, surname, "accountType", "isVerified") FROM stdin;
 \.
 
 
 --
--- TOC entry 3688 (class 0 OID 16429)
--- Dependencies: 221
+-- TOC entry 3380 (class 0 OID 16397)
+-- Dependencies: 217
 -- Data for Name: Session; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
 COPY public."Session" ("sessionId", "accountId", "deviceName", "sessionKey", "refreshToken", "lastActivityDate") FROM stdin;
-8	10	Postman Client	01876e626dae1931ede393903b8af7de327b828c52b37113ac3a24f373c1f0c5	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjEwLCJhY2NvdW50VHlwZSI6IlVTRVIiLCJzZXNzaW9uSWQiOjgsImlhdCI6MTczMTg1MzQwMSwiZXhwIjoxNzM0NDQ1NDAxfQ.FtUPXWfpwMEYuans23U4TqjnXeNIDxhNDfDfd6IbG5c	2024-11-17
 \.
 
 
 --
--- TOC entry 3697 (class 0 OID 0)
--- Dependencies: 218
+-- TOC entry 3384 (class 0 OID 16430)
+-- Dependencies: 221
+-- Data for Name: VerificationCode; Type: TABLE DATA; Schema: public; Owner: UYikamacim
+--
+
+COPY public."VerificationCode" ("verificationId", phone, code) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3394 (class 0 OID 0)
+-- Dependencies: 216
 -- Name: Account_accountId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -200,8 +257,8 @@ SELECT pg_catalog.setval('public."Account_accountId_seq"', 10, true);
 
 
 --
--- TOC entry 3698 (class 0 OID 0)
--- Dependencies: 220
+-- TOC entry 3395 (class 0 OID 0)
+-- Dependencies: 218
 -- Name: Session_accountId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -209,7 +266,7 @@ SELECT pg_catalog.setval('public."Session_accountId_seq"', 1, false);
 
 
 --
--- TOC entry 3699 (class 0 OID 0)
+-- TOC entry 3396 (class 0 OID 0)
 -- Dependencies: 219
 -- Name: Session_sessionId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
@@ -218,7 +275,25 @@ SELECT pg_catalog.setval('public."Session_sessionId_seq"', 8, true);
 
 
 --
--- TOC entry 3533 (class 2606 OID 16398)
+-- TOC entry 3397 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: verification_verificationid_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
+--
+
+SELECT pg_catalog.setval('public.verification_verificationid_seq', 1, false);
+
+
+--
+-- TOC entry 3225 (class 2606 OID 16423)
+-- Name: Account Account_phone_uk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
+--
+
+ALTER TABLE ONLY public."Account"
+    ADD CONSTRAINT "Account_phone_uk" UNIQUE (phone);
+
+
+--
+-- TOC entry 3227 (class 2606 OID 16408)
 -- Name: Account Account_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -227,16 +302,7 @@ ALTER TABLE ONLY public."Account"
 
 
 --
--- TOC entry 3535 (class 2606 OID 16404)
--- Name: Account Account_username_uk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
---
-
-ALTER TABLE ONLY public."Account"
-    ADD CONSTRAINT "Account_username_uk" UNIQUE (username);
-
-
---
--- TOC entry 3537 (class 2606 OID 16437)
+-- TOC entry 3229 (class 2606 OID 16412)
 -- Name: Session Session_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -245,7 +311,25 @@ ALTER TABLE ONLY public."Session"
 
 
 --
--- TOC entry 3538 (class 2606 OID 16438)
+-- TOC entry 3231 (class 2606 OID 16437)
+-- Name: VerificationCode VerificationCode_phone_uk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
+--
+
+ALTER TABLE ONLY public."VerificationCode"
+    ADD CONSTRAINT "VerificationCode_phone_uk" UNIQUE (phone);
+
+
+--
+-- TOC entry 3233 (class 2606 OID 16435)
+-- Name: VerificationCode VerificationCode_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
+--
+
+ALTER TABLE ONLY public."VerificationCode"
+    ADD CONSTRAINT "VerificationCode_pk" PRIMARY KEY ("verificationId");
+
+
+--
+-- TOC entry 3234 (class 2606 OID 16413)
 -- Name: Session Session_Account_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -253,7 +337,7 @@ ALTER TABLE ONLY public."Session"
     ADD CONSTRAINT "Session_Account_fk" FOREIGN KEY ("accountId") REFERENCES public."Account"("accountId");
 
 
--- Completed on 2024-11-17 17:35:10 +03
+-- Completed on 2025-03-15 13:04:51 UTC
 
 --
 -- PostgreSQL database dump complete

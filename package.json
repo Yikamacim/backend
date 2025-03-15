@@ -34,7 +34,7 @@
     "db-init": "docker run --name yikamacim-db -e POSTGRES_USER=UYikamacim -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres:16",
     "db-rm": "docker rm yikamacim-db",
     "db-in-docker": "docker exec yikamacim-db psql --host=localhost --port=5432 --username=UYikamacim --dbname=postgres --command=\"DROP DATABASE IF EXISTS \\\"DYikamacim\\\";\" && docker exec yikamacim-db psql --host=localhost --port=5432 --username=UYikamacim --dbname=postgres --command=\"CREATE DATABASE \\\"DYikamacim\\\";\" && cat ./dumps/db/db_dump.sql | docker exec -i yikamacim-db psql --host=localhost --port=5432 --username=UYikamacim --dbname=DYikamacim",
-    "db-out": "pg_dump --host=localhost --port=5432 --username=UYikamacim --verbose --dbname=DYikamacim --format=plain --blobs --file=./dumps/db/db_dump.sql",
+    "db-out": "docker exec yikamacim-db pg_dump --host=localhost --port=5432 --username=UYikamacim --verbose --dbname=DYikamacim --format=plain --blobs > ./dumps/db/db_dump.sql",
     "db-in": "psql --host=yikamacim-db.czggso0ksewe.eu-central-1.rds.amazonaws.com --port=5432 --username=UYikamacim --dbname=postgres --command=\"DROP DATABASE IF EXISTS \\\"DYikamacim\\\";\" && psql --host=yikamacim-db.czggso0ksewe.eu-central-1.rds.amazonaws.com --port=5432 --username=UYikamacim --dbname=postgres --command=\"CREATE DATABASE \\\"DYikamacim\\\";\" && psql --host=yikamacim-db.czggso0ksewe.eu-central-1.rds.amazonaws.com --port=5432 --username=UYikamacim --dbname=DYikamacim --file=./dumps/db/db_dump.sql",
     "start-devt": "node ./out/main.js",
     "start-prod": "pm2 start ./out/main.js -- --production",
