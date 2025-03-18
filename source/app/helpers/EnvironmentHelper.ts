@@ -25,6 +25,18 @@ export class EnvironmentHelper implements IHelper {
     return this.mJwtSecret;
   }
 
+  public get twilioAccountSid(): string {
+    return this.mTwilioAccountSid;
+  }
+
+  public get twilioAuthToken(): string {
+    return this.mTwilioAuthToken;
+  }
+
+  public get twilioPhoneNumber(): string {
+    return this.mTwilioPhoneNumber;
+  }
+
   public get poolUser(): string {
     return this.mPoolUser;
   }
@@ -43,6 +55,9 @@ export class EnvironmentHelper implements IHelper {
 
   private constructor(
     private readonly mJwtSecret = this.loadJwtSecret(),
+    private readonly mTwilioAccountSid = this.loadTwilioAccountSid(),
+    private readonly mTwilioAuthToken = this.loadTwilioAuthToken(),
+    private readonly mTwilioPhoneNumber = this.loadTwilioPhoneNumber(),
     private readonly mPoolUser = this.loadPoolUser(),
     private readonly mPoolHost = this.loadPoolHost(),
     private readonly mPoolDatabase = this.loadPoolDatabase(),
@@ -60,6 +75,27 @@ export class EnvironmentHelper implements IHelper {
       envValue += valuePart;
     }
     return envValue;
+  }
+
+  private loadTwilioAccountSid(): string {
+    const encoded = this.getEnvValue(
+      ["TXJK_IKJH", "TYXK_ILFT", "TKRX_IPVR", "TBZK_IXZG", "TEQL_ICXN"],
+      true,
+    );
+    return Buffer.from(encoded, "base64url").toString("utf-8");
+  }
+
+  private loadTwilioAuthToken(): string {
+    const encoded = this.getEnvValue(
+      ["TXLO_TKVN", "TYXZ_TNLI", "TAQX_TKZP", "TNME_TXGH", "TEQZ_TFXA"],
+      true,
+    );
+    return Buffer.from(encoded, "base64url").toString("utf-8");
+  }
+
+  private loadTwilioPhoneNumber(): string {
+    const encoded = this.getEnvValue(["TXRA_PKZC", "TVXA_PHFZ"], true);
+    return Buffer.from(encoded, "base64url").toString("utf-8");
   }
 
   private loadJwtSecret(): Secret {

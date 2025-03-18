@@ -11,10 +11,12 @@ import { MethodMiddleware } from "./app/middlewares/MethodMiddleware";
 import { PoolTest } from "./app/tests/PoolTest";
 import { EndpointsBuilder } from "./core/_internal/endpoints/EndpointsBuilder";
 import { RecordsBuilder } from "./core/_internal/records/RecordsBuilder";
+import { AccessBuilder } from "./core/access/AccessBuilder";
 import { AccountsBuilder } from "./core/accounts/AccountsBuilder";
 import { LoginBuilder } from "./core/login/LoginBuilder";
 import { MySessionsBuilder } from "./core/my/sessions/MySessionsBuilder";
 import { SignupBuilder } from "./core/signup/SignupBuilder";
+import { SmsModule } from "./modules/sms/module";
 
 // App
 const app: Express = express();
@@ -61,6 +63,12 @@ app.use(
 
 // PRIVATE ROUTES
 app.use(
+  // api/access
+  `${ConfigConstants.API_PREFIX}/${AccessBuilder.BASE_ROUTE}`,
+  AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
+  new AccessBuilder().router,
+);
+app.use(
   // api/my/sessions
   `${ConfigConstants.API_PREFIX}/${MySessionsBuilder.BASE_ROUTE}`,
   AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
@@ -78,6 +86,7 @@ app.use(FailureMiddleware.serverFailure.bind(FailureMiddleware));
 void PoolTest.run();
 
 // Server
-app.listen(ConfigConstants.PORT, (): void => {
+app.listen(ConfigConstants.PORT, async (): Promise<void> => {
+  await SmsModule.instance.send();
   LogHelper.progress(`Server listening on port ${ConfigConstants.PORT}...`);
 });
