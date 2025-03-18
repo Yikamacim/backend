@@ -16,7 +16,6 @@ import { AccountsBuilder } from "./core/accounts/AccountsBuilder";
 import { LoginBuilder } from "./core/login/LoginBuilder";
 import { MySessionsBuilder } from "./core/my/sessions/MySessionsBuilder";
 import { SignupBuilder } from "./core/signup/SignupBuilder";
-import { SmsModule } from "./modules/sms/module";
 
 // App
 const app: Express = express();
@@ -86,7 +85,7 @@ app.use(FailureMiddleware.serverFailure.bind(FailureMiddleware));
 void PoolTest.run();
 
 // Server
-app.listen(ConfigConstants.PORT, async (): Promise<void> => {
-  await SmsModule.instance.send();
+app.listen(ConfigConstants.PORT, (): void => {
+  // await SmsModule.instance.send();
   LogHelper.progress(`Server listening on port ${ConfigConstants.PORT}...`);
 });
