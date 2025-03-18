@@ -48,6 +48,8 @@ export class VerifyController implements IController {
         );
       }
       const blueprintData: VerifyParams = protovalidData;
+      // Add + sign to phone
+      blueprintData.phone = `+${blueprintData.phone}`;
       // V3: Physical validation
       const validationErrors = VerifyParams.getValidationErrors(blueprintData);
       if (validationErrors.length > 0) {

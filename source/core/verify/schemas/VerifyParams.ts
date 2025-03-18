@@ -3,7 +3,7 @@ import type { ClientError } from "../../../app/schemas/ClientError";
 import { PhoneValidator } from "../../../common/validators/PhoneValidator";
 
 export class VerifyParams implements IParams {
-  private constructor(public readonly phone: string) {}
+  private constructor(public phone: string) {}
 
   public static isBlueprint(data: unknown): data is VerifyParams {
     if (typeof data !== "object" || data === null) {
