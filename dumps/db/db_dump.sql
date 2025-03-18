@@ -5,7 +5,7 @@
 -- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
 -- Dumped by pg_dump version 16.8 (Debian 16.8-1.pgdg120+1)
 
--- Started on 2025-03-15 13:04:50 UTC
+-- Started on 2025-03-18 13:02:48 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -148,17 +148,18 @@ ALTER SEQUENCE public."Session_sessionId_seq" OWNED BY public."Session"."session
 
 --
 -- TOC entry 221 (class 1259 OID 16430)
--- Name: VerificationCode; Type: TABLE; Schema: public; Owner: UYikamacim
+-- Name: Verification; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
-CREATE TABLE public."VerificationCode" (
+CREATE TABLE public."Verification" (
     "verificationId" integer NOT NULL,
     phone character varying(15) NOT NULL,
-    code character varying(6) NOT NULL
+    code character varying(6) NOT NULL,
+    "sentAt" timestamp without time zone NOT NULL
 );
 
 
-ALTER TABLE public."VerificationCode" OWNER TO "UYikamacim";
+ALTER TABLE public."Verification" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 220 (class 1259 OID 16429)
@@ -182,7 +183,7 @@ ALTER SEQUENCE public.verification_verificationid_seq OWNER TO "UYikamacim";
 -- Name: verification_verificationid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
-ALTER SEQUENCE public.verification_verificationid_seq OWNED BY public."VerificationCode"."verificationId";
+ALTER SEQUENCE public.verification_verificationid_seq OWNED BY public."Verification"."verificationId";
 
 
 --
@@ -211,10 +212,10 @@ ALTER TABLE ONLY public."Session" ALTER COLUMN "accountId" SET DEFAULT nextval('
 
 --
 -- TOC entry 3223 (class 2604 OID 16433)
--- Name: VerificationCode verificationId; Type: DEFAULT; Schema: public; Owner: UYikamacim
+-- Name: Verification verificationId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
-ALTER TABLE ONLY public."VerificationCode" ALTER COLUMN "verificationId" SET DEFAULT nextval('public.verification_verificationid_seq'::regclass);
+ALTER TABLE ONLY public."Verification" ALTER COLUMN "verificationId" SET DEFAULT nextval('public.verification_verificationid_seq'::regclass);
 
 
 --
@@ -224,6 +225,7 @@ ALTER TABLE ONLY public."VerificationCode" ALTER COLUMN "verificationId" SET DEF
 --
 
 COPY public."Account" ("accountId", phone, password, name, surname, "accountType", "isVerified") FROM stdin;
+11	+905331991562	$2b$10$6DQRvLxWf/8UXXiDwaKA.uVNHYfbylrM.F8OmhtvA3PviEjXlruEG	Veysel Karani	Saydam	USER	f
 \.
 
 
@@ -240,10 +242,11 @@ COPY public."Session" ("sessionId", "accountId", "deviceName", "sessionKey", "re
 --
 -- TOC entry 3384 (class 0 OID 16430)
 -- Dependencies: 221
--- Data for Name: VerificationCode; Type: TABLE DATA; Schema: public; Owner: UYikamacim
+-- Data for Name: Verification; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
-COPY public."VerificationCode" ("verificationId", phone, code) FROM stdin;
+COPY public."Verification" ("verificationId", phone, code, "sentAt") FROM stdin;
+1	+905331991562	710746	2025-03-18 15:31:54.931
 \.
 
 
@@ -253,7 +256,7 @@ COPY public."VerificationCode" ("verificationId", phone, code) FROM stdin;
 -- Name: Account_accountId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
-SELECT pg_catalog.setval('public."Account_accountId_seq"', 10, true);
+SELECT pg_catalog.setval('public."Account_accountId_seq"', 11, true);
 
 
 --
@@ -280,7 +283,7 @@ SELECT pg_catalog.setval('public."Session_sessionId_seq"', 8, true);
 -- Name: verification_verificationid_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
-SELECT pg_catalog.setval('public.verification_verificationid_seq', 1, false);
+SELECT pg_catalog.setval('public.verification_verificationid_seq', 1, true);
 
 
 --
@@ -312,20 +315,20 @@ ALTER TABLE ONLY public."Session"
 
 --
 -- TOC entry 3231 (class 2606 OID 16437)
--- Name: VerificationCode VerificationCode_phone_uk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
+-- Name: Verification Verification_phone_uk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
-ALTER TABLE ONLY public."VerificationCode"
-    ADD CONSTRAINT "VerificationCode_phone_uk" UNIQUE (phone);
+ALTER TABLE ONLY public."Verification"
+    ADD CONSTRAINT "Verification_phone_uk" UNIQUE (phone);
 
 
 --
 -- TOC entry 3233 (class 2606 OID 16435)
--- Name: VerificationCode VerificationCode_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
+-- Name: Verification Verification_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
-ALTER TABLE ONLY public."VerificationCode"
-    ADD CONSTRAINT "VerificationCode_pk" PRIMARY KEY ("verificationId");
+ALTER TABLE ONLY public."Verification"
+    ADD CONSTRAINT "Verification_pk" PRIMARY KEY ("verificationId");
 
 
 --
@@ -337,7 +340,7 @@ ALTER TABLE ONLY public."Session"
     ADD CONSTRAINT "Session_Account_fk" FOREIGN KEY ("accountId") REFERENCES public."Account"("accountId");
 
 
--- Completed on 2025-03-15 13:04:51 UTC
+-- Completed on 2025-03-18 13:02:48 UTC
 
 --
 -- PostgreSQL database dump complete
