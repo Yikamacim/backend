@@ -25,7 +25,7 @@ export class SignupProvider implements IProvider {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       // WHAT IS THIS SHIT
-      if (phone !== "+905331991562") {
+      if (phone === "+905331991562") {
         const results = await DbConstants.POOL.query(
           AccountQueries.INSERT_ACCOUNT_RT_$PHONE_$PSWRD_$NAME_$SNAME_$ACTP,
           [phone, password, name, surname, accountType],
