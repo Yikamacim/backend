@@ -18,6 +18,13 @@ export class VerifyBuilder implements IBuilder {
   private buildRoutes(): void {
     RouteHelper.buildRoute(
       this.router,
+      { baseRoute: VerifyBuilder.BASE_ROUTE, route: "/:phone" },
+      RouteType.PUBLIC,
+      Method.GET,
+      this.controller.postVerify.bind(this.controller),
+    );
+    RouteHelper.buildRoute(
+      this.router,
       { baseRoute: VerifyBuilder.BASE_ROUTE, route: "/" },
       RouteType.AUTHENTICATING,
       Method.POST,

@@ -60,7 +60,7 @@ export class MySessionsController implements IController {
     }
   }
 
-  public async deleteMySessions(
+  public async deleteMySessions$sessionId(
     req: ExpressRequest,
     res: ControllerResponse<null, Tokens | null>,
     next: ExpressNextFunction,
@@ -112,7 +112,7 @@ export class MySessionsController implements IController {
       }
       const validatedData = blueprintData;
       // >----------< HAND OVER TO MANAGER >----------<
-      const mrDeleteMySessions = await this.manager.deleteMySessions(
+      const mrDeleteMySessions = await this.manager.deleteMySessions$sessionId(
         tokenPayload.accountId,
         tokenPayload.sessionId,
         parseInt(validatedData.sessionId),

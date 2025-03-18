@@ -24,7 +24,7 @@ export class MySessionsManager implements IManager {
     );
   }
 
-  public async deleteMySessions(
+  public async deleteMySessions$sessionId(
     accountId: number,
     currentSessionId: number,
     sessionId: number,

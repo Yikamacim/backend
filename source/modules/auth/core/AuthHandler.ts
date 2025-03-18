@@ -87,4 +87,8 @@ export class AuthHandler implements IHandler {
       })
     ).data;
   }
+
+  public async revoke(tokenPayload: TokenPayload): Promise<void> {
+    await this.provider.deleteSession(tokenPayload.sessionId);
+  }
 }

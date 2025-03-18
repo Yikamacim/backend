@@ -57,6 +57,17 @@ export class AuthProvider implements IProvider {
     }
   }
 
+  public async deleteSession(sessionId: number): Promise<ProviderResponse<null>> {
+    await DbConstants.POOL.query(DbConstants.BEGIN);
+    try {
+      await DbConstants.POOL.query(SessionQueries.DELETE_SESSION_$SSID, [sessionId]);
+      return await ResponseUtil.providerResponse(null);
+    } catch (error) {
+      await DbConstants.POOL.query(DbConstants.ROLLBACK);
+      throw error;
+    }
+  }
+
   // >-----------------------------------< PRIVATE METHODS >------------------------------------< //
 
   private async createSession(sessionData: SessionData): Promise<Tokens> {

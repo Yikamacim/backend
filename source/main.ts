@@ -14,8 +14,10 @@ import { RecordsBuilder } from "./core/_internal/records/RecordsBuilder";
 import { AccessBuilder } from "./core/access/AccessBuilder";
 import { AccountsBuilder } from "./core/accounts/AccountsBuilder";
 import { LoginBuilder } from "./core/login/LoginBuilder";
+import { LogoutBuilder } from "./core/logout/LogoutBuilder";
 import { MySessionsBuilder } from "./core/my/sessions/MySessionsBuilder";
 import { SignupBuilder } from "./core/signup/SignupBuilder";
+import { VerifyBuilder } from "./core/verify/VerifyBuilder";
 
 // App
 const app: Express = express();
@@ -52,6 +54,11 @@ app.use(
   `${ConfigConstants.API_PREFIX}/${SignupBuilder.BASE_ROUTE}`,
   new SignupBuilder().router,
 );
+app.use(
+  // api/verify
+  `${ConfigConstants.API_PREFIX}/${VerifyBuilder.BASE_ROUTE}`,
+  new VerifyBuilder().router,
+);
 
 // PUBLIC ROUTES
 app.use(
@@ -73,6 +80,12 @@ app.use(
   AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
   new MySessionsBuilder().router,
 );
+app.use(
+  // api/logout
+  `${ConfigConstants.API_PREFIX}/${LogoutBuilder.BASE_ROUTE}`,
+  AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
+  new LogoutBuilder().router,
+);
 
 // >---------------------------------------< ROUTES END >---------------------------------------< //
 
@@ -86,6 +99,5 @@ void PoolTest.run();
 
 // Server
 app.listen(ConfigConstants.PORT, (): void => {
-  // await SmsModule.instance.send();
   LogHelper.progress(`Server listening on port ${ConfigConstants.PORT}...`);
 });

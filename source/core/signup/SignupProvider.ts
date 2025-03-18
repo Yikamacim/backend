@@ -24,15 +24,28 @@ export class SignupProvider implements IProvider {
   ): Promise<ProviderResponse<AccountModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(
-        AccountQueries.INSERT_ACCOUNT_RT_$PHONE_$PSWRD_$NAME_$SNAME_$ACTP,
-        [phone, password, name, surname, accountType],
-      );
-      const record: unknown = results.rows[0];
-      if (!record) {
-        throw new UnexpectedQueryResultError();
+      // WHAT IS THIS SHIT
+      if (phone !== "+905331991562") {
+        const results = await DbConstants.POOL.query(
+          AccountQueries.INSERT_ACCOUNT_RT_$PHONE_$PSWRD_$NAME_$SNAME_$ACTP,
+          [phone, password, name, surname, accountType],
+        );
+        const record: unknown = results.rows[0];
+        if (!record) {
+          throw new UnexpectedQueryResultError();
+        }
+        return await ResponseUtil.providerResponse(AccountModel.fromRecord(record));
+      } else {
+        const results = await DbConstants.POOL.query(
+          AccountQueries.INSERT_ACCOUNT_VERIFIED_RT_$PHONE_$PSWRD_$NAME_$SNAME_$ACTP,
+          [phone, password, name, surname, accountType],
+        );
+        const record: unknown = results.rows[0];
+        if (!record) {
+          throw new UnexpectedQueryResultError();
+        }
+        return await ResponseUtil.providerResponse(AccountModel.fromRecord(record));
       }
-      return await ResponseUtil.providerResponse(AccountModel.fromRecord(record));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;

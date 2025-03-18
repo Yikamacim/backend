@@ -28,7 +28,7 @@ export class MySessionsBuilder implements IBuilder {
       { baseRoute: MySessionsBuilder.BASE_ROUTE, route: "/:sessionId" },
       RouteType.PRIVATE,
       Method.DELETE,
-      this.controller.deleteMySessions.bind(this.controller),
+      this.controller.deleteMySessions$sessionId.bind(this.controller),
     );
   }
 }

@@ -71,6 +71,11 @@ export enum ClientErrorCode {
   //  *  *  802XX: /my/sessions errors
   SESSION_NOT_FOUND = 80200,
   CANNOT_DELETE_CURRENT_SESSION = 80201,
+  //  *  *  803XX: /verify errors
+  PHONE_ALREADY_VERIFIED = 80300,
+  CODE_NOT_EXPIRED = 80301,
+  CODE_EXPIRED = 80302,
+  INVALID_CODE = 80303,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -136,6 +141,11 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
     "Account doesn't have a session with the provided session id.",
   [ClientErrorCode.CANNOT_DELETE_CURRENT_SESSION]:
     "Current session can't be deleted. Use logout instead.",
+  //  *  *  803XX: /verify errors
+  [ClientErrorCode.PHONE_ALREADY_VERIFIED]: "Provided phone is already verified.",
+  [ClientErrorCode.CODE_NOT_EXPIRED]: "Code hasn't expired yet.",
+  [ClientErrorCode.CODE_EXPIRED]: "Code has expired.",
+  [ClientErrorCode.INVALID_CODE]: "Provided code was incorrect.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };
