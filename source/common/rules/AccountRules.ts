@@ -3,7 +3,7 @@ import type { IRules } from "../../app/interfaces/IRules";
 export class AccountRules implements IRules {
   public static readonly PHONE_MIN_LENGTH = 10;
   public static readonly PHONE_MAX_LENGTH = 15;
-  public static readonly PHONE_REGEX = /^\+?[1-9]\d{1,14}$/u;
+  public static readonly PHONE_REGEX = /^\+[1-9]\d{1,14}$/u;
 
   public static readonly PASSWORD_MIN_LENGTH = 4;
   public static readonly PASSWORD_MAX_LENGTH = Number.MAX_SAFE_INTEGER;
