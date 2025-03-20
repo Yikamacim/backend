@@ -25,3 +25,25 @@ export class LogoutBuilder implements IBuilder {
     );
   }
 }
+
+
+
+/*
+
+public requestWithTokenCheck(request: Function) {
+  const response = request();
+
+  if (response.status === 401) {
+    const verifyResponse = verifyTokens();
+    if (verifyResponse.status !== 200) {
+      logout();
+    }
+
+    return request();
+  }
+
+  return response;
+}
+
+
+*/
