@@ -41,7 +41,7 @@ export class VerifyProvider implements IProvider {
         phone,
       ]);
       const record: unknown = results.rows[0];
-      // There is not a record
+      // No record exist with the phone number
       if (!record) {
         return await ResponseUtil.providerResponse(true);
       }

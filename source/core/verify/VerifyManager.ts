@@ -72,7 +72,7 @@ export class VerifyManager implements IManager {
       );
     }
     // Check if verification code expired
-    if (await this.provider.isCodeExpired(validatedData.phone)) {
+    if ((await this.provider.isCodeExpired(validatedData.phone)).data) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.FORBIDDEN),
         null,
