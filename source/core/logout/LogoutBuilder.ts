@@ -20,30 +20,8 @@ export class LogoutBuilder implements IBuilder {
       this.router,
       { baseRoute: LogoutBuilder.BASE_ROUTE, route: "/" },
       RouteType.PRIVATE,
-      Method.GET,
+      Method.DELETE,
       this.controller.postLogin.bind(this.controller),
     );
   }
 }
-
-
-
-/*
-
-public requestWithTokenCheck(request: Function) {
-  const response = request();
-
-  if (response.status === 401) {
-    const verifyResponse = verifyTokens();
-    if (verifyResponse.status !== 200) {
-      logout();
-    }
-
-    return request();
-  }
-
-  return response;
-}
-
-
-*/
