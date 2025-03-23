@@ -31,7 +31,7 @@ export class AccountsController implements IController {
           null,
         );
       }
-      const protovalidData: unknown = { username: preliminaryData };
+      const protovalidData: unknown = { phone: preliminaryData };
       // V2: Schematic validation
       if (!AccountsParams.isBlueprint(protovalidData)) {
         return ResponseUtil.controllerResponse(

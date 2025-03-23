@@ -30,29 +30,29 @@ export class MySessionsController implements IController {
       }
       const tokenPayload = local;
       // >----------< HAND OVER TO MANAGER >----------<
-      const mrGetAccount = await this.manager.getMySessions(
+      const mrGetMySessions = await this.manager.getMySessions(
         tokenPayload.accountId,
         tokenPayload.sessionId,
       );
       // Check manager response
-      if (!mrGetAccount.httpStatus.isSuccess()) {
+      if (!mrGetMySessions.httpStatus.isSuccess()) {
         // Respond without token
         return ResponseUtil.controllerResponse(
           res,
-          mrGetAccount.httpStatus,
-          mrGetAccount.serverError,
-          mrGetAccount.clientErrors,
-          mrGetAccount.data,
+          mrGetMySessions.httpStatus,
+          mrGetMySessions.serverError,
+          mrGetMySessions.clientErrors,
+          mrGetMySessions.data,
           null,
         );
       }
       // Respond with token
       return ResponseUtil.controllerResponse(
         res,
-        mrGetAccount.httpStatus,
-        mrGetAccount.serverError,
-        mrGetAccount.clientErrors,
-        mrGetAccount.data,
+        mrGetMySessions.httpStatus,
+        mrGetMySessions.serverError,
+        mrGetMySessions.clientErrors,
+        mrGetMySessions.data,
         await AuthModule.instance.refresh(tokenPayload),
       );
     } catch (error) {
@@ -112,30 +112,30 @@ export class MySessionsController implements IController {
       }
       const validatedData = blueprintData;
       // >----------< HAND OVER TO MANAGER >----------<
-      const mrDeleteMySessions = await this.manager.deleteMySessions$sessionId(
+      const mrDeleteMySessions$sessionId = await this.manager.deleteMySessions$sessionId(
         tokenPayload.accountId,
         tokenPayload.sessionId,
         parseInt(validatedData.sessionId),
       );
       // Check manager response
-      if (!mrDeleteMySessions.httpStatus.isSuccess()) {
+      if (!mrDeleteMySessions$sessionId.httpStatus.isSuccess()) {
         // Respond without token
         return ResponseUtil.controllerResponse(
           res,
-          mrDeleteMySessions.httpStatus,
-          mrDeleteMySessions.serverError,
-          mrDeleteMySessions.clientErrors,
-          mrDeleteMySessions.data,
+          mrDeleteMySessions$sessionId.httpStatus,
+          mrDeleteMySessions$sessionId.serverError,
+          mrDeleteMySessions$sessionId.clientErrors,
+          mrDeleteMySessions$sessionId.data,
           null,
         );
       }
       // Respond with token
       return ResponseUtil.controllerResponse(
         res,
-        mrDeleteMySessions.httpStatus,
-        mrDeleteMySessions.serverError,
-        mrDeleteMySessions.clientErrors,
-        mrDeleteMySessions.data,
+        mrDeleteMySessions$sessionId.httpStatus,
+        mrDeleteMySessions$sessionId.serverError,
+        mrDeleteMySessions$sessionId.clientErrors,
+        mrDeleteMySessions$sessionId.data,
         await AuthModule.instance.refresh(tokenPayload),
       );
     } catch (error) {

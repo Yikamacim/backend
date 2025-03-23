@@ -19,7 +19,7 @@ export class MySessionsProvider implements IProvider {
   ): Promise<ProviderResponse<SessionModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(SessionQueries.GET_SESSIONS_$ACID_$SSID, [
+      const results = await DbConstants.POOL.query(SessionQueries.GET_SESSION_$ACID_$SSID, [
         accountId,
         sessionId,
       ]);

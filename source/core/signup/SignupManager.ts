@@ -16,7 +16,7 @@ export class SignupManager implements IManager {
   ): Promise<ManagerResponse<SignupResponse | null>> {
     // Try to get account
     const prGetAccount = await this.provider.getAccount(validatedData.phone);
-    // Account exists with username, return conflict
+    // Account exists with phone, return conflict
     if (prGetAccount.data) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),

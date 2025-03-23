@@ -1,0 +1,4 @@
+export enum ProvinceQueries {
+  GET_PROVINCE_$PVID = `SELECT * FROM "Province" WHERE "provinceId" = $1`,
+  GET_PROVINCES_$CNID = `SELECT * FROM "Province" WHERE "countryId" = $1`,
+}

@@ -13,6 +13,8 @@ import { EndpointsBuilder } from "./core/_internal/endpoints/EndpointsBuilder";
 import { RecordsBuilder } from "./core/_internal/records/RecordsBuilder";
 import { AccessBuilder } from "./core/access/AccessBuilder";
 import { AccountsBuilder } from "./core/accounts/AccountsBuilder";
+import { CountriesBuilder } from "./core/address/countries/CountriesBuilder";
+import { DistrictsBuilder } from "./core/address/districts/DistrictsBuilder";
 import { LoginBuilder } from "./core/login/LoginBuilder";
 import { LogoutBuilder } from "./core/logout/LogoutBuilder";
 import { MySessionsBuilder } from "./core/my/sessions/MySessionsBuilder";
@@ -65,6 +67,21 @@ app.use(
   // api/accounts
   `${ConfigConstants.API_PREFIX}/${AccountsBuilder.BASE_ROUTE}`,
   new AccountsBuilder().router,
+);
+app.use(
+  // api/address/countries
+  `${ConfigConstants.API_PREFIX}/${CountriesBuilder.BASE_ROUTE}`,
+  new CountriesBuilder().router,
+);
+app.use(
+  // api/address/districts
+  `${ConfigConstants.API_PREFIX}/${DistrictsBuilder.BASE_ROUTE}`,
+  new DistrictsBuilder().router,
+);
+app.use(
+  // api/address/provinces
+  `${ConfigConstants.API_PREFIX}/${DistrictsBuilder.BASE_ROUTE}`,
+  new DistrictsBuilder().router,
 );
 
 // PRIVATE ROUTES

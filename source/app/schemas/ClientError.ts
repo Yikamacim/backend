@@ -76,6 +76,17 @@ export enum ClientErrorCode {
   CODE_NOT_EXPIRED = 80301,
   CODE_EXPIRED = 80302,
   INVALID_CODE = 80303,
+  //  *  *  804XX: /address/countries errors
+  INVALID_COUNTRY_ID = 80400,
+  NO_COUNTRY_FOUND = 80401,
+  //  *  *  805XX: /address/districts errors
+  INVALID_DISTRICT_ID = 80500,
+  NO_DISTRICT_FOUND = 80501,
+  INVALID_PROVINCE_ID_FOR_DISTRICT = 80502,
+  //  *  *  806XX: /address/provinces errors
+  INVALID_PROVINCE_ID = 80600,
+  NO_PROVINCE_FOUND = 80601,
+  INVALID_COUNTRY_ID_FOR_PROVINCE = 80602,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -146,6 +157,17 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.CODE_NOT_EXPIRED]: "Code hasn't expired yet.",
   [ClientErrorCode.CODE_EXPIRED]: "Code has expired.",
   [ClientErrorCode.INVALID_CODE]: "Provided code was incorrect.",
+  //  *  *  804XX: /address/countries errors
+  [ClientErrorCode.INVALID_COUNTRY_ID]: "Provided country id was invalid.",
+  [ClientErrorCode.NO_COUNTRY_FOUND]: "No country was found with the provided id.",
+  //  *  *  805XX: /address/districts errors
+  [ClientErrorCode.INVALID_DISTRICT_ID]: "Provided district id was invalid.",
+  [ClientErrorCode.NO_DISTRICT_FOUND]: "No district was found with the provided id.",
+  [ClientErrorCode.INVALID_PROVINCE_ID_FOR_DISTRICT]: "No province was found with the provided id.",
+  //  *  *  806XX: /address/provinces errors
+  [ClientErrorCode.INVALID_PROVINCE_ID]: "Provided province id was invalid.",
+  [ClientErrorCode.NO_PROVINCE_FOUND]: "No province was found with the provided id.",
+  [ClientErrorCode.INVALID_COUNTRY_ID_FOR_PROVINCE]: "No country was found with the provided id.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };
