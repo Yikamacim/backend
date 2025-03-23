@@ -15,6 +15,7 @@ import { AccessBuilder } from "./core/access/AccessBuilder";
 import { AccountsBuilder } from "./core/accounts/AccountsBuilder";
 import { CountriesBuilder } from "./core/address/countries/CountriesBuilder";
 import { DistrictsBuilder } from "./core/address/districts/DistrictsBuilder";
+import { ProvincesBuilder } from "./core/address/provinces/ProvincesBuilder";
 import { LoginBuilder } from "./core/login/LoginBuilder";
 import { LogoutBuilder } from "./core/logout/LogoutBuilder";
 import { MySessionsBuilder } from "./core/my/sessions/MySessionsBuilder";
@@ -80,8 +81,8 @@ app.use(
 );
 app.use(
   // api/address/provinces
-  `${ConfigConstants.API_PREFIX}/${DistrictsBuilder.BASE_ROUTE}`,
-  new DistrictsBuilder().router,
+  `${ConfigConstants.API_PREFIX}/${ProvincesBuilder.BASE_ROUTE}`,
+  new ProvincesBuilder().router,
 );
 
 // PRIVATE ROUTES
