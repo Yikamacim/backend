@@ -11,10 +11,10 @@ export class AccountRules implements IRules {
     /^(?=.*\p{Ll})(?=.*\p{Lu})(?=.*\p{N})(?=.*[^\p{L}\p{N}\s])\S+$/u;
 
   public static readonly NAME_MIN_LENGTH = 1;
-  public static readonly NAME_MAX_LENGTH = 50;
-  public static readonly NAME_REGEX = /^[\p{L}\s]{1,50}$/u;
+  public static readonly NAME_MAX_LENGTH = 64;
+  public static readonly NAME_REGEX = /^[\p{L}\s]{1,64}$/u;
 
   public static readonly SURNAME_MIN_LENGTH = 1;
-  public static readonly SURNAME_MAX_LENGTH = 50;
-  public static readonly SURNAME_REGEX = /^[\p{L}]{1,50}$/u;
+  public static readonly SURNAME_MAX_LENGTH = 64;
+  public static readonly SURNAME_REGEX = /^[\p{L}]{1,64}$/u;
 }
