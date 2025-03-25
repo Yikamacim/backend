@@ -16,6 +16,7 @@ import { CountriesBuilder } from "./core/countries/CountriesBuilder";
 import { DistrictsBuilder } from "./core/districts/DistrictsBuilder";
 import { LoginBuilder } from "./core/login/LoginBuilder";
 import { LogoutBuilder } from "./core/logout/LogoutBuilder";
+import { MyAddressesBuilder } from "./core/my/addresses/MyAddressesBuilder";
 import { MySessionsBuilder } from "./core/my/sessions/MySessionsBuilder";
 import { NeighbourhoodsBuilder } from "./core/neighbourhoods/NeighbourhoodsBuilder";
 import { ProvincesBuilder } from "./core/provinces/ProvincesBuilder";
@@ -97,6 +98,12 @@ app.use(
   MySessionsBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
   new MySessionsBuilder().router,
+);
+app.use(
+  // api/my/addresses
+  MyAddressesBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
+  new MyAddressesBuilder().router,
 );
 app.use(
   // api/logout
