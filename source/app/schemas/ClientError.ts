@@ -1,4 +1,5 @@
 import { AccountRules } from "../../common/rules/AccountRules";
+import { AddressRules } from "../../common/rules/AddressRules";
 import { SessionRules } from "../../common/rules/SessionRules";
 import { VerificationRules } from "../../common/rules/VerificationRules";
 import { AuthConstants } from "../constants/AuthConstants";
@@ -54,12 +55,16 @@ export enum ClientErrorCode {
   INVALID_NAME_LENGTH = 60002,
   INVALID_SURNAME_LENGTH = 60003,
   INVALID_CODE_LENGTH = 60004,
+  INVALID_ADDRESS_NAME_LENGTH = 60005,
+  INVALID_EXPLICIT_ADDRESS_LENGTH = 60006,
   //  *  7XXXX: Content errors
   INVALID_PHONE_CONTENT = 70002,
   INVALID_PASSWORD_CONTENT = 70003,
   INVALID_NAME_CONTENT = 70004,
   INVALID_SURNAME_CONTENT = 70005,
   INVALID_CODE_CONTENT = 70006,
+  INVALID_ADDRESS_NAME_CONTENT = 70007,
+  INVALID_EXPLICIT_ADDRESS_CONTENT = 70008,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -76,17 +81,22 @@ export enum ClientErrorCode {
   CODE_NOT_EXPIRED = 80301,
   CODE_EXPIRED = 80302,
   INVALID_CODE = 80303,
-  //  *  *  804XX: /address/countries errors
+  //  *  *  804XX: /countries errors
   INVALID_COUNTRY_ID = 80400,
   NO_COUNTRY_FOUND = 80401,
-  //  *  *  805XX: /address/districts errors
+  //  *  *  805XX: /districts errors
   INVALID_DISTRICT_ID = 80500,
   NO_DISTRICT_FOUND = 80501,
-  INVALID_PROVINCE_ID_FOR_DISTRICT = 80502,
-  //  *  *  806XX: /address/provinces errors
-  INVALID_PROVINCE_ID = 80600,
-  NO_PROVINCE_FOUND = 80601,
-  INVALID_COUNTRY_ID_FOR_PROVINCE = 80602,
+  //  *  *  806XX: /neighbourhoods errors
+  INVALID_NEIGHBOURHOOD_ID = 80600,
+  NO_NEIGHBOURHOOD_FOUND = 80601,
+  //  *  *  807XX: /provinces errors
+  INVALID_PROVINCE_ID = 80700,
+  NO_PROVINCE_FOUND = 80701,
+  //  *  *  808XX: /my/addresses errors
+  INVALID_ADDRESS_ID = 80800,
+  ADDRESS_NOT_FOUND = 80801,
+  CANNOT_DELETE_DEFAULT_ADDRESS = 80802,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -132,6 +142,8 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_NAME_LENGTH]: `Provided name wasn't in the length range of ${AccountRules.NAME_MIN_LENGTH} to ${AccountRules.NAME_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_SURNAME_LENGTH]: `Provided surname wasn't in the length range of ${AccountRules.SURNAME_MIN_LENGTH} to ${AccountRules.SURNAME_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_CODE_LENGTH]: `Provided code's length wasn't ${VerificationRules.CODE_LENGTH}.`,
+  [ClientErrorCode.INVALID_ADDRESS_NAME_LENGTH]: `Provided address name wasn't in the length range of ${AddressRules.NAME_MIN_LENGTH} to ${AddressRules.NAME_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_EXPLICIT_ADDRESS_LENGTH]: `Provided explicit address wasn't in the length range of ${AddressRules.EXPLICIT_ADDRESS_MIN_LENGTH} to ${AddressRules.EXPLICIT_ADDRESS_MAX_LENGTH}.`,
   //  *  7XXXX: Content errors
   [ClientErrorCode.INVALID_PHONE_CONTENT]: "Provided phone contained invalid characters.",
   [ClientErrorCode.INVALID_PASSWORD_CONTENT]:
@@ -139,6 +151,10 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_NAME_CONTENT]: "Provided name contained invalid characters.",
   [ClientErrorCode.INVALID_SURNAME_CONTENT]: "Provided surname contained invalid characters.",
   [ClientErrorCode.INVALID_CODE_CONTENT]: "Provided code contained invalid characters.",
+  [ClientErrorCode.INVALID_ADDRESS_NAME_CONTENT]:
+    "Provided address name contained invalid characters.",
+  [ClientErrorCode.INVALID_EXPLICIT_ADDRESS_CONTENT]:
+    "Provided explicit address contained invalid characters.",
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -163,11 +179,16 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   //  *  *  805XX: /address/districts errors
   [ClientErrorCode.INVALID_DISTRICT_ID]: "Provided district id was invalid.",
   [ClientErrorCode.NO_DISTRICT_FOUND]: "No district was found with the provided id.",
-  [ClientErrorCode.INVALID_PROVINCE_ID_FOR_DISTRICT]: "No province was found with the provided id.",
-  //  *  *  806XX: /address/provinces errors
+  //  *  *  806XX: /address/neighbourhoods errors
+  [ClientErrorCode.INVALID_NEIGHBOURHOOD_ID]: "Provided neighbourhood id was invalid.",
+  [ClientErrorCode.NO_NEIGHBOURHOOD_FOUND]: "No neighbourhood was found with the provided id.",
+  //  *  *  807XX: /address/provinces errors
   [ClientErrorCode.INVALID_PROVINCE_ID]: "Provided province id was invalid.",
   [ClientErrorCode.NO_PROVINCE_FOUND]: "No province was found with the provided id.",
-  [ClientErrorCode.INVALID_COUNTRY_ID_FOR_PROVINCE]: "No country was found with the provided id.",
+  //  *  *  808XX: /my/addresses errors
+  [ClientErrorCode.INVALID_ADDRESS_ID]: "Provided address id was invalid.",
+  [ClientErrorCode.ADDRESS_NOT_FOUND]: "Account doesn't have an address with the provided id.",
+  [ClientErrorCode.CANNOT_DELETE_DEFAULT_ADDRESS]: "Default address can't be deleted.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

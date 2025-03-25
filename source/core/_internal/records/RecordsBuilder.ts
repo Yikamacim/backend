@@ -3,10 +3,11 @@ import { Method } from "../../../app/enums/Method";
 import { RouteType } from "../../../app/enums/RouteType";
 import { RouteHelper } from "../../../app/helpers/RouteHelper";
 import type { IBuilder } from "../../../app/interfaces/IBuilder";
+import { _internalRoute } from "../_internalRoute";
 import { RecordsController } from "./RecordsController";
 
 export class RecordsBuilder implements IBuilder {
-  public static readonly BASE_ROUTE = "_internal/records";
+  public static readonly BASE_ROUTE = `${_internalRoute.BASE_ROUTE}/records`;
 
   public constructor(
     public readonly router = Router(),

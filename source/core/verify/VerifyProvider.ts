@@ -41,12 +41,10 @@ export class VerifyProvider implements IProvider {
         phone,
       ]);
       const record: unknown = results.rows[0];
-      // No record exist with the phone number
       if (!record) {
         return await ResponseUtil.providerResponse(true);
       }
       const verification = VerificationModel.fromRecord(record);
-      // There is a record, check expiration
       if (DateUtil.isExpired(verification.sentAt, SmsConstants.SMS_CODE_EXPIRATION_TIME)) {
         return await ResponseUtil.providerResponse(true);
       }

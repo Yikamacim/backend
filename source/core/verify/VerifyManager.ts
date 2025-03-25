@@ -13,11 +13,10 @@ export class VerifyManager implements IManager {
   public constructor(private readonly provider = new VerifyProvider()) {}
 
   public async getVerify$phone(validatedData: VerifyParams): Promise<ManagerResponse<null>> {
-    // Try to get account
+    // Try to get the account
     const prGetAccount = await this.provider.getAccount(validatedData.phone);
     // If no account found
     if (!prGetAccount.data) {
-      // Return with error
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -50,7 +49,7 @@ export class VerifyManager implements IManager {
   public async postVerify(
     validatedData: VerifyRequest,
   ): Promise<ManagerResponse<VerifyResponse | null>> {
-    // Try to get account
+    // Try to get the account
     const prGetAccount = await this.provider.getAccount(validatedData.phone);
     // If no account found
     if (!prGetAccount.data) {
@@ -80,6 +79,7 @@ export class VerifyManager implements IManager {
         null,
       );
     }
+    // Check if code is valid
     if (!(await SmsModule.instance.verify(validatedData.phone, validatedData.code))) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.FORBIDDEN),

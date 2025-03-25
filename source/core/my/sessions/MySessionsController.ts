@@ -3,10 +3,7 @@ import type { Tokens } from "../../../@types/tokens";
 import type { ExpressNextFunction, ExpressRequest } from "../../../@types/wrappers";
 import { PayloadHelper } from "../../../app/helpers/PayloadHelper";
 import type { IController } from "../../../app/interfaces/IController";
-import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
-import { UnexpectedAuthError } from "../../../app/schemas/ServerError";
-import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { AuthModule } from "../../../modules/auth/module";
 import { MySessionsManager } from "./MySessionsManager";
@@ -22,37 +19,27 @@ export class MySessionsController implements IController {
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
-      // >-----------< AUTHORIZATION VALIDATION >-----------<
-      const local: unknown = res.locals["tokenPayload"];
-      // V0: Authorization validation
-      if (!PayloadHelper.isValidPayload(local)) {
-        throw new UnexpectedAuthError();
-      }
-      const tokenPayload = local;
-      // >----------< HAND OVER TO MANAGER >----------<
-      const mrGetMySessions = await this.manager.getMySessions(
-        tokenPayload.accountId,
-        tokenPayload.sessionId,
-      );
-      // Check manager response
-      if (!mrGetMySessions.httpStatus.isSuccess()) {
-        // Respond without token
+      // >-----------< AUTHORIZATION >-----------<
+      const tokenPayload = PayloadHelper.getPayload(res);
+      // >----------< LOGIC >----------<
+      const mr = await this.manager.getMySessions(tokenPayload.accountId, tokenPayload.sessionId);
+      // >----------< RESPONSE >----------<
+      if (!mr.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
           res,
-          mrGetMySessions.httpStatus,
-          mrGetMySessions.serverError,
-          mrGetMySessions.clientErrors,
-          mrGetMySessions.data,
+          mr.httpStatus,
+          mr.serverError,
+          mr.clientErrors,
+          mr.data,
           null,
         );
       }
-      // Respond with token
       return ResponseUtil.controllerResponse(
         res,
-        mrGetMySessions.httpStatus,
-        mrGetMySessions.serverError,
-        mrGetMySessions.clientErrors,
-        mrGetMySessions.data,
+        mr.httpStatus,
+        mr.serverError,
+        mr.clientErrors,
+        mr.data,
         await AuthModule.instance.refresh(tokenPayload),
       );
     } catch (error) {
@@ -64,78 +51,45 @@ export class MySessionsController implements IController {
     req: ExpressRequest,
     res: ControllerResponse<null, Tokens | null>,
     next: ExpressNextFunction,
-  ): Promise<ControllerResponse<null, Tokens | null> | void> {
+  ): Promise<typeof res | void> {
     try {
-      // >-----------< AUTHORIZATION VALIDATION >-----------<
-      const local: unknown = res.locals["tokenPayload"];
-      if (!PayloadHelper.isValidPayload(local)) {
-        throw new UnexpectedAuthError();
-      }
-      const tokenPayload = local;
-      // >----------< REQUEST VALIDATION >----------<
-      const preliminaryData: unknown = req.params["sessionId"];
-      // V1: Existence validation
-      if (!ProtoUtil.isProtovalid(preliminaryData)) {
+      // >-----------< AUTHORIZATION >-----------<
+      const tokenPayload = PayloadHelper.getPayload(res);
+      // >----------< VALIDATION >----------<
+      const pr = MySessionsParams.parse(req);
+      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          [new ClientError(ClientErrorCode.MISSING_PARAMETER)],
+          pr.clientErrors,
           null,
           null,
         );
       }
-      const protovalidData: unknown = { sessionId: preliminaryData };
-      // V2: Schematic validation
-      if (!MySessionsParams.isBlueprint(protovalidData)) {
-        return ResponseUtil.controllerResponse(
-          res,
-          new HttpStatus(HttpStatusCode.BAD_REQUEST),
-          null,
-          [new ClientError(ClientErrorCode.INVALID_PARAMETER)],
-          null,
-          null,
-        );
-      }
-      const blueprintData: MySessionsParams = protovalidData;
-      // V3: Physical validation
-      const validationErrors = MySessionsParams.getValidationErrors(blueprintData);
-      if (validationErrors.length > 0) {
-        return ResponseUtil.controllerResponse(
-          res,
-          new HttpStatus(HttpStatusCode.BAD_REQUEST),
-          null,
-          validationErrors,
-          null,
-          null,
-        );
-      }
-      const validatedData = blueprintData;
-      // >----------< HAND OVER TO MANAGER >----------<
-      const mrDeleteMySessions$sessionId = await this.manager.deleteMySessions$sessionId(
+      // >----------< LOGIC >----------<
+      const mr = await this.manager.deleteMySessions$sessionId(
         tokenPayload.accountId,
         tokenPayload.sessionId,
-        parseInt(validatedData.sessionId),
+        parseInt(pr.validatedData.sessionId),
       );
-      // Check manager response
-      if (!mrDeleteMySessions$sessionId.httpStatus.isSuccess()) {
-        // Respond without token
+      // >----------< RESPONSE >----------<
+      if (!mr.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
           res,
-          mrDeleteMySessions$sessionId.httpStatus,
-          mrDeleteMySessions$sessionId.serverError,
-          mrDeleteMySessions$sessionId.clientErrors,
-          mrDeleteMySessions$sessionId.data,
+          mr.httpStatus,
+          mr.serverError,
+          mr.clientErrors,
+          mr.data,
           null,
         );
       }
-      // Respond with token
       return ResponseUtil.controllerResponse(
         res,
-        mrDeleteMySessions$sessionId.httpStatus,
-        mrDeleteMySessions$sessionId.serverError,
-        mrDeleteMySessions$sessionId.clientErrors,
-        mrDeleteMySessions$sessionId.data,
+        mr.httpStatus,
+        mr.serverError,
+        mr.clientErrors,
+        mr.data,
         await AuthModule.instance.refresh(tokenPayload),
       );
     } catch (error) {

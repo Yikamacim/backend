@@ -14,9 +14,9 @@ export class LoginManager implements IManager {
   public async postLogin(
     validatedData: LoginRequest,
   ): Promise<ManagerResponse<LoginResponse | null>> {
-    // Try to get account
+    // Try to get the account
     const providerResponse = await this.provider.getAccount(validatedData.phone);
-    // If no account found
+    // If no account was found
     if (!providerResponse.data) {
       // Return with error
       return ResponseUtil.managerResponse(
@@ -26,7 +26,7 @@ export class LoginManager implements IManager {
         null,
       );
     }
-    // Account found, check password
+    // Got the account, check the password
     if (!(await EncryptionHelper.compare(validatedData.password, providerResponse.data.password))) {
       // Passwords don't match
       return ResponseUtil.managerResponse(

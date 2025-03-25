@@ -21,7 +21,7 @@ export class RouteHelper implements IHelper {
       req: ExpressRequest,
       res: ControllerResponse<D, T>,
       next: ExpressNextFunction,
-    ) => Promise<ControllerResponse<D, T> | void>,
+    ) => Promise<typeof res | void>,
   ): void {
     const apiRoute = this.concatRoute(fullRoute);
     if (!RouteHelper.routeInfo.has(apiRoute)) {
@@ -59,15 +59,17 @@ export class RouteHelper implements IHelper {
     routeMethods[1].push(method);
   }
 
-  public static getEndpoints(): string[] {
-    const endpoints: string[] = [];
-    RouteHelper.routeInfo.forEach((info: Pair<string, Method[]>, route: string) => {
-      const methodsList = info[1].map((method) => `"${method}"`).join(", ");
-      endpoints.push(
-        `Route: "${ConfigConstants.API_PREFIX}/${route}" | Type: ${info[0]} | Methods: [${methodsList}]`,
-      );
+  public static getEndpoints(): Promise<string[]> {
+    return new Promise((resolve) => {
+      const endpoints: string[] = [];
+      RouteHelper.routeInfo.forEach((info: Pair<string, Method[]>, route: string) => {
+        const methodsList = info[1].map((method) => `"${method}"`).join(", ");
+        endpoints.push(
+          `Route: "${ConfigConstants.API_PREFIX}/${route}" | Type: ${info[0]} | Methods: [${methodsList}]`,
+        );
+      });
+      resolve(endpoints);
     });
-    return endpoints;
   }
 
   public static getMethods(url: string): Method[] | null {

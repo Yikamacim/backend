@@ -1,4 +1,7 @@
 import type { IModel } from "../app/interfaces/IModel";
+import type { IParams } from "../app/interfaces/IParams";
+import type { IQueries } from "../app/interfaces/IQueries";
+import type { IRequest } from "../app/interfaces/IRequest";
 import type { IResponse } from "../app/interfaces/IResponse";
 import type { ClientError } from "../app/schemas/ClientError";
 import type { HttpStatus } from "../app/schemas/HttpStatus";
@@ -16,6 +19,11 @@ export type ControllerResponse<
   data: D;
   tokens: T;
 }>;
+
+export type ParserResponse<T extends IRequest | IParams | IQueries | null> = {
+  clientErrors: ClientError[];
+  validatedData: T;
+};
 
 export type MiddlewareResponse = ControllerResponse<null, null>;
 

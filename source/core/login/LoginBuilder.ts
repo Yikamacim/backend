@@ -3,10 +3,11 @@ import { Method } from "../../app/enums/Method";
 import { RouteType } from "../../app/enums/RouteType";
 import { RouteHelper } from "../../app/helpers/RouteHelper";
 import type { IBuilder } from "../../app/interfaces/IBuilder";
+import { ApiRoute } from "../ApiRoute";
 import { LoginController } from "./LoginController";
 
 export class LoginBuilder implements IBuilder {
-  public static readonly BASE_ROUTE = "login";
+  public static readonly BASE_ROUTE = `${ApiRoute.BASE_ROUTE}/login`;
 
   public constructor(
     public readonly router = Router(),

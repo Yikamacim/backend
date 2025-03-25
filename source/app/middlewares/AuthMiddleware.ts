@@ -1,12 +1,11 @@
 import type { MiddlewareResponse } from "../../@types/responses";
-import type { Token } from "../../@types/tokens";
 import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers";
 import { AuthModule } from "../../modules/auth/module";
+import { LocalsConstants } from "../constants/LocalsConstants";
 import type { AccountType } from "../enums/AccountType";
 import { ClientError, ClientErrorCode } from "../schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../schemas/HttpStatus";
 import { HeadersUtil } from "../utils/HeadersUtil";
-import { ProtoUtil } from "../utils/ProtoUtil";
 import { ResponseUtil } from "../utils/ResponseUtil";
 
 export class AuthMiddleware {
@@ -17,54 +16,31 @@ export class AuthMiddleware {
       next: ExpressNextFunction,
     ): Promise<typeof res | void> => {
       try {
-        // >----------< REQUEST VALIDATION >----------<
-        const preliminaryData: unknown = req.headers;
-        // V1: Existence validation
-        if (!ProtoUtil.isProtovalid(preliminaryData)) {
+        // >----------< VALIDATION >----------<
+        const pr = HeadersUtil.parseToken(req);
+        if (pr.clientErrors.length > 0 || pr.validatedData === null) {
           return ResponseUtil.middlewareResponse(
             res,
             new HttpStatus(HttpStatusCode.BAD_REQUEST),
             null,
-            [new ClientError(ClientErrorCode.MISSING_HEADERS)],
+            pr.clientErrors,
           );
         }
-        const protovalidData: unknown = preliminaryData;
-        // V2: Schematic validation
-        if (!HeadersUtil.isBlueprint(protovalidData, "authorization", "string")) {
-          return ResponseUtil.middlewareResponse(
-            res,
-            new HttpStatus(HttpStatusCode.BAD_REQUEST),
-            null,
-            [new ClientError(ClientErrorCode.INVALID_HEADERS)],
-          );
-        }
-        const blueprintData: string = protovalidData.authorization!;
-        // V3: Physical validation
-        const validationErrors = HeadersUtil.getAuthValidationErrors(blueprintData);
-        if (validationErrors.length > 0) {
-          return ResponseUtil.middlewareResponse(
-            res,
-            new HttpStatus(HttpStatusCode.BAD_REQUEST),
-            null,
-            validationErrors,
-          );
-        }
-        const validatedData: Token = blueprintData.split(" ")[1]!;
-        // V4: Logical validation
-        const hrClientErrors = await AuthModule.instance.verify(validatedData);
-        if (hrClientErrors.length > 0) {
-          // Unauthorized access
+        // >-----------< LOGIC >-----------<
+        const verificationErrors = await AuthModule.instance.verify(pr.validatedData);
+        // If there are verification errors
+        if (verificationErrors.length > 0) {
           return ResponseUtil.middlewareResponse(
             res,
             new HttpStatus(HttpStatusCode.UNAUTHORIZED),
             null,
-            hrClientErrors,
+            verificationErrors,
           );
         }
         // Payload extraction
-        const hrTokenPayload = AuthModule.instance.getPayload(validatedData);
+        const tokenPayload = AuthModule.instance.getPayload(pr.validatedData);
         // Authorization check
-        if (!allowedAccountTypes.includes(hrTokenPayload.accountType)) {
+        if (!allowedAccountTypes.includes(tokenPayload.accountType)) {
           // Forbidden access
           return ResponseUtil.middlewareResponse(
             res,
@@ -73,7 +49,7 @@ export class AuthMiddleware {
             [new ClientError(ClientErrorCode.FORBIDDEN_ACCESS)],
           );
         }
-        res.locals["tokenPayload"] = hrTokenPayload;
+        res.locals[LocalsConstants.TOKEN_PAYLOAD] = tokenPayload;
         // >----------< CONTINUE >----------<
         return next();
       } catch (error) {

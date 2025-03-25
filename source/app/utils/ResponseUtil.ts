@@ -2,12 +2,16 @@ import type {
   ControllerResponse,
   ManagerResponse,
   MiddlewareResponse,
+  ParserResponse,
   ProviderResponse,
 } from "../../@types/responses";
 import type { Tokens } from "../../@types/tokens";
 import { DbConstants } from "../constants/DbConstants";
 import { LogHelper } from "../helpers/LogHelper";
 import type { IModel } from "../interfaces/IModel";
+import type { IParams } from "../interfaces/IParams";
+import type { IQueries } from "../interfaces/IQueries";
+import type { IRequest } from "../interfaces/IRequest";
 import type { IResponse } from "../interfaces/IResponse";
 import type { IUtil } from "../interfaces/IUtil";
 import type { ClientError } from "../schemas/ClientError";
@@ -47,6 +51,16 @@ export class ResponseUtil implements IUtil {
       LogHelper.detail(JSON.stringify(body, null, 2), 1);
     }
     return res.status(httpStatus.code).send(body);
+  }
+
+  public static parserResponse<T extends IRequest | IParams | IQueries | null>(
+    clientErrors: ClientError[],
+    validatedData: T,
+  ): ParserResponse<T> {
+    return {
+      clientErrors,
+      validatedData,
+    };
   }
 
   public static middlewareResponse(

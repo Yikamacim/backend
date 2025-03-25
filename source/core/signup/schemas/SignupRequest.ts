@@ -1,6 +1,10 @@
+import type { ParserResponse } from "../../../@types/responses";
+import type { ExpressRequest } from "../../../@types/wrappers";
 import { AccountType } from "../../../app/enums/AccountType";
 import type { IRequest } from "../../../app/interfaces/IRequest";
-import type { ClientError } from "../../../app/schemas/ClientError";
+import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
+import { ProtoUtil } from "../../../app/utils/ProtoUtil";
+import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { DeviceNameValidator } from "../../../common/validators/DeviceNameValidator";
 import { NameValidator } from "../../../common/validators/NameValidator";
 import { PasswordValidator } from "../../../common/validators/PasswordValidator";
@@ -19,7 +23,32 @@ export class SignupRequest implements IRequest {
     public readonly sessionKey: string,
   ) {}
 
-  public static isBlueprint(obj: unknown): obj is SignupRequest {
+  public static parse(req: ExpressRequest): ParserResponse<SignupRequest | null> {
+    const preliminaryData: unknown = req.body;
+    // V1: Existence validation
+    if (!ProtoUtil.isProtovalid(preliminaryData)) {
+      return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.MISSING_BODY)], null);
+    }
+    const protovalidData: unknown = preliminaryData;
+    // V2: Schematic validation
+    if (!SignupRequest.isBlueprint(protovalidData)) {
+      return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.INVALID_BODY)], null);
+    }
+    const blueprintData: SignupRequest = protovalidData;
+    // V3: Physical validation
+    const clientErrors: ClientError[] = [];
+    PhoneValidator.validate(blueprintData.phone, clientErrors);
+    PasswordValidator.validate(blueprintData.password, clientErrors);
+    NameValidator.validate(blueprintData.name, clientErrors);
+    SurnameValidator.validate(blueprintData.surname, clientErrors);
+    DeviceNameValidator.validate(blueprintData.deviceName, clientErrors);
+    SessionKeyValidator.validate(blueprintData.sessionKey, clientErrors);
+    const validatedData = blueprintData;
+    // Return parser response
+    return ResponseUtil.parserResponse(clientErrors, validatedData);
+  }
+
+  private static isBlueprint(obj: unknown): obj is SignupRequest {
     if (typeof obj !== "object" || obj === null) {
       return false;
     }
@@ -33,16 +62,5 @@ export class SignupRequest implements IRequest {
       typeof blueprint.deviceName === "string" &&
       typeof blueprint.sessionKey === "string"
     );
-  }
-
-  public static getValidationErrors(blueprintData: SignupRequest): ClientError[] {
-    const validationErrors = new Array<ClientError>();
-    PhoneValidator.validate(blueprintData.phone, validationErrors);
-    PasswordValidator.validate(blueprintData.password, validationErrors);
-    NameValidator.validate(blueprintData.name, validationErrors);
-    SurnameValidator.validate(blueprintData.surname, validationErrors);
-    DeviceNameValidator.validate(blueprintData.deviceName, validationErrors);
-    SessionKeyValidator.validate(blueprintData.sessionKey, validationErrors);
-    return validationErrors;
   }
 }

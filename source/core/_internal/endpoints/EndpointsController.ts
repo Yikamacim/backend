@@ -1,28 +1,25 @@
 import type { ControllerResponse } from "../../../@types/responses";
 import type { ExpressNextFunction, ExpressRequest } from "../../../@types/wrappers";
+import { RouteHelper } from "../../../app/helpers/RouteHelper";
 import type { IController } from "../../../app/interfaces/IController";
+import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import { EndpointsManager } from "./EndpointsManager";
 import type { EndpointsResponse } from "./schemas/EndpointsResponse";
 
 export class EndpointsController implements IController {
-  public constructor(private readonly manager = new EndpointsManager()) {}
-
   public async getEndpoints(
     _: ExpressRequest,
     res: ControllerResponse<EndpointsResponse, null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
-      // >-----------< HAND OVER TO MANAGER >-----------<
-      const mrGetEndpoints = await this.manager.getEndpoints();
-      // Successful response
+      // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(
         res,
-        mrGetEndpoints.httpStatus,
-        mrGetEndpoints.serverError,
-        mrGetEndpoints.clientErrors,
-        mrGetEndpoints.data,
+        new HttpStatus(HttpStatusCode.OK),
+        null,
+        [],
+        await RouteHelper.getEndpoints(),
         null,
         false,
       );

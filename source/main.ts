@@ -11,14 +11,15 @@ import { MethodMiddleware } from "./app/middlewares/MethodMiddleware";
 import { PoolTest } from "./app/tests/PoolTest";
 import { EndpointsBuilder } from "./core/_internal/endpoints/EndpointsBuilder";
 import { RecordsBuilder } from "./core/_internal/records/RecordsBuilder";
-import { AccessBuilder } from "./core/access/AccessBuilder";
 import { AccountsBuilder } from "./core/accounts/AccountsBuilder";
-import { CountriesBuilder } from "./core/address/countries/CountriesBuilder";
-import { DistrictsBuilder } from "./core/address/districts/DistrictsBuilder";
-import { ProvincesBuilder } from "./core/address/provinces/ProvincesBuilder";
+import { CountriesBuilder } from "./core/countries/CountriesBuilder";
+import { DistrictsBuilder } from "./core/districts/DistrictsBuilder";
 import { LoginBuilder } from "./core/login/LoginBuilder";
 import { LogoutBuilder } from "./core/logout/LogoutBuilder";
 import { MySessionsBuilder } from "./core/my/sessions/MySessionsBuilder";
+import { NeighbourhoodsBuilder } from "./core/neighbourhoods/NeighbourhoodsBuilder";
+import { ProvincesBuilder } from "./core/provinces/ProvincesBuilder";
+import { RefreshBuilder } from "./core/refresh/RefreshBuilder";
 import { SignupBuilder } from "./core/signup/SignupBuilder";
 import { VerifyBuilder } from "./core/verify/VerifyBuilder";
 
@@ -37,72 +38,77 @@ app.use(LoggerMiddleware.log.bind(LoggerMiddleware));
 // INTERNAL ROUTES
 app.use(
   // api/_internal/endpoints
-  `${ConfigConstants.API_PREFIX}/${EndpointsBuilder.BASE_ROUTE}`,
+  EndpointsBuilder.BASE_ROUTE,
   new EndpointsBuilder().router,
 );
 app.use(
   // api/_internal/records
-  `${ConfigConstants.API_PREFIX}/${RecordsBuilder.BASE_ROUTE}`,
+  RecordsBuilder.BASE_ROUTE,
   new RecordsBuilder().router,
 );
 
 // AUTHENTICATING ROUTES
 app.use(
   // api/login
-  `${ConfigConstants.API_PREFIX}/${LoginBuilder.BASE_ROUTE}`,
+  LoginBuilder.BASE_ROUTE,
   new LoginBuilder().router,
 );
 app.use(
   // api/signup
-  `${ConfigConstants.API_PREFIX}/${SignupBuilder.BASE_ROUTE}`,
+  SignupBuilder.BASE_ROUTE,
   new SignupBuilder().router,
 );
 app.use(
   // api/verify
-  `${ConfigConstants.API_PREFIX}/${VerifyBuilder.BASE_ROUTE}`,
+  VerifyBuilder.BASE_ROUTE,
   new VerifyBuilder().router,
 );
 
 // PUBLIC ROUTES
 app.use(
   // api/accounts
-  `${ConfigConstants.API_PREFIX}/${AccountsBuilder.BASE_ROUTE}`,
+  AccountsBuilder.BASE_ROUTE,
   new AccountsBuilder().router,
 );
 app.use(
-  // api/address/countries
-  `${ConfigConstants.API_PREFIX}/${CountriesBuilder.BASE_ROUTE}`,
+  // api/countries
+  CountriesBuilder.BASE_ROUTE,
   new CountriesBuilder().router,
 );
 app.use(
-  // api/address/districts
-  `${ConfigConstants.API_PREFIX}/${DistrictsBuilder.BASE_ROUTE}`,
+  // api/districts
+  DistrictsBuilder.BASE_ROUTE,
   new DistrictsBuilder().router,
 );
 app.use(
-  // api/address/provinces
-  `${ConfigConstants.API_PREFIX}/${ProvincesBuilder.BASE_ROUTE}`,
+  // api/neighbourhoods
+  NeighbourhoodsBuilder.BASE_ROUTE,
+  new NeighbourhoodsBuilder().router,
+);
+app.use(
+  // api/provinces
+  ProvincesBuilder.BASE_ROUTE,
   new ProvincesBuilder().router,
 );
 
 // PRIVATE ROUTES
 app.use(
-  // api/access
-  `${ConfigConstants.API_PREFIX}/${AccessBuilder.BASE_ROUTE}`,
-  AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
-  new AccessBuilder().router,
-);
-app.use(
   // api/my/sessions
-  `${ConfigConstants.API_PREFIX}/${MySessionsBuilder.BASE_ROUTE}`,
+  MySessionsBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
   new MySessionsBuilder().router,
 );
 app.use(
   // api/logout
-  `${ConfigConstants.API_PREFIX}/${LogoutBuilder.BASE_ROUTE}`,
+  LogoutBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
   new LogoutBuilder().router,
+);
+app.use(
+  // api/refresh
+  RefreshBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
+  new RefreshBuilder().router,
 );
 
 // >---------------------------------------< ROUTES END >---------------------------------------< //

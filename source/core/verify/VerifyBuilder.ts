@@ -3,10 +3,11 @@ import { Method } from "../../app/enums/Method";
 import { RouteType } from "../../app/enums/RouteType";
 import { RouteHelper } from "../../app/helpers/RouteHelper";
 import type { IBuilder } from "../../app/interfaces/IBuilder";
+import { ApiRoute } from "../ApiRoute";
 import { VerifyController } from "./VerifyController";
 
 export class VerifyBuilder implements IBuilder {
-  public static readonly BASE_ROUTE = "verify";
+  public static readonly BASE_ROUTE = `${ApiRoute.BASE_ROUTE}/verify`;
 
   public constructor(
     public readonly router = Router(),
@@ -18,17 +19,17 @@ export class VerifyBuilder implements IBuilder {
   private buildRoutes(): void {
     RouteHelper.buildRoute(
       this.router,
-      { baseRoute: VerifyBuilder.BASE_ROUTE, route: "/:phone" },
-      RouteType.PUBLIC,
-      Method.GET,
-      this.controller.getVerify$phone.bind(this.controller),
-    );
-    RouteHelper.buildRoute(
-      this.router,
       { baseRoute: VerifyBuilder.BASE_ROUTE, route: "/" },
       RouteType.AUTHENTICATING,
       Method.POST,
       this.controller.postVerify.bind(this.controller),
+    );
+    RouteHelper.buildRoute(
+      this.router,
+      { baseRoute: VerifyBuilder.BASE_ROUTE, route: "/:phone" },
+      RouteType.PUBLIC,
+      Method.GET,
+      this.controller.getVerify$phone.bind(this.controller),
     );
   }
 }

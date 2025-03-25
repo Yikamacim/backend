@@ -13,9 +13,9 @@ export class MySessionsManager implements IManager {
     accountId: number,
     currentSessionId: number,
   ): Promise<ManagerResponse<MySessionsResponse[]>> {
-    // Try to get the account
+    // Try to get my sessions
     const prGetMySessions = await this.provider.getMySessions(accountId);
-    // Return sessions
+    // Return my sessions
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
@@ -29,7 +29,7 @@ export class MySessionsManager implements IManager {
     currentSessionId: number,
     sessionId: number,
   ): Promise<ManagerResponse<null>> {
-    // Check if session is the current session
+    // Check if the session is the current one
     if (sessionId === currentSessionId) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
@@ -38,9 +38,9 @@ export class MySessionsManager implements IManager {
         null,
       );
     }
-    // Try to get the account
+    // Try to get the session
     const prGetMySession = await this.provider.getMySession(accountId, sessionId);
-    // Check if session exists
+    // Check if the session exists
     if (!prGetMySession.data) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -49,7 +49,7 @@ export class MySessionsManager implements IManager {
         null,
       );
     }
-    // Delete session
+    // Delete the session
     await this.provider.deleteSession(sessionId);
     // Return success
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.NO_CONTENT), null, [], null);

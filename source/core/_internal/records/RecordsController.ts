@@ -1,30 +1,25 @@
 import type { ControllerResponse } from "../../../@types/responses";
 import type { ExpressNextFunction, ExpressRequest } from "../../../@types/wrappers";
+import { LogHelper } from "../../../app/helpers/LogHelper";
 import type { IController } from "../../../app/interfaces/IController";
+import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import { RecordsManager } from "./RecordsManager";
 import type { RecordsResponse } from "./schemas/RecordsResponse";
 
 export class RecordsController implements IController {
-  public constructor(private readonly manager = new RecordsManager()) {
-    this.manager = new RecordsManager();
-  }
-
   public async getRecords(
     _: ExpressRequest,
     res: ControllerResponse<RecordsResponse, null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
-      // >-----------< HAND OVER TO MANAGER >-----------<
-      const mrGetRecords = await this.manager.getRecords();
-      // Successful response
+      // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(
         res,
-        mrGetRecords.httpStatus,
-        mrGetRecords.serverError,
-        mrGetRecords.clientErrors,
-        mrGetRecords.data,
+        new HttpStatus(HttpStatusCode.OK),
+        null,
+        [],
+        await LogHelper.getRecords(),
         null,
         false,
       );
@@ -34,31 +29,19 @@ export class RecordsController implements IController {
   }
 
   public async deleteRecords(
-    _req: ExpressRequest,
+    _: ExpressRequest,
     res: ControllerResponse<null, null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
-      // >-----------< HAND OVER TO MANAGER >-----------<
-      const managerResponse = await this.manager.deleteRecords();
-      // Check manager response
-      if (!managerResponse.httpStatus.isSuccess()) {
-        // Unsuccessful response
-        return ResponseUtil.controllerResponse(
-          res,
-          managerResponse.httpStatus,
-          managerResponse.serverError,
-          managerResponse.clientErrors,
-          null,
-          null,
-        );
-      }
-      // Successful response
+      // >----------< LOGIC >----------<
+      await LogHelper.deleteRecords();
+      // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(
         res,
-        managerResponse.httpStatus,
-        managerResponse.serverError,
-        managerResponse.clientErrors,
+        new HttpStatus(HttpStatusCode.NO_CONTENT),
+        null,
+        [],
         null,
         null,
         false,

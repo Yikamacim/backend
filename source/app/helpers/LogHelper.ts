@@ -3,12 +3,16 @@ import type { IHelper } from "../interfaces/IHelper";
 export class LogHelper implements IHelper {
   private static records: string[] = [];
 
-  public static getRecords(): string[] {
-    return this.records;
+  public static getRecords(): Promise<string[]> {
+    return new Promise((resolve) => {
+      resolve(this.records);
+    });
   }
 
-  public static deleteRecords(): void {
-    this.records = [];
+  public static deleteRecords(): Promise<void> {
+    return new Promise(() => {
+      this.records = [];
+    });
   }
 
   public static log(message: string): void {

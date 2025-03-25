@@ -1,5 +1,9 @@
+import type { ParserResponse } from "../../../@types/responses";
+import type { ExpressRequest } from "../../../@types/wrappers";
 import type { IRequest } from "../../../app/interfaces/IRequest";
-import type { ClientError } from "../../../app/schemas/ClientError";
+import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
+import { ProtoUtil } from "../../../app/utils/ProtoUtil";
+import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { CodeValidator } from "../../../common/validators/CodeValidator";
 import { DeviceNameValidator } from "../../../common/validators/DeviceNameValidator";
 import { PhoneValidator } from "../../../common/validators/PhoneValidator";
@@ -13,7 +17,30 @@ export class VerifyRequest implements IRequest {
     public readonly sessionKey: string,
   ) {}
 
-  public static isBlueprint(obj: unknown): obj is VerifyRequest {
+  public static parse(req: ExpressRequest): ParserResponse<VerifyRequest | null> {
+    const preliminaryData: unknown = req.body;
+    // V1: Existence validation
+    if (!ProtoUtil.isProtovalid(preliminaryData)) {
+      return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.MISSING_BODY)], null);
+    }
+    const protovalidData: unknown = preliminaryData;
+    // V2: Schematic validation
+    if (!VerifyRequest.isBlueprint(protovalidData)) {
+      return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.INVALID_BODY)], null);
+    }
+    const blueprintData: VerifyRequest = protovalidData;
+    // V3: Physical validation
+    const clientErrors: ClientError[] = [];
+    PhoneValidator.validate(blueprintData.phone, clientErrors);
+    CodeValidator.validate(blueprintData.code, clientErrors);
+    DeviceNameValidator.validate(blueprintData.deviceName, clientErrors);
+    SessionKeyValidator.validate(blueprintData.sessionKey, clientErrors);
+    const validatedData = blueprintData;
+    // Return parser response
+    return ResponseUtil.parserResponse(clientErrors, validatedData);
+  }
+
+  private static isBlueprint(obj: unknown): obj is VerifyRequest {
     if (typeof obj !== "object" || obj === null) {
       return false;
     }
@@ -24,14 +51,5 @@ export class VerifyRequest implements IRequest {
       typeof blueprint.deviceName === "string" &&
       typeof blueprint.sessionKey === "string"
     );
-  }
-
-  public static getValidationErrors(blueprintData: VerifyRequest): ClientError[] {
-    const validationErrors = new Array<ClientError>();
-    PhoneValidator.validate(blueprintData.phone, validationErrors);
-    CodeValidator.validate(blueprintData.code, validationErrors);
-    DeviceNameValidator.validate(blueprintData.deviceName, validationErrors);
-    SessionKeyValidator.validate(blueprintData.sessionKey, validationErrors);
-    return validationErrors;
   }
 }
