@@ -9,7 +9,7 @@ export class LoggerMiddleware implements IMiddleware {
   public static log(req: ExpressRequest, _: MiddlewareResponse, next: ExpressNextFunction): void {
     try {
       if (req.url !== `${ConfigConstants.API_PREFIX}/${RecordsBuilder.BASE_ROUTE}`) {
-        LogHelper.info(`Received a "${req.method}" request on url "${req.url}".`);
+        LogHelper.info(`Received a '${req.method}' request on url '${req.url}'.`);
         LogHelper.log("Request headers were:");
         LogHelper.detail(JSON.stringify(req.headers, null, 2), 1);
         LogHelper.log("Request body was:");

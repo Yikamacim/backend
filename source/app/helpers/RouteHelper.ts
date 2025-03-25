@@ -63,10 +63,8 @@ export class RouteHelper implements IHelper {
     return new Promise((resolve) => {
       const endpoints: string[] = [];
       RouteHelper.routeInfo.forEach((info: Pair<string, Method[]>, route: string) => {
-        const methodsList = info[1].map((method) => `"${method}"`).join(", ");
-        endpoints.push(
-          `Route: "${ConfigConstants.API_PREFIX}/${route}" | Type: ${info[0]} | Methods: [${methodsList}]`,
-        );
+        const methodsList = info[1].map((method) => `'${method}'`).join(", ");
+        endpoints.push(`Route: '${route}' | Type: ${info[0]} | Methods: [${methodsList}]`);
       });
       resolve(endpoints);
     });
