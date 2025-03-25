@@ -36,7 +36,7 @@ export class AccountsController implements IController {
         mr.httpStatus,
         mr.serverError,
         mr.clientErrors,
-        null,
+        mr.data,
         null,
       );
     } catch (error) {
