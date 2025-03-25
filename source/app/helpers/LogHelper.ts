@@ -10,8 +10,9 @@ export class LogHelper implements IHelper {
   }
 
   public static deleteRecords(): Promise<void> {
-    return new Promise(() => {
+    return new Promise((resolve) => {
       this.records = [];
+      resolve();
     });
   }
 
