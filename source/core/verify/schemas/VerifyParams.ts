@@ -27,6 +27,7 @@ export class VerifyParams implements IParams {
       );
     }
     const blueprintData: VerifyParams = protovalidData;
+    blueprintData.phone = `+${blueprintData.phone}`;
     // V3: Physical validation
     const clientErrors: ClientError[] = [];
     PhoneValidator.validate(blueprintData.phone, clientErrors);
