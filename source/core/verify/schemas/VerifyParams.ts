@@ -18,7 +18,7 @@ export class VerifyParams implements IParams {
         null,
       );
     }
-    const protovalidData: unknown = { countryId: preliminaryData };
+    const protovalidData: unknown = { phone: preliminaryData };
     // V2: Schematic validation
     if (!VerifyParams.isBlueprint(protovalidData)) {
       return ResponseUtil.parserResponse(

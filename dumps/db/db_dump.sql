@@ -5,7 +5,7 @@
 -- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
 -- Dumped by pg_dump version 16.8 (Debian 16.8-1.pgdg120+1)
 
--- Started on 2025-03-26 11:55:07 UTC
+-- Started on 2025-03-26 12:03:38 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -75158,7 +75158,7 @@ ALTER TABLE ONLY public."Session"
     ADD CONSTRAINT "Session_Account_fk" FOREIGN KEY ("accountId") REFERENCES public."Account"("accountId");
 
 
--- Completed on 2025-03-26 11:55:07 UTC
+-- Completed on 2025-03-26 12:03:38 UTC
 
 --
 -- PostgreSQL database dump complete
