@@ -49,6 +49,9 @@ export class ResponseUtil implements IUtil {
       }
       LogHelper.log("Response was:");
       LogHelper.detail(JSON.stringify(body, null, 2), 1);
+    } else {
+      LogHelper.log("Response was:");
+      LogHelper.detail("Hidden", 1);
     }
     return res.status(httpStatus.code).send(body);
   }

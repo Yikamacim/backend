@@ -39,6 +39,7 @@ export class ProvincesController implements IController {
         mr.clientErrors,
         mr.data,
         null,
+        false,
       );
     } catch (error) {
       return next(error);
@@ -73,6 +74,7 @@ export class ProvincesController implements IController {
         mr.clientErrors,
         mr.data,
         null,
+        false,
       );
     } catch (error) {
       return next(error);
