@@ -5,7 +5,7 @@
 -- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
 -- Dumped by pg_dump version 16.8 (Debian 16.8-1.pgdg120+1)
 
--- Started on 2025-03-26 12:45:32 UTC
+-- Started on 2025-03-26 12:51:30 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -100,6 +100,90 @@ CREATE TABLE public."Address" (
 ALTER TABLE public."Address" OWNER TO "UYikamacim";
 
 --
+-- TOC entry 225 (class 1259 OID 16448)
+-- Name: Country; Type: TABLE; Schema: public; Owner: UYikamacim
+--
+
+CREATE TABLE public."Country" (
+    "countryId" integer NOT NULL,
+    name character varying(128) NOT NULL
+);
+
+
+ALTER TABLE public."Country" OWNER TO "UYikamacim";
+
+--
+-- TOC entry 227 (class 1259 OID 16472)
+-- Name: District; Type: TABLE; Schema: public; Owner: UYikamacim
+--
+
+CREATE TABLE public."District" (
+    "districtId" integer NOT NULL,
+    "provinceId" integer NOT NULL,
+    name character varying(128) NOT NULL
+);
+
+
+ALTER TABLE public."District" OWNER TO "UYikamacim";
+
+--
+-- TOC entry 229 (class 1259 OID 16484)
+-- Name: Neighborhood; Type: TABLE; Schema: public; Owner: UYikamacim
+--
+
+CREATE TABLE public."Neighborhood" (
+    "neighborhoodId" integer NOT NULL,
+    "districtId" integer NOT NULL,
+    name character varying(128) NOT NULL,
+    "postalCode" character varying(5) NOT NULL
+);
+
+
+ALTER TABLE public."Neighborhood" OWNER TO "UYikamacim";
+
+--
+-- TOC entry 223 (class 1259 OID 16441)
+-- Name: Province; Type: TABLE; Schema: public; Owner: UYikamacim
+--
+
+CREATE TABLE public."Province" (
+    "provinceId" integer NOT NULL,
+    "countryId" integer NOT NULL,
+    name character varying(128) NOT NULL
+);
+
+
+ALTER TABLE public."Province" OWNER TO "UYikamacim";
+
+--
+-- TOC entry 232 (class 1259 OID 16556)
+-- Name: AddressView; Type: VIEW; Schema: public; Owner: UYikamacim
+--
+
+CREATE VIEW public."AddressView" AS
+ SELECT "Address"."addressId",
+    "Address"."accountId",
+    "Address".name,
+    "Address"."countryId",
+    "Country".name AS "countryName",
+    "Address"."provinceId",
+    "Province".name AS "provinceName",
+    "Address"."districtId",
+    "District".name AS "districtName",
+    "Address"."neighborhoodId",
+    "Neighborhood".name AS "neighborhoodName",
+    "Address"."explicitAddress",
+    "Address"."isDefault"
+   FROM ((((public."Address"
+     JOIN public."Country" ON (("Address"."countryId" = "Country"."countryId")))
+     JOIN public."Province" ON (("Address"."provinceId" = "Province"."provinceId")))
+     JOIN public."District" ON (("Address"."districtId" = "District"."districtId")))
+     JOIN public."Neighborhood" ON (("Address"."neighborhoodId" = "Neighborhood"."neighborhoodId")));
+
+
+ALTER VIEW public."AddressView" OWNER TO "UYikamacim";
+
+--
 -- TOC entry 230 (class 1259 OID 16506)
 -- Name: Address_addressId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
@@ -123,19 +207,6 @@ ALTER SEQUENCE public."Address_addressId_seq" OWNER TO "UYikamacim";
 
 ALTER SEQUENCE public."Address_addressId_seq" OWNED BY public."Address"."addressId";
 
-
---
--- TOC entry 225 (class 1259 OID 16448)
--- Name: Country; Type: TABLE; Schema: public; Owner: UYikamacim
---
-
-CREATE TABLE public."Country" (
-    "countryId" integer NOT NULL,
-    name character varying(128) NOT NULL
-);
-
-
-ALTER TABLE public."Country" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 224 (class 1259 OID 16447)
@@ -163,20 +234,6 @@ ALTER SEQUENCE public."Country_countryId_seq" OWNED BY public."Country"."country
 
 
 --
--- TOC entry 227 (class 1259 OID 16472)
--- Name: District; Type: TABLE; Schema: public; Owner: UYikamacim
---
-
-CREATE TABLE public."District" (
-    "districtId" integer NOT NULL,
-    "provinceId" integer NOT NULL,
-    name character varying(128) NOT NULL
-);
-
-
-ALTER TABLE public."District" OWNER TO "UYikamacim";
-
---
 -- TOC entry 226 (class 1259 OID 16471)
 -- Name: District_districtId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
@@ -202,21 +259,6 @@ ALTER SEQUENCE public."District_districtId_seq" OWNED BY public."District"."dist
 
 
 --
--- TOC entry 229 (class 1259 OID 16484)
--- Name: Neighborhood; Type: TABLE; Schema: public; Owner: UYikamacim
---
-
-CREATE TABLE public."Neighborhood" (
-    "neighborhoodId" integer NOT NULL,
-    "districtId" integer NOT NULL,
-    name character varying(128) NOT NULL,
-    "postalCode" character varying(5) NOT NULL
-);
-
-
-ALTER TABLE public."Neighborhood" OWNER TO "UYikamacim";
-
---
 -- TOC entry 228 (class 1259 OID 16483)
 -- Name: Neighborhood_neighborhoodId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
@@ -240,20 +282,6 @@ ALTER SEQUENCE public."Neighborhood_neighborhoodId_seq" OWNER TO "UYikamacim";
 
 ALTER SEQUENCE public."Neighborhood_neighborhoodId_seq" OWNED BY public."Neighborhood"."neighborhoodId";
 
-
---
--- TOC entry 223 (class 1259 OID 16441)
--- Name: Province; Type: TABLE; Schema: public; Owner: UYikamacim
---
-
-CREATE TABLE public."Province" (
-    "provinceId" integer NOT NULL,
-    "countryId" integer NOT NULL,
-    name character varying(128) NOT NULL
-);
-
-
-ALTER TABLE public."Province" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 222 (class 1259 OID 16440)
@@ -386,34 +414,6 @@ ALTER SEQUENCE public.verification_verificationid_seq OWNER TO "UYikamacim";
 
 ALTER SEQUENCE public.verification_verificationid_seq OWNED BY public."Verification"."verificationId";
 
-
---
--- TOC entry 232 (class 1259 OID 16556)
--- Name: view_name; Type: VIEW; Schema: public; Owner: UYikamacim
---
-
-CREATE VIEW public.view_name AS
- SELECT "Address"."addressId",
-    "Address"."accountId",
-    "Address".name,
-    "Address"."countryId",
-    "Country".name AS "countryName",
-    "Address"."provinceId",
-    "Province".name AS "provinceName",
-    "Address"."districtId",
-    "District".name AS "districtName",
-    "Address"."neighborhoodId",
-    "Neighborhood".name AS "neighborhoodName",
-    "Address"."explicitAddress",
-    "Address"."isDefault"
-   FROM ((((public."Address"
-     JOIN public."Country" ON (("Address"."countryId" = "Country"."countryId")))
-     JOIN public."Province" ON (("Address"."provinceId" = "Province"."provinceId")))
-     JOIN public."District" ON (("Address"."districtId" = "District"."districtId")))
-     JOIN public."Neighborhood" ON (("Address"."neighborhoodId" = "Neighborhood"."neighborhoodId")));
-
-
-ALTER VIEW public.view_name OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3246 (class 2604 OID 16404)
@@ -75158,7 +75158,7 @@ ALTER TABLE ONLY public."Session"
     ADD CONSTRAINT "Session_Account_fk" FOREIGN KEY ("accountId") REFERENCES public."Account"("accountId");
 
 
--- Completed on 2025-03-26 12:45:32 UTC
+-- Completed on 2025-03-26 12:51:30 UTC
 
 --
 -- PostgreSQL database dump complete
