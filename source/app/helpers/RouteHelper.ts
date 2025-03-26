@@ -2,7 +2,6 @@ import type { ControllerResponse } from "../../@types/responses";
 import type { Tokens } from "../../@types/tokens";
 import type { FullRoute, Pair } from "../../@types/utils";
 import type { ExpressNextFunction, ExpressRequest, ExpressRouter } from "../../@types/wrappers";
-import { ConfigConstants } from "../constants/ConfigConstants";
 import { Method } from "../enums/Method";
 import { RouteType } from "../enums/RouteType";
 import type { IHelper } from "../interfaces/IHelper";
@@ -71,8 +70,7 @@ export class RouteHelper implements IHelper {
   }
 
   public static getMethods(url: string): Method[] | null {
-    const route = url.replace(`${ConfigConstants.API_PREFIX}/`, "");
-    const routeParts = route.split("/");
+    const routeParts = url.split("/");
     let methods: Method[] | null = null;
     this.routeInfo.forEach((info: Pair<string, Method[]>, apiRoute: string) => {
       const apiRouteParts = apiRoute.split("/").filter((part: string) => part !== "");
