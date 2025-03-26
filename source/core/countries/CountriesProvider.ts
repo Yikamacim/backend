@@ -16,6 +16,7 @@ export class CountriesProvider implements IProvider {
       }
       return await ResponseUtil.providerResponse(
         records.map((record: unknown) => CountryModel.fromRecord(record)),
+        false,
       );
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
@@ -31,7 +32,7 @@ export class CountriesProvider implements IProvider {
       if (!record) {
         return await ResponseUtil.providerResponse(null);
       }
-      return await ResponseUtil.providerResponse(CountryModel.fromRecord(record));
+      return await ResponseUtil.providerResponse(CountryModel.fromRecord(record), false);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;

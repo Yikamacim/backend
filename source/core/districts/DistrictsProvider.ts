@@ -20,6 +20,7 @@ export class DistrictsProvider implements IProvider {
       }
       return await ResponseUtil.providerResponse(
         records.map((record: unknown) => DistrictModel.fromRecord(record)),
+        false,
       );
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
@@ -39,7 +40,7 @@ export class DistrictsProvider implements IProvider {
       if (!record) {
         return await ResponseUtil.providerResponse(null);
       }
-      return await ResponseUtil.providerResponse(DistrictModel.fromRecord(record));
+      return await ResponseUtil.providerResponse(DistrictModel.fromRecord(record), false);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;

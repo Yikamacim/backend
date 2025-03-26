@@ -98,6 +98,10 @@ export class ResponseUtil implements IUtil {
       LogHelper.log("Provider response was:");
       LogHelper.detail(JSON.stringify(data, null, 2), 1);
     }
+    else {
+      LogHelper.log("Provider response was:");
+      LogHelper.detail("Hidden", 1);
+    }
     return {
       data,
     };
