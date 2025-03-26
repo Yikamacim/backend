@@ -38,81 +38,81 @@ app.use(LoggerMiddleware.log.bind(LoggerMiddleware));
 
 // INTERNAL ROUTES
 app.use(
-  // api/_internal/endpoints
+  // _internal/endpoints
   EndpointsBuilder.BASE_ROUTE,
   new EndpointsBuilder().router,
 );
 app.use(
-  // api/_internal/records
+  // _internal/records
   RecordsBuilder.BASE_ROUTE,
   new RecordsBuilder().router,
 );
 
 // AUTHENTICATING ROUTES
 app.use(
-  // api/login
+  // login
   LoginBuilder.BASE_ROUTE,
   new LoginBuilder().router,
 );
 app.use(
-  // api/signup
+  // signup
   SignupBuilder.BASE_ROUTE,
   new SignupBuilder().router,
 );
 app.use(
-  // api/verify
+  // verify
   VerifyBuilder.BASE_ROUTE,
   new VerifyBuilder().router,
 );
 
 // PUBLIC ROUTES
 app.use(
-  // api/accounts
+  // accounts
   AccountsBuilder.BASE_ROUTE,
   new AccountsBuilder().router,
 );
 app.use(
-  // api/countries
+  // countries
   CountriesBuilder.BASE_ROUTE,
   new CountriesBuilder().router,
 );
 app.use(
-  // api/districts
+  // districts
   DistrictsBuilder.BASE_ROUTE,
   new DistrictsBuilder().router,
 );
 app.use(
-  // api/neighborhoods
+  // neighborhoods
   NeighborhoodsBuilder.BASE_ROUTE,
   new NeighborhoodsBuilder().router,
 );
 app.use(
-  // api/provinces
+  // provinces
   ProvincesBuilder.BASE_ROUTE,
   new ProvincesBuilder().router,
 );
 
 // PRIVATE ROUTES
 app.use(
-  // api/my/sessions
+  // my/sessions
   MySessionsBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
   new MySessionsBuilder().router,
 );
 app.use(
-  // api/my/addresses
+  // my/addresses
   MyAddressesBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
   new MyAddressesBuilder().router,
 );
 app.use(
-  // api/logout
+  // logout
   LogoutBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
   new LogoutBuilder().router,
 );
 app.use(
-  // api/refresh
+  // refresh
   RefreshBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
   new RefreshBuilder().router,

@@ -3,11 +3,10 @@ import { Method } from "../../app/enums/Method";
 import { RouteType } from "../../app/enums/RouteType";
 import { RouteHelper } from "../../app/helpers/RouteHelper";
 import type { IBuilder } from "../../app/interfaces/IBuilder";
-import { ApiRoute } from "../ApiRoute";
 import { ProvincesController } from "./ProvincesController";
 
 export class ProvincesBuilder implements IBuilder {
-  public static readonly BASE_ROUTE = `${ApiRoute.BASE_ROUTE}/provinces`;
+  public static readonly BASE_ROUTE = "provinces";
 
   public constructor(
     public readonly router = Router(),
