@@ -51,7 +51,7 @@ export class ResponseUtil implements IUtil {
       LogHelper.detail(JSON.stringify(body, null, 2), 1);
     } else {
       LogHelper.log("Response was:");
-      LogHelper.detail("Hidden", 1);
+      LogHelper.detail("...", 1);
     }
     return res.status(httpStatus.code).send(body);
   }
@@ -91,7 +91,7 @@ export class ResponseUtil implements IUtil {
 
   public static async providerResponse<D extends IModel | boolean | null>(
     data: D,
-    log = true,
+    log = false,
   ): Promise<ProviderResponse<D>> {
     await DbConstants.POOL.query(DbConstants.COMMIT);
     if (log) {
@@ -99,7 +99,7 @@ export class ResponseUtil implements IUtil {
       LogHelper.detail(JSON.stringify(data, null, 2), 1);
     } else {
       LogHelper.log("Provider response was:");
-      LogHelper.detail("Hidden", 1);
+      LogHelper.detail("...", 1);
     }
     return {
       data,

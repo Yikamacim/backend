@@ -32,7 +32,7 @@ export class CountriesProvider implements IProvider {
       if (!record) {
         return await ResponseUtil.providerResponse(null);
       }
-      return await ResponseUtil.providerResponse(CountryModel.fromRecord(record), false);
+      return await ResponseUtil.providerResponse(CountryModel.fromRecord(record));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;

@@ -40,7 +40,7 @@ export class DistrictsProvider implements IProvider {
       if (!record) {
         return await ResponseUtil.providerResponse(null);
       }
-      return await ResponseUtil.providerResponse(DistrictModel.fromRecord(record), false);
+      return await ResponseUtil.providerResponse(DistrictModel.fromRecord(record));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;

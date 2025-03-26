@@ -20,7 +20,6 @@ export class NeighborhoodsProvider implements IProvider {
       }
       return await ResponseUtil.providerResponse(
         records.map((record: unknown) => NeighborhoodModel.fromRecord(record)),
-        false,
       );
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
@@ -40,7 +39,7 @@ export class NeighborhoodsProvider implements IProvider {
       if (!record) {
         return await ResponseUtil.providerResponse(null);
       }
-      return await ResponseUtil.providerResponse(NeighborhoodModel.fromRecord(record), false);
+      return await ResponseUtil.providerResponse(NeighborhoodModel.fromRecord(record));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;

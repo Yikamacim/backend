@@ -14,8 +14,6 @@ export class LoggerMiddleware implements IMiddleware {
         LogHelper.detail(JSON.stringify(req.headers, null, 2), 1);
         LogHelper.log("Request body was:");
         LogHelper.detail(JSON.stringify(req.body, null, 2), 1);
-        LogHelper.log("Request query was:");
-        LogHelper.detail(JSON.stringify(req.query), 1);
       }
       return next();
     } catch (error) {
