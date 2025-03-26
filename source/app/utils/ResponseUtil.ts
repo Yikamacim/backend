@@ -97,8 +97,7 @@ export class ResponseUtil implements IUtil {
     if (log) {
       LogHelper.log("Provider response was:");
       LogHelper.detail(JSON.stringify(data, null, 2), 1);
-    }
-    else {
+    } else {
       LogHelper.log("Provider response was:");
       LogHelper.detail("Hidden", 1);
     }
