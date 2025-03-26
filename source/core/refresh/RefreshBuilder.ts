@@ -6,7 +6,7 @@ import type { IBuilder } from "../../app/interfaces/IBuilder";
 import { RefreshController } from "./RefreshController";
 
 export class RefreshBuilder implements IBuilder {
-  public static readonly BASE_ROUTE = "refresh";
+  public static readonly BASE_ROUTE = "/refresh";
 
   public constructor(
     public readonly router = Router(),

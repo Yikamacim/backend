@@ -3,11 +3,10 @@ import { Method } from "../../../app/enums/Method";
 import { RouteType } from "../../../app/enums/RouteType";
 import { RouteHelper } from "../../../app/helpers/RouteHelper";
 import type { IBuilder } from "../../../app/interfaces/IBuilder";
-import { _internalRoute } from "../_internalRoute";
 import { EndpointsController } from "./EndpointsController";
 
 export class EndpointsBuilder implements IBuilder {
-  public static readonly BASE_ROUTE = `${_internalRoute.BASE_ROUTE}/endpoints`;
+  public static readonly BASE_ROUTE = "/_internal/endpoints";
 
   public constructor(
     public readonly router = Router(),

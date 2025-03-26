@@ -6,7 +6,7 @@ import type { IBuilder } from "../../app/interfaces/IBuilder";
 import { LogoutController } from "./LogoutController";
 
 export class LogoutBuilder implements IBuilder {
-  public static readonly BASE_ROUTE = "logout";
+  public static readonly BASE_ROUTE = "/logout";
 
   public constructor(
     public readonly router = Router(),

@@ -6,7 +6,7 @@ import type { IBuilder } from "../../app/interfaces/IBuilder";
 import { VerifyController } from "./VerifyController";
 
 export class VerifyBuilder implements IBuilder {
-  public static readonly BASE_ROUTE = "verify";
+  public static readonly BASE_ROUTE = "/verify";
 
   public constructor(
     public readonly router = Router(),

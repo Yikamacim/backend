@@ -47,11 +47,8 @@ export class ResponseUtil implements IUtil {
           LogHelper.detail(`${error.code} - ${error.message}`, 1);
         });
       }
-      LogHelper.log("Response was:");
+      LogHelper.log("Controller response was:");
       LogHelper.detail(JSON.stringify(body, null, 2), 1);
-    } else {
-      LogHelper.log("Response was:");
-      LogHelper.detail("...", 1);
     }
     return res.status(httpStatus.code).send(body);
   }
@@ -97,9 +94,6 @@ export class ResponseUtil implements IUtil {
     if (log) {
       LogHelper.log("Provider response was:");
       LogHelper.detail(JSON.stringify(data, null, 2), 1);
-    } else {
-      LogHelper.log("Provider response was:");
-      LogHelper.detail("...", 1);
     }
     return {
       data,

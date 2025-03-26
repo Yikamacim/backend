@@ -6,7 +6,7 @@ import type { IBuilder } from "../../app/interfaces/IBuilder";
 import { SignupController } from "./SignupController";
 
 export class SignupBuilder implements IBuilder {
-  public static readonly BASE_ROUTE = "signup";
+  public static readonly BASE_ROUTE = "/signup";
 
   public constructor(
     public readonly router = Router(),

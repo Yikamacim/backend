@@ -6,7 +6,7 @@ import type { IBuilder } from "../../app/interfaces/IBuilder";
 import { AccountsController } from "./AccountsController";
 
 export class AccountsBuilder implements IBuilder {
-  public static readonly BASE_ROUTE = "accounts";
+  public static readonly BASE_ROUTE = "/accounts";
 
   public constructor(
     public readonly router = Router(),

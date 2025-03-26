@@ -3,11 +3,10 @@ import { Method } from "../../../app/enums/Method";
 import { RouteType } from "../../../app/enums/RouteType";
 import { RouteHelper } from "../../../app/helpers/RouteHelper";
 import type { IBuilder } from "../../../app/interfaces/IBuilder";
-import { MyRoute } from "../MyRoute";
 import { MySessionsController } from "./MySessionsController";
 
 export class MySessionsBuilder implements IBuilder {
-  public static readonly BASE_ROUTE = `${MyRoute.BASE_ROUTE}/sessions`;
+  public static readonly BASE_ROUTE = "/my/sessions";
 
   public constructor(
     public readonly router = Router(),
