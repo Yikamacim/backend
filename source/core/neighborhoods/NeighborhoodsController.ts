@@ -3,22 +3,22 @@ import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers"
 import type { IController } from "../../app/interfaces/IController";
 import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
-import { NeighbourhoodsManager } from "./NeighbourhoodsManager";
-import { NeighbourhoodsParams } from "./schemas/NeighbourhoodsParams";
-import { NeighbourhoodsQueries } from "./schemas/NeighbourhoodsQueries";
-import type { NeighbourhoodsResponse } from "./schemas/NeighbourhoodsResponse";
+import { NeighborhoodsManager } from "./NeighborhoodsManager";
+import { NeighborhoodsParams } from "./schemas/NeighborhoodsParams";
+import { NeighborhoodsQueries } from "./schemas/NeighborhoodsQueries";
+import type { NeighborhoodsResponse } from "./schemas/NeighborhoodsResponse";
 
-export class NeighbourhoodsController implements IController {
-  public constructor(private readonly manager = new NeighbourhoodsManager()) {}
+export class NeighborhoodsController implements IController {
+  public constructor(private readonly manager = new NeighborhoodsManager()) {}
 
-  public async getNeighbourhoods(
+  public async getNeighborhoods(
     req: ExpressRequest,
-    res: ControllerResponse<NeighbourhoodsResponse[], null>,
+    res: ControllerResponse<NeighborhoodsResponse[], null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pr = NeighbourhoodsQueries.parse(req);
+      const pr = NeighborhoodsQueries.parse(req);
       if (pr.clientErrors.length > 0 || pr.validatedData === null) {
         return ResponseUtil.controllerResponse(
           res,
@@ -30,7 +30,7 @@ export class NeighbourhoodsController implements IController {
         );
       }
       // >-----------< LOGIC >-----------<
-      const mr = await this.manager.getNeighbourhoods(pr.validatedData);
+      const mr = await this.manager.getNeighborhoods(pr.validatedData);
       // >-----------< RESPONSE >-----------<
       return ResponseUtil.controllerResponse(
         res,
@@ -45,14 +45,14 @@ export class NeighbourhoodsController implements IController {
     }
   }
 
-  public async getNeighbourhoods$neighbourhoodId(
+  public async getNeighborhoods$neighborhoodId(
     req: ExpressRequest,
-    res: ControllerResponse<NeighbourhoodsResponse | null, null>,
+    res: ControllerResponse<NeighborhoodsResponse | null, null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pr = NeighbourhoodsParams.parse(req);
+      const pr = NeighborhoodsParams.parse(req);
       if (pr.clientErrors.length > 0 || pr.validatedData === null) {
         return ResponseUtil.controllerResponse(
           res,
@@ -64,7 +64,7 @@ export class NeighbourhoodsController implements IController {
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.getNeighbourhoods$neighbourhoodId(pr.validatedData);
+      const mr = await this.manager.getNeighborhoods$neighborhoodId(pr.validatedData);
       // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(
         res,

@@ -6,10 +6,10 @@ import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { StringUtil } from "../../../app/utils/StringUtil";
 
-export class NeighbourhoodsQueries implements IQueries {
+export class NeighborhoodsQueries implements IQueries {
   private constructor(public readonly districtId: string) {}
 
-  public static parse(req: ExpressRequest): ParserResponse<NeighbourhoodsQueries | null> {
+  public static parse(req: ExpressRequest): ParserResponse<NeighborhoodsQueries | null> {
     const preliminaryData: unknown = req.query["districtId"];
     // V1: Existence validation
     if (!ProtoUtil.isProtovalid(preliminaryData)) {
@@ -17,10 +17,10 @@ export class NeighbourhoodsQueries implements IQueries {
     }
     const protovalidData: unknown = { districtId: preliminaryData };
     // V2: Schematic validation
-    if (!NeighbourhoodsQueries.isBlueprint(protovalidData)) {
+    if (!NeighborhoodsQueries.isBlueprint(protovalidData)) {
       return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.INVALID_QUERY)], null);
     }
-    const blueprintData: NeighbourhoodsQueries = protovalidData;
+    const blueprintData: NeighborhoodsQueries = protovalidData;
     // V3: Physical validation
     const clientErrors: ClientError[] = [];
     if (!StringUtil.isIntParsable(blueprintData.districtId)) {
@@ -31,11 +31,11 @@ export class NeighbourhoodsQueries implements IQueries {
     return ResponseUtil.parserResponse(clientErrors, validatedData);
   }
 
-  private static isBlueprint(data: unknown): data is NeighbourhoodsQueries {
+  private static isBlueprint(data: unknown): data is NeighborhoodsQueries {
     if (typeof data !== "object" || data === null) {
       return false;
     }
-    const blueprint = data as NeighbourhoodsQueries;
+    const blueprint = data as NeighborhoodsQueries;
     return typeof blueprint.districtId === "string";
   }
 }

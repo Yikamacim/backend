@@ -6,11 +6,11 @@ import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { StringUtil } from "../../../app/utils/StringUtil";
 
-export class NeighbourhoodsParams implements IParams {
-  private constructor(public readonly neighbourhoodId: string) {}
+export class NeighborhoodsParams implements IParams {
+  private constructor(public readonly neighborhoodId: string) {}
 
-  public static parse(req: ExpressRequest): ParserResponse<NeighbourhoodsParams | null> {
-    const preliminaryData: unknown = req.params["neighbourhoodId"];
+  public static parse(req: ExpressRequest): ParserResponse<NeighborhoodsParams | null> {
+    const preliminaryData: unknown = req.params["neighborhoodId"];
     // V1: Existence validation
     if (!ProtoUtil.isProtovalid(preliminaryData)) {
       return ResponseUtil.parserResponse(
@@ -18,30 +18,30 @@ export class NeighbourhoodsParams implements IParams {
         null,
       );
     }
-    const protovalidData: unknown = { neighbourhoodId: preliminaryData };
+    const protovalidData: unknown = { neighborhoodId: preliminaryData };
     // V2: Schematic validation
-    if (!NeighbourhoodsParams.isBlueprint(protovalidData)) {
+    if (!NeighborhoodsParams.isBlueprint(protovalidData)) {
       return ResponseUtil.parserResponse(
         [new ClientError(ClientErrorCode.INVALID_PARAMETER)],
         null,
       );
     }
-    const blueprintData: NeighbourhoodsParams = protovalidData;
+    const blueprintData: NeighborhoodsParams = protovalidData;
     // V3: Physical validation
     const clientErrors: ClientError[] = [];
-    if (!StringUtil.isIntParsable(blueprintData.neighbourhoodId)) {
-      clientErrors.push(new ClientError(ClientErrorCode.INVALID_NEIGHBOURHOOD_ID));
+    if (!StringUtil.isIntParsable(blueprintData.neighborhoodId)) {
+      clientErrors.push(new ClientError(ClientErrorCode.INVALID_NEIGHBORHOOD_ID));
     }
     const validatedData = blueprintData;
     // Return parser response
     return ResponseUtil.parserResponse(clientErrors, validatedData);
   }
 
-  private static isBlueprint(data: unknown): data is NeighbourhoodsParams {
+  private static isBlueprint(data: unknown): data is NeighborhoodsParams {
     if (typeof data !== "object" || data === null) {
       return false;
     }
-    const blueprint = data as NeighbourhoodsParams;
-    return typeof blueprint.neighbourhoodId === "string";
+    const blueprint = data as NeighborhoodsParams;
+    return typeof blueprint.neighborhoodId === "string";
   }
 }

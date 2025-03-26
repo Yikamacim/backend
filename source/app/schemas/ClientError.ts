@@ -87,9 +87,9 @@ export enum ClientErrorCode {
   //  *  *  805XX: /districts errors
   INVALID_DISTRICT_ID = 80500,
   NO_DISTRICT_FOUND = 80501,
-  //  *  *  806XX: /neighbourhoods errors
-  INVALID_NEIGHBOURHOOD_ID = 80600,
-  NO_NEIGHBOURHOOD_FOUND = 80601,
+  //  *  *  806XX: /neighborhoods errors
+  INVALID_NEIGHBORHOOD_ID = 80600,
+  NO_NEIGHBORHOOD_FOUND = 80601,
   //  *  *  807XX: /provinces errors
   INVALID_PROVINCE_ID = 80700,
   NO_PROVINCE_FOUND = 80701,
@@ -179,9 +179,9 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   //  *  *  805XX: /address/districts errors
   [ClientErrorCode.INVALID_DISTRICT_ID]: "Provided district id was invalid.",
   [ClientErrorCode.NO_DISTRICT_FOUND]: "No district was found with the provided id.",
-  //  *  *  806XX: /address/neighbourhoods errors
-  [ClientErrorCode.INVALID_NEIGHBOURHOOD_ID]: "Provided neighbourhood id was invalid.",
-  [ClientErrorCode.NO_NEIGHBOURHOOD_FOUND]: "No neighbourhood was found with the provided id.",
+  //  *  *  806XX: /address/neighborhoods errors
+  [ClientErrorCode.INVALID_NEIGHBORHOOD_ID]: "Provided neighborhood id was invalid.",
+  [ClientErrorCode.NO_NEIGHBORHOOD_FOUND]: "No neighborhood was found with the provided id.",
   //  *  *  807XX: /address/provinces errors
   [ClientErrorCode.INVALID_PROVINCE_ID]: "Provided province id was invalid.",
   [ClientErrorCode.NO_PROVINCE_FOUND]: "No province was found with the provided id.",

@@ -5,7 +5,7 @@
 -- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
 -- Dumped by pg_dump version 16.8 (Debian 16.8-1.pgdg120+1)
 
--- Started on 2025-03-26 12:03:38 UTC
+-- Started on 2025-03-26 12:45:32 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -91,97 +91,13 @@ CREATE TABLE public."Address" (
     "countryId" integer NOT NULL,
     "provinceId" integer NOT NULL,
     "districtId" integer NOT NULL,
-    "neighbourhoodId" integer NOT NULL,
+    "neighborhoodId" integer NOT NULL,
     "explicitAddress" character varying(256) NOT NULL,
     "isDefault" boolean NOT NULL
 );
 
 
 ALTER TABLE public."Address" OWNER TO "UYikamacim";
-
---
--- TOC entry 225 (class 1259 OID 16448)
--- Name: Country; Type: TABLE; Schema: public; Owner: UYikamacim
---
-
-CREATE TABLE public."Country" (
-    "countryId" integer NOT NULL,
-    name character varying(128) NOT NULL
-);
-
-
-ALTER TABLE public."Country" OWNER TO "UYikamacim";
-
---
--- TOC entry 227 (class 1259 OID 16472)
--- Name: District; Type: TABLE; Schema: public; Owner: UYikamacim
---
-
-CREATE TABLE public."District" (
-    "districtId" integer NOT NULL,
-    "provinceId" integer NOT NULL,
-    name character varying(128) NOT NULL
-);
-
-
-ALTER TABLE public."District" OWNER TO "UYikamacim";
-
---
--- TOC entry 229 (class 1259 OID 16484)
--- Name: Neighbourhood; Type: TABLE; Schema: public; Owner: UYikamacim
---
-
-CREATE TABLE public."Neighbourhood" (
-    "neighbourhoodId" integer NOT NULL,
-    "districtId" integer NOT NULL,
-    name character varying(128) NOT NULL,
-    "postalCode" character varying(5) NOT NULL
-);
-
-
-ALTER TABLE public."Neighbourhood" OWNER TO "UYikamacim";
-
---
--- TOC entry 223 (class 1259 OID 16441)
--- Name: Province; Type: TABLE; Schema: public; Owner: UYikamacim
---
-
-CREATE TABLE public."Province" (
-    "provinceId" integer NOT NULL,
-    "countryId" integer NOT NULL,
-    name character varying(128) NOT NULL
-);
-
-
-ALTER TABLE public."Province" OWNER TO "UYikamacim";
-
---
--- TOC entry 232 (class 1259 OID 16543)
--- Name: AddressView; Type: VIEW; Schema: public; Owner: UYikamacim
---
-
-CREATE VIEW public."AddressView" AS
- SELECT "Address"."addressId",
-    "Address"."accountId",
-    "Address".name,
-    "Address"."countryId",
-    "Country".name AS "countryName",
-    "Address"."provinceId",
-    "Province".name AS "provinceName",
-    "Address"."districtId",
-    "District".name AS "districtName",
-    "Address"."neighbourhoodId",
-    "Neighbourhood".name AS "neighbourhoodName",
-    "Address"."explicitAddress",
-    "Address"."isDefault"
-   FROM ((((public."Address"
-     JOIN public."Country" ON (("Address"."countryId" = "Country"."countryId")))
-     JOIN public."Province" ON (("Address"."provinceId" = "Province"."provinceId")))
-     JOIN public."District" ON (("Address"."districtId" = "District"."districtId")))
-     JOIN public."Neighbourhood" ON (("Address"."neighbourhoodId" = "Neighbourhood"."neighbourhoodId")));
-
-
-ALTER VIEW public."AddressView" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 230 (class 1259 OID 16506)
@@ -209,6 +125,19 @@ ALTER SEQUENCE public."Address_addressId_seq" OWNED BY public."Address"."address
 
 
 --
+-- TOC entry 225 (class 1259 OID 16448)
+-- Name: Country; Type: TABLE; Schema: public; Owner: UYikamacim
+--
+
+CREATE TABLE public."Country" (
+    "countryId" integer NOT NULL,
+    name character varying(128) NOT NULL
+);
+
+
+ALTER TABLE public."Country" OWNER TO "UYikamacim";
+
+--
 -- TOC entry 224 (class 1259 OID 16447)
 -- Name: Country_countryId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
@@ -232,6 +161,20 @@ ALTER SEQUENCE public."Country_countryId_seq" OWNER TO "UYikamacim";
 
 ALTER SEQUENCE public."Country_countryId_seq" OWNED BY public."Country"."countryId";
 
+
+--
+-- TOC entry 227 (class 1259 OID 16472)
+-- Name: District; Type: TABLE; Schema: public; Owner: UYikamacim
+--
+
+CREATE TABLE public."District" (
+    "districtId" integer NOT NULL,
+    "provinceId" integer NOT NULL,
+    name character varying(128) NOT NULL
+);
+
+
+ALTER TABLE public."District" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 226 (class 1259 OID 16471)
@@ -259,11 +202,26 @@ ALTER SEQUENCE public."District_districtId_seq" OWNED BY public."District"."dist
 
 
 --
--- TOC entry 228 (class 1259 OID 16483)
--- Name: Neighbourhood_neighbourhoodId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
+-- TOC entry 229 (class 1259 OID 16484)
+-- Name: Neighborhood; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
-CREATE SEQUENCE public."Neighbourhood_neighbourhoodId_seq"
+CREATE TABLE public."Neighborhood" (
+    "neighborhoodId" integer NOT NULL,
+    "districtId" integer NOT NULL,
+    name character varying(128) NOT NULL,
+    "postalCode" character varying(5) NOT NULL
+);
+
+
+ALTER TABLE public."Neighborhood" OWNER TO "UYikamacim";
+
+--
+-- TOC entry 228 (class 1259 OID 16483)
+-- Name: Neighborhood_neighborhoodId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
+--
+
+CREATE SEQUENCE public."Neighborhood_neighborhoodId_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -272,16 +230,30 @@ CREATE SEQUENCE public."Neighbourhood_neighbourhoodId_seq"
     CACHE 1;
 
 
-ALTER SEQUENCE public."Neighbourhood_neighbourhoodId_seq" OWNER TO "UYikamacim";
+ALTER SEQUENCE public."Neighborhood_neighborhoodId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3457 (class 0 OID 0)
 -- Dependencies: 228
--- Name: Neighbourhood_neighbourhoodId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
+-- Name: Neighborhood_neighborhoodId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
-ALTER SEQUENCE public."Neighbourhood_neighbourhoodId_seq" OWNED BY public."Neighbourhood"."neighbourhoodId";
+ALTER SEQUENCE public."Neighborhood_neighborhoodId_seq" OWNED BY public."Neighborhood"."neighborhoodId";
 
+
+--
+-- TOC entry 223 (class 1259 OID 16441)
+-- Name: Province; Type: TABLE; Schema: public; Owner: UYikamacim
+--
+
+CREATE TABLE public."Province" (
+    "provinceId" integer NOT NULL,
+    "countryId" integer NOT NULL,
+    name character varying(128) NOT NULL
+);
+
+
+ALTER TABLE public."Province" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 222 (class 1259 OID 16440)
@@ -416,6 +388,34 @@ ALTER SEQUENCE public.verification_verificationid_seq OWNED BY public."Verificat
 
 
 --
+-- TOC entry 232 (class 1259 OID 16556)
+-- Name: view_name; Type: VIEW; Schema: public; Owner: UYikamacim
+--
+
+CREATE VIEW public.view_name AS
+ SELECT "Address"."addressId",
+    "Address"."accountId",
+    "Address".name,
+    "Address"."countryId",
+    "Country".name AS "countryName",
+    "Address"."provinceId",
+    "Province".name AS "provinceName",
+    "Address"."districtId",
+    "District".name AS "districtName",
+    "Address"."neighborhoodId",
+    "Neighborhood".name AS "neighborhoodName",
+    "Address"."explicitAddress",
+    "Address"."isDefault"
+   FROM ((((public."Address"
+     JOIN public."Country" ON (("Address"."countryId" = "Country"."countryId")))
+     JOIN public."Province" ON (("Address"."provinceId" = "Province"."provinceId")))
+     JOIN public."District" ON (("Address"."districtId" = "District"."districtId")))
+     JOIN public."Neighborhood" ON (("Address"."neighborhoodId" = "Neighborhood"."neighborhoodId")));
+
+
+ALTER VIEW public.view_name OWNER TO "UYikamacim";
+
+--
 -- TOC entry 3246 (class 2604 OID 16404)
 -- Name: Account accountId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
@@ -449,10 +449,10 @@ ALTER TABLE ONLY public."District" ALTER COLUMN "districtId" SET DEFAULT nextval
 
 --
 -- TOC entry 3256 (class 2604 OID 16487)
--- Name: Neighbourhood neighbourhoodId; Type: DEFAULT; Schema: public; Owner: UYikamacim
+-- Name: Neighborhood neighborhoodId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
-ALTER TABLE ONLY public."Neighbourhood" ALTER COLUMN "neighbourhoodId" SET DEFAULT nextval('public."Neighbourhood_neighbourhoodId_seq"'::regclass);
+ALTER TABLE ONLY public."Neighborhood" ALTER COLUMN "neighborhoodId" SET DEFAULT nextval('public."Neighborhood_neighborhoodId_seq"'::regclass);
 
 
 --
@@ -506,7 +506,7 @@ COPY public."Account" ("accountId", phone, password, name, surname, "accountType
 -- Data for Name: Address; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
-COPY public."Address" ("addressId", "accountId", name, "countryId", "provinceId", "districtId", "neighbourhoodId", "explicitAddress", "isDefault") FROM stdin;
+COPY public."Address" ("addressId", "accountId", name, "countryId", "provinceId", "districtId", "neighborhoodId", "explicitAddress", "isDefault") FROM stdin;
 2	12	Ev	1	52	617	46774	Osman Yilmaz Mah. 635/1 Sok. No:5A/8, Kocaeli/GEBZE	f
 3	12	İş	1	52	617	46774	Osman Yilmaz Mah. 635/1 Sok. No:5A/8, Gebze/Kocaeli	t
 \.
@@ -1509,10 +1509,10 @@ COPY public."District" ("districtId", "provinceId", name) FROM stdin;
 --
 -- TOC entry 3445 (class 0 OID 16484)
 -- Dependencies: 229
--- Data for Name: Neighbourhood; Type: TABLE DATA; Schema: public; Owner: UYikamacim
+-- Data for Name: Neighborhood; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
-COPY public."Neighbourhood" ("neighbourhoodId", "districtId", name, "postalCode") FROM stdin;
+COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") FROM stdin;
 1	1	Akpınar Mahallesi	01720
 2	1	Başpınar Mahallesi	01720
 3	1	Mansurlu Mahallesi	01720
@@ -74945,10 +74945,10 @@ SELECT pg_catalog.setval('public."District_districtId_seq"', 1, false);
 --
 -- TOC entry 3466 (class 0 OID 0)
 -- Dependencies: 228
--- Name: Neighbourhood_neighbourhoodId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
+-- Name: Neighborhood_neighborhoodId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
-SELECT pg_catalog.setval('public."Neighbourhood_neighbourhoodId_seq"', 1, false);
+SELECT pg_catalog.setval('public."Neighborhood_neighborhoodId_seq"', 1, false);
 
 
 --
@@ -75034,11 +75034,11 @@ ALTER TABLE ONLY public."District"
 
 --
 -- TOC entry 3275 (class 2606 OID 16489)
--- Name: Neighbourhood Neighbourhood_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
+-- Name: Neighborhood Neighborhood_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
-ALTER TABLE ONLY public."Neighbourhood"
-    ADD CONSTRAINT "Neighbourhood_pk" PRIMARY KEY ("neighbourhoodId");
+ALTER TABLE ONLY public."Neighborhood"
+    ADD CONSTRAINT "Neighborhood_pk" PRIMARY KEY ("neighborhoodId");
 
 
 --
@@ -75106,11 +75106,11 @@ ALTER TABLE ONLY public."Address"
 
 --
 -- TOC entry 3285 (class 2606 OID 16533)
--- Name: Address Address_Neighbourhood_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
+-- Name: Address Address_Neighborhood_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
 ALTER TABLE ONLY public."Address"
-    ADD CONSTRAINT "Address_Neighbourhood_fk" FOREIGN KEY ("neighbourhoodId") REFERENCES public."Neighbourhood"("neighbourhoodId");
+    ADD CONSTRAINT "Address_Neighborhood_fk" FOREIGN KEY ("neighborhoodId") REFERENCES public."Neighborhood"("neighborhoodId");
 
 
 --
@@ -75133,11 +75133,11 @@ ALTER TABLE ONLY public."District"
 
 --
 -- TOC entry 3281 (class 2606 OID 16500)
--- Name: Neighbourhood Neighbourhood_District_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
+-- Name: Neighborhood Neighborhood_District_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
-ALTER TABLE ONLY public."Neighbourhood"
-    ADD CONSTRAINT "Neighbourhood_District_fk" FOREIGN KEY ("districtId") REFERENCES public."District"("districtId");
+ALTER TABLE ONLY public."Neighborhood"
+    ADD CONSTRAINT "Neighborhood_District_fk" FOREIGN KEY ("districtId") REFERENCES public."District"("districtId");
 
 
 --
@@ -75158,7 +75158,7 @@ ALTER TABLE ONLY public."Session"
     ADD CONSTRAINT "Session_Account_fk" FOREIGN KEY ("accountId") REFERENCES public."Account"("accountId");
 
 
--- Completed on 2025-03-26 12:03:38 UTC
+-- Completed on 2025-03-26 12:45:32 UTC
 
 --
 -- PostgreSQL database dump complete

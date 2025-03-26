@@ -4,14 +4,14 @@ import { RouteType } from "../../app/enums/RouteType";
 import { RouteHelper } from "../../app/helpers/RouteHelper";
 import type { IBuilder } from "../../app/interfaces/IBuilder";
 import { ApiRoute } from "../ApiRoute";
-import { NeighbourhoodsController } from "./NeighbourhoodsController";
+import { NeighborhoodsController } from "./NeighborhoodsController";
 
-export class NeighbourhoodsBuilder implements IBuilder {
-  public static readonly BASE_ROUTE = `${ApiRoute.BASE_ROUTE}/neighbourhoods`;
+export class NeighborhoodsBuilder implements IBuilder {
+  public static readonly BASE_ROUTE = `${ApiRoute.BASE_ROUTE}/neighborhoods`;
 
   public constructor(
     public readonly router = Router(),
-    private readonly controller = new NeighbourhoodsController(),
+    private readonly controller = new NeighborhoodsController(),
   ) {
     this.buildRoutes();
   }
@@ -19,17 +19,17 @@ export class NeighbourhoodsBuilder implements IBuilder {
   private buildRoutes(): void {
     RouteHelper.buildRoute(
       this.router,
-      { baseRoute: NeighbourhoodsBuilder.BASE_ROUTE, route: "/" },
+      { baseRoute: NeighborhoodsBuilder.BASE_ROUTE, route: "/" },
       RouteType.PUBLIC,
       Method.GET,
-      this.controller.getNeighbourhoods.bind(this.controller),
+      this.controller.getNeighborhoods.bind(this.controller),
     );
     RouteHelper.buildRoute(
       this.router,
-      { baseRoute: NeighbourhoodsBuilder.BASE_ROUTE, route: "/:neighbourhoodId" },
+      { baseRoute: NeighborhoodsBuilder.BASE_ROUTE, route: "/:neighborhoodId" },
       RouteType.PUBLIC,
       Method.GET,
-      this.controller.getNeighbourhoods$neighbourhoodId.bind(this.controller),
+      this.controller.getNeighborhoods$neighborhoodId.bind(this.controller),
     );
   }
 }

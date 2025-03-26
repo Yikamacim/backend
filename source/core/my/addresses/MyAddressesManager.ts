@@ -38,7 +38,7 @@ export class MyAddressesManager implements IManager {
       validatedData.countryId,
       validatedData.provinceId,
       validatedData.districtId,
-      validatedData.neighbourhoodId,
+      validatedData.neighborhoodId,
       validatedData.explicitAddress,
       validatedData.isDefault,
     );
@@ -110,7 +110,7 @@ export class MyAddressesManager implements IManager {
       validatedData.countryId,
       validatedData.provinceId,
       validatedData.districtId,
-      validatedData.neighbourhoodId,
+      validatedData.neighborhoodId,
       validatedData.explicitAddress,
       validatedData.isDefault,
     );

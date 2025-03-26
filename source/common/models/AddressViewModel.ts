@@ -12,8 +12,8 @@ export class AddressViewModel implements IModel {
     public readonly provinceName: string,
     public readonly districtId: number,
     public readonly districtName: string,
-    public readonly neighbourhoodId: number,
-    public readonly neighbourhoodName: string,
+    public readonly neighborhoodId: number,
+    public readonly neighborhoodName: string,
     public readonly explicitAddress: string,
     public readonly isDefault: boolean,
   ) {}
@@ -35,8 +35,8 @@ export class AddressViewModel implements IModel {
       record.provinceName,
       record.districtId,
       record.districtName,
-      record.neighbourhoodId,
-      record.neighbourhoodName,
+      record.neighborhoodId,
+      record.neighborhoodName,
       record.explicitAddress,
       record.isDefault,
     );
@@ -64,8 +64,8 @@ export class AddressViewModel implements IModel {
       typeof model.provinceName === "string" &&
       typeof model.districtId === "number" &&
       typeof model.districtName === "string" &&
-      typeof model.neighbourhoodId === "number" &&
-      typeof model.neighbourhoodName === "string" &&
+      typeof model.neighborhoodId === "number" &&
+      typeof model.neighborhoodName === "string" &&
       typeof model.explicitAddress === "string" &&
       typeof model.isDefault === "boolean"
     );

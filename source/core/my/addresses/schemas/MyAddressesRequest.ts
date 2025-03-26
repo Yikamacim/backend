@@ -13,7 +13,7 @@ export class MyAddressesRequest implements IRequest {
     public readonly countryId: number,
     public readonly provinceId: number,
     public readonly districtId: number,
-    public readonly neighbourhoodId: number,
+    public readonly neighborhoodId: number,
     public readonly explicitAddress: string,
     public readonly isDefault: boolean,
   ) {}
@@ -49,7 +49,7 @@ export class MyAddressesRequest implements IRequest {
       typeof blueprint.countryId === "number" &&
       typeof blueprint.provinceId === "number" &&
       typeof blueprint.districtId === "number" &&
-      typeof blueprint.neighbourhoodId === "number" &&
+      typeof blueprint.neighborhoodId === "number" &&
       typeof blueprint.explicitAddress === "string" &&
       typeof blueprint.isDefault === "boolean"
     );

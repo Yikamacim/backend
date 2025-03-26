@@ -18,7 +18,7 @@ import { LoginBuilder } from "./core/login/LoginBuilder";
 import { LogoutBuilder } from "./core/logout/LogoutBuilder";
 import { MyAddressesBuilder } from "./core/my/addresses/MyAddressesBuilder";
 import { MySessionsBuilder } from "./core/my/sessions/MySessionsBuilder";
-import { NeighbourhoodsBuilder } from "./core/neighbourhoods/NeighbourhoodsBuilder";
+import { NeighborhoodsBuilder } from "./core/neighborhoods/NeighborhoodsBuilder";
 import { ProvincesBuilder } from "./core/provinces/ProvincesBuilder";
 import { RefreshBuilder } from "./core/refresh/RefreshBuilder";
 import { SignupBuilder } from "./core/signup/SignupBuilder";
@@ -82,9 +82,9 @@ app.use(
   new DistrictsBuilder().router,
 );
 app.use(
-  // api/neighbourhoods
-  NeighbourhoodsBuilder.BASE_ROUTE,
-  new NeighbourhoodsBuilder().router,
+  // api/neighborhoods
+  NeighborhoodsBuilder.BASE_ROUTE,
+  new NeighborhoodsBuilder().router,
 );
 app.use(
   // api/provinces

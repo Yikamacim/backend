@@ -27,8 +27,8 @@ export class MyAddressesResponse implements IResponse {
       model.provinceName,
       model.districtId,
       model.districtName,
-      model.neighbourhoodId,
-      model.neighbourhoodName,
+      model.neighborhoodId,
+      model.neighborhoodName,
       model.explicitAddress,
       model.isDefault,
     );

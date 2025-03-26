@@ -9,7 +9,7 @@ export class AddressModel implements IModel {
     public readonly countryId: number,
     public readonly provinceId: number,
     public readonly districtId: number,
-    public readonly neighbourhoodId: number,
+    public readonly neighborhoodId: number,
     public readonly explicitAddress: string,
     public readonly isDefault: boolean,
   ) {}
@@ -28,7 +28,7 @@ export class AddressModel implements IModel {
       record.countryId,
       record.provinceId,
       record.districtId,
-      record.neighbourhoodId,
+      record.neighborhoodId,
       record.explicitAddress,
       record.isDefault,
     );
@@ -53,7 +53,7 @@ export class AddressModel implements IModel {
       typeof model.countryId === "number" &&
       typeof model.provinceId === "number" &&
       typeof model.districtId === "number" &&
-      typeof model.neighbourhoodId === "number" &&
+      typeof model.neighborhoodId === "number" &&
       typeof model.explicitAddress === "string" &&
       typeof model.isDefault === "boolean"
     );
