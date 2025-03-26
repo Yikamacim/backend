@@ -1,32 +1,40 @@
 import type { IResponse } from "../../../../app/interfaces/IResponse";
-import type { AddressModel } from "../../../../common/models/AddressModel";
+import type { AddressViewModel } from "../../../../common/models/AddressViewModel";
 
 export class MyAddressesResponse implements IResponse {
   private constructor(
-    public readonly addressesId: number,
+    public readonly addressId: number,
     public readonly name: string,
     public readonly countryId: number,
+    public readonly countryName: string,
     public readonly provinceId: number,
+    public readonly provinceName: string,
     public readonly districtId: number,
+    public readonly districtName: string,
     public readonly neighborhoodId: number,
+    public readonly neighborhoodName: string,
     public readonly expicitAddress: string,
     public readonly isDefault: boolean,
   ) {}
 
-  public static fromModel(model: AddressModel): MyAddressesResponse {
+  public static fromModel(model: AddressViewModel): MyAddressesResponse {
     return new MyAddressesResponse(
       model.addressId,
       model.name,
       model.countryId,
+      model.countryName,
       model.provinceId,
+      model.provinceName,
       model.districtId,
+      model.districtName,
       model.neighbourhoodId,
+      model.neighbourhoodName,
       model.explicitAddress,
       model.isDefault,
     );
   }
 
-  public static fromModels(models: AddressModel[]): MyAddressesResponse[] {
-    return models.map((model: AddressModel) => MyAddressesResponse.fromModel(model));
+  public static fromModels(models: AddressViewModel[]): MyAddressesResponse[] {
+    return models.map((model: AddressViewModel) => MyAddressesResponse.fromModel(model));
   }
 }

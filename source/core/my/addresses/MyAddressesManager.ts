@@ -2,6 +2,7 @@ import type { ManagerResponse } from "../../../@types/responses";
 import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
+import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { MyAddressesProvider } from "./MyAddressesProvider";
 import type { MyAddressesRequest } from "./schemas/MyAddressesRequest";
@@ -41,12 +42,20 @@ export class MyAddressesManager implements IManager {
       validatedData.explicitAddress,
       validatedData.isDefault,
     );
+    // Get created address
+    const prGetCreatedAddress = await this.provider.getMyAddress(
+      accountId,
+      prCreateAddress.data.addressId,
+    );
+    if (!prGetCreatedAddress.data) {
+      throw new UnexpectedDatabaseStateError("Address was not created");
+    }
     // Return address
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyAddressesResponse.fromModel(prCreateAddress.data),
+      MyAddressesResponse.fromModel(prGetCreatedAddress.data),
     );
   }
 
@@ -105,12 +114,28 @@ export class MyAddressesManager implements IManager {
       validatedData.explicitAddress,
       validatedData.isDefault,
     );
+    if (!prUpdateAddress.data) {
+      throw new UnexpectedDatabaseStateError("Address was not updated");
+    }
+    // Get updated address
+    const prGetUpdatedAddress = await this.provider.getMyAddress(
+      accountId,
+      prUpdateAddress.data.addressId,
+    );
+    if (!prGetUpdatedAddress.data) {
+      return ResponseUtil.managerResponse(
+        new HttpStatus(HttpStatusCode.NOT_FOUND),
+        null,
+        [new ClientError(ClientErrorCode.ADDRESS_NOT_FOUND)],
+        null,
+      );
+    }
     // Return address
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyAddressesResponse.fromModel(prUpdateAddress.data),
+      MyAddressesResponse.fromModel(prGetUpdatedAddress.data),
     );
   }
 
@@ -131,7 +156,7 @@ export class MyAddressesManager implements IManager {
     // Check if address is default
     if (prGetMyAddress.data.isDefault) {
       return ResponseUtil.managerResponse(
-        new HttpStatus(HttpStatusCode.BAD_REQUEST),
+        new HttpStatus(HttpStatusCode.CONFLICT),
         null,
         [new ClientError(ClientErrorCode.CANNOT_DELETE_DEFAULT_ADDRESS)],
         null,

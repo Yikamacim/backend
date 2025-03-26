@@ -22,7 +22,7 @@ export class NeighbourhoodsBuilder implements IBuilder {
       { baseRoute: NeighbourhoodsBuilder.BASE_ROUTE, route: "/" },
       RouteType.PUBLIC,
       Method.GET,
-      this.controller.getNeighbourhoods$districtId.bind(this.controller),
+      this.controller.getNeighbourhoods.bind(this.controller),
     );
     RouteHelper.buildRoute(
       this.router,

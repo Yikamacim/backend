@@ -11,7 +11,7 @@ import { NeighbourhoodsResponse } from "./schemas/NeighbourhoodsResponse";
 export class NeighbourhoodsManager implements IManager {
   public constructor(private readonly provider = new NeighbourhoodsProvider()) {}
 
-  public async getNeighbourhoods$districtId(
+  public async getNeighbourhoods(
     validatedData: NeighbourhoodsQueries,
   ): Promise<ManagerResponse<NeighbourhoodsResponse[]>> {
     // Get neighbourhoods by province id

@@ -11,7 +11,7 @@ import { DistrictsResponse } from "./schemas/DistrictsResponse";
 export class DistrictsManager implements IManager {
   public constructor(private readonly provider = new DistrictsProvider()) {}
 
-  public async getDistricts$provinceId(
+  public async getDistricts(
     validatedData: DistrictsQueries,
   ): Promise<ManagerResponse<DistrictsResponse[]>> {
     // Get districts by province id

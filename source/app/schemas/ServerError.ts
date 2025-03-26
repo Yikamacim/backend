@@ -19,6 +19,13 @@ export class UnexpectedQueryResultError extends Error {
   }
 }
 
+export class UnexpectedDatabaseStateError extends Error {
+  public constructor(public readonly state: string) {
+    super(`Database state was unexpected. State: ${state}.`);
+    this.name = "UnexpectedDatabaseStateError";
+  }
+}
+
 export class ModelMismatchError extends Error {
   public constructor(public readonly model: unknown) {
     super(

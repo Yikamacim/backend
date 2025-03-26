@@ -11,7 +11,7 @@ import type { NeighbourhoodsResponse } from "./schemas/NeighbourhoodsResponse";
 export class NeighbourhoodsController implements IController {
   public constructor(private readonly manager = new NeighbourhoodsManager()) {}
 
-  public async getNeighbourhoods$districtId(
+  public async getNeighbourhoods(
     req: ExpressRequest,
     res: ControllerResponse<NeighbourhoodsResponse[], null>,
     next: ExpressNextFunction,
@@ -30,7 +30,7 @@ export class NeighbourhoodsController implements IController {
         );
       }
       // >-----------< LOGIC >-----------<
-      const mr = await this.manager.getNeighbourhoods$districtId(pr.validatedData);
+      const mr = await this.manager.getNeighbourhoods(pr.validatedData);
       // >-----------< RESPONSE >-----------<
       return ResponseUtil.controllerResponse(
         res,

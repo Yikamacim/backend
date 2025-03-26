@@ -5,7 +5,7 @@
 -- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
 -- Dumped by pg_dump version 16.8 (Debian 16.8-1.pgdg120+1)
 
--- Started on 2025-03-25 21:01:13 UTC
+-- Started on 2025-03-26 11:25:56 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -494,6 +494,7 @@ ALTER TABLE ONLY public."Verification" ALTER COLUMN "verificationId" SET DEFAULT
 --
 
 COPY public."Account" ("accountId", phone, password, name, surname, "accountType", "isVerified") FROM stdin;
+12	+905554443322	$2b$10$ltdEnbrSlYx/Bgbb9m8WX.WJg8LMj2629iYdVKyJ34hNaCMd2epVi	Postman	Client	USER	t
 \.
 
 
@@ -504,6 +505,8 @@ COPY public."Account" ("accountId", phone, password, name, surname, "accountType
 --
 
 COPY public."Address" ("addressId", "accountId", name, "countryId", "provinceId", "districtId", "neighbourhoodId", "explicitAddress", "isDefault") FROM stdin;
+2	12	Ev	1	52	617	46774	Osman Yilmaz Mah. 635/1 Sok. No:5A/8, Kocaeli/GEBZE	f
+3	12	İş	1	52	617	46774	Osman Yilmaz Mah. 635/1 Sok. No:5A/8, Gebze/Kocaeli	t
 \.
 
 
@@ -74886,6 +74889,7 @@ COPY public."Province" ("provinceId", "countryId", name) FROM stdin;
 --
 
 COPY public."Session" ("sessionId", "accountId", "deviceName", "sessionKey", "refreshToken", "lastActivityDate") FROM stdin;
+10	12	Postman Client	01876e626dae1931ede393903b8af7de327b828c52b37113ac3a24f373c1f0c5	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjEyLCJhY2NvdW50VHlwZSI6IlVTRVIiLCJzZXNzaW9uSWQiOjEwLCJpYXQiOjE3NDI5ODgwODMsImV4cCI6MTc0NTU4MDA4M30.Xcg4DaradYopza8MvtLn8I6wI21gustHdjgUnjWwdcM	2025-03-26
 \.
 
 
@@ -74905,7 +74909,7 @@ COPY public."Verification" ("verificationId", phone, code, "sentAt") FROM stdin;
 -- Name: Account_accountId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
-SELECT pg_catalog.setval('public."Account_accountId_seq"', 11, true);
+SELECT pg_catalog.setval('public."Account_accountId_seq"', 12, true);
 
 
 --
@@ -74914,7 +74918,7 @@ SELECT pg_catalog.setval('public."Account_accountId_seq"', 11, true);
 -- Name: Address_addressId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
-SELECT pg_catalog.setval('public."Address_addressId_seq"', 1, false);
+SELECT pg_catalog.setval('public."Address_addressId_seq"', 3, true);
 
 
 --
@@ -74968,7 +74972,7 @@ SELECT pg_catalog.setval('public."Session_accountId_seq"', 1, false);
 -- Name: Session_sessionId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
-SELECT pg_catalog.setval('public."Session_sessionId_seq"', 8, true);
+SELECT pg_catalog.setval('public."Session_sessionId_seq"', 10, true);
 
 
 --
@@ -75071,12 +75075,12 @@ ALTER TABLE ONLY public."Verification"
 
 
 --
--- TOC entry 3282 (class 2606 OID 16513)
+-- TOC entry 3282 (class 2606 OID 16548)
 -- Name: Address Address_Account_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
 ALTER TABLE ONLY public."Address"
-    ADD CONSTRAINT "Address_Account_fk" FOREIGN KEY ("addressId") REFERENCES public."Account"("accountId");
+    ADD CONSTRAINT "Address_Account_fk" FOREIGN KEY ("accountId") REFERENCES public."Account"("accountId");
 
 
 --
@@ -75151,7 +75155,7 @@ ALTER TABLE ONLY public."Session"
     ADD CONSTRAINT "Session_Account_fk" FOREIGN KEY ("accountId") REFERENCES public."Account"("accountId");
 
 
--- Completed on 2025-03-25 21:01:13 UTC
+-- Completed on 2025-03-26 11:25:56 UTC
 
 --
 -- PostgreSQL database dump complete

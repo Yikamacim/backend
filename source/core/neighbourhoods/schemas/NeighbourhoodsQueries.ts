@@ -10,7 +10,7 @@ export class NeighbourhoodsQueries implements IQueries {
   private constructor(public readonly districtId: string) {}
 
   public static parse(req: ExpressRequest): ParserResponse<NeighbourhoodsQueries | null> {
-    const preliminaryData: unknown = req.params["districtId"];
+    const preliminaryData: unknown = req.query["districtId"];
     // V1: Existence validation
     if (!ProtoUtil.isProtovalid(preliminaryData)) {
       return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.MISSING_QUERY)], null);

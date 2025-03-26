@@ -11,7 +11,7 @@ import type { DistrictsResponse } from "./schemas/DistrictsResponse";
 export class DistrictsController implements IController {
   public constructor(private readonly manager = new DistrictsManager()) {}
 
-  public async getDistricts$provinceId(
+  public async getDistricts(
     req: ExpressRequest,
     res: ControllerResponse<DistrictsResponse[], null>,
     next: ExpressNextFunction,
@@ -30,7 +30,7 @@ export class DistrictsController implements IController {
         );
       }
       // >-----------< LOGIC >-----------<
-      const mr = await this.manager.getDistricts$provinceId(pr.validatedData);
+      const mr = await this.manager.getDistricts(pr.validatedData);
       // >-----------< RESPONSE >-----------<
       return ResponseUtil.controllerResponse(
         res,

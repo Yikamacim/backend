@@ -22,7 +22,7 @@ export class ProvincesBuilder implements IBuilder {
       { baseRoute: ProvincesBuilder.BASE_ROUTE, route: "/" },
       RouteType.PUBLIC,
       Method.GET,
-      this.controller.getProvinces$countryId.bind(this.controller),
+      this.controller.getProvinces.bind(this.controller),
     );
     RouteHelper.buildRoute(
       this.router,

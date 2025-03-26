@@ -11,7 +11,7 @@ import type { ProvincesResponse } from "./schemas/ProvincesResponse";
 export class ProvincesController implements IController {
   public constructor(private readonly manager = new ProvincesManager()) {}
 
-  public async getProvinces$countryId(
+  public async getProvinces(
     req: ExpressRequest,
     res: ControllerResponse<ProvincesResponse[], null>,
     next: ExpressNextFunction,
@@ -30,7 +30,7 @@ export class ProvincesController implements IController {
         );
       }
       // >-----------< LOGIC >-----------<
-      const mr = await this.manager.getProvinces$countryId(pr.validatedData);
+      const mr = await this.manager.getProvinces(pr.validatedData);
       // >-----------< RESPONSE >-----------<
       return ResponseUtil.controllerResponse(
         res,
