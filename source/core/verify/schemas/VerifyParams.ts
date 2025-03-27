@@ -7,7 +7,7 @@ import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { PhoneValidator } from "../../../common/validators/PhoneValidator";
 
 export class VerifyParams implements IParams {
-  private constructor(public phone: string) {}
+  private constructor(public readonly phone: string) {}
 
   public static parse(req: ExpressRequest): ParserResponse<VerifyParams | null> {
     const preliminaryData: unknown = req.params["phone"];
@@ -27,7 +27,6 @@ export class VerifyParams implements IParams {
       );
     }
     const blueprintData: VerifyParams = protovalidData;
-    blueprintData.phone = `+${blueprintData.phone}`;
     // V3: Physical validation
     const clientErrors: ClientError[] = [];
     PhoneValidator.validate(blueprintData.phone, clientErrors);
