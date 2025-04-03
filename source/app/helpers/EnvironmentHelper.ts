@@ -25,6 +25,14 @@ export class EnvironmentHelper implements IHelper {
     return this.mJwtSecret;
   }
 
+  public get awsRegion(): string {
+    return this.mAwsRegion;
+  }
+
+  public get bucketName(): string {
+    return this.mBucketName;
+  }
+
   public get twilioAccountSid(): string {
     return this.mTwilioAccountSid;
   }
@@ -55,6 +63,8 @@ export class EnvironmentHelper implements IHelper {
 
   private constructor(
     private readonly mJwtSecret = this.loadJwtSecret(),
+    private readonly mAwsRegion = this.loadAwsRegion(),
+    private readonly mBucketName = this.loadBucketName(),
     private readonly mTwilioAccountSid = this.loadTwilioAccountSid(),
     private readonly mTwilioAuthToken = this.loadTwilioAuthToken(),
     private readonly mTwilioPhoneNumber = this.loadTwilioPhoneNumber(),
@@ -77,6 +87,24 @@ export class EnvironmentHelper implements IHelper {
     return envValue;
   }
 
+  private loadJwtSecret(): Secret {
+    const encoded = this.getEnvValue(
+      ["JXCQ_SBWR", "JQXE_SBPN", "JBAX_SFBI", "JYQQ_SXWY", "JRGM_SGXD"],
+      true,
+    );
+    return Buffer.from(encoded, "base64url").toString("utf-8");
+  }
+
+  private loadAwsRegion(): string {
+    const encoded = this.getEnvValue(["AXIL_RKFH", "AVXT_RJME"], true);
+    return Buffer.from(encoded, "base64url").toString("utf-8");
+  }
+
+  private loadBucketName(): string {
+    const encoded = this.getEnvValue(["BXOG_NDOS", "BIXI_NKLK"], true);
+    return Buffer.from(encoded, "base64url").toString("utf-8");
+  }
+
   private loadTwilioAccountSid(): string {
     const encoded = this.getEnvValue(
       ["TXJK_IKJH", "TYXK_ILFT", "TKRX_IPVR", "TBZK_IXZG", "TEQL_ICXN"],
@@ -95,14 +123,6 @@ export class EnvironmentHelper implements IHelper {
 
   private loadTwilioPhoneNumber(): string {
     const encoded = this.getEnvValue(["TXRA_PKZC", "TVXA_PHFZ"], true);
-    return Buffer.from(encoded, "base64url").toString("utf-8");
-  }
-
-  private loadJwtSecret(): Secret {
-    const encoded = this.getEnvValue(
-      ["JXCQ_SBWR", "JQXE_SBPN", "JBAX_SFBI", "JYQQ_SXWY", "JRGM_SGXD"],
-      true,
-    );
     return Buffer.from(encoded, "base64url").toString("utf-8");
   }
 
