@@ -17,6 +17,7 @@ import { DistrictsBuilder } from "./core/districts/DistrictsBuilder";
 import { LoginBuilder } from "./core/login/LoginBuilder";
 import { LogoutBuilder } from "./core/logout/LogoutBuilder";
 import { MyAddressesBuilder } from "./core/my/addresses/MyAddressesBuilder";
+import { MyMediasBuilder } from "./core/my/medias/MyMediasBuilder";
 import { MySessionsBuilder } from "./core/my/sessions/MySessionsBuilder";
 import { NeighborhoodsBuilder } from "./core/neighborhoods/NeighborhoodsBuilder";
 import { ProvincesBuilder } from "./core/provinces/ProvincesBuilder";
@@ -94,16 +95,22 @@ app.use(
 
 // PRIVATE ROUTES
 app.use(
-  // my/sessions
-  MySessionsBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
-  new MySessionsBuilder().router,
-);
-app.use(
   // my/addresses
   MyAddressesBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
   new MyAddressesBuilder().router,
+);
+app.use(
+  // my/medias
+  MyMediasBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
+  new MyMediasBuilder().router,
+);
+app.use(
+  // my/sessions
+  MySessionsBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
+  new MySessionsBuilder().router,
 );
 app.use(
   // logout
