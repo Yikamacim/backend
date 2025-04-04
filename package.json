@@ -40,7 +40,7 @@
     "db-out": "docker exec ykm-db pg_dump --host=localhost --port=5432 --username=UYikamacim --verbose --dbname=DYikamacim --format=plain --blobs > ./dumps/db/db_dump.sql",
     "db-in": "psql --host=ykm-rds-db.czggso0ksewe.eu-central-1.rds.amazonaws.com --port=5432 --username=UYikamacim --dbname=postgres --command=\"DROP DATABASE IF EXISTS \\\"DYikamacim\\\";\" && psql --host=ykm-rds-db.czggso0ksewe.eu-central-1.rds.amazonaws.com --port=5432 --username=UYikamacim --dbname=postgres --command=\"CREATE DATABASE \\\"DYikamacim\\\";\" && psql --host=ykm-rds-db.czggso0ksewe.eu-central-1.rds.amazonaws.com --port=5432 --username=UYikamacim --dbname=DYikamacim --file=./dumps/db/db_dump.sql",
     "start-devt": "node ./out/main.js",
-    "start-prod": "pm2 start ./out/main.js -- --production",
-    "stop-prod": "pm2 stop ./out/main.js"
+    "start-prod": "pm2 start --name yikamacim ./out/main.js -- --production",
+    "stop-prod": "pm2 stop yikamacim && pm2 delete yikamacim"
   }
 }
