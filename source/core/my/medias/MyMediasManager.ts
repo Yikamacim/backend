@@ -22,6 +22,7 @@ export class MyMediasManager implements IManager {
       null,
       [],
       MyMediasUploadResponse.fromModel(
+        prCreateMyMedia.data.mediaId,
         await BucketModule.instance.getUploadUrl(
           prCreateMyMedia.data.mediaId.toString(),
           mediaType,
