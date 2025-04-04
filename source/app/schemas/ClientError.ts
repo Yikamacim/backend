@@ -97,6 +97,8 @@ export enum ClientErrorCode {
   INVALID_ADDRESS_ID = 80800,
   ADDRESS_NOT_FOUND = 80801,
   CANNOT_DELETE_DEFAULT_ADDRESS = 80802,
+  //  *  *  809XX: /my/medias errors
+  INVALID_MEDIA_TYPE = 80900,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -189,6 +191,8 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_ADDRESS_ID]: "Provided address id was invalid.",
   [ClientErrorCode.ADDRESS_NOT_FOUND]: "Account doesn't have an address with the provided id.",
   [ClientErrorCode.CANNOT_DELETE_DEFAULT_ADDRESS]: "Default address can't be deleted.",
+  //  *  *  809XX: /my/medias errors
+  [ClientErrorCode.INVALID_MEDIA_TYPE]: "Provided media type was invalid.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

@@ -1,3 +1,4 @@
+import type { MediaType } from "express";
 import type { IResponse } from "../interfaces/IResponse";
 
 export class ServerError implements IResponse {
@@ -57,5 +58,12 @@ export class CorruptedRouteInfoError extends Error {
   public constructor(public readonly route: string) {
     super(`Information about route "${route}" is corrupted. Contact with the developers.`);
     this.name = "CorruptedRouteInfoError";
+  }
+}
+
+export class UnexpectedMediaTypeError extends Error {
+  public constructor(public readonly mediaType: MediaType) {
+    super(`Media type "${mediaType.value}" is not expected. Contact with the developers.`);
+    this.name = "UnexpectedMediaTypeError";
   }
 }
