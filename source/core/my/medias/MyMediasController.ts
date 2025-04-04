@@ -37,7 +37,7 @@ export class MyMediasController implements IController {
       // >----------< LOGIC >----------<
       const mr = await this.manager.getMyMediasUpload$mediaType(
         tokenPayload.accountId,
-        pr.validatedData.mediaType as MediaType,
+        pr.validatedData.mediaType.toUpperCase() as MediaType,
       );
       // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(
