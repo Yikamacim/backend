@@ -18,7 +18,7 @@ export class MyCarpetsParams implements IParams {
         null,
       );
     }
-    const protovalidData: unknown = { sessionId: preliminaryData };
+    const protovalidData: unknown = { carpetId: preliminaryData };
     // V2: Schematic validation
     if (!MyCarpetsParams.isBlueprint(protovalidData)) {
       return ResponseUtil.parserResponse(
