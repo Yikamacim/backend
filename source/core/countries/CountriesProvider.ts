@@ -14,10 +14,7 @@ export class CountriesProvider implements IProvider {
       if (!records) {
         return await ResponseUtil.providerResponse([]);
       }
-      return await ResponseUtil.providerResponse(
-        records.map((record: unknown) => CountryModel.fromRecord(record)),
-        false,
-      );
+      return await ResponseUtil.providerResponse(CountryModel.fromRecords(records));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;

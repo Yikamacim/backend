@@ -1,5 +1,6 @@
 import { AccountRules } from "../../common/rules/AccountRules";
 import { AddressRules } from "../../common/rules/AddressRules";
+import { ItemRules } from "../../common/rules/ItemRules";
 import { SessionRules } from "../../common/rules/SessionRules";
 import { VerificationRules } from "../../common/rules/VerificationRules";
 import { AuthConstants } from "../constants/AuthConstants";
@@ -57,6 +58,8 @@ export enum ClientErrorCode {
   INVALID_CODE_LENGTH = 60004,
   INVALID_ADDRESS_NAME_LENGTH = 60005,
   INVALID_EXPLICIT_ADDRESS_LENGTH = 60006,
+  INVALID_ITEM_NAME_LENGTH = 60007,
+  INVALID_ITEM_DESCRIPTION_LENGTH = 60008,
   //  *  7XXXX: Content errors
   INVALID_PHONE_CONTENT = 70002,
   INVALID_PASSWORD_CONTENT = 70003,
@@ -65,6 +68,9 @@ export enum ClientErrorCode {
   INVALID_CODE_CONTENT = 70006,
   INVALID_ADDRESS_NAME_CONTENT = 70007,
   INVALID_EXPLICIT_ADDRESS_CONTENT = 70008,
+  INVALID_ITEM_NAME_CONTENT = 70009,
+  INVALID_ITEM_DESCRIPTION_CONTENT = 70010,
+  DUPLICATE_MEDIA_IDS = 70011,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -99,6 +105,11 @@ export enum ClientErrorCode {
   CANNOT_DELETE_DEFAULT_ADDRESS = 80802,
   //  *  *  809XX: /my/medias errors
   INVALID_MEDIA_TYPE = 80900,
+  //  *  *  810XX: /my/carpets errors
+  INVALID_CARPET_ID = 81000,
+  CARPET_NOT_FOUND = 81001,
+  MEDIA_NOT_FOUND = 81002,
+  MEDIA_NOT_UPLOADED = 81003,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -146,6 +157,8 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_CODE_LENGTH]: `Provided code's length wasn't ${VerificationRules.CODE_LENGTH}.`,
   [ClientErrorCode.INVALID_ADDRESS_NAME_LENGTH]: `Provided address name wasn't in the length range of ${AddressRules.NAME_MIN_LENGTH} to ${AddressRules.NAME_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_EXPLICIT_ADDRESS_LENGTH]: `Provided explicit address wasn't in the length range of ${AddressRules.EXPLICIT_ADDRESS_MIN_LENGTH} to ${AddressRules.EXPLICIT_ADDRESS_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_ITEM_NAME_LENGTH]: `Provided item name wasn't in the length range of ${ItemRules.NAME_MIN_LENGTH} to ${ItemRules.NAME_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_ITEM_DESCRIPTION_LENGTH]: `Provided item description wasn't in the length range of ${ItemRules.DESCRIPTION_MIN_LENGTH} to ${ItemRules.DESCRIPTION_MAX_LENGTH}.`,
   //  *  7XXXX: Content errors
   [ClientErrorCode.INVALID_PHONE_CONTENT]: "Provided phone contained invalid characters.",
   [ClientErrorCode.INVALID_PASSWORD_CONTENT]:
@@ -157,6 +170,10 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
     "Provided address name contained invalid characters.",
   [ClientErrorCode.INVALID_EXPLICIT_ADDRESS_CONTENT]:
     "Provided explicit address contained invalid characters.",
+  [ClientErrorCode.INVALID_ITEM_NAME_CONTENT]: "Provided item name contained invalid characters.",
+  [ClientErrorCode.INVALID_ITEM_DESCRIPTION_CONTENT]:
+    "Provided item description contained invalid characters.",
+  [ClientErrorCode.DUPLICATE_MEDIA_IDS]: "Provided media ids contained duplicates.",
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -193,6 +210,11 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.CANNOT_DELETE_DEFAULT_ADDRESS]: "Default address can't be deleted.",
   //  *  *  809XX: /my/medias errors
   [ClientErrorCode.INVALID_MEDIA_TYPE]: "Provided media type was invalid.",
+  //  *  *  810XX: /my/carpets errors
+  [ClientErrorCode.INVALID_CARPET_ID]: "Provided carpet id was invalid.",
+  [ClientErrorCode.CARPET_NOT_FOUND]: "Account doesn't have a carpet with the provided id.",
+  [ClientErrorCode.MEDIA_NOT_FOUND]: "Account doesn't have a media with the provided id.",
+  [ClientErrorCode.MEDIA_NOT_UPLOADED]: "Media wasn't uploaded to the bucket.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

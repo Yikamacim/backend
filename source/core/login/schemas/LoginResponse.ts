@@ -1,5 +1,5 @@
-import type { AccountType } from "../../../app/enums/AccountType";
 import type { IResponse } from "../../../app/interfaces/IResponse";
+import type { AccountType } from "../../../common/enums/AccountType";
 import type { AccountModel } from "../../../common/models/AccountModel";
 
 export class LoginResponse implements IResponse {

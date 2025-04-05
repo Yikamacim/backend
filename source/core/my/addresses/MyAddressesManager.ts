@@ -31,7 +31,7 @@ export class MyAddressesManager implements IManager {
     if (validatedData.isDefault) {
       await this.provider.clearMyDefaultAddresses(accountId);
     }
-    // Create address
+    // Create my address
     const prCreateAddress = await this.provider.createAddress(
       accountId,
       validatedData.name,
@@ -42,7 +42,7 @@ export class MyAddressesManager implements IManager {
       validatedData.explicitAddress,
       validatedData.isDefault,
     );
-    // Get created address
+    // Get the created address
     const prGetCreatedAddress = await this.provider.getMyAddress(
       accountId,
       prCreateAddress.data.addressId,
@@ -50,7 +50,7 @@ export class MyAddressesManager implements IManager {
     if (!prGetCreatedAddress.data) {
       throw new UnexpectedDatabaseStateError("Address was not created");
     }
-    // Return address
+    // Return the created address
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
@@ -74,7 +74,7 @@ export class MyAddressesManager implements IManager {
         null,
       );
     }
-    // Return address
+    // Return my address
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
@@ -103,7 +103,7 @@ export class MyAddressesManager implements IManager {
     if (validatedData.isDefault) {
       await this.provider.clearMyDefaultAddresses(accountId);
     }
-    // Update address
+    // Update my address
     const prUpdateAddress = await this.provider.updateAddress(
       addressId,
       validatedData.name,
@@ -130,7 +130,7 @@ export class MyAddressesManager implements IManager {
         null,
       );
     }
-    // Return address
+    // Return updated address
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
@@ -162,7 +162,7 @@ export class MyAddressesManager implements IManager {
         null,
       );
     }
-    // Delete address
+    // Delete my address
     await this.provider.deleteAddress(addressId);
     // Return success
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.NO_CONTENT), null, [], null);

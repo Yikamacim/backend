@@ -1,7 +1,7 @@
 import type { TokenPayload } from "../../@types/tokens";
 import type { ExpressResponse } from "../../@types/wrappers";
+import { AccountType } from "../../common/enums/AccountType";
 import { LocalsConstants } from "../constants/LocalsConstants";
-import { AccountType } from "../enums/AccountType";
 import type { IHelper } from "../interfaces/IHelper";
 import { UnexpectedAuthError } from "../schemas/ServerError";
 

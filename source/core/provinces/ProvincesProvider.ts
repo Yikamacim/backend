@@ -18,9 +18,7 @@ export class ProvincesProvider implements IProvider {
       if (!records) {
         return await ResponseUtil.providerResponse([]);
       }
-      return await ResponseUtil.providerResponse(
-        records.map((record: unknown) => ProvinceModel.fromRecord(record)),
-      );
+      return await ResponseUtil.providerResponse(ProvinceModel.fromRecords(records));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;

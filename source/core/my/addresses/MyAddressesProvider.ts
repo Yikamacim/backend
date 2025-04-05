@@ -19,9 +19,7 @@ export class MyAddressesProvider implements IProvider {
       if (!records) {
         return await ResponseUtil.providerResponse([]);
       }
-      return await ResponseUtil.providerResponse(
-        records.map((record: unknown) => AddressViewModel.fromRecord(record)),
-      );
+      return await ResponseUtil.providerResponse(AddressViewModel.fromRecords(records));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -62,7 +60,7 @@ export class MyAddressesProvider implements IProvider {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(
-        AddressQueries.INSERT_ADDRESS_RT_$ACID_$ANAME_$CNID_$PVID_$DSID_$NBID_$EXAD_$ISDF,
+        AddressQueries.INSERT_ADDRESS_RT_$ACID_$NAME_$CNID_$PVID_$DSID_$NBID_$EXAD_$ISDF,
         [
           accountId,
           name,
@@ -98,7 +96,7 @@ export class MyAddressesProvider implements IProvider {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(
-        AddressQueries.UPDATE_ADDRESS_RT_$ADID_$ANAME_$CNID_$PVID_$DSID_$NBID_$EXAD_$ISDF,
+        AddressQueries.UPDATE_ADDRESS_RT_$ADID_$NAME_$CNID_$PVID_$DSID_$NBID_$EXAD_$ISDF,
         [
           addressId,
           name,
@@ -135,7 +133,7 @@ export class MyAddressesProvider implements IProvider {
   public async clearMyDefaultAddresses(accountId: number): Promise<ProviderResponse<null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      await DbConstants.POOL.query(AddressQueries.CLEAR_DEFAULT_ADDRESSES_$ACID, [accountId]);
+      await DbConstants.POOL.query(AddressQueries.UPDATE_ADDRESSES_$ACID_$ISDF, [accountId, false]);
       return await ResponseUtil.providerResponse(null);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);

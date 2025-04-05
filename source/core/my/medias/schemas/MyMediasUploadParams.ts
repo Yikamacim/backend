@@ -1,10 +1,10 @@
 import type { ParserResponse } from "../../../../@types/responses";
 import type { ExpressRequest } from "../../../../@types/wrappers";
-import { MediaType } from "../../../../app/enums/MediaType";
 import type { IParams } from "../../../../app/interfaces/IParams";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
+import { MediaType } from "../../../../common/enums/MediaType";
 
 export class MyMediasUploadParams implements IParams {
   private constructor(public readonly mediaType: string) {}

@@ -42,14 +42,15 @@ export class AuthProvider implements IProvider {
       // Check if session is found
       if (!session) {
         // Session not found, create one
-        const tokens = await this.createSession(sessionData);
+        const tokens = await this.partialCreateSession(sessionData);
         // If account has more than max sessions, delete the oldest one
-        await this.eliminateSessionIfNecessary(sessions);
+        await this.partialEliminateSessionIfNecessary(sessions);
         return await ResponseUtil.providerResponse(tokens);
       } else {
         // Session found, update it
-        await DbConstants.POOL.query(DbConstants.COMMIT);
-        return await ResponseUtil.providerResponse(await this.updateSession(sessionData, session));
+        return await ResponseUtil.providerResponse(
+          await this.partialUpdateSession(sessionData, session),
+        );
       }
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
@@ -68,9 +69,9 @@ export class AuthProvider implements IProvider {
     }
   }
 
-  // >-----------------------------------< PRIVATE METHODS >------------------------------------< //
+  // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async createSession(sessionData: SessionData): Promise<Tokens> {
+  private async partialCreateSession(sessionData: SessionData): Promise<Tokens> {
     const sessionResults = await DbConstants.POOL.query(
       SessionQueries.INSERT_SESSION_RT_$ACID_$DVNM_$SKEY,
       [sessionData.accountId, sessionData.deviceName, sessionData.sessionKey],
@@ -98,7 +99,7 @@ export class AuthProvider implements IProvider {
     return tokens;
   }
 
-  private async eliminateSessionIfNecessary(sessions: SessionModel[]): Promise<void> {
+  private async partialEliminateSessionIfNecessary(sessions: SessionModel[]): Promise<void> {
     const sessionCount = sessions.length + 1;
     // If account has more than max sessions, delete the oldest one
     if (sessionCount > SessionConstants.MAX_SESSION_COUNT) {
@@ -110,7 +111,10 @@ export class AuthProvider implements IProvider {
     }
   }
 
-  private async updateSession(sessionData: SessionData, session: SessionModel): Promise<Tokens> {
+  private async partialUpdateSession(
+    sessionData: SessionData,
+    session: SessionModel,
+  ): Promise<Tokens> {
     // Create payload
     const payload: TokenPayload = {
       accountId: sessionData.accountId,

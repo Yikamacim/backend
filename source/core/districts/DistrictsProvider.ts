@@ -18,10 +18,7 @@ export class DistrictsProvider implements IProvider {
       if (!records) {
         return await ResponseUtil.providerResponse([]);
       }
-      return await ResponseUtil.providerResponse(
-        records.map((record: unknown) => DistrictModel.fromRecord(record)),
-        false,
-      );
+      return await ResponseUtil.providerResponse(DistrictModel.fromRecords(records));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;

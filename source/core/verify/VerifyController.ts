@@ -70,21 +70,21 @@ export class VerifyController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pr = VerifyParams.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      const pp = VerifyParams.parse(req);
+      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          pp.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.getVerify$phone(pr.validatedData);
+      const mr = await this.manager.getVerify$phone(pp.validatedData);
       if (mr.httpStatus.isSuccess()) {
-        await SmsModule.instance.send(pr.validatedData.phone);
+        await SmsModule.instance.send(pp.validatedData.phone);
       }
       // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(

@@ -1,14 +1,15 @@
 import type { ControllerResponse } from "../../../@types/responses";
 import type { Tokens } from "../../../@types/tokens";
 import type { ExpressNextFunction, ExpressRequest } from "../../../@types/wrappers";
-import type { MediaType } from "../../../app/enums/MediaType";
 import { PayloadHelper } from "../../../app/helpers/PayloadHelper";
 import type { IController } from "../../../app/interfaces/IController";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
+import type { MediaType } from "../../../common/enums/MediaType";
 import { AuthModule } from "../../../modules/auth/module";
 import { MyMediasManager } from "./MyMediasManager";
 import { MyMediasUploadParams } from "./schemas/MyMediasUploadParams";
+import { MyMediasUploadQueries } from "./schemas/MyMediasUploadQueries";
 import type { MyMediasUploadResponse } from "./schemas/MyMediasUploadResponse";
 
 export class MyMediasController implements IController {
@@ -23,13 +24,24 @@ export class MyMediasController implements IController {
       // >-----------< AUTHORIZATION >-----------<
       const tokenPayload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const pr = MyMediasUploadParams.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      const pp = MyMediasUploadParams.parse(req);
+      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          pp.clientErrors,
+          null,
+          null,
+        );
+      }
+      const pq = MyMediasUploadQueries.parse(req);
+      if (pq.clientErrors.length > 0 || pq.validatedData === null) {
+        return ResponseUtil.controllerResponse(
+          res,
+          new HttpStatus(HttpStatusCode.BAD_REQUEST),
+          null,
+          pq.clientErrors,
           null,
           null,
         );
@@ -37,7 +49,8 @@ export class MyMediasController implements IController {
       // >----------< LOGIC >----------<
       const mr = await this.manager.getMyMediasUpload$mediaType(
         tokenPayload.accountId,
-        pr.validatedData.mediaType.toUpperCase() as MediaType,
+        pp.validatedData.mediaType.toUpperCase() as MediaType,
+        pq.validatedData.extension,
       );
       // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(

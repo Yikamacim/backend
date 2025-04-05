@@ -1,6 +1,5 @@
 import express, { type Express } from "express";
 import { ConfigConstants } from "./app/constants/ConfigConstants";
-import { AccountType } from "./app/enums/AccountType";
 import { EnvironmentHelper } from "./app/helpers/EnvironmentHelper";
 import { LogHelper } from "./app/helpers/LogHelper";
 import { AuthMiddleware } from "./app/middlewares/AuthMiddleware";
@@ -9,6 +8,7 @@ import { FailureMiddleware } from "./app/middlewares/FailureMiddleware";
 import { LoggerMiddleware } from "./app/middlewares/LoggerMiddleware";
 import { MethodMiddleware } from "./app/middlewares/MethodMiddleware";
 import { PoolTest } from "./app/tests/PoolTest";
+import { AccountType } from "./common/enums/AccountType";
 import { EndpointsBuilder } from "./core/_internal/endpoints/EndpointsBuilder";
 import { RecordsBuilder } from "./core/_internal/records/RecordsBuilder";
 import { AccountsBuilder } from "./core/accounts/AccountsBuilder";
@@ -17,6 +17,7 @@ import { DistrictsBuilder } from "./core/districts/DistrictsBuilder";
 import { LoginBuilder } from "./core/login/LoginBuilder";
 import { LogoutBuilder } from "./core/logout/LogoutBuilder";
 import { MyAddressesBuilder } from "./core/my/addresses/MyAddressesBuilder";
+import { MyCarpetsBuilder } from "./core/my/carpets/MyCarpetsBuilder";
 import { MyMediasBuilder } from "./core/my/medias/MyMediasBuilder";
 import { MySessionsBuilder } from "./core/my/sessions/MySessionsBuilder";
 import { NeighborhoodsBuilder } from "./core/neighborhoods/NeighborhoodsBuilder";
@@ -97,8 +98,14 @@ app.use(
 app.use(
   // my/addresses
   MyAddressesBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
   new MyAddressesBuilder().router,
+);
+app.use(
+  // my/carpets
+  MyCarpetsBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  new MyCarpetsBuilder().router,
 );
 app.use(
   // my/medias

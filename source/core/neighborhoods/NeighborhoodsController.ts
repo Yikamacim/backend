@@ -18,19 +18,19 @@ export class NeighborhoodsController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pr = NeighborhoodsQueries.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      const pq = NeighborhoodsQueries.parse(req);
+      if (pq.clientErrors.length > 0 || pq.validatedData === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          pq.clientErrors,
           [],
           null,
         );
       }
       // >-----------< LOGIC >-----------<
-      const mr = await this.manager.getNeighborhoods(pr.validatedData);
+      const mr = await this.manager.getNeighborhoods(pq.validatedData);
       // >-----------< RESPONSE >-----------<
       return ResponseUtil.controllerResponse(
         res,
@@ -53,19 +53,19 @@ export class NeighborhoodsController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pr = NeighborhoodsParams.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      const pp = NeighborhoodsParams.parse(req);
+      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          pp.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.getNeighborhoods$neighborhoodId(pr.validatedData);
+      const mr = await this.manager.getNeighborhoods$neighborhoodId(pp.validatedData);
       // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(
         res,

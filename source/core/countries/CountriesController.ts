@@ -39,19 +39,19 @@ export class CountriesController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pr = CountriesParams.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      const pp = CountriesParams.parse(req);
+      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          pp.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.getCountries$countryId(pr.validatedData);
+      const mr = await this.manager.getCountries$countryId(pp.validatedData);
       // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(
         res,

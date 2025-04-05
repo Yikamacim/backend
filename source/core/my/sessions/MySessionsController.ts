@@ -56,13 +56,13 @@ export class MySessionsController implements IController {
       // >-----------< AUTHORIZATION >-----------<
       const tokenPayload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const pr = MySessionsParams.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      const pp = MySessionsParams.parse(req);
+      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          pp.clientErrors,
           null,
           null,
         );
@@ -71,7 +71,7 @@ export class MySessionsController implements IController {
       const mr = await this.manager.deleteMySessions$sessionId(
         tokenPayload.accountId,
         tokenPayload.sessionId,
-        parseInt(pr.validatedData.sessionId),
+        parseInt(pp.validatedData.sessionId),
       );
       // >----------< RESPONSE >----------<
       if (!mr.httpStatus.isSuccess()) {

@@ -18,9 +18,7 @@ export class NeighborhoodsProvider implements IProvider {
       if (!records) {
         return await ResponseUtil.providerResponse([]);
       }
-      return await ResponseUtil.providerResponse(
-        records.map((record: unknown) => NeighborhoodModel.fromRecord(record)),
-      );
+      return await ResponseUtil.providerResponse(NeighborhoodModel.fromRecords(records));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;

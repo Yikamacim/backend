@@ -103,13 +103,13 @@ export class MyAddressesController implements IController {
       // >-----------< AUTHORIZATION >-----------<
       const tokenPayload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const pr = MyAddressesParams.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      const pp = MyAddressesParams.parse(req);
+      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          pp.clientErrors,
           null,
           null,
         );
@@ -117,7 +117,7 @@ export class MyAddressesController implements IController {
       // >----------< LOGIC >----------<
       const mr = await this.manager.getMyAddresses$addressId(
         tokenPayload.accountId,
-        parseInt(pr.validatedData.addressId),
+        parseInt(pp.validatedData.addressId),
       );
       // >----------< RESPONSE >----------<
       if (!mr.httpStatus.isSuccess()) {

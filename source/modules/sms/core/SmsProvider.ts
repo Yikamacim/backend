@@ -7,7 +7,7 @@ import { VerificationModel } from "../../../common/models/VerificationModel";
 import { VerificationQueries } from "../../../common/queries/VerificationQueries";
 import type { VerificationData } from "../@types/verification";
 
-export class VerificationProvider implements IProvider {
+export class SmsProvider implements IProvider {
   public async createOrUpdateVerification(
     verificationData: VerificationData,
   ): Promise<ProviderResponse<null>> {
@@ -19,11 +19,11 @@ export class VerificationProvider implements IProvider {
       const record: unknown = results.rows[0];
       // There is not a record
       if (!record) {
-        await this.createVerification(verificationData);
+        await this.partialCreateVerification(verificationData);
         return await ResponseUtil.providerResponse(null);
       }
       // There is a record, update it
-      await this.updateVerification(verificationData);
+      await this.partialUpdateVerification(verificationData);
       return await ResponseUtil.providerResponse(null);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
@@ -48,9 +48,9 @@ export class VerificationProvider implements IProvider {
     }
   }
 
-  // >-----------------------------------< PRIVATE METHODS >------------------------------------< //
+  // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async createVerification(verificationData: VerificationData): Promise<void> {
+  private async partialCreateVerification(verificationData: VerificationData): Promise<void> {
     const sessionResults = await DbConstants.POOL.query(
       VerificationQueries.INSERT_VERIFICATION_RT_$PHONE_$CODE_$SENTAT,
       [verificationData.phone, verificationData.code, verificationData.sentAt],
@@ -61,8 +61,7 @@ export class VerificationProvider implements IProvider {
     }
   }
 
-  private async updateVerification(verificationData: VerificationData): Promise<void> {
-    // Update verification
+  private async partialUpdateVerification(verificationData: VerificationData): Promise<void> {
     await DbConstants.POOL.query(VerificationQueries.UPDATE_VERIFICATION_RT_$PHONE_$CODE_$SENTAT, [
       verificationData.phone,
       verificationData.code,

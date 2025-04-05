@@ -18,19 +18,19 @@ export class DistrictsController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pr = DistrictsQueries.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      const pq = DistrictsQueries.parse(req);
+      if (pq.clientErrors.length > 0 || pq.validatedData === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          pq.clientErrors,
           [],
           null,
         );
       }
       // >-----------< LOGIC >-----------<
-      const mr = await this.manager.getDistricts(pr.validatedData);
+      const mr = await this.manager.getDistricts(pq.validatedData);
       // >-----------< RESPONSE >-----------<
       return ResponseUtil.controllerResponse(
         res,
@@ -53,19 +53,19 @@ export class DistrictsController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pr = DistrictsParams.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      const pp = DistrictsParams.parse(req);
+      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          pp.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.getDistricts$districtId(pr.validatedData);
+      const mr = await this.manager.getDistricts$districtId(pp.validatedData);
       // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(
         res,

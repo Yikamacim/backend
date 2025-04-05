@@ -1,6 +1,6 @@
-import { AccountType } from "../../app/enums/AccountType";
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError, UnexpectedQueryResultError } from "../../app/schemas/ServerError";
+import { AccountType } from "../enums/AccountType";
 
 export class AccountModel implements IModel {
   private constructor(

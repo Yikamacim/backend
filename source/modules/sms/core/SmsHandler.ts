@@ -3,11 +3,11 @@ import { EnvironmentHelper } from "../../../app/helpers/EnvironmentHelper";
 import type { IHandler } from "../../../app/interfaces/IHandler";
 import type { Code } from "../@types/code";
 import { CodeHelper } from "../app/helpers/CodeHelper";
-import { VerificationProvider } from "./VerificationProvider";
+import { SmsProvider } from "./SmsProvider";
 
 export class SmsHandler implements IHandler {
   public constructor(
-    private readonly provider = new VerificationProvider(),
+    private readonly provider = new SmsProvider(),
     private readonly twilio = new Twilio(
       EnvironmentHelper.get().twilioAccountSid,
       EnvironmentHelper.get().twilioAuthToken,

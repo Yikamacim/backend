@@ -1,10 +1,10 @@
 import type { ParserResponse } from "../../../@types/responses";
 import type { ExpressRequest } from "../../../@types/wrappers";
-import { AccountType } from "../../../app/enums/AccountType";
 import type { IRequest } from "../../../app/interfaces/IRequest";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
+import { AccountType } from "../../../common/enums/AccountType";
 import { DeviceNameValidator } from "../../../common/validators/DeviceNameValidator";
 import { NameValidator } from "../../../common/validators/NameValidator";
 import { PasswordValidator } from "../../../common/validators/PasswordValidator";

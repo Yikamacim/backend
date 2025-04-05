@@ -18,19 +18,19 @@ export class ProvincesController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pr = ProvincesQueries.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      const pq = ProvincesQueries.parse(req);
+      if (pq.clientErrors.length > 0 || pq.validatedData === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          pq.clientErrors,
           [],
           null,
         );
       }
       // >-----------< LOGIC >-----------<
-      const mr = await this.manager.getProvinces(pr.validatedData);
+      const mr = await this.manager.getProvinces(pq.validatedData);
       // >-----------< RESPONSE >-----------<
       return ResponseUtil.controllerResponse(
         res,
@@ -53,19 +53,19 @@ export class ProvincesController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pr = ProvincesParams.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      const pp = ProvincesParams.parse(req);
+      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          pp.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.getProvinces$provinceId(pr.validatedData);
+      const mr = await this.manager.getProvinces$provinceId(pp.validatedData);
       // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(
         res,

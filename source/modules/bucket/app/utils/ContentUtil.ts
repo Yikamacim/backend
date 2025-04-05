@@ -1,6 +1,6 @@
-import { MediaType } from "../../../../app/enums/MediaType";
 import type { IUtil } from "../../../../app/interfaces/IUtil";
 import { UnexpectedMediaTypeError } from "../../../../app/schemas/ServerError";
+import { MediaType } from "../../../../common/enums/MediaType";
 import { MediaConstants } from "../constants/MediaConstants";
 
 export class ContentUtil implements IUtil {

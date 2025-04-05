@@ -1,9 +1,9 @@
 import type { ProviderResponse } from "../../@types/responses";
 import { DbConstants } from "../../app/constants/DbConstants";
-import type { AccountType } from "../../app/enums/AccountType";
 import type { IProvider } from "../../app/interfaces/IProvider";
 import { UnexpectedQueryResultError } from "../../app/schemas/ServerError";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import type { AccountType } from "../../common/enums/AccountType";
 import { AccountModel } from "../../common/models/AccountModel";
 import { AccountProvider } from "../../common/providers/AccountProvider";
 import { AccountQueries } from "../../common/queries/AccountQueries";

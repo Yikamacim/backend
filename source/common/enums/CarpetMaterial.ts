@@ -1,0 +1,14 @@
+export enum CarpetMaterial {
+  WOOL = "WOOL",
+  NYLON = "NYLON",
+  POLYESTER = "POLYESTER",
+  POLYPROPYLENE = "POLYPROPYLENE",
+  ACRYLIC = "ACRYLIC",
+  VISCOSE = "VISCOSE",
+  BAMBOO = "BAMBOO",
+  SILK = "SILK",
+  COTTON = "COTTON",
+  JUTE = "JUTE",
+  SISAL = "SISAL",
+  LEATHER = "LEATHER",
+}

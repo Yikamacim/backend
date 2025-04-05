@@ -1,12 +1,13 @@
-import { MediaType } from "../../app/enums/MediaType";
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError, UnexpectedQueryResultError } from "../../app/schemas/ServerError";
+import { MediaType } from "../enums/MediaType";
 
 export class MediaModel implements IModel {
   private constructor(
     public readonly mediaId: number,
     public readonly accountId: number,
     public readonly mediaType: MediaType,
+    public readonly extension: string,
     public readonly isUsed: boolean,
     public readonly createdAt: Date,
   ) {}
@@ -22,6 +23,7 @@ export class MediaModel implements IModel {
       record.mediaId,
       record.accountId,
       record.mediaType,
+      record.extension,
       record.isUsed,
       record.createdAt,
     );
@@ -43,6 +45,7 @@ export class MediaModel implements IModel {
       typeof model.mediaId === "number" &&
       typeof model.accountId === "number" &&
       Object.values(MediaType).includes(model.mediaType) &&
+      typeof model.extension === "string" &&
       typeof model.isUsed === "boolean" &&
       model.createdAt instanceof Date
     );
