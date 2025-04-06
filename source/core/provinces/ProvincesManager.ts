@@ -35,7 +35,7 @@ export class ProvincesManager implements IManager {
       parseInt(validatedData.provinceId),
     );
     // If no province was found
-    if (!prGetProvinceById.data) {
+    if (prGetProvinceById.data === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,

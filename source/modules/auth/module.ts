@@ -5,7 +5,7 @@ export class AuthModule implements IModule {
   private static sInstance: AuthModule;
 
   public static get instance(): AuthModule {
-    if (!AuthModule.sInstance) {
+    if (AuthModule.sInstance === undefined) {
       AuthModule.sInstance = new AuthModule();
     }
     return AuthModule.sInstance;

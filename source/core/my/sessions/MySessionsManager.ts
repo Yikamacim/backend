@@ -41,7 +41,7 @@ export class MySessionsManager implements IManager {
     // Try to get the session
     const prGetMySession = await this.provider.getMySession(accountId, sessionId);
     // Check if the session exists
-    if (!prGetMySession.data) {
+    if (prGetMySession.data === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,

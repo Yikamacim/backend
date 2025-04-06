@@ -1,5 +1,6 @@
 import type { IModel } from "../../app/interfaces/IModel";
-import { ModelMismatchError, UnexpectedQueryResultError } from "../../app/schemas/ServerError";
+import { ModelMismatchError } from "../../app/schemas/ServerError";
+import { ProtoUtil } from "../../app/utils/ProtoUtil";
 
 export class NeighborhoodModel implements IModel {
   private constructor(
@@ -10,9 +11,6 @@ export class NeighborhoodModel implements IModel {
   ) {}
 
   public static fromRecord(record: unknown): NeighborhoodModel {
-    if (!record) {
-      throw new UnexpectedQueryResultError();
-    }
     if (!this.isValidModel(record)) {
       throw new ModelMismatchError(record);
     }
@@ -32,7 +30,7 @@ export class NeighborhoodModel implements IModel {
   }
 
   private static isValidModel(data: unknown): data is NeighborhoodModel {
-    if (typeof data !== "object" || data === null) {
+    if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
     const model = data as NeighborhoodModel;

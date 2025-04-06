@@ -47,7 +47,7 @@ export class MyAddressesManager implements IManager {
       accountId,
       prCreateAddress.data.addressId,
     );
-    if (!prGetCreatedAddress.data) {
+    if (prGetCreatedAddress.data === null) {
       throw new UnexpectedDatabaseStateError("Address was not created");
     }
     // Return the created address
@@ -66,7 +66,7 @@ export class MyAddressesManager implements IManager {
     // Try to get my address
     const prGetMyAddress = await this.provider.getMyAddress(accountId, addressId);
     // Check if address exists
-    if (!prGetMyAddress.data) {
+    if (prGetMyAddress.data === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -91,7 +91,7 @@ export class MyAddressesManager implements IManager {
     // Try to get my address
     const prGetMyAddress = await this.provider.getMyAddress(accountId, addressId);
     // Check if address exists
-    if (!prGetMyAddress.data) {
+    if (prGetMyAddress.data === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -114,7 +114,7 @@ export class MyAddressesManager implements IManager {
       validatedData.explicitAddress,
       validatedData.isDefault,
     );
-    if (!prUpdateAddress.data) {
+    if (prUpdateAddress.data === null) {
       throw new UnexpectedDatabaseStateError("Address was not updated");
     }
     // Get updated address
@@ -122,7 +122,7 @@ export class MyAddressesManager implements IManager {
       accountId,
       prUpdateAddress.data.addressId,
     );
-    if (!prGetUpdatedAddress.data) {
+    if (prGetUpdatedAddress.data === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -145,7 +145,7 @@ export class MyAddressesManager implements IManager {
   ): Promise<ManagerResponse<null>> {
     // Try to get my address
     const prGetMyAddress = await this.provider.getMyAddress(accountId, addressId);
-    if (!prGetMyAddress.data) {
+    if (prGetMyAddress.data === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,

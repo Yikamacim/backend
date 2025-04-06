@@ -1,5 +1,6 @@
 import type { IModel } from "../../app/interfaces/IModel";
-import { ModelMismatchError, UnexpectedQueryResultError } from "../../app/schemas/ServerError";
+import { ModelMismatchError } from "../../app/schemas/ServerError";
+import { ProtoUtil } from "../../app/utils/ProtoUtil";
 import { AccountType } from "../enums/AccountType";
 
 export class AccountModel implements IModel {
@@ -14,9 +15,6 @@ export class AccountModel implements IModel {
   ) {}
 
   public static fromRecord(record: unknown): AccountModel {
-    if (!record) {
-      throw new UnexpectedQueryResultError();
-    }
     if (!this.isValidModel(record)) {
       throw new ModelMismatchError(record);
     }
@@ -39,7 +37,7 @@ export class AccountModel implements IModel {
   }
 
   private static isValidModel(data: unknown): data is AccountModel {
-    if (typeof data !== "object" || data === null) {
+    if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
     const model = data as AccountModel;

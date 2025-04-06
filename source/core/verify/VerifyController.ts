@@ -35,7 +35,7 @@ export class VerifyController implements IController {
       // >----------< LOGIC >----------<
       const mr = await this.manager.postVerify(pr.validatedData);
       // >----------< RESPONSE >----------<
-      if (!mr.httpStatus.isSuccess() || !mr.data) {
+      if (!mr.httpStatus.isSuccess() || mr.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           mr.httpStatus,

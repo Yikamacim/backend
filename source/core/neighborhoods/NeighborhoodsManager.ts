@@ -35,7 +35,7 @@ export class NeighborhoodsManager implements IManager {
       parseInt(validatedData.neighborhoodId),
     );
     // If no neighborhood found
-    if (!prGetNeighborhoodById.data) {
+    if (prGetNeighborhoodById.data === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,

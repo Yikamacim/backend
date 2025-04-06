@@ -3,7 +3,6 @@ import type { SessionData } from "../../../@types/sessions";
 import type { TokenPayload, Tokens } from "../../../@types/tokens";
 import { DbConstants } from "../../../app/constants/DbConstants";
 import type { IProvider } from "../../../app/interfaces/IProvider";
-import { UnexpectedQueryResultError } from "../../../app/schemas/ServerError";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { SessionModel } from "../../../common/models/SessionModel";
 import { AccountProvider } from "../../../common/providers/AccountProvider";
@@ -31,16 +30,13 @@ export class AuthProvider implements IProvider {
         sessionData.accountId,
       ]);
       const sessionRecords: unknown[] = sessionResults.rows;
-      if (!sessionRecords) {
-        throw new UnexpectedQueryResultError();
-      }
       const sessions = SessionModel.fromRecords(sessionRecords);
       // Try to find session
       const session = sessions.find(
         (session: SessionModel) => session.sessionKey === sessionData.sessionKey,
       );
       // Check if session is found
-      if (!session) {
+      if (session === undefined) {
         // Session not found, create one
         const tokens = await this.partialCreateSession(sessionData);
         // If account has more than max sessions, delete the oldest one
@@ -77,9 +73,6 @@ export class AuthProvider implements IProvider {
       [sessionData.accountId, sessionData.deviceName, sessionData.sessionKey],
     );
     const sessionRecord: unknown = sessionResults.rows[0];
-    if (!sessionRecord) {
-      throw new UnexpectedQueryResultError();
-    }
     const session = SessionModel.fromRecord(sessionRecord);
     // Create payload
     const payload: TokenPayload = {

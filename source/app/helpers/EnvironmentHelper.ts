@@ -6,7 +6,7 @@ export class EnvironmentHelper implements IHelper {
   private static sInstance: EnvironmentHelper;
 
   public static load(): EnvironmentHelper {
-    if (!EnvironmentHelper.sInstance) {
+    if (EnvironmentHelper.sInstance === undefined) {
       dotenv.config();
       EnvironmentHelper.sInstance = new EnvironmentHelper();
     }
@@ -79,7 +79,7 @@ export class EnvironmentHelper implements IHelper {
     let envValue = "";
     for (const keyPart of keyParts) {
       const valuePart = process.env[`${prefix}_${keyPart}`];
-      if (!valuePart) {
+      if (valuePart === undefined) {
         throw new Error(`Environment variable "${prefix}_${keyPart}" is not defined!`);
       }
       envValue += valuePart;

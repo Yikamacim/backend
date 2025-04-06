@@ -1,5 +1,6 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
+import { ProtoUtil } from "../../app/utils/ProtoUtil";
 
 export class SessionModel implements IModel {
   public constructor(
@@ -32,11 +33,11 @@ export class SessionModel implements IModel {
     return records.map((record: unknown): SessionModel => this.fromRecord(record));
   }
 
-  private static isValidModel(obj: unknown): obj is SessionModel {
-    if (typeof obj !== "object" || obj === null) {
+  private static isValidModel(data: unknown): data is SessionModel {
+    if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
-    const model = obj as SessionModel;
+    const model = data as SessionModel;
     return (
       typeof model.sessionId === "number" &&
       typeof model.accountId === "number" &&
@@ -47,10 +48,10 @@ export class SessionModel implements IModel {
     );
   }
 
-  private static areValidModels(objs: unknown[]): objs is SessionModel[] {
-    if (!Array.isArray(objs)) {
+  private static areValidModels(data: unknown[]): data is SessionModel[] {
+    if (!Array.isArray(data)) {
       return false;
     }
-    return objs.every((obj: unknown): boolean => SessionModel.isValidModel(obj));
+    return data.every((obj: unknown): boolean => SessionModel.isValidModel(obj));
   }
 }

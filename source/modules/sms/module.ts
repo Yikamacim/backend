@@ -5,7 +5,7 @@ export class SmsModule implements IModule {
   private static sInstance: SmsModule;
 
   public static get instance(): SmsModule {
-    if (!SmsModule.sInstance) {
+    if (SmsModule.sInstance === undefined) {
       SmsModule.sInstance = new SmsModule();
     }
     return SmsModule.sInstance;

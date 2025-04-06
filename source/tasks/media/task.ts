@@ -7,7 +7,7 @@ export class MediaTask implements ITask {
   private static sInstance: MediaTask;
 
   public static get instance(): MediaTask {
-    if (!MediaTask.sInstance) {
+    if (MediaTask.sInstance === undefined) {
       MediaTask.sInstance = new MediaTask();
     }
     return MediaTask.sInstance;

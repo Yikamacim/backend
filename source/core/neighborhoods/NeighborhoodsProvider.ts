@@ -1,6 +1,7 @@
 import type { ProviderResponse } from "../../@types/responses";
 import { DbConstants } from "../../app/constants/DbConstants";
 import type { IProvider } from "../../app/interfaces/IProvider";
+import { ProtoUtil } from "../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
 import { NeighborhoodModel } from "../../common/models/NeighborhoodModel";
 import { NeighborhoodQueries } from "../../common/queries/NeighborhoodQueries";
@@ -15,9 +16,6 @@ export class NeighborhoodsProvider implements IProvider {
         districtId,
       ]);
       const records: unknown[] = results.rows;
-      if (!records) {
-        return await ResponseUtil.providerResponse([]);
-      }
       return await ResponseUtil.providerResponse(NeighborhoodModel.fromRecords(records));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
@@ -34,7 +32,7 @@ export class NeighborhoodsProvider implements IProvider {
         neighborhoodId,
       ]);
       const record: unknown = results.rows[0];
-      if (!record) {
+      if (!ProtoUtil.isProtovalid(record)) {
         return await ResponseUtil.providerResponse(null);
       }
       return await ResponseUtil.providerResponse(NeighborhoodModel.fromRecord(record));

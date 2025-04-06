@@ -13,13 +13,6 @@ export class ServerError implements IResponse {
   }
 }
 
-export class UnexpectedQueryResultError extends Error {
-  public constructor() {
-    super("Query result was unexpected. Contact with the developers.");
-    this.name = "UnexpectedQueryResultError";
-  }
-}
-
 export class UnexpectedDatabaseStateError extends Error {
   public constructor(public readonly state: string) {
     super(`Database state was unexpected. State: ${state}.`);
@@ -51,6 +44,13 @@ export class UnexpectedAuthError extends Error {
   public constructor() {
     super("Authentication failed unexpectedly. Contact with the developers.");
     this.name = "UnexpectedAuthError";
+  }
+}
+
+export class UnexpectedVerificationError extends Error {
+  public constructor() {
+    super("Verification failed unexpectedly. Contact with the developers.");
+    this.name = "UnexpectedVerificationError";
   }
 }
 

@@ -85,8 +85,9 @@ export enum ClientErrorCode {
   //  *  *  803XX: /verify errors
   PHONE_ALREADY_VERIFIED = 80300,
   CODE_NOT_EXPIRED = 80301,
-  CODE_EXPIRED = 80302,
-  INVALID_CODE = 80303,
+  NO_VERIFICATION_FOUND = 80302,
+  CODE_EXPIRED = 80303,
+  INVALID_CODE = 80304,
   //  *  *  804XX: /countries errors
   INVALID_COUNTRY_ID = 80400,
   NO_COUNTRY_FOUND = 80401,
@@ -190,6 +191,7 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   //  *  *  803XX: /verify errors
   [ClientErrorCode.PHONE_ALREADY_VERIFIED]: "Provided phone is already verified.",
   [ClientErrorCode.CODE_NOT_EXPIRED]: "Code hasn't expired yet.",
+  [ClientErrorCode.NO_VERIFICATION_FOUND]: "No verification was found with the provided phone.",
   [ClientErrorCode.CODE_EXPIRED]: "Code has expired.",
   [ClientErrorCode.INVALID_CODE]: "Provided code was incorrect.",
   //  *  *  804XX: /address/countries errors

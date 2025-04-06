@@ -1,6 +1,7 @@
 import type { ProviderResponse } from "../../@types/responses";
 import { DbConstants } from "../../app/constants/DbConstants";
 import type { IProvider } from "../../app/interfaces/IProvider";
+import { ProtoUtil } from "../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
 import { DistrictModel } from "../../common/models/DistrictModel";
 import { DistrictQueries } from "../../common/queries/DistrictQueries";
@@ -15,9 +16,6 @@ export class DistrictsProvider implements IProvider {
         provinceId,
       ]);
       const records: unknown[] = results.rows;
-      if (!records) {
-        return await ResponseUtil.providerResponse([]);
-      }
       return await ResponseUtil.providerResponse(DistrictModel.fromRecords(records));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
@@ -34,7 +32,7 @@ export class DistrictsProvider implements IProvider {
         districtId,
       ]);
       const record: unknown = results.rows[0];
-      if (!record) {
+      if (!ProtoUtil.isProtovalid(record)) {
         return await ResponseUtil.providerResponse(null);
       }
       return await ResponseUtil.providerResponse(DistrictModel.fromRecord(record));

@@ -1,7 +1,7 @@
 import type { ProviderResponse } from "../../../@types/responses";
 import { DbConstants } from "../../../app/constants/DbConstants";
 import type { IProvider } from "../../../app/interfaces/IProvider";
-import { UnexpectedQueryResultError } from "../../../app/schemas/ServerError";
+import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { AddressModel } from "../../../common/models/AddressModel";
 import { AddressViewModel } from "../../../common/models/AddressViewModel";
@@ -16,9 +16,6 @@ export class MyAddressesProvider implements IProvider {
         accountId,
       ]);
       const records: unknown[] = results.rows;
-      if (!records) {
-        return await ResponseUtil.providerResponse([]);
-      }
       return await ResponseUtil.providerResponse(AddressViewModel.fromRecords(records));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
@@ -37,7 +34,7 @@ export class MyAddressesProvider implements IProvider {
         addressId,
       ]);
       const record: unknown = results.rows[0];
-      if (!record) {
+      if (!ProtoUtil.isProtovalid(record)) {
         return await ResponseUtil.providerResponse(null);
       }
       return await ResponseUtil.providerResponse(AddressViewModel.fromRecord(record));
@@ -73,9 +70,6 @@ export class MyAddressesProvider implements IProvider {
         ],
       );
       const record: unknown = results.rows[0];
-      if (!record) {
-        throw new UnexpectedQueryResultError();
-      }
       return await ResponseUtil.providerResponse(AddressModel.fromRecord(record));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
@@ -109,9 +103,6 @@ export class MyAddressesProvider implements IProvider {
         ],
       );
       const record: unknown = results.rows[0];
-      if (!record) {
-        throw new UnexpectedQueryResultError();
-      }
       return await ResponseUtil.providerResponse(AddressModel.fromRecord(record));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);

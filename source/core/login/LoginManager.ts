@@ -15,9 +15,9 @@ export class LoginManager implements IManager {
     validatedData: LoginRequest,
   ): Promise<ManagerResponse<LoginResponse | null>> {
     // Try to get the account
-    const providerResponse = await this.provider.getAccount(validatedData.phone);
+    const prGetAccount = await this.provider.getAccount(validatedData.phone);
     // If no account was found
-    if (!providerResponse.data) {
+    if (prGetAccount.data === null) {
       // Return with error
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -27,7 +27,7 @@ export class LoginManager implements IManager {
       );
     }
     // Got the account, check the password
-    if (!(await EncryptionHelper.compare(validatedData.password, providerResponse.data.password))) {
+    if (!(await EncryptionHelper.compare(validatedData.password, prGetAccount.data.password))) {
       // Passwords don't match
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.UNAUTHORIZED),
@@ -41,7 +41,7 @@ export class LoginManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      LoginResponse.fromModel(providerResponse.data),
+      LoginResponse.fromModel(prGetAccount.data),
     );
   }
 }

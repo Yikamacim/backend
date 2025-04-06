@@ -1,6 +1,7 @@
 import type { ProviderResponse } from "../../@types/responses";
 import { DbConstants } from "../../app/constants/DbConstants";
 import type { IProvider } from "../../app/interfaces/IProvider";
+import { ProtoUtil } from "../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
 import { AccountQueries } from "../../common/queries/AccountQueries";
 import { AccountModel } from "../models/AccountModel";
@@ -11,7 +12,7 @@ export class AccountProvider implements IProvider {
     try {
       const results = await DbConstants.POOL.query(AccountQueries.GET_ACCOUNT_$ACID, [accountId]);
       const record: unknown = results.rows[0];
-      if (!record) {
+      if (!ProtoUtil.isProtovalid(record)) {
         return await ResponseUtil.providerResponse(null);
       }
       return await ResponseUtil.providerResponse(AccountModel.fromRecord(record));
@@ -26,7 +27,7 @@ export class AccountProvider implements IProvider {
     try {
       const results = await DbConstants.POOL.query(AccountQueries.GET_ACCOUNT_$PHONE, [phone]);
       const record: unknown = results.rows[0];
-      if (!record) {
+      if (!ProtoUtil.isProtovalid(record)) {
         return await ResponseUtil.providerResponse(null);
       }
       return await ResponseUtil.providerResponse(AccountModel.fromRecord(record));

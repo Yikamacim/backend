@@ -5,7 +5,7 @@ export class BucketModule implements IModule {
   private static sInstance: BucketModule;
 
   public static get instance(): BucketModule {
-    if (!BucketModule.sInstance) {
+    if (BucketModule.sInstance === undefined) {
       BucketModule.sInstance = new BucketModule();
     }
     return BucketModule.sInstance;

@@ -37,19 +37,19 @@ export class MyCarpetsBuilder implements IBuilder {
       Method.GET,
       this.controller.getMyCarpets$carpetId.bind(this.controller),
     );
-    // RouteHelper.buildRoute(
-    //   this.router,
-    //   { baseRoute: MyCarpetsBuilder.BASE_ROUTE, route: "/:carpetId" },
-    //   RouteType.PRIVATE,
-    //   Method.PUT,
-    //   this.controller.getMySessions.bind(this.controller),
-    // );
-    // RouteHelper.buildRoute(
-    //   this.router,
-    //   { baseRoute: MyCarpetsBuilder.BASE_ROUTE, route: "/:carpetId" },
-    //   RouteType.PRIVATE,
-    //   Method.DELETE,
-    //   this.controller.deleteMySessions$sessionId.bind(this.controller),
-    // );
+    RouteHelper.buildRoute(
+      this.router,
+      { baseRoute: MyCarpetsBuilder.BASE_ROUTE, route: "/:carpetId" },
+      RouteType.PRIVATE,
+      Method.PUT,
+      this.controller.putMyCarpets$carpetId.bind(this.controller),
+    );
+    RouteHelper.buildRoute(
+      this.router,
+      { baseRoute: MyCarpetsBuilder.BASE_ROUTE, route: "/:carpetId" },
+      RouteType.PRIVATE,
+      Method.DELETE,
+      this.controller.deleteMyCarpets$carpetId.bind(this.controller),
+    );
   }
 }

@@ -1,5 +1,6 @@
 import type { IModel } from "../../app/interfaces/IModel";
-import { ModelMismatchError, UnexpectedQueryResultError } from "../../app/schemas/ServerError";
+import { ModelMismatchError } from "../../app/schemas/ServerError";
+import { ProtoUtil } from "../../app/utils/ProtoUtil";
 import { MediaType } from "../enums/MediaType";
 
 export class MediaModel implements IModel {
@@ -13,9 +14,6 @@ export class MediaModel implements IModel {
   ) {}
 
   public static fromRecord(record: unknown): MediaModel {
-    if (!record) {
-      throw new UnexpectedQueryResultError();
-    }
     if (!this.isValidModel(record)) {
       throw new ModelMismatchError(record);
     }
@@ -37,7 +35,7 @@ export class MediaModel implements IModel {
   }
 
   private static isValidModel(data: unknown): data is MediaModel {
-    if (typeof data !== "object" || data === null) {
+    if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
     const model = data as MediaModel;

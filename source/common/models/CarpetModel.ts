@@ -1,5 +1,6 @@
 import type { IModel } from "../../app/interfaces/IModel";
-import { ModelMismatchError, UnexpectedQueryResultError } from "../../app/schemas/ServerError";
+import { ModelMismatchError } from "../../app/schemas/ServerError";
+import { ProtoUtil } from "../../app/utils/ProtoUtil";
 import { CarpetMaterial } from "../enums/CarpetMaterial";
 
 export class CarpetModel implements IModel {
@@ -12,9 +13,6 @@ export class CarpetModel implements IModel {
   ) {}
 
   public static fromRecord(record: unknown): CarpetModel {
-    if (!record) {
-      throw new UnexpectedQueryResultError();
-    }
     if (!this.isValidModel(record)) {
       throw new ModelMismatchError(record);
     }
@@ -35,15 +33,15 @@ export class CarpetModel implements IModel {
   }
 
   private static isValidModel(data: unknown): data is CarpetModel {
-    if (typeof data !== "object" || data === null) {
+    if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
     const model = data as CarpetModel;
     return (
       typeof model.carpetId === "number" &&
       typeof model.itemId === "number" &&
-      typeof model.width === "number" &&
-      typeof model.length === "number" &&
+      (typeof model.width === "number" || model.width === null) &&
+      (typeof model.length === "number" || model.length === null) &&
       (model.carpetMaterial === null ||
         Object.values(CarpetMaterial).includes(model.carpetMaterial))
     );

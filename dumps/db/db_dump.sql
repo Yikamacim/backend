@@ -5,7 +5,7 @@
 -- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
 -- Dumped by pg_dump version 16.8 (Debian 16.8-1.pgdg120+1)
 
--- Started on 2025-04-05 11:08:25 UTC
+-- Started on 2025-04-06 13:11:39 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -33,15 +33,13 @@ CREATE TYPE public."AccountType" AS ENUM (
 ALTER TYPE public."AccountType" OWNER TO "UYikamacim";
 
 --
--- TOC entry 905 (class 1247 OID 24610)
+-- TOC entry 911 (class 1247 OID 24798)
 -- Name: CarpetMaterial; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
 CREATE TYPE public."CarpetMaterial" AS ENUM (
     'WOOL',
-    'NYLON',
     'POLYESTER',
-    'POLYPROPYLENE',
     'ACRYLIC',
     'VISCOSE',
     'BAMBOO',
@@ -49,7 +47,12 @@ CREATE TYPE public."CarpetMaterial" AS ENUM (
     'COTTON',
     'JUTE',
     'SISAL',
-    'LEATHER'
+    'LEATHER',
+    'NEPAL',
+    'HANDMADE',
+    'SHAGGY',
+    'STEP',
+    'PATCHWORK'
 );
 
 
@@ -246,7 +249,7 @@ ALTER SEQUENCE public."Address_addressId_seq" OWNED BY public."Address"."address
 
 
 --
--- TOC entry 236 (class 1259 OID 24605)
+-- TOC entry 240 (class 1259 OID 24830)
 -- Name: Carpet; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -277,7 +280,7 @@ CREATE TABLE public."Item" (
 ALTER TABLE public."Item" OWNER TO "UYikamacim";
 
 --
--- TOC entry 237 (class 1259 OID 24697)
+-- TOC entry 241 (class 1259 OID 24841)
 -- Name: CarpetView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -297,7 +300,7 @@ CREATE VIEW public."CarpetView" AS
 ALTER VIEW public."CarpetView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 235 (class 1259 OID 24604)
+-- TOC entry 239 (class 1259 OID 24829)
 -- Name: Carpet_carpetId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -314,7 +317,7 @@ ALTER SEQUENCE public."Carpet_carpetId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3515 (class 0 OID 0)
--- Dependencies: 235
+-- Dependencies: 239
 -- Name: Carpet_carpetId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -372,7 +375,7 @@ ALTER SEQUENCE public."District_districtId_seq" OWNED BY public."District"."dist
 
 
 --
--- TOC entry 240 (class 1259 OID 24715)
+-- TOC entry 237 (class 1259 OID 24715)
 -- Name: ItemMedia; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -385,7 +388,7 @@ CREATE TABLE public."ItemMedia" (
 ALTER TABLE public."ItemMedia" OWNER TO "UYikamacim";
 
 --
--- TOC entry 239 (class 1259 OID 24702)
+-- TOC entry 236 (class 1259 OID 24702)
 -- Name: Media; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -402,7 +405,7 @@ CREATE TABLE public."Media" (
 ALTER TABLE public."Media" OWNER TO "UYikamacim";
 
 --
--- TOC entry 241 (class 1259 OID 24730)
+-- TOC entry 238 (class 1259 OID 24730)
 -- Name: ItemMediaView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -443,7 +446,7 @@ ALTER SEQUENCE public."Item_itemId_seq" OWNED BY public."Item"."itemId";
 
 
 --
--- TOC entry 238 (class 1259 OID 24701)
+-- TOC entry 235 (class 1259 OID 24701)
 -- Name: Media_mediaId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -460,7 +463,7 @@ ALTER SEQUENCE public."Media_mediaId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3519 (class 0 OID 0)
--- Dependencies: 238
+-- Dependencies: 235
 -- Name: Media_mediaId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -641,7 +644,7 @@ ALTER TABLE ONLY public."Address" ALTER COLUMN "addressId" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3292 (class 2604 OID 24608)
+-- TOC entry 3295 (class 2604 OID 24833)
 -- Name: Carpet carpetId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -673,7 +676,7 @@ ALTER TABLE ONLY public."Item" ALTER COLUMN "itemId" SET DEFAULT nextval('public
 
 
 --
--- TOC entry 3293 (class 2604 OID 24705)
+-- TOC entry 3292 (class 2604 OID 24705)
 -- Name: Media mediaId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -746,8 +749,8 @@ COPY public."Address" ("addressId", "accountId", name, "countryId", "provinceId"
 
 
 --
--- TOC entry 3504 (class 0 OID 24605)
--- Dependencies: 236
+-- TOC entry 3507 (class 0 OID 24830)
+-- Dependencies: 240
 -- Data for Name: Carpet; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -1760,8 +1763,8 @@ COPY public."Item" ("itemId", "accountId", name, description) FROM stdin;
 
 
 --
--- TOC entry 3507 (class 0 OID 24715)
--- Dependencies: 240
+-- TOC entry 3505 (class 0 OID 24715)
+-- Dependencies: 237
 -- Data for Name: ItemMedia; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -1770,8 +1773,8 @@ COPY public."ItemMedia" ("itemId", "mediaId") FROM stdin;
 
 
 --
--- TOC entry 3506 (class 0 OID 24702)
--- Dependencies: 239
+-- TOC entry 3504 (class 0 OID 24702)
+-- Dependencies: 236
 -- Data for Name: Media; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -75199,7 +75202,7 @@ SELECT pg_catalog.setval('public."Address_addressId_seq"', 3, true);
 
 --
 -- TOC entry 3527 (class 0 OID 0)
--- Dependencies: 235
+-- Dependencies: 239
 -- Name: Carpet_carpetId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -75235,7 +75238,7 @@ SELECT pg_catalog.setval('public."Item_itemId_seq"', 1, false);
 
 --
 -- TOC entry 3531 (class 0 OID 0)
--- Dependencies: 238
+-- Dependencies: 235
 -- Name: Media_mediaId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -75315,7 +75318,7 @@ ALTER TABLE ONLY public."Address"
 
 
 --
--- TOC entry 3319 (class 2606 OID 24691)
+-- TOC entry 3323 (class 2606 OID 24835)
 -- Name: Carpet Carpet_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -75342,7 +75345,7 @@ ALTER TABLE ONLY public."District"
 
 
 --
--- TOC entry 3323 (class 2606 OID 24719)
+-- TOC entry 3321 (class 2606 OID 24719)
 -- Name: ItemMedia ItemMedia_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -75360,7 +75363,7 @@ ALTER TABLE ONLY public."Item"
 
 
 --
--- TOC entry 3321 (class 2606 OID 24709)
+-- TOC entry 3319 (class 2606 OID 24709)
 -- Name: Media Media_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -75459,7 +75462,7 @@ ALTER TABLE ONLY public."Address"
 
 
 --
--- TOC entry 3334 (class 2606 OID 24692)
+-- TOC entry 3337 (class 2606 OID 24836)
 -- Name: Carpet Carpet_Item_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -75477,7 +75480,7 @@ ALTER TABLE ONLY public."District"
 
 
 --
--- TOC entry 3336 (class 2606 OID 24720)
+-- TOC entry 3335 (class 2606 OID 24720)
 -- Name: ItemMedia ItemMedia_Item_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -75486,7 +75489,7 @@ ALTER TABLE ONLY public."ItemMedia"
 
 
 --
--- TOC entry 3337 (class 2606 OID 24725)
+-- TOC entry 3336 (class 2606 OID 24725)
 -- Name: ItemMedia ItemMedia_Media_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -75504,7 +75507,7 @@ ALTER TABLE ONLY public."Item"
 
 
 --
--- TOC entry 3335 (class 2606 OID 24710)
+-- TOC entry 3334 (class 2606 OID 24710)
 -- Name: Media Media_Account_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -75539,7 +75542,7 @@ ALTER TABLE ONLY public."Session"
     ADD CONSTRAINT "Session_Account_fk" FOREIGN KEY ("accountId") REFERENCES public."Account"("accountId");
 
 
--- Completed on 2025-04-05 11:08:25 UTC
+-- Completed on 2025-04-06 13:11:39 UTC
 
 --
 -- PostgreSQL database dump complete

@@ -28,7 +28,7 @@ export class CountriesManager implements IManager {
     // Try to get the country
     const prGetCountryById = await this.provider.getCountryById(parseInt(validatedData.countryId));
     // If no country was found
-    if (!prGetCountryById.data) {
+    if (prGetCountryById.data === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,

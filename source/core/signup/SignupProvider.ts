@@ -1,7 +1,6 @@
 import type { ProviderResponse } from "../../@types/responses";
 import { DbConstants } from "../../app/constants/DbConstants";
 import type { IProvider } from "../../app/interfaces/IProvider";
-import { UnexpectedQueryResultError } from "../../app/schemas/ServerError";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
 import type { AccountType } from "../../common/enums/AccountType";
 import { AccountModel } from "../../common/models/AccountModel";
@@ -31,9 +30,6 @@ export class SignupProvider implements IProvider {
           [phone, password, name, surname, accountType],
         );
         const record: unknown = results.rows[0];
-        if (!record) {
-          throw new UnexpectedQueryResultError();
-        }
         return await ResponseUtil.providerResponse(AccountModel.fromRecord(record));
       } else {
         const results = await DbConstants.POOL.query(
@@ -41,9 +37,6 @@ export class SignupProvider implements IProvider {
           [phone, password, name, surname, accountType],
         );
         const record: unknown = results.rows[0];
-        if (!record) {
-          throw new UnexpectedQueryResultError();
-        }
         return await ResponseUtil.providerResponse(AccountModel.fromRecord(record));
       }
     } catch (error) {

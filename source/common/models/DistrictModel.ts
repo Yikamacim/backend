@@ -1,5 +1,6 @@
 import type { IModel } from "../../app/interfaces/IModel";
-import { ModelMismatchError, UnexpectedQueryResultError } from "../../app/schemas/ServerError";
+import { ModelMismatchError } from "../../app/schemas/ServerError";
+import { ProtoUtil } from "../../app/utils/ProtoUtil";
 
 export class DistrictModel implements IModel {
   private constructor(
@@ -9,9 +10,6 @@ export class DistrictModel implements IModel {
   ) {}
 
   public static fromRecord(record: unknown): DistrictModel {
-    if (!record) {
-      throw new UnexpectedQueryResultError();
-    }
     if (!this.isValidModel(record)) {
       throw new ModelMismatchError(record);
     }
@@ -26,7 +24,7 @@ export class DistrictModel implements IModel {
   }
 
   private static isValidModel(data: unknown): data is DistrictModel {
-    if (typeof data !== "object" || data === null) {
+    if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
     const model = data as DistrictModel;

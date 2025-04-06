@@ -16,7 +16,7 @@ export class MethodMiddleware implements IMiddleware {
   ): typeof res | void {
     try {
       const routeMethods = RouteHelper.getMethods(req.originalUrl);
-      if (!routeMethods) {
+      if (routeMethods === null) {
         return next();
       }
       if (!Object.values(Method).includes(req.method.toUpperCase() as Method)) {

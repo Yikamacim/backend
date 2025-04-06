@@ -1,7 +1,8 @@
 import type { ProviderResponse } from "../../../@types/responses";
 import { DbConstants } from "../../../app/constants/DbConstants";
 import type { IProvider } from "../../../app/interfaces/IProvider";
-import { UnexpectedQueryResultError } from "../../../app/schemas/ServerError";
+import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
+import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import type { CarpetMaterial } from "../../../common/enums/CarpetMaterial";
 import { CarpetModel } from "../../../common/models/CarpetModel";
@@ -24,9 +25,6 @@ export class MyCarpetsProvider implements IProvider {
         accountId,
       ]);
       const records: unknown[] = results.rows;
-      if (!records) {
-        return await ResponseUtil.providerResponse([]);
-      }
       return await ResponseUtil.providerResponse(CarpetViewModel.fromRecords(records));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
@@ -45,7 +43,7 @@ export class MyCarpetsProvider implements IProvider {
         carpetId,
       ]);
       const record: unknown = results.rows[0];
-      if (!record) {
+      if (!ProtoUtil.isProtovalid(record)) {
         return await ResponseUtil.providerResponse(null);
       }
       return await ResponseUtil.providerResponse(CarpetViewModel.fromRecord(record));
@@ -62,9 +60,6 @@ export class MyCarpetsProvider implements IProvider {
         itemId,
       ]);
       const records: unknown[] = results.rows;
-      if (!records) {
-        return await ResponseUtil.providerResponse([]);
-      }
       return await ResponseUtil.providerResponse(ItemMediaViewModel.fromRecords(records));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
@@ -80,9 +75,6 @@ export class MyCarpetsProvider implements IProvider {
         false,
       ]);
       const records: unknown[] = results.rows;
-      if (!records) {
-        return await ResponseUtil.providerResponse([]);
-      }
       return await ResponseUtil.providerResponse(MediaModel.fromRecords(records));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
@@ -104,12 +96,61 @@ export class MyCarpetsProvider implements IProvider {
       const item = await this.partialCreateItem(accountId, name, description);
       const carpet = await this.partialCreateCarpet(item.itemId, width, length, carpetMaterial);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      await this.partialUpdateMediasAsUsed(mediaIds);
+      await this.partialUpdateMediasIsUsed(mediaIds, true);
       const carpetView = await this.partialGetMyCarpet(accountId, carpet.carpetId);
-      if (!carpetView) {
-        throw new UnexpectedQueryResultError();
+      if (carpetView === null) {
+        throw new UnexpectedDatabaseStateError("Carpet was not created");
       }
       return await ResponseUtil.providerResponse(carpetView);
+    } catch (error) {
+      await DbConstants.POOL.query(DbConstants.ROLLBACK);
+      throw error;
+    }
+  }
+
+  public async updateCarpet(
+    accountId: number,
+    oldMediaIds: number[],
+    carpetId: number,
+    itemId: number,
+    name: string,
+    description: string,
+    mediaIds: number[],
+    width: number | null,
+    length: number | null,
+    carpetMaterial: CarpetMaterial | null,
+  ): Promise<ProviderResponse<CarpetViewModel>> {
+    await DbConstants.POOL.query(DbConstants.BEGIN);
+    try {
+      await this.partialDeleteItemMedias(itemId, oldMediaIds);
+      await this.partialUpdateMediasIsUsed(oldMediaIds, false);
+      await this.partialUpdateItem(itemId, name, description);
+      await this.partialUpdateCarpet(carpetId, width, length, carpetMaterial);
+      await this.partialCreateItemMedias(itemId, mediaIds);
+      await this.partialUpdateMediasIsUsed(mediaIds, true);
+      const carpetView = await this.partialGetMyCarpet(accountId, carpetId);
+      if (carpetView === null) {
+        throw new UnexpectedDatabaseStateError("Carpet was not updated");
+      }
+      return await ResponseUtil.providerResponse(carpetView);
+    } catch (error) {
+      await DbConstants.POOL.query(DbConstants.ROLLBACK);
+      throw error;
+    }
+  }
+
+  public async deleteCarpet(
+    itemId: number,
+    carpetId: number,
+    mediaIds: number[],
+  ): Promise<ProviderResponse<null>> {
+    await DbConstants.POOL.query(DbConstants.BEGIN);
+    try {
+      await this.partialDeleteCarpet(carpetId);
+      await this.partialDeleteItemMedias(itemId, mediaIds);
+      await this.partialUpdateMediasIsUsed(mediaIds, false);
+      await this.partialDeleteItem(itemId);
+      return await ResponseUtil.providerResponse(null);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -123,16 +164,29 @@ export class MyCarpetsProvider implements IProvider {
     name: string,
     description: string,
   ): Promise<ItemModel> {
-    const results = await DbConstants.POOL.query(ItemQueries.INSERT_ITEM_$ACID_$NAME_$DESC, [
+    const results = await DbConstants.POOL.query(ItemQueries.INSERT_ITEM_RT_$ACID_$NAME_$DESC, [
       accountId,
       name,
       description,
     ]);
     const record: unknown = results.rows[0];
-    if (!record) {
-      throw new UnexpectedQueryResultError();
-    }
     return ItemModel.fromRecord(record);
+  }
+
+  private async partialUpdateItem(
+    itemId: number,
+    name: string,
+    description: string,
+  ): Promise<void> {
+    await DbConstants.POOL.query(ItemQueries.UPDATE_ITEM_RT_$ITID_$NAME_$DESC, [
+      itemId,
+      name,
+      description,
+    ]);
+  }
+
+  private async partialDeleteItem(itemId: number): Promise<void> {
+    await DbConstants.POOL.query(ItemQueries.DELETE_ITEM_$ITID, [itemId]);
   }
 
   private async partialCreateCarpet(
@@ -142,39 +196,52 @@ export class MyCarpetsProvider implements IProvider {
     carpetMaterial: CarpetMaterial | null,
   ): Promise<CarpetModel> {
     const results = await DbConstants.POOL.query(
-      CarpetQueries.INSERT_CARPET_$ITID_$WIDTH_$LENGTH_$CMAT,
+      CarpetQueries.INSERT_CARPET_RT_$ITID_$WIDTH_$LENGTH_$CMAT,
       [itemId, width, length, carpetMaterial],
     );
     const record: unknown = results.rows[0];
-    if (!record) {
-      throw new UnexpectedQueryResultError();
-    }
     return CarpetModel.fromRecord(record);
+  }
+
+  private async partialUpdateCarpet(
+    itemId: number,
+    width: number | null,
+    length: number | null,
+    carpetMaterial: CarpetMaterial | null,
+  ): Promise<CarpetModel> {
+    const results = await DbConstants.POOL.query(
+      CarpetQueries.INSERT_CARPET_RT_$ITID_$WIDTH_$LENGTH_$CMAT,
+      [itemId, width, length, carpetMaterial],
+    );
+    const record: unknown = results.rows[0];
+    return CarpetModel.fromRecord(record);
+  }
+
+  private async partialDeleteCarpet(carpetId: number): Promise<void> {
+    await DbConstants.POOL.query(CarpetQueries.DELETE_CARPET_$CPID, [carpetId]);
   }
 
   private async partialCreateItemMedias(itemId: number, mediaIds: number[]): Promise<void> {
     for (const mediaId of mediaIds) {
-      const results = await DbConstants.POOL.query(ItemMediaQueries.INSERT_ITEM_MEDIA_$ITID_$MDID, [
+      await DbConstants.POOL.query(ItemMediaQueries.INSERT_ITEM_MEDIA_RT_$ITID_$MDID, [
         itemId,
         mediaId,
       ]);
-      const record: unknown = results.rows[0];
-      if (!record) {
-        throw new UnexpectedQueryResultError();
-      }
     }
   }
 
-  private async partialUpdateMediasAsUsed(mediaIds: number[]): Promise<void> {
+  private async partialDeleteItemMedias(itemId: number, mediaIds: number[]): Promise<void> {
     for (const mediaId of mediaIds) {
-      const results = await DbConstants.POOL.query(MediaQueries.UPDATE_MEDIA_RT_$MDID_$ISUS, [
+      await DbConstants.POOL.query(ItemMediaQueries.DELETE_ITEM_MEDIA_$ITID_$MDID, [
+        itemId,
         mediaId,
-        true,
       ]);
-      const record: unknown = results.rows[0];
-      if (!record) {
-        throw new UnexpectedQueryResultError();
-      }
+    }
+  }
+
+  private async partialUpdateMediasIsUsed(mediaIds: number[], isUsed: boolean): Promise<void> {
+    for (const mediaId of mediaIds) {
+      await DbConstants.POOL.query(MediaQueries.UPDATE_MEDIA_RT_$MDID_$ISUS, [mediaId, isUsed]);
     }
   }
 
@@ -187,7 +254,7 @@ export class MyCarpetsProvider implements IProvider {
       carpetId,
     ]);
     const record: unknown = results.rows[0];
-    if (!record) {
+    if (!ProtoUtil.isProtovalid(record)) {
       return null;
     }
     return CarpetViewModel.fromRecord(record);

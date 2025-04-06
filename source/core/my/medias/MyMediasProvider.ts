@@ -1,7 +1,6 @@
 import type { ProviderResponse } from "../../../@types/responses";
 import { DbConstants } from "../../../app/constants/DbConstants";
 import type { IProvider } from "../../../app/interfaces/IProvider";
-import { UnexpectedQueryResultError } from "../../../app/schemas/ServerError";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import type { MediaType } from "../../../common/enums/MediaType";
 import { MediaModel } from "../../../common/models/MediaModel";
@@ -21,9 +20,6 @@ export class MyMediasProvider implements IProvider {
         extension,
       ]);
       const record: unknown = results.rows[0];
-      if (!record) {
-        throw new UnexpectedQueryResultError();
-      }
       return await ResponseUtil.providerResponse(MediaModel.fromRecord(record));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);

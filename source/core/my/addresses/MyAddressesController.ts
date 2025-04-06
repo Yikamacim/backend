@@ -152,24 +152,24 @@ export class MyAddressesController implements IController {
       // >-----------< AUTHORIZATION >-----------<
       const tokenPayload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const prParams = MyAddressesParams.parse(req);
-      if (prParams.clientErrors.length > 0 || prParams.validatedData === null) {
+      const pp = MyAddressesParams.parse(req);
+      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          prParams.clientErrors,
+          pp.clientErrors,
           null,
           null,
         );
       }
-      const prBody = MyAddressesRequest.parse(req);
-      if (prBody.clientErrors.length > 0 || prBody.validatedData === null) {
+      const pr = MyAddressesRequest.parse(req);
+      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          prBody.clientErrors,
+          pr.clientErrors,
           null,
           null,
         );
@@ -177,8 +177,8 @@ export class MyAddressesController implements IController {
       // >----------< LOGIC >----------<
       const mr = await this.manager.putMyAddresses$addressId(
         tokenPayload.accountId,
-        parseInt(prParams.validatedData.addressId),
-        prBody.validatedData,
+        parseInt(pp.validatedData.addressId),
+        pr.validatedData,
       );
       // >----------< RESPONSE >----------<
       if (!mr.httpStatus.isSuccess()) {
@@ -212,14 +212,14 @@ export class MyAddressesController implements IController {
     try {
       // >-----------< AUTHORIZATION >-----------<
       const tokenPayload = PayloadHelper.getPayload(res);
-      // >----------< REQUEST VALIDATION >----------<
-      const pr = MyAddressesParams.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      // >----------< VALIDATION >----------<
+      const pp = MyAddressesParams.parse(req);
+      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          pp.clientErrors,
           null,
           null,
         );
@@ -227,7 +227,7 @@ export class MyAddressesController implements IController {
       // >----------< LOGIC >----------<
       const mr = await this.manager.deleteMyAddresses$addressId(
         tokenPayload.accountId,
-        parseInt(pr.validatedData.addressId),
+        parseInt(pp.validatedData.addressId),
       );
       // >----------< RESPONSE >----------<
       if (!mr.httpStatus.isSuccess()) {

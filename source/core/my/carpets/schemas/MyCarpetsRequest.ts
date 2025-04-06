@@ -36,7 +36,6 @@ export class MyCarpetsRequest implements IRequest {
     ItemNameValidator.validate(blueprintData.name, clientErrors);
     ItemDescriptionValidator.validate(blueprintData.description, clientErrors);
     MediaIdsValidator.validate(blueprintData.mediaIds, clientErrors);
-    // Check if duplicate mediaIds
     const validatedData = blueprintData;
     // Return parser response
     return ResponseUtil.parserResponse(clientErrors, validatedData);

@@ -1,6 +1,7 @@
 import { Twilio } from "twilio";
 import { EnvironmentHelper } from "../../../app/helpers/EnvironmentHelper";
 import type { IHandler } from "../../../app/interfaces/IHandler";
+import { UnexpectedVerificationError } from "../../../app/schemas/ServerError";
 import type { Code } from "../@types/code";
 import { CodeHelper } from "../app/helpers/CodeHelper";
 import { SmsProvider } from "./SmsProvider";
@@ -31,6 +32,10 @@ export class SmsHandler implements IHandler {
 
   public async verify(phone: string, code: Code): Promise<boolean> {
     const prGetVerification = await this.provider.getVerification(phone);
+    // If no verification found
+    if (prGetVerification.data === null) {
+      throw new UnexpectedVerificationError();
+    }
     if (prGetVerification.data.code !== code) {
       return false;
     }

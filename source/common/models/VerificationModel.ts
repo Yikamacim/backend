@@ -1,5 +1,6 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
+import { ProtoUtil } from "../../app/utils/ProtoUtil";
 
 export class VerificationModel implements IModel {
   public constructor(
@@ -23,11 +24,11 @@ export class VerificationModel implements IModel {
     return records.map((record: unknown): VerificationModel => this.fromRecord(record));
   }
 
-  private static isValidModel(obj: unknown): obj is VerificationModel {
-    if (typeof obj !== "object" || obj === null) {
+  private static isValidModel(data: unknown): data is VerificationModel {
+    if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
-    const model = obj as VerificationModel;
+    const model = data as VerificationModel;
     return (
       typeof model.verificationId === "number" &&
       typeof model.phone === "string" &&
@@ -36,10 +37,10 @@ export class VerificationModel implements IModel {
     );
   }
 
-  private static areValidModels(objs: unknown[]): objs is VerificationModel[] {
-    if (!Array.isArray(objs)) {
+  private static areValidModels(data: unknown[]): data is VerificationModel[] {
+    if (!Array.isArray(data)) {
       return false;
     }
-    return objs.every((obj: unknown): boolean => VerificationModel.isValidModel(obj));
+    return data.every((obj: unknown): boolean => VerificationModel.isValidModel(obj));
   }
 }

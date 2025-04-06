@@ -16,7 +16,7 @@ export class AccountsManager implements IManager {
     // Try to get the account
     const prGetAccount = await this.provider.getAccount(validatedData.phone);
     // If no account found
-    if (!prGetAccount.data) {
+    if (prGetAccount.data === null) {
       // Return with error
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),

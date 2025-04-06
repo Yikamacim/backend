@@ -50,7 +50,7 @@ export class MyCarpetsManager implements IManager {
     const medias: MediaModel[] = [];
     for (const mediaId of validatedData.mediaIds) {
       const media = prGetMyMedias.data.find((media) => media.mediaId === mediaId);
-      if (!media) {
+      if (media === undefined) {
         return ResponseUtil.managerResponse(
           new HttpStatus(HttpStatusCode.NOT_FOUND),
           null,
@@ -60,12 +60,13 @@ export class MyCarpetsManager implements IManager {
       }
       medias.push(media);
     }
-    // Check if medias uploaded to bucket
+    // Check if medias was uploaded to bucket
     for (const media of medias) {
-      const mediaExists = await BucketModule.instance.checkFileExists(
-        `${media.mediaId.toString()}.${media.extension}`,
-      );
-      if (!mediaExists) {
+      if (
+        !(await BucketModule.instance.checkFileExists(
+          `${media.mediaId.toString()}.${media.extension}`,
+        ))
+      ) {
         return ResponseUtil.managerResponse(
           new HttpStatus(HttpStatusCode.NOT_FOUND),
           null,
@@ -141,5 +142,114 @@ export class MyCarpetsManager implements IManager {
       [],
       MyCarpetsResponse.fromModel(prGetMyCarpet.data, mediaData),
     );
+  }
+
+  public async putMyCarpets$carpetId(
+    accountId: number,
+    carpetId: number,
+    validatedData: MyCarpetsRequest,
+  ): Promise<ManagerResponse<MyCarpetsResponse | null>> {
+    // Try to get my carpet
+    const prGetMyCarpet = await this.provider.getMyCarpet(accountId, carpetId);
+    // Check if carpet exists
+    if (prGetMyCarpet.data === null) {
+      return ResponseUtil.managerResponse(
+        new HttpStatus(HttpStatusCode.NOT_FOUND),
+        null,
+        [new ClientError(ClientErrorCode.CARPET_NOT_FOUND)],
+        null,
+      );
+    }
+    // Get my medias
+    const prGetMyMedias = await this.provider.getMyMedias(accountId);
+    // Check if medias exist in database
+    const medias: MediaModel[] = [];
+    for (const mediaId of validatedData.mediaIds) {
+      const media = prGetMyMedias.data.find((media) => media.mediaId === mediaId);
+      if (media === undefined) {
+        return ResponseUtil.managerResponse(
+          new HttpStatus(HttpStatusCode.NOT_FOUND),
+          null,
+          [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
+          null,
+        );
+      }
+      medias.push(media);
+    }
+    // Check if medias was uploaded to bucket
+    for (const media of medias) {
+      if (
+        !(await BucketModule.instance.checkFileExists(
+          `${media.mediaId.toString()}.${media.extension}`,
+        ))
+      ) {
+        return ResponseUtil.managerResponse(
+          new HttpStatus(HttpStatusCode.NOT_FOUND),
+          null,
+          [new ClientError(ClientErrorCode.MEDIA_NOT_UPLOADED)],
+          null,
+        );
+      }
+    }
+    // Get old item mediaIds
+    const prGetItemMedias = await this.provider.getItemMedias(prGetMyCarpet.data.itemId);
+    const oldMediaIds: number[] = prGetItemMedias.data.map((itemMedia) => itemMedia.mediaId);
+    // Create my carpet
+    const prCreateCarpet = await this.provider.updateCarpet(
+      accountId,
+      oldMediaIds,
+      carpetId,
+      prGetMyCarpet.data.itemId,
+      validatedData.name,
+      validatedData.description,
+      validatedData.mediaIds,
+      validatedData.width,
+      validatedData.length,
+      validatedData.carpetMaterial,
+    );
+    // Create media data
+    const mediaData: MediaData[] = [];
+    for (const media of medias) {
+      mediaData.push({
+        mediaId: media.mediaId,
+        mediaType: media.mediaType,
+        extension: media.extension,
+        url: await BucketModule.instance.getAccessUrl(
+          `${media.mediaId.toString()}.${media.extension}`,
+        ),
+      });
+    }
+    // Return my carpet
+    return ResponseUtil.managerResponse(
+      new HttpStatus(HttpStatusCode.CREATED),
+      null,
+      [],
+      MyCarpetsResponse.fromModel(prCreateCarpet.data, mediaData),
+    );
+  }
+
+  public async deleteMyCarpets$carpetId(
+    accountId: number,
+    carpetId: number,
+  ): Promise<ManagerResponse<null>> {
+    // Try to get my carpet
+    const prGetMyCarpet = await this.provider.getMyCarpet(accountId, carpetId);
+    // Check if carpet exists
+    if (prGetMyCarpet.data === null) {
+      return ResponseUtil.managerResponse(
+        new HttpStatus(HttpStatusCode.NOT_FOUND),
+        null,
+        [new ClientError(ClientErrorCode.CARPET_NOT_FOUND)],
+        null,
+      );
+    }
+    // Get media ids
+    const prGetItemMedias = await this.provider.getItemMedias(prGetMyCarpet.data.itemId);
+    const mediaIds: number[] = prGetItemMedias.data.map((itemMedia) => itemMedia.mediaId);
+
+    // Create my carpet
+    await this.provider.deleteCarpet(prGetMyCarpet.data.itemId, carpetId, mediaIds);
+    // Return my carpet
+    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.NO_CONTENT), null, [], null);
   }
 }

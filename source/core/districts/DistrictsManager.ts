@@ -35,7 +35,7 @@ export class DistrictsManager implements IManager {
       parseInt(validatedData.districtId),
     );
     // If no district was found
-    if (!prGetDistrictById.data) {
+    if (prGetDistrictById.data === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,

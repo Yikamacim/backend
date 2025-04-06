@@ -1,5 +1,6 @@
 import type { IModel } from "../../app/interfaces/IModel";
-import { ModelMismatchError, UnexpectedQueryResultError } from "../../app/schemas/ServerError";
+import { ModelMismatchError } from "../../app/schemas/ServerError";
+import { ProtoUtil } from "../../app/utils/ProtoUtil";
 
 export class ProvinceModel implements IModel {
   private constructor(
@@ -9,9 +10,6 @@ export class ProvinceModel implements IModel {
   ) {}
 
   public static fromRecord(record: unknown): ProvinceModel {
-    if (!record) {
-      throw new UnexpectedQueryResultError();
-    }
     if (!this.isValidModel(record)) {
       throw new ModelMismatchError(record);
     }
@@ -26,7 +24,7 @@ export class ProvinceModel implements IModel {
   }
 
   private static isValidModel(data: unknown): data is ProvinceModel {
-    if (typeof data !== "object" || data === null) {
+    if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
     const model = data as ProvinceModel;

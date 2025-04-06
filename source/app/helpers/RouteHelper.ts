@@ -52,7 +52,7 @@ export class RouteHelper implements IHelper {
 
   public static addMethod(route: string, method: Method): void {
     const routeMethods = RouteHelper.routeInfo.get(route);
-    if (!routeMethods || routeMethods.length !== 2) {
+    if (routeMethods === undefined || routeMethods.length !== 2) {
       throw new CorruptedRouteInfoError(route);
     }
     routeMethods[1].push(method);
