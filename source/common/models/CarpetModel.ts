@@ -40,8 +40,8 @@ export class CarpetModel implements IModel {
     return (
       typeof model.carpetId === "number" &&
       typeof model.itemId === "number" &&
-      (typeof model.width === "number" || model.width === null) &&
-      (typeof model.length === "number" || model.length === null) &&
+      (model.width === null || typeof model.width === "number") &&
+      (model.length === null || typeof model.length === "number") &&
       (model.carpetMaterial === null ||
         Object.values(CarpetMaterial).includes(model.carpetMaterial))
     );

@@ -2,6 +2,7 @@ import { AccountRules } from "../../common/rules/AccountRules";
 import { AddressRules } from "../../common/rules/AddressRules";
 import { ItemRules } from "../../common/rules/ItemRules";
 import { SessionRules } from "../../common/rules/SessionRules";
+import { VehicleRules } from "../../common/rules/VehicleRules";
 import { VerificationRules } from "../../common/rules/VerificationRules";
 import { AuthConstants } from "../constants/AuthConstants";
 import type { IResponse } from "../interfaces/IResponse";
@@ -60,6 +61,8 @@ export enum ClientErrorCode {
   INVALID_EXPLICIT_ADDRESS_LENGTH = 60006,
   INVALID_ITEM_NAME_LENGTH = 60007,
   INVALID_ITEM_DESCRIPTION_LENGTH = 60008,
+  INVALID_VEHICLE_BRAND_LENGTH = 60009,
+  INVALID_VEHICLE_MODEL_LENGTH = 60010,
   //  *  7XXXX: Content errors
   INVALID_PHONE_CONTENT = 70002,
   INVALID_PASSWORD_CONTENT = 70003,
@@ -71,6 +74,8 @@ export enum ClientErrorCode {
   INVALID_ITEM_NAME_CONTENT = 70009,
   INVALID_ITEM_DESCRIPTION_CONTENT = 70010,
   DUPLICATE_MEDIA_IDS = 70011,
+  INVALID_VEHICLE_BRAND_CONTENT = 70012,
+  INVALID_VEHICLE_MODEL_CONTENT = 70013,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -111,6 +116,12 @@ export enum ClientErrorCode {
   CARPET_NOT_FOUND = 81001,
   MEDIA_NOT_FOUND = 81002,
   MEDIA_NOT_UPLOADED = 81003,
+  //  *  *  811XX: /my/vehicles errors
+  INVALID_VEHICLE_ID = 81100,
+  VEHICLE_NOT_FOUND = 81101,
+  //  *  *  812XX: /my/curtains errors
+  INVALID_CURTAIN_ID = 81200,
+  CURTAIN_NOT_FOUND = 81201,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -160,6 +171,8 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_EXPLICIT_ADDRESS_LENGTH]: `Provided explicit address wasn't in the length range of ${AddressRules.EXPLICIT_ADDRESS_MIN_LENGTH} to ${AddressRules.EXPLICIT_ADDRESS_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_ITEM_NAME_LENGTH]: `Provided item name wasn't in the length range of ${ItemRules.NAME_MIN_LENGTH} to ${ItemRules.NAME_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_ITEM_DESCRIPTION_LENGTH]: `Provided item description wasn't in the length range of ${ItemRules.DESCRIPTION_MIN_LENGTH} to ${ItemRules.DESCRIPTION_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_VEHICLE_BRAND_LENGTH]: `Provided vehicle brand wasn't in the length range of ${VehicleRules.BRAND_MIN_LENGTH} to ${VehicleRules.BRAND_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_VEHICLE_MODEL_LENGTH]: `Provided vehicle model wasn't in the length range of ${VehicleRules.MODEL_MIN_LENGTH} to ${VehicleRules.MODEL_MAX_LENGTH}.`,
   //  *  7XXXX: Content errors
   [ClientErrorCode.INVALID_PHONE_CONTENT]: "Provided phone contained invalid characters.",
   [ClientErrorCode.INVALID_PASSWORD_CONTENT]:
@@ -175,6 +188,10 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_ITEM_DESCRIPTION_CONTENT]:
     "Provided item description contained invalid characters.",
   [ClientErrorCode.DUPLICATE_MEDIA_IDS]: "Provided media ids contained duplicates.",
+  [ClientErrorCode.INVALID_VEHICLE_BRAND_CONTENT]:
+    "Provided vehicle brand contained invalid characters.",
+  [ClientErrorCode.INVALID_VEHICLE_MODEL_CONTENT]:
+    "Provided vehicle model contained invalid characters.",
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -217,6 +234,12 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.CARPET_NOT_FOUND]: "Account doesn't have a carpet with the provided id.",
   [ClientErrorCode.MEDIA_NOT_FOUND]: "Account doesn't have a media with the provided id.",
   [ClientErrorCode.MEDIA_NOT_UPLOADED]: "Media wasn't uploaded to the bucket.",
+  //  *  *  811XX: /my/vehicles errors
+  [ClientErrorCode.INVALID_VEHICLE_ID]: "Provided vehicle id was invalid.",
+  [ClientErrorCode.VEHICLE_NOT_FOUND]: "Account doesn't have a vehicle with the provided id.",
+  //  *  *  812XX: /my/curtains errors
+  [ClientErrorCode.INVALID_CURTAIN_ID]: "Provided curtain id was invalid.",
+  [ClientErrorCode.CURTAIN_NOT_FOUND]: "Account doesn't have a curtain with the provided id.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

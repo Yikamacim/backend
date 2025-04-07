@@ -4,16 +4,16 @@ import type { IProvider } from "../../../app/interfaces/IProvider";
 import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import type { CarpetMaterial } from "../../../common/enums/CarpetMaterial";
-import { CarpetModel } from "../../../common/models/CarpetModel";
-import { CarpetViewModel } from "../../../common/models/CarpetViewModel";
+import type { VehicleType } from "../../../common/enums/VehicleType";
+import { VehicleModel } from "../../../common/models/VehicleModel";
+import { VehicleViewModel } from "../../../common/models/VehicleViewModel";
 import { ItemMediaProvider } from "../../../common/providers/ItemMediaProvider";
 import { ItemProvider } from "../../../common/providers/ItemProvider";
 import { MediaProvider } from "../../../common/providers/MediaProvider";
-import { CarpetQueries } from "../../../common/queries/CarpetQueries";
-import { CarpetViewQueries } from "../../../common/queries/CarpetViewQueries";
+import { VehicleQueries } from "../../../common/queries/VehicleQueries";
+import { VehicleViewQueries } from "../../../common/queries/VehicleViewQueries";
 
-export class MyCarpetsProvider implements IProvider {
+export class MyVehiclesProvider implements IProvider {
   public constructor(
     private readonly itemProvider = new ItemProvider(),
     private readonly itemMediaProvider = new ItemMediaProvider(),
@@ -42,102 +42,102 @@ export class MyCarpetsProvider implements IProvider {
   public getMyMedias: typeof this.mediaProvider.getMyMedias;
   public partialUpdateMedias: typeof this.mediaProvider.partialUpdateMedias;
 
-  public async getMyCarpets(accountId: number): Promise<ProviderResponse<CarpetViewModel[]>> {
+  public async getMyVehicles(accountId: number): Promise<ProviderResponse<VehicleViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(CarpetViewQueries.GET_CARPETS_$ACID, [
+      const results = await DbConstants.POOL.query(VehicleViewQueries.GET_VEHICLES_$ACID, [
         accountId,
       ]);
       const records: unknown[] = results.rows;
-      return await ResponseUtil.providerResponse(CarpetViewModel.fromRecords(records));
+      return await ResponseUtil.providerResponse(VehicleViewModel.fromRecords(records));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async getMyCarpet(
+  public async getMyVehicle(
     accountId: number,
-    carpetId: number,
-  ): Promise<ProviderResponse<CarpetViewModel | null>> {
+    vehicleId: number,
+  ): Promise<ProviderResponse<VehicleViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const myCarpet = await this.partialGetMyCarpet(accountId, carpetId);
-      if (myCarpet === null) {
+      const myVehicle = await this.partialGetMyVehicle(accountId, vehicleId);
+      if (myVehicle === null) {
         return await ResponseUtil.providerResponse(null);
       }
-      return await ResponseUtil.providerResponse(myCarpet);
+      return await ResponseUtil.providerResponse(myVehicle);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async createCarpet(
+  public async createVehicle(
     accountId: number,
     name: string,
     description: string,
     mediaIds: number[],
-    width: number | null,
-    length: number | null,
-    carpetMaterial: CarpetMaterial | null,
-  ): Promise<ProviderResponse<CarpetViewModel>> {
+    brand: string | null,
+    model: string | null,
+    vehicleType: VehicleType | null,
+  ): Promise<ProviderResponse<VehicleViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const item = await this.partialCreateItem(accountId, name, description);
-      const carpet = await this.partialCreateCarpet(item.itemId, width, length, carpetMaterial);
+      const vehicle = await this.partialCreateVehicle(item.itemId, brand, model, vehicleType);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, true);
-      const carpetView = await this.partialGetMyCarpet(accountId, carpet.carpetId);
-      if (carpetView === null) {
-        throw new UnexpectedDatabaseStateError("Carpet was not created");
+      const vehicleView = await this.partialGetMyVehicle(accountId, vehicle.vehicleId);
+      if (vehicleView === null) {
+        throw new UnexpectedDatabaseStateError("Vehicle was not created");
       }
-      return await ResponseUtil.providerResponse(carpetView);
+      return await ResponseUtil.providerResponse(vehicleView);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async updateCarpet(
+  public async updateVehicle(
     accountId: number,
     oldMediaIds: number[],
-    carpetId: number,
+    vehicleId: number,
     itemId: number,
     name: string,
     description: string,
     mediaIds: number[],
-    width: number | null,
-    length: number | null,
-    carpetMaterial: CarpetMaterial | null,
-  ): Promise<ProviderResponse<CarpetViewModel>> {
+    brand: string | null,
+    model: string | null,
+    vehicleType: VehicleType | null,
+  ): Promise<ProviderResponse<VehicleViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await this.partialDeleteItemMedias(itemId, oldMediaIds);
       await this.partialUpdateMedias(oldMediaIds, false);
       await this.partialUpdateItem(itemId, name, description);
-      await this.partialUpdateCarpet(carpetId, width, length, carpetMaterial);
+      await this.partialUpdateVehicle(vehicleId, brand, model, vehicleType);
       await this.partialCreateItemMedias(itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, true);
-      const carpetView = await this.partialGetMyCarpet(accountId, carpetId);
-      if (carpetView === null) {
-        throw new UnexpectedDatabaseStateError("Carpet was not updated");
+      const vehicleView = await this.partialGetMyVehicle(accountId, vehicleId);
+      if (vehicleView === null) {
+        throw new UnexpectedDatabaseStateError("Vehicle was not updated");
       }
-      return await ResponseUtil.providerResponse(carpetView);
+      return await ResponseUtil.providerResponse(vehicleView);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async deleteCarpet(
+  public async deleteVehicle(
     itemId: number,
-    carpetId: number,
+    vehicleId: number,
     mediaIds: number[],
   ): Promise<ProviderResponse<null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      await this.partialDeleteCarpet(carpetId);
+      await this.partialDeleteVehicle(vehicleId);
       await this.partialDeleteItemMedias(itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, false);
       await this.partialDeleteItem(itemId);
@@ -150,50 +150,50 @@ export class MyCarpetsProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialCreateCarpet(
+  private async partialCreateVehicle(
     itemId: number,
-    width: number | null,
-    length: number | null,
-    carpetMaterial: CarpetMaterial | null,
-  ): Promise<CarpetModel> {
+    brand: string | null,
+    model: string | null,
+    vehicleType: VehicleType | null,
+  ): Promise<VehicleModel> {
     const results = await DbConstants.POOL.query(
-      CarpetQueries.INSERT_CARPET_RT_$ITID_$WIDTH_$LENGTH_$CMAT,
-      [itemId, width, length, carpetMaterial],
+      VehicleQueries.INSERT_VEHICLE_RT_$ITID_$BRAND_$MODEL_$VHTP,
+      [itemId, brand, model, vehicleType],
     );
     const record: unknown = results.rows[0];
-    return CarpetModel.fromRecord(record);
+    return VehicleModel.fromRecord(record);
   }
 
-  private async partialUpdateCarpet(
-    carpetId: number,
-    width: number | null,
-    length: number | null,
-    carpetMaterial: CarpetMaterial | null,
-  ): Promise<CarpetModel> {
+  private async partialUpdateVehicle(
+    vehicleId: number,
+    brand: string | null,
+    model: string | null,
+    vehicleType: VehicleType | null,
+  ): Promise<VehicleModel> {
     const results = await DbConstants.POOL.query(
-      CarpetQueries.UPDATE_CARPET_RT_$CPID_$WIDTH_$LENGTH_$CMAT,
-      [carpetId, width, length, carpetMaterial],
+      VehicleQueries.UPDATE_VEHICLE_RT_$CPID_$BRAND_$MODEL_$VHTP,
+      [vehicleId, brand, model, vehicleType],
     );
     const record: unknown = results.rows[0];
-    return CarpetModel.fromRecord(record);
+    return VehicleModel.fromRecord(record);
   }
 
-  private async partialDeleteCarpet(carpetId: number): Promise<void> {
-    await DbConstants.POOL.query(CarpetQueries.DELETE_CARPET_$CPID, [carpetId]);
+  private async partialDeleteVehicle(vehicleId: number): Promise<void> {
+    await DbConstants.POOL.query(VehicleQueries.DELETE_VEHICLE_$VHID, [vehicleId]);
   }
 
-  private async partialGetMyCarpet(
+  private async partialGetMyVehicle(
     accountId: number,
-    carpetId: number,
-  ): Promise<CarpetViewModel | null> {
-    const results = await DbConstants.POOL.query(CarpetViewQueries.GET_CARPET_$ACID_$CPID, [
+    vehicleId: number,
+  ): Promise<VehicleViewModel | null> {
+    const results = await DbConstants.POOL.query(VehicleViewQueries.GET_VEHICLE_$ACID_$VHID, [
       accountId,
-      carpetId,
+      vehicleId,
     ]);
     const record: unknown = results.rows[0];
     if (!ProtoUtil.isProtovalid(record)) {
       return null;
     }
-    return CarpetViewModel.fromRecord(record);
+    return VehicleViewModel.fromRecord(record);
   }
 }

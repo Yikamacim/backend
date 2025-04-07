@@ -4,16 +4,17 @@ import type { IProvider } from "../../../app/interfaces/IProvider";
 import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import type { CarpetMaterial } from "../../../common/enums/CarpetMaterial";
-import { CarpetModel } from "../../../common/models/CarpetModel";
-import { CarpetViewModel } from "../../../common/models/CarpetViewModel";
+import type { CurtainMaterial } from "../../../common/enums/CurtainMaterial";
+import type { CurtainType } from "../../../common/enums/CurtainType";
+import { CurtainModel } from "../../../common/models/CurtainModel";
+import { CurtainViewModel } from "../../../common/models/CurtainViewModel";
 import { ItemMediaProvider } from "../../../common/providers/ItemMediaProvider";
 import { ItemProvider } from "../../../common/providers/ItemProvider";
 import { MediaProvider } from "../../../common/providers/MediaProvider";
-import { CarpetQueries } from "../../../common/queries/CarpetQueries";
-import { CarpetViewQueries } from "../../../common/queries/CarpetViewQueries";
+import { CurtainQueries } from "../../../common/queries/CurtainQueries";
+import { CurtainViewQueries } from "../../../common/queries/CurtainViewQueries";
 
-export class MyCarpetsProvider implements IProvider {
+export class MyCurtainsProvider implements IProvider {
   public constructor(
     private readonly itemProvider = new ItemProvider(),
     private readonly itemMediaProvider = new ItemMediaProvider(),
@@ -42,64 +43,71 @@ export class MyCarpetsProvider implements IProvider {
   public getMyMedias: typeof this.mediaProvider.getMyMedias;
   public partialUpdateMedias: typeof this.mediaProvider.partialUpdateMedias;
 
-  public async getMyCarpets(accountId: number): Promise<ProviderResponse<CarpetViewModel[]>> {
+  public async getMyCurtains(accountId: number): Promise<ProviderResponse<CurtainViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(CarpetViewQueries.GET_CARPETS_$ACID, [
+      const results = await DbConstants.POOL.query(CurtainViewQueries.GET_CURTAINS_$ACID, [
         accountId,
       ]);
       const records: unknown[] = results.rows;
-      return await ResponseUtil.providerResponse(CarpetViewModel.fromRecords(records));
+      return await ResponseUtil.providerResponse(CurtainViewModel.fromRecords(records));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async getMyCarpet(
+  public async getMyCurtain(
     accountId: number,
-    carpetId: number,
-  ): Promise<ProviderResponse<CarpetViewModel | null>> {
+    curtainId: number,
+  ): Promise<ProviderResponse<CurtainViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const myCarpet = await this.partialGetMyCarpet(accountId, carpetId);
-      if (myCarpet === null) {
+      const myCurtain = await this.partialGetMyCurtain(accountId, curtainId);
+      if (myCurtain === null) {
         return await ResponseUtil.providerResponse(null);
       }
-      return await ResponseUtil.providerResponse(myCarpet);
+      return await ResponseUtil.providerResponse(myCurtain);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async createCarpet(
+  public async createCurtain(
     accountId: number,
     name: string,
     description: string,
     mediaIds: number[],
     width: number | null,
     length: number | null,
-    carpetMaterial: CarpetMaterial | null,
-  ): Promise<ProviderResponse<CarpetViewModel>> {
+    curtainType: CurtainType | null,
+    curtainMaterial: CurtainMaterial | null,
+  ): Promise<ProviderResponse<CurtainViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const item = await this.partialCreateItem(accountId, name, description);
-      const carpet = await this.partialCreateCarpet(item.itemId, width, length, carpetMaterial);
+      const curtain = await this.partialCreateCurtain(
+        item.itemId,
+        width,
+        length,
+        curtainType,
+        curtainMaterial,
+      );
       await this.partialCreateItemMedias(item.itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, true);
-      const carpetView = await this.partialGetMyCarpet(accountId, carpet.carpetId);
-      if (carpetView === null) {
-        throw new UnexpectedDatabaseStateError("Carpet was not created");
+      const curtainView = await this.partialGetMyCurtain(accountId, curtain.curtainId);
+      if (curtainView === null) {
+        throw new UnexpectedDatabaseStateError("Curtain was not created");
       }
-      return await ResponseUtil.providerResponse(carpetView);
+      return await ResponseUtil.providerResponse(curtainView);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async updateCarpet(
+  public async updateCurtain(
     accountId: number,
     oldMediaIds: number[],
     carpetId: number,
@@ -109,35 +117,36 @@ export class MyCarpetsProvider implements IProvider {
     mediaIds: number[],
     width: number | null,
     length: number | null,
-    carpetMaterial: CarpetMaterial | null,
-  ): Promise<ProviderResponse<CarpetViewModel>> {
+    curtainType: CurtainType | null,
+    curtainMaterial: CurtainMaterial | null,
+  ): Promise<ProviderResponse<CurtainViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await this.partialDeleteItemMedias(itemId, oldMediaIds);
       await this.partialUpdateMedias(oldMediaIds, false);
       await this.partialUpdateItem(itemId, name, description);
-      await this.partialUpdateCarpet(carpetId, width, length, carpetMaterial);
+      await this.partialUpdateCurtain(carpetId, width, length, curtainType, curtainMaterial);
       await this.partialCreateItemMedias(itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, true);
-      const carpetView = await this.partialGetMyCarpet(accountId, carpetId);
-      if (carpetView === null) {
-        throw new UnexpectedDatabaseStateError("Carpet was not updated");
+      const curtainView = await this.partialGetMyCurtain(accountId, carpetId);
+      if (curtainView === null) {
+        throw new UnexpectedDatabaseStateError("Curtain was not updated");
       }
-      return await ResponseUtil.providerResponse(carpetView);
+      return await ResponseUtil.providerResponse(curtainView);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async deleteCarpet(
+  public async deleteCurtain(
     itemId: number,
-    carpetId: number,
+    curtainId: number,
     mediaIds: number[],
   ): Promise<ProviderResponse<null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      await this.partialDeleteCarpet(carpetId);
+      await this.partialDeleteCurtain(curtainId);
       await this.partialDeleteItemMedias(itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, false);
       await this.partialDeleteItem(itemId);
@@ -150,50 +159,52 @@ export class MyCarpetsProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialCreateCarpet(
+  private async partialCreateCurtain(
     itemId: number,
     width: number | null,
     length: number | null,
-    carpetMaterial: CarpetMaterial | null,
-  ): Promise<CarpetModel> {
+    curtainType: CurtainType | null,
+    curtainMaterial: CurtainMaterial | null,
+  ): Promise<CurtainModel> {
     const results = await DbConstants.POOL.query(
-      CarpetQueries.INSERT_CARPET_RT_$ITID_$WIDTH_$LENGTH_$CMAT,
-      [itemId, width, length, carpetMaterial],
+      CurtainQueries.INSERT_CURTAIN_RT_$ITID_$WIDTH_$LENGTH_$CTYP_$CMAT,
+      [itemId, width, length, curtainType, curtainMaterial],
     );
     const record: unknown = results.rows[0];
-    return CarpetModel.fromRecord(record);
+    return CurtainModel.fromRecord(record);
   }
 
-  private async partialUpdateCarpet(
-    carpetId: number,
+  private async partialUpdateCurtain(
+    curtainId: number,
     width: number | null,
     length: number | null,
-    carpetMaterial: CarpetMaterial | null,
-  ): Promise<CarpetModel> {
+    curtainType: CurtainType | null,
+    curtainMaterial: CurtainMaterial | null,
+  ): Promise<CurtainModel> {
     const results = await DbConstants.POOL.query(
-      CarpetQueries.UPDATE_CARPET_RT_$CPID_$WIDTH_$LENGTH_$CMAT,
-      [carpetId, width, length, carpetMaterial],
+      CurtainQueries.UPDATE_CURTAIN_RT_$CPID_$WIDTH_$LENGTH_$CTYP_$CMAT,
+      [curtainId, width, length, curtainType, curtainMaterial],
     );
     const record: unknown = results.rows[0];
-    return CarpetModel.fromRecord(record);
+    return CurtainModel.fromRecord(record);
   }
 
-  private async partialDeleteCarpet(carpetId: number): Promise<void> {
-    await DbConstants.POOL.query(CarpetQueries.DELETE_CARPET_$CPID, [carpetId]);
+  private async partialDeleteCurtain(curtainId: number): Promise<void> {
+    await DbConstants.POOL.query(CurtainQueries.DELETE_CURTAIN_$CRID, [curtainId]);
   }
 
-  private async partialGetMyCarpet(
+  private async partialGetMyCurtain(
     accountId: number,
-    carpetId: number,
-  ): Promise<CarpetViewModel | null> {
-    const results = await DbConstants.POOL.query(CarpetViewQueries.GET_CARPET_$ACID_$CPID, [
+    curtainId: number,
+  ): Promise<CurtainViewModel | null> {
+    const results = await DbConstants.POOL.query(CurtainViewQueries.GET_CURTAIN_$ACID_$CRID, [
       accountId,
-      carpetId,
+      curtainId,
     ]);
     const record: unknown = results.rows[0];
     if (!ProtoUtil.isProtovalid(record)) {
       return null;
     }
-    return CarpetViewModel.fromRecord(record);
+    return CurtainViewModel.fromRecord(record);
   }
 }

@@ -26,6 +26,8 @@ import { RefreshBuilder } from "./core/refresh/RefreshBuilder";
 import { SignupBuilder } from "./core/signup/SignupBuilder";
 import { VerifyBuilder } from "./core/verify/VerifyBuilder";
 import { PurgeTask } from "./tasks/purge/task";
+import { MyCurtainsBuilder } from "./core/my/curtains/MyCurtainsBuilder";
+import { MyVehiclesBuilder } from "./core/my/vehicles/MyVehiclesBuilder";
 
 // App
 const app: Express = express();
@@ -109,6 +111,12 @@ app.use(
   new MyCarpetsBuilder().router,
 );
 app.use(
+  // my/curtains
+  MyCurtainsBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  new MyCurtainsBuilder().router,
+);
+app.use(
   // my/medias
   MyMediasBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
@@ -119,6 +127,12 @@ app.use(
   MySessionsBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
   new MySessionsBuilder().router,
+);
+app.use(
+  // my/vehicles
+  MyVehiclesBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  new MyVehiclesBuilder().router,
 );
 app.use(
   // logout

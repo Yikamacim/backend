@@ -8,39 +8,41 @@ import { FileUtil } from "../../../app/utils/FileUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { MediaModel } from "../../../common/models/MediaModel";
 import { BucketModule } from "../../../modules/bucket/module";
-import { MyCarpetsProvider } from "./MyCarpetsProvider";
-import type { MyCarpetsParams } from "./schemas/MyCarpetsParams";
-import type { MyCarpetsRequest } from "./schemas/MyCarpetsRequest";
-import { MyCarpetsResponse } from "./schemas/MyCarpetsResponse";
+import { MyCurtainsProvider } from "./MyCurtainsProvider";
+import type { MyCurtainsParams } from "./schemas/MyCurtainsParams";
+import type { MyCurtainsRequest } from "./schemas/MyCurtainsRequest";
+import { MyCurtainsResponse } from "./schemas/MyCurtainsResponse";
 
-export class MyCarpetsManager implements IManager {
-  public constructor(private readonly provider = new MyCarpetsProvider()) {}
+export class MyCurtainsManager implements IManager {
+  public constructor(private readonly provider = new MyCurtainsProvider()) {}
 
-  public async getMyCarpets(payload: TokenPayload): Promise<ManagerResponse<MyCarpetsResponse[]>> {
-    const myCarpets = await this.provider.getMyCarpets(payload.accountId);
-    const responses: MyCarpetsResponse[] = [];
-    for (const myCarpet of myCarpets) {
-      const myCarpetMedias = await this.provider.getItemMedias(myCarpet.itemId);
-      const myCarpetMediasData: MediaData[] = [];
-      for (const myCarpetMedia of myCarpetMedias) {
-        myCarpetMediasData.push({
-          mediaId: myCarpetMedia.mediaId,
-          mediaType: myCarpetMedia.mediaType,
-          extension: myCarpetMedia.extension,
+  public async getMyCurtains(
+    payload: TokenPayload,
+  ): Promise<ManagerResponse<MyCurtainsResponse[]>> {
+    const myCurtains = await this.provider.getMyCurtains(payload.accountId);
+    const responses: MyCurtainsResponse[] = [];
+    for (const myCurtain of myCurtains) {
+      const myCurtainMedias = await this.provider.getItemMedias(myCurtain.itemId);
+      const myCurtainMediasData: MediaData[] = [];
+      for (const myCurtainMedia of myCurtainMedias) {
+        myCurtainMediasData.push({
+          mediaId: myCurtainMedia.mediaId,
+          mediaType: myCurtainMedia.mediaType,
+          extension: myCurtainMedia.extension,
           url: await BucketModule.instance.getAccessUrl(
-            FileUtil.getName(myCarpetMedia.mediaId.toString(), myCarpetMedia.extension),
+            FileUtil.getName(myCurtainMedia.mediaId.toString(), myCurtainMedia.extension),
           ),
         });
       }
-      responses.push(MyCarpetsResponse.fromModel(myCarpet, myCarpetMediasData));
+      responses.push(MyCurtainsResponse.fromModel(myCurtain, myCurtainMediasData));
     }
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
   }
 
-  public async postMyCarpets(
+  public async postMyCurtains(
     payload: TokenPayload,
-    request: MyCarpetsRequest,
-  ): Promise<ManagerResponse<MyCarpetsResponse | null>> {
+    request: MyCurtainsRequest,
+  ): Promise<ManagerResponse<MyCurtainsResponse | null>> {
     const myMedias = await this.provider.getMyMedias(payload.accountId);
     const medias: MediaModel[] = [];
     for (const mediaId of request.mediaIds) {
@@ -69,14 +71,15 @@ export class MyCarpetsManager implements IManager {
         );
       }
     }
-    const myCarpet = await this.provider.createCarpet(
+    const myCurtain = await this.provider.createCurtain(
       payload.accountId,
       request.name,
       request.description,
       request.mediaIds,
       request.width,
       request.length,
-      request.carpetMaterial,
+      request.curtainType,
+      request.curtainMaterial,
     );
     const mediaData: MediaData[] = [];
     for (const media of medias) {
@@ -93,26 +96,29 @@ export class MyCarpetsManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyCarpetsResponse.fromModel(myCarpet, mediaData),
+      MyCurtainsResponse.fromModel(myCurtain, mediaData),
     );
   }
 
-  public async getMyCarpets$(
+  public async getMyCurtains$(
     payload: TokenPayload,
-    params: MyCarpetsParams,
-  ): Promise<ManagerResponse<MyCarpetsResponse | null>> {
-    const myCarpet = await this.provider.getMyCarpet(payload.accountId, parseInt(params.carpetId));
-    if (myCarpet === null) {
+    params: MyCurtainsParams,
+  ): Promise<ManagerResponse<MyCurtainsResponse | null>> {
+    const myCurtain = await this.provider.getMyCurtain(
+      payload.accountId,
+      parseInt(params.curtainId),
+    );
+    if (myCurtain === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.CARPET_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.CURTAIN_NOT_FOUND)],
         null,
       );
     }
-    const myCarpetMedias = await this.provider.getItemMedias(myCarpet.itemId);
+    const myCurtainMedias = await this.provider.getItemMedias(myCurtain.itemId);
     const mediaData: MediaData[] = [];
-    for (const itemMedia of myCarpetMedias) {
+    for (const itemMedia of myCurtainMedias) {
       mediaData.push({
         mediaId: itemMedia.mediaId,
         mediaType: itemMedia.mediaType,
@@ -126,21 +132,24 @@ export class MyCarpetsManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyCarpetsResponse.fromModel(myCarpet, mediaData),
+      MyCurtainsResponse.fromModel(myCurtain, mediaData),
     );
   }
 
-  public async putMyCarpets$(
+  public async putMyCurtains$(
     payload: TokenPayload,
-    params: MyCarpetsParams,
-    request: MyCarpetsRequest,
-  ): Promise<ManagerResponse<MyCarpetsResponse | null>> {
-    const myCarpet = await this.provider.getMyCarpet(payload.accountId, parseInt(params.carpetId));
-    if (myCarpet === null) {
+    params: MyCurtainsParams,
+    request: MyCurtainsRequest,
+  ): Promise<ManagerResponse<MyCurtainsResponse | null>> {
+    const myCurtain = await this.provider.getMyCurtain(
+      payload.accountId,
+      parseInt(params.curtainId),
+    );
+    if (myCurtain === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.CARPET_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.CURTAIN_NOT_FOUND)],
         null,
       );
     }
@@ -172,18 +181,19 @@ export class MyCarpetsManager implements IManager {
         );
       }
     }
-    const myCarpetMedias = await this.provider.getItemMedias(myCarpet.itemId);
-    const myUpdatedCarpet = await this.provider.updateCarpet(
+    const myCurtainMedias = await this.provider.getItemMedias(myCurtain.itemId);
+    const myUpdatedCurtain = await this.provider.updateCurtain(
       payload.accountId,
-      myCarpetMedias.map((itemMedia) => itemMedia.mediaId),
-      myCarpet.carpetId,
-      myCarpet.itemId,
+      myCurtainMedias.map((itemMedia) => itemMedia.mediaId),
+      myCurtain.curtainId,
+      myCurtain.itemId,
       request.name,
       request.description,
       request.mediaIds,
       request.width,
       request.length,
-      request.carpetMaterial,
+      request.curtainType,
+      request.curtainMaterial,
     );
     const mediaData: MediaData[] = [];
     for (const media of medias) {
@@ -200,28 +210,31 @@ export class MyCarpetsManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyCarpetsResponse.fromModel(myUpdatedCarpet, mediaData),
+      MyCurtainsResponse.fromModel(myUpdatedCurtain, mediaData),
     );
   }
 
-  public async deleteMyCarpets$(
+  public async deleteMyCurtains$(
     payload: TokenPayload,
-    params: MyCarpetsParams,
+    params: MyCurtainsParams,
   ): Promise<ManagerResponse<null>> {
-    const myCarpet = await this.provider.getMyCarpet(payload.accountId, parseInt(params.carpetId));
-    if (myCarpet === null) {
+    const myCurtain = await this.provider.getMyCurtain(
+      payload.accountId,
+      parseInt(params.curtainId),
+    );
+    if (myCurtain === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.CARPET_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.CURTAIN_NOT_FOUND)],
         null,
       );
     }
-    const myCarpetMedias = await this.provider.getItemMedias(myCarpet.itemId);
-    await this.provider.deleteCarpet(
-      myCarpet.itemId,
-      myCarpet.carpetId,
-      myCarpetMedias.map((myCarpetMedia) => myCarpetMedia.mediaId),
+    const myCurtainMedias = await this.provider.getItemMedias(myCurtain.itemId);
+    await this.provider.deleteCurtain(
+      myCurtain.itemId,
+      myCurtain.curtainId,
+      myCurtainMedias.map((myCurtainMedia) => myCurtainMedia.mediaId),
     );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.NO_CONTENT), null, [], null);
   }
