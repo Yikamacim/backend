@@ -11,14 +11,9 @@ import { LoginResponse } from "./schemas/LoginResponse";
 export class LoginManager implements IManager {
   public constructor(private readonly provider = new LoginProvider()) {}
 
-  public async postLogin(
-    validatedData: LoginRequest,
-  ): Promise<ManagerResponse<LoginResponse | null>> {
-    // Try to get the account
-    const prGetAccount = await this.provider.getAccount(validatedData.phone);
-    // If no account was found
-    if (prGetAccount.data === null) {
-      // Return with error
+  public async postLogin(request: LoginRequest): Promise<ManagerResponse<LoginResponse | null>> {
+    const account = await this.provider.getAccount(request.phone);
+    if (account === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -26,9 +21,7 @@ export class LoginManager implements IManager {
         null,
       );
     }
-    // Got the account, check the password
-    if (!(await EncryptionHelper.compare(validatedData.password, prGetAccount.data.password))) {
-      // Passwords don't match
+    if (!(await EncryptionHelper.isMatching(request.password, account.password))) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.UNAUTHORIZED),
         null,
@@ -36,12 +29,11 @@ export class LoginManager implements IManager {
         null,
       );
     }
-    // Passwords match
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      LoginResponse.fromModel(prGetAccount.data),
+      LoginResponse.fromModel(account),
     );
   }
 }

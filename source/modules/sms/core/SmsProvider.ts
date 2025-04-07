@@ -42,7 +42,7 @@ export class SmsProvider implements IProvider {
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
   private async partialCreateVerification(verificationData: VerificationData): Promise<void> {
-    await DbConstants.POOL.query(VerificationQueries.INSERT_VERIFICATION_RT_$PHONE_$CODE_$SENTAT, [
+    await DbConstants.POOL.query(VerificationQueries.INSERT_VERIFICATION_$PHONE_$CODE_$SENTAT, [
       verificationData.phone,
       verificationData.code,
       verificationData.sentAt,
@@ -50,7 +50,7 @@ export class SmsProvider implements IProvider {
   }
 
   private async partialUpdateVerification(verificationData: VerificationData): Promise<void> {
-    await DbConstants.POOL.query(VerificationQueries.UPDATE_VERIFICATION_RT_$PHONE_$CODE_$SENTAT, [
+    await DbConstants.POOL.query(VerificationQueries.UPDATE_VERIFICATION_$PHONE_$CODE_$SENTAT, [
       verificationData.phone,
       verificationData.code,
       verificationData.sentAt,

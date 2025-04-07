@@ -14,34 +14,34 @@ export class AuthHandler implements IHandler {
 
   public async verify(token: Token): Promise<ClientError[]> {
     try {
-      const tokenPayload = jwt.verify(token, EnvironmentHelper.get().jwtSecret);
-      if (!PayloadHelper.isValidPayload(tokenPayload)) {
+      const payload = jwt.verify(token, EnvironmentHelper.get().jwtSecret);
+      if (!PayloadHelper.isValidPayload(payload)) {
         return [new ClientError(ClientErrorCode.INVALID_TOKEN)];
       }
       // Try getting the account
-      const prGetAccount = await this.provider.getAccount(tokenPayload.accountId);
+      const myAccount = await this.provider.getAccount(payload.accountId);
       // If no account found
-      if (prGetAccount.data === null) {
+      if (myAccount === null) {
         return [new ClientError(ClientErrorCode.INVALID_TOKEN)];
       }
       // Check if account type matches
-      if (tokenPayload.accountType !== prGetAccount.data.accountType) {
+      if (payload.accountType !== myAccount.accountType) {
         return [new ClientError(ClientErrorCode.INVALID_TOKEN)];
       }
       // If refresh token
-      if (!TokenHelper.isAccessToken(tokenPayload)) {
+      if (!TokenHelper.isAccessToken(payload)) {
         // Verify session
-        const prGetSession = await this.provider.getSession(tokenPayload.sessionId);
+        const mySession = await this.provider.getSession(payload.sessionId);
         // If no session found
-        if (prGetSession.data === null) {
+        if (mySession === null) {
           return [new ClientError(ClientErrorCode.INVALID_TOKEN)];
         }
         // Check if accountId matches
-        if (tokenPayload.accountId !== prGetSession.data.accountId) {
+        if (payload.accountId !== mySession.accountId) {
           return [new ClientError(ClientErrorCode.INVALID_TOKEN)];
         }
         // Check if refreshToken matches
-        if (token !== prGetSession.data.refreshToken) {
+        if (token !== mySession.refreshToken) {
           return [new ClientError(ClientErrorCode.INVALID_TOKEN)];
         }
       }
@@ -70,25 +70,23 @@ export class AuthHandler implements IHandler {
   }
 
   public async generate(sessionData: SessionData): Promise<Tokens> {
-    return (await this.provider.createOrUpdateSession(sessionData)).data;
+    return await this.provider.createOrUpdateSession(sessionData);
   }
 
-  public async refresh(tokenPayload: TokenPayload): Promise<Tokens> {
-    const currentSession = await this.provider.getSession(tokenPayload.sessionId);
-    if (currentSession.data === null) {
+  public async refresh(payload: TokenPayload): Promise<Tokens> {
+    const session = await this.provider.getSession(payload.sessionId);
+    if (session === null) {
       throw new UnexpectedAuthError();
     }
-    return (
-      await this.provider.createOrUpdateSession({
-        accountId: tokenPayload.accountId,
-        accountType: tokenPayload.accountType,
-        deviceName: currentSession.data.deviceName,
-        sessionKey: currentSession.data.sessionKey,
-      })
-    ).data;
+    return await this.provider.createOrUpdateSession({
+      accountId: payload.accountId,
+      accountType: payload.accountType,
+      deviceName: session.deviceName,
+      sessionKey: session.sessionKey,
+    });
   }
 
-  public async revoke(tokenPayload: TokenPayload): Promise<void> {
-    await this.provider.deleteSession(tokenPayload.sessionId);
+  public async revoke(payload: TokenPayload): Promise<void> {
+    await this.provider.deleteSession(payload.sessionId);
   }
 }

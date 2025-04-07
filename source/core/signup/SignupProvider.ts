@@ -26,15 +26,15 @@ export class SignupProvider implements IProvider {
       // WHAT IS THIS SHIT
       if (phone === "+905331991562") {
         const results = await DbConstants.POOL.query(
-          AccountQueries.INSERT_ACCOUNT_RT_$PHONE_$PSWRD_$NAME_$SNAME_$ATYP,
-          [phone, password, name, surname, accountType],
+          AccountQueries.INSERT_ACCOUNT_RT_$PHONE_$PSWRD_$NAME_$SNAME_$ATYP_$ISVF,
+          [phone, password, name, surname, accountType, false],
         );
         const record: unknown = results.rows[0];
         return await ResponseUtil.providerResponse(AccountModel.fromRecord(record));
       } else {
         const results = await DbConstants.POOL.query(
-          AccountQueries.INSERT_ACCOUNT_VERIFIED_RT_$PHONE_$PSWRD_$NAME_$SNAME_$ATYP,
-          [phone, password, name, surname, accountType],
+          AccountQueries.INSERT_ACCOUNT_RT_$PHONE_$PSWRD_$NAME_$SNAME_$ATYP_$ISVF,
+          [phone, password, name, surname, accountType, true],
         );
         const record: unknown = results.rows[0];
         return await ResponseUtil.providerResponse(AccountModel.fromRecord(record));

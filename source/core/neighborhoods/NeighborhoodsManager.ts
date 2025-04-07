@@ -12,30 +12,24 @@ export class NeighborhoodsManager implements IManager {
   public constructor(private readonly provider = new NeighborhoodsProvider()) {}
 
   public async getNeighborhoods(
-    validatedData: NeighborhoodsQueries,
+    queries: NeighborhoodsQueries,
   ): Promise<ManagerResponse<NeighborhoodsResponse[]>> {
-    // Get neighborhoods by province id
-    const prGetNeighborhoodsByDistrictId = await this.provider.getNeighborhoodsByDistrictId(
-      parseInt(validatedData.districtId),
+    const neighborhoods = await this.provider.getNeighborhoodsByDistrictId(
+      parseInt(queries.districtId),
     );
-    // Return neighborhoods
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      NeighborhoodsResponse.fromModels(prGetNeighborhoodsByDistrictId.data),
+      NeighborhoodsResponse.fromModels(neighborhoods),
     );
   }
 
-  public async getNeighborhoods$neighborhoodId(
-    validatedData: NeighborhoodsParams,
+  public async getNeighborhoods$(
+    params: NeighborhoodsParams,
   ): Promise<ManagerResponse<NeighborhoodsResponse | null>> {
-    // Try to get the neighborhood
-    const prGetNeighborhoodById = await this.provider.getNeighborhoodById(
-      parseInt(validatedData.neighborhoodId),
-    );
-    // If no neighborhood found
-    if (prGetNeighborhoodById.data === null) {
+    const neighborhood = await this.provider.getNeighborhoodById(parseInt(params.neighborhoodId));
+    if (neighborhood === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -43,12 +37,11 @@ export class NeighborhoodsManager implements IManager {
         null,
       );
     }
-    // Return neighborhood
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      NeighborhoodsResponse.fromModel(prGetNeighborhoodById.data),
+      NeighborhoodsResponse.fromModel(neighborhood),
     );
   }
 }

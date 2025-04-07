@@ -19,42 +19,42 @@ export class LoginController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pr = LoginRequest.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      const request = LoginRequest.parse(req);
+      if (request.clientErrors.length > 0 || request.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          request.clientErrors,
           null,
           null,
         );
       }
       // >-----------< LOGIC >-----------<
-      const mr = await this.manager.postLogin(pr.validatedData);
+      const out = await this.manager.postLogin(request.data);
       // >-----------< RESPONSE >-----------<
-      if (!mr.httpStatus.isSuccess() || mr.data === null) {
+      if (!out.httpStatus.isSuccess() || out.data === null) {
         return ResponseUtil.controllerResponse(
           res,
-          mr.httpStatus,
-          mr.serverError,
-          mr.clientErrors,
-          mr.data,
+          out.httpStatus,
+          out.serverError,
+          out.clientErrors,
+          out.data,
           null,
         );
       }
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
-        mr.data.isVerified
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
+        out.data.isVerified
           ? await AuthModule.instance.generate({
-              accountId: mr.data.accountId,
-              accountType: mr.data.accountType,
-              deviceName: pr.validatedData.deviceName,
-              sessionKey: pr.validatedData.sessionKey,
+              accountId: out.data.accountId,
+              accountType: out.data.accountType,
+              deviceName: request.data.deviceName,
+              sessionKey: request.data.sessionKey,
             })
           : null,
       );

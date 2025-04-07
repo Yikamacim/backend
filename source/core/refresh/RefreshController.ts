@@ -15,7 +15,7 @@ export class RefreshController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >----------< AUTHORIZATION >----------<
-      const tokenPayload = PayloadHelper.getPayload(res);
+      const payload = PayloadHelper.getPayload(res);
       // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(
         res,
@@ -23,7 +23,7 @@ export class RefreshController implements IController {
         null,
         [],
         null,
-        await AuthModule.instance.refresh(tokenPayload),
+        await AuthModule.instance.refresh(payload),
       );
     } catch (error) {
       return next(error);

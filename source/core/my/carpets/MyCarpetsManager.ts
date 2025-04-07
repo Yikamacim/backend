@@ -1,56 +1,51 @@
 import type { MediaData } from "../../../@types/medias";
 import type { ManagerResponse } from "../../../@types/responses";
+import type { TokenPayload } from "../../../@types/tokens";
 import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
+import { FileUtil } from "../../../app/utils/FileUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { MediaModel } from "../../../common/models/MediaModel";
 import { BucketModule } from "../../../modules/bucket/module";
 import { MyCarpetsProvider } from "./MyCarpetsProvider";
+import type { MyCarpetsParams } from "./schemas/MyCarpetsParams";
 import type { MyCarpetsRequest } from "./schemas/MyCarpetsRequest";
 import { MyCarpetsResponse } from "./schemas/MyCarpetsResponse";
 
 export class MyCarpetsManager implements IManager {
   public constructor(private readonly provider = new MyCarpetsProvider()) {}
 
-  public async getMyCarpets(accountId: number): Promise<ManagerResponse<MyCarpetsResponse[]>> {
-    // Get my carpets
-    const prGetMyCarpets = await this.provider.getMyCarpets(accountId);
-    // Get media data for each carpet
+  public async getMyCarpets(payload: TokenPayload): Promise<ManagerResponse<MyCarpetsResponse[]>> {
+    const myCarpets = await this.provider.getMyCarpets(payload.accountId);
     const responses: MyCarpetsResponse[] = [];
-    for (const carpet of prGetMyCarpets.data) {
-      // Get media ids
-      const prGetItemMedias = await this.provider.getItemMedias(carpet.itemId);
-      // For each media, get media data
-      const mediaData: MediaData[] = [];
-      for (const media of prGetItemMedias.data) {
-        mediaData.push({
-          mediaId: media.mediaId,
-          mediaType: media.mediaType,
-          extension: media.extension,
+    for (const myCarpet of myCarpets) {
+      const myCarpetMedias = await this.provider.getItemMedias(myCarpet.itemId);
+      const myCarpetMediasData: MediaData[] = [];
+      for (const myCarpetMedia of myCarpetMedias) {
+        myCarpetMediasData.push({
+          mediaId: myCarpetMedia.mediaId,
+          mediaType: myCarpetMedia.mediaType,
+          extension: myCarpetMedia.extension,
           url: await BucketModule.instance.getAccessUrl(
-            `${media.mediaId.toString()}.${media.extension}`,
+            FileUtil.getName(myCarpetMedia.mediaId.toString(), myCarpetMedia.extension),
           ),
         });
       }
-      // Push to response
-      responses.push(MyCarpetsResponse.fromModel(carpet, mediaData));
+      responses.push(MyCarpetsResponse.fromModel(myCarpet, myCarpetMediasData));
     }
-    // Return my carpets
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
   }
 
   public async postMyCarpets(
-    accountId: number,
-    validatedData: MyCarpetsRequest,
+    payload: TokenPayload,
+    request: MyCarpetsRequest,
   ): Promise<ManagerResponse<MyCarpetsResponse | null>> {
-    // Get my medias
-    const prGetMyMedias = await this.provider.getMyMedias(accountId);
-    // Check if medias exist in database
+    const myMedias = await this.provider.getMyMedias(payload.accountId);
     const medias: MediaModel[] = [];
-    for (const mediaId of validatedData.mediaIds) {
-      const media = prGetMyMedias.data.find((media) => media.mediaId === mediaId);
-      if (media === undefined) {
+    for (const mediaId of request.mediaIds) {
+      const myMedia = myMedias.find((myMedia) => myMedia.mediaId === mediaId);
+      if (myMedia === undefined) {
         return ResponseUtil.managerResponse(
           new HttpStatus(HttpStatusCode.NOT_FOUND),
           null,
@@ -58,13 +53,12 @@ export class MyCarpetsManager implements IManager {
           null,
         );
       }
-      medias.push(media);
+      medias.push(myMedia);
     }
-    // Check if medias was uploaded to bucket
     for (const media of medias) {
       if (
         !(await BucketModule.instance.checkFileExists(
-          `${media.mediaId.toString()}.${media.extension}`,
+          FileUtil.getName(media.mediaId.toString(), media.extension),
         ))
       ) {
         return ResponseUtil.managerResponse(
@@ -75,17 +69,15 @@ export class MyCarpetsManager implements IManager {
         );
       }
     }
-    // Create my carpet
-    const prCreateCarpet = await this.provider.createCarpet(
-      accountId,
-      validatedData.name,
-      validatedData.description,
-      validatedData.mediaIds,
-      validatedData.width,
-      validatedData.length,
-      validatedData.carpetMaterial,
+    const myCarpet = await this.provider.createCarpet(
+      payload.accountId,
+      request.name,
+      request.description,
+      request.mediaIds,
+      request.width,
+      request.length,
+      request.carpetMaterial,
     );
-    // Create media data
     const mediaData: MediaData[] = [];
     for (const media of medias) {
       mediaData.push({
@@ -93,27 +85,24 @@ export class MyCarpetsManager implements IManager {
         mediaType: media.mediaType,
         extension: media.extension,
         url: await BucketModule.instance.getAccessUrl(
-          `${media.mediaId.toString()}.${media.extension}`,
+          FileUtil.getName(media.mediaId.toString(), media.extension),
         ),
       });
     }
-    // Return my carpet
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyCarpetsResponse.fromModel(prCreateCarpet.data, mediaData),
+      MyCarpetsResponse.fromModel(myCarpet, mediaData),
     );
   }
 
-  public async getMyCarpets$carpetId(
-    accountId: number,
-    carpetId: number,
+  public async getMyCarpets$(
+    payload: TokenPayload,
+    params: MyCarpetsParams,
   ): Promise<ManagerResponse<MyCarpetsResponse | null>> {
-    // Try to get my carpet
-    const prGetMyCarpet = await this.provider.getMyCarpet(accountId, carpetId);
-    // Check if carpet exists
-    if (prGetMyCarpet.data === null) {
+    const myCarpet = await this.provider.getMyCarpet(payload.accountId, parseInt(params.carpetId));
+    if (myCarpet === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -121,38 +110,33 @@ export class MyCarpetsManager implements IManager {
         null,
       );
     }
-    // Get media ids
-    const prGetItemMedias = await this.provider.getItemMedias(prGetMyCarpet.data.itemId);
-    // Get media data for my carpet
+    const itemMedias = await this.provider.getItemMedias(myCarpet.itemId);
     const mediaData: MediaData[] = [];
-    for (const media of prGetItemMedias.data) {
+    for (const itemMedia of itemMedias) {
       mediaData.push({
-        mediaId: media.mediaId,
-        mediaType: media.mediaType,
-        extension: media.extension,
+        mediaId: itemMedia.mediaId,
+        mediaType: itemMedia.mediaType,
+        extension: itemMedia.extension,
         url: await BucketModule.instance.getAccessUrl(
-          `${media.mediaId.toString()}.${media.extension}`,
+          FileUtil.getName(itemMedia.mediaId.toString(), itemMedia.extension),
         ),
       });
     }
-    // Return my carpet
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyCarpetsResponse.fromModel(prGetMyCarpet.data, mediaData),
+      MyCarpetsResponse.fromModel(myCarpet, mediaData),
     );
   }
 
-  public async putMyCarpets$carpetId(
-    accountId: number,
-    carpetId: number,
-    validatedData: MyCarpetsRequest,
+  public async putMyCarpets$(
+    payload: TokenPayload,
+    params: MyCarpetsParams,
+    request: MyCarpetsRequest,
   ): Promise<ManagerResponse<MyCarpetsResponse | null>> {
-    // Try to get my carpet
-    const prGetMyCarpet = await this.provider.getMyCarpet(accountId, carpetId);
-    // Check if carpet exists
-    if (prGetMyCarpet.data === null) {
+    const myCarpet = await this.provider.getMyCarpet(payload.accountId, parseInt(params.carpetId));
+    if (myCarpet === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -160,13 +144,11 @@ export class MyCarpetsManager implements IManager {
         null,
       );
     }
-    // Get my medias
-    const prGetMyMedias = await this.provider.getMyMedias(accountId);
-    // Check if medias exist in database
+    const myMedias = await this.provider.getMyMedias(payload.accountId);
     const medias: MediaModel[] = [];
-    for (const mediaId of validatedData.mediaIds) {
-      const media = prGetMyMedias.data.find((media) => media.mediaId === mediaId);
-      if (media === undefined) {
+    for (const mediaId of request.mediaIds) {
+      const myMedia = myMedias.find((myMedia) => myMedia.mediaId === mediaId);
+      if (myMedia === undefined) {
         return ResponseUtil.managerResponse(
           new HttpStatus(HttpStatusCode.NOT_FOUND),
           null,
@@ -174,13 +156,12 @@ export class MyCarpetsManager implements IManager {
           null,
         );
       }
-      medias.push(media);
+      medias.push(myMedia);
     }
-    // Check if medias was uploaded to bucket
     for (const media of medias) {
       if (
         !(await BucketModule.instance.checkFileExists(
-          `${media.mediaId.toString()}.${media.extension}`,
+          FileUtil.getName(media.mediaId.toString(), media.extension),
         ))
       ) {
         return ResponseUtil.managerResponse(
@@ -191,23 +172,19 @@ export class MyCarpetsManager implements IManager {
         );
       }
     }
-    // Get old item mediaIds
-    const prGetItemMedias = await this.provider.getItemMedias(prGetMyCarpet.data.itemId);
-    const oldMediaIds: number[] = prGetItemMedias.data.map((itemMedia) => itemMedia.mediaId);
-    // Create my carpet
-    const prCreateCarpet = await this.provider.updateCarpet(
-      accountId,
-      oldMediaIds,
-      carpetId,
-      prGetMyCarpet.data.itemId,
-      validatedData.name,
-      validatedData.description,
-      validatedData.mediaIds,
-      validatedData.width,
-      validatedData.length,
-      validatedData.carpetMaterial,
+    const itemMedias = await this.provider.getItemMedias(myCarpet.itemId);
+    const myUpdatedCarpet = await this.provider.updateCarpet(
+      payload.accountId,
+      itemMedias.map((itemMedia) => itemMedia.mediaId),
+      myCarpet.carpetId,
+      myCarpet.itemId,
+      request.name,
+      request.description,
+      request.mediaIds,
+      request.width,
+      request.length,
+      request.carpetMaterial,
     );
-    // Create media data
     const mediaData: MediaData[] = [];
     for (const media of medias) {
       mediaData.push({
@@ -215,7 +192,7 @@ export class MyCarpetsManager implements IManager {
         mediaType: media.mediaType,
         extension: media.extension,
         url: await BucketModule.instance.getAccessUrl(
-          `${media.mediaId.toString()}.${media.extension}`,
+          FileUtil.getName(media.mediaId.toString(), media.extension),
         ),
       });
     }
@@ -224,18 +201,16 @@ export class MyCarpetsManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyCarpetsResponse.fromModel(prCreateCarpet.data, mediaData),
+      MyCarpetsResponse.fromModel(myUpdatedCarpet, mediaData),
     );
   }
 
-  public async deleteMyCarpets$carpetId(
-    accountId: number,
-    carpetId: number,
+  public async deleteMyCarpets$(
+    payload: TokenPayload,
+    params: MyCarpetsParams,
   ): Promise<ManagerResponse<null>> {
-    // Try to get my carpet
-    const prGetMyCarpet = await this.provider.getMyCarpet(accountId, carpetId);
-    // Check if carpet exists
-    if (prGetMyCarpet.data === null) {
+    const myCarpet = await this.provider.getMyCarpet(payload.accountId, parseInt(params.carpetId));
+    if (myCarpet === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -243,13 +218,12 @@ export class MyCarpetsManager implements IManager {
         null,
       );
     }
-    // Get media ids
-    const prGetItemMedias = await this.provider.getItemMedias(prGetMyCarpet.data.itemId);
-    const mediaIds: number[] = prGetItemMedias.data.map((itemMedia) => itemMedia.mediaId);
-
-    // Create my carpet
-    await this.provider.deleteCarpet(prGetMyCarpet.data.itemId, carpetId, mediaIds);
-    // Return my carpet
+    const myCarpetMedias = await this.provider.getItemMedias(myCarpet.itemId);
+    await this.provider.deleteCarpet(
+      myCarpet.itemId,
+      myCarpet.carpetId,
+      myCarpetMedias.map((myCarpetMedia) => myCarpetMedia.mediaId),
+    );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.NO_CONTENT), null, [], null);
   }
 }

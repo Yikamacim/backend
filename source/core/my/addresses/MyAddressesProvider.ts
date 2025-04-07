@@ -1,6 +1,7 @@
 import type { ProviderResponse } from "../../../@types/responses";
 import { DbConstants } from "../../../app/constants/DbConstants";
 import type { IProvider } from "../../../app/interfaces/IProvider";
+import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { AddressModel } from "../../../common/models/AddressModel";
@@ -53,7 +54,7 @@ export class MyAddressesProvider implements IProvider {
     neighborhoodId: number,
     explicitAddress: string,
     isDefault: boolean,
-  ): Promise<ProviderResponse<AddressModel>> {
+  ): Promise<ProviderResponse<AddressViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(
@@ -70,7 +71,9 @@ export class MyAddressesProvider implements IProvider {
         ],
       );
       const record: unknown = results.rows[0];
-      return await ResponseUtil.providerResponse(AddressModel.fromRecord(record));
+      return await ResponseUtil.providerResponse(
+        await this.partialGetAddress(AddressModel.fromRecord(record).addressId),
+      );
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -86,7 +89,7 @@ export class MyAddressesProvider implements IProvider {
     neighborhoodId: number,
     explicitAddress: string,
     isDefault: boolean,
-  ): Promise<ProviderResponse<AddressModel>> {
+  ): Promise<ProviderResponse<AddressViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(
@@ -103,7 +106,9 @@ export class MyAddressesProvider implements IProvider {
         ],
       );
       const record: unknown = results.rows[0];
-      return await ResponseUtil.providerResponse(AddressModel.fromRecord(record));
+      return await ResponseUtil.providerResponse(
+        await this.partialGetAddress(AddressModel.fromRecord(record).addressId),
+      );
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -130,5 +135,16 @@ export class MyAddressesProvider implements IProvider {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
+  }
+
+  // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
+
+  private async partialGetAddress(addressId: number): Promise<AddressViewModel> {
+    const results = await DbConstants.POOL.query(AddressViewQueries.GET_ADDRESS_$ADID, [addressId]);
+    const record: unknown = results.rows[0];
+    if (!ProtoUtil.isProtovalid(record)) {
+      throw new UnexpectedDatabaseStateError("Address was not created");
+    }
+    return AddressViewModel.fromRecord(record);
   }
 }

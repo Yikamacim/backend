@@ -18,26 +18,26 @@ export class DistrictsController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pq = DistrictsQueries.parse(req);
-      if (pq.clientErrors.length > 0 || pq.validatedData === null) {
+      const queries = DistrictsQueries.parse(req);
+      if (queries.clientErrors.length > 0 || queries.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pq.clientErrors,
+          queries.clientErrors,
           [],
           null,
         );
       }
       // >-----------< LOGIC >-----------<
-      const mr = await this.manager.getDistricts(pq.validatedData);
+      const out = await this.manager.getDistricts(queries.data);
       // >-----------< RESPONSE >-----------<
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
         null,
         false,
       );
@@ -46,33 +46,33 @@ export class DistrictsController implements IController {
     }
   }
 
-  public async getDistricts$districtId(
+  public async getDistricts$(
     req: ExpressRequest,
     res: ControllerResponse<DistrictsResponse | null, null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pp = DistrictsParams.parse(req);
-      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
+      const params = DistrictsParams.parse(req);
+      if (params.clientErrors.length > 0 || params.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pp.clientErrors,
+          params.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.getDistricts$districtId(pp.validatedData);
+      const out = await this.manager.getDistricts$(params.data);
       // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
         null,
         false,
       );

@@ -11,23 +11,23 @@ export class ProvincesQueries implements IQueries {
 
   public static parse(req: ExpressRequest): ParserResponse<ProvincesQueries | null> {
     const preliminaryData: unknown = req.query["countryId"];
-    // V1: Existence validation
+    // >----------< EXISTENCE VALIDATION >----------<
     if (!ProtoUtil.isProtovalid(preliminaryData)) {
       return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.MISSING_QUERY)], null);
     }
     const protovalidData: unknown = { countryId: preliminaryData };
-    // V2: Schematic validation
+    // >----------< SCHEMATIC VALIDATION >----------<
     if (!ProvincesQueries.isBlueprint(protovalidData)) {
       return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.INVALID_QUERY)], null);
     }
     const blueprintData: ProvincesQueries = protovalidData;
-    // V3: Physical validation
+    // >----------< PHYSICAL VALIDATION >----------<
     const clientErrors: ClientError[] = [];
     if (!StringUtil.isIntParsable(blueprintData.countryId)) {
       clientErrors.push(new ClientError(ClientErrorCode.INVALID_COUNTRY_ID));
     }
     const validatedData = blueprintData;
-    // Return parser response
+    // >----------< RETURN >----------<
     return ResponseUtil.parserResponse(clientErrors, validatedData);
   }
 

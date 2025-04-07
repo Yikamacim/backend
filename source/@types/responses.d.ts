@@ -22,7 +22,7 @@ export type ControllerResponse<
 
 export type ParserResponse<T extends IRequest | IParams | IQueries | null> = {
   clientErrors: ClientError[];
-  validatedData: T;
+  data: T;
 };
 
 export type MiddlewareResponse = ControllerResponse<null, null>;
@@ -34,6 +34,4 @@ export type ManagerResponse<D extends IResponse | null> = {
   data: D;
 };
 
-export type ProviderResponse<D extends IModel | boolean | null> = {
-  data: D;
-};
+export type ProviderResponse<D extends IModel | boolean | null> = D;

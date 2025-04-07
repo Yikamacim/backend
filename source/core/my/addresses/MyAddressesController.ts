@@ -21,27 +21,27 @@ export class MyAddressesController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
-      const tokenPayload = PayloadHelper.getPayload(res);
+      const payload = PayloadHelper.getPayload(res);
       // >----------< LOGIC >----------<
-      const mr = await this.manager.getMyAddresses(tokenPayload.accountId);
+      const out = await this.manager.getMyAddresses(payload);
       // >----------< RESPONSE >----------<
-      if (!mr.httpStatus.isSuccess()) {
+      if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
           res,
-          mr.httpStatus,
-          mr.serverError,
-          mr.clientErrors,
-          mr.data,
+          out.httpStatus,
+          out.serverError,
+          out.clientErrors,
+          out.data,
           null,
         );
       }
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
-        await AuthModule.instance.refresh(tokenPayload),
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
+        await AuthModule.instance.refresh(payload),
       );
     } catch (error) {
       return next(error);
@@ -55,198 +55,188 @@ export class MyAddressesController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
-      const tokenPayload = PayloadHelper.getPayload(res);
+      const payload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const pr = MyAddressesRequest.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      const request = MyAddressesRequest.parse(req);
+      if (request.clientErrors.length > 0 || request.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          request.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.postMyAddresses(tokenPayload.accountId, pr.validatedData);
+      const out = await this.manager.postMyAddresses(payload, request.data);
       // >----------< RESPONSE >----------<
-      if (!mr.httpStatus.isSuccess()) {
+      if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
           res,
-          mr.httpStatus,
-          mr.serverError,
-          mr.clientErrors,
-          mr.data,
+          out.httpStatus,
+          out.serverError,
+          out.clientErrors,
+          out.data,
           null,
         );
       }
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
-        await AuthModule.instance.refresh(tokenPayload),
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
+        await AuthModule.instance.refresh(payload),
       );
     } catch (error) {
       return next(error);
     }
   }
 
-  public async getMyAddresses$addressId(
+  public async getMyAddresses$(
     req: ExpressRequest,
     res: ControllerResponse<MyAddressesResponse | null, Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
-      const tokenPayload = PayloadHelper.getPayload(res);
+      const payload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const pp = MyAddressesParams.parse(req);
-      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
+      const params = MyAddressesParams.parse(req);
+      if (params.clientErrors.length > 0 || params.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pp.clientErrors,
+          params.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.getMyAddresses$addressId(
-        tokenPayload.accountId,
-        parseInt(pp.validatedData.addressId),
-      );
+      const out = await this.manager.getMyAddresses$(payload, params.data);
       // >----------< RESPONSE >----------<
-      if (!mr.httpStatus.isSuccess()) {
+      if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
           res,
-          mr.httpStatus,
-          mr.serverError,
-          mr.clientErrors,
-          mr.data,
+          out.httpStatus,
+          out.serverError,
+          out.clientErrors,
+          out.data,
           null,
         );
       }
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
-        await AuthModule.instance.refresh(tokenPayload),
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
+        await AuthModule.instance.refresh(payload),
       );
     } catch (error) {
       return next(error);
     }
   }
 
-  public async putMyAddresses$addressId(
+  public async putMyAddresses$(
     req: ExpressRequest,
     res: ControllerResponse<MyAddressesResponse | null, Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
-      const tokenPayload = PayloadHelper.getPayload(res);
+      const payload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const pp = MyAddressesParams.parse(req);
-      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
+      const params = MyAddressesParams.parse(req);
+      if (params.clientErrors.length > 0 || params.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pp.clientErrors,
+          params.clientErrors,
           null,
           null,
         );
       }
-      const pr = MyAddressesRequest.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      const request = MyAddressesRequest.parse(req);
+      if (request.clientErrors.length > 0 || request.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          request.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.putMyAddresses$addressId(
-        tokenPayload.accountId,
-        parseInt(pp.validatedData.addressId),
-        pr.validatedData,
-      );
+      const out = await this.manager.putMyAddresses$(payload, params.data, request.data);
       // >----------< RESPONSE >----------<
-      if (!mr.httpStatus.isSuccess()) {
+      if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
           res,
-          mr.httpStatus,
-          mr.serverError,
-          mr.clientErrors,
-          mr.data,
+          out.httpStatus,
+          out.serverError,
+          out.clientErrors,
+          out.data,
           null,
         );
       }
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
-        await AuthModule.instance.refresh(tokenPayload),
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
+        await AuthModule.instance.refresh(payload),
       );
     } catch (error) {
       return next(error);
     }
   }
 
-  public async deleteMyAddresses$addressId(
+  public async deleteMyAddresses$(
     req: ExpressRequest,
     res: ControllerResponse<null, Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
-      const tokenPayload = PayloadHelper.getPayload(res);
+      const payload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const pp = MyAddressesParams.parse(req);
-      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
+      const params = MyAddressesParams.parse(req);
+      if (params.clientErrors.length > 0 || params.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pp.clientErrors,
+          params.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.deleteMyAddresses$addressId(
-        tokenPayload.accountId,
-        parseInt(pp.validatedData.addressId),
-      );
+      const out = await this.manager.deleteMyAddresses$(payload, params.data);
       // >----------< RESPONSE >----------<
-      if (!mr.httpStatus.isSuccess()) {
+      if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
           res,
-          mr.httpStatus,
-          mr.serverError,
-          mr.clientErrors,
-          mr.data,
+          out.httpStatus,
+          out.serverError,
+          out.clientErrors,
+          out.data,
           null,
         );
       }
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
-        await AuthModule.instance.refresh(tokenPayload),
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
+        await AuthModule.instance.refresh(payload),
       );
     } catch (error) {
       return next(error);

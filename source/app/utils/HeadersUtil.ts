@@ -11,21 +11,21 @@ import { ResponseUtil } from "./ResponseUtil";
 export class HeadersUtil implements IUtil {
   public static parseToken(req: ExpressRequest): ParserResponse<Token | null> {
     const preliminaryData: unknown = req.headers;
-    // V1: Existence validation
+    // >----------< EXISTENCE VALIDATION >----------<
     if (!ProtoUtil.isProtovalid(preliminaryData)) {
       return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.MISSING_HEADERS)], null);
     }
     const protovalidData: unknown = preliminaryData;
-    // V2: Schematic validation
+    // >----------< SCHEMATIC VALIDATION >----------<
     if (!HeadersUtil.isBlueprint(protovalidData, "authorization", "string")) {
       return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.INVALID_HEADERS)], null);
     }
     const blueprintData: string = protovalidData.authorization!;
-    // V3: Physical validation
+    // >----------< PHYSICAL VALIDATION >----------<
     const clientErrors: ClientError[] = [];
     AuthValidator.validate(blueprintData, clientErrors);
     const validatedData: Token = blueprintData.split(" ")[1]!;
-    // Return parser response
+    // >----------< RETURN >----------<
     return ResponseUtil.parserResponse(clientErrors, validatedData);
   }
 

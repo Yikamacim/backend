@@ -25,6 +25,7 @@ import { ProvincesBuilder } from "./core/provinces/ProvincesBuilder";
 import { RefreshBuilder } from "./core/refresh/RefreshBuilder";
 import { SignupBuilder } from "./core/signup/SignupBuilder";
 import { VerifyBuilder } from "./core/verify/VerifyBuilder";
+import { PurgeTask } from "./tasks/purge/task";
 
 // App
 const app: Express = express();
@@ -141,6 +142,9 @@ app.use(FailureMiddleware.serverFailure.bind(FailureMiddleware));
 
 // Tests
 void PoolTest.run();
+
+// Tasks
+PurgeTask.instance.start();
 
 // Server
 app.listen(ConfigConstants.PORT, (): void => {

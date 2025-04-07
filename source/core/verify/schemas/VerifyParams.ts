@@ -11,7 +11,7 @@ export class VerifyParams implements IParams {
 
   public static parse(req: ExpressRequest): ParserResponse<VerifyParams | null> {
     const preliminaryData: unknown = req.params["phone"];
-    // V1: Existence validation
+    // >----------< EXISTENCE VALIDATION >----------<
     if (!ProtoUtil.isProtovalid(preliminaryData)) {
       return ResponseUtil.parserResponse(
         [new ClientError(ClientErrorCode.MISSING_PARAMETER)],
@@ -19,7 +19,7 @@ export class VerifyParams implements IParams {
       );
     }
     const protovalidData: unknown = { phone: preliminaryData };
-    // V2: Schematic validation
+    // >----------< SCHEMATIC VALIDATION >----------<
     if (!VerifyParams.isBlueprint(protovalidData)) {
       return ResponseUtil.parserResponse(
         [new ClientError(ClientErrorCode.INVALID_PARAMETER)],
@@ -27,11 +27,11 @@ export class VerifyParams implements IParams {
       );
     }
     const blueprintData: VerifyParams = protovalidData;
-    // V3: Physical validation
+    // >----------< PHYSICAL VALIDATION >----------<
     const clientErrors: ClientError[] = [];
     PhoneValidator.validate(blueprintData.phone, clientErrors);
     const validatedData = blueprintData;
-    // Return parser response
+    // >----------< RETURN >----------<
     return ResponseUtil.parserResponse(clientErrors, validatedData);
   }
 

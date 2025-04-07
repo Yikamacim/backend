@@ -12,30 +12,22 @@ export class DistrictsManager implements IManager {
   public constructor(private readonly provider = new DistrictsProvider()) {}
 
   public async getDistricts(
-    validatedData: DistrictsQueries,
+    queries: DistrictsQueries,
   ): Promise<ManagerResponse<DistrictsResponse[]>> {
-    // Get districts by province id
-    const prGetDistrictsByProvinceId = await this.provider.getDistrictsByProvinceId(
-      parseInt(validatedData.provinceId),
-    );
-    // Return districts
+    const districts = await this.provider.getDistrictsByProvinceId(parseInt(queries.provinceId));
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      DistrictsResponse.fromModels(prGetDistrictsByProvinceId.data),
+      DistrictsResponse.fromModels(districts),
     );
   }
 
-  public async getDistricts$districtId(
-    validatedData: DistrictsParams,
+  public async getDistricts$(
+    params: DistrictsParams,
   ): Promise<ManagerResponse<DistrictsResponse | null>> {
-    // Try to get the district
-    const prGetDistrictById = await this.provider.getDistrictById(
-      parseInt(validatedData.districtId),
-    );
-    // If no district was found
-    if (prGetDistrictById.data === null) {
+    const district = await this.provider.getDistrictById(parseInt(params.districtId));
+    if (district === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -43,12 +35,11 @@ export class DistrictsManager implements IManager {
         null,
       );
     }
-    // Return the district
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      DistrictsResponse.fromModel(prGetDistrictById.data),
+      DistrictsResponse.fromModel(district),
     );
   }
 }

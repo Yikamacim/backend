@@ -21,7 +21,7 @@ export class MyMediasBuilder implements IBuilder {
       { baseRoute: MyMediasBuilder.BASE_ROUTE, route: "/upload/:mediaType" },
       RouteType.PRIVATE,
       Method.GET,
-      this.controller.getMyMediasUpload$mediaType.bind(this.controller),
+      this.controller.getMyMediasUpload$.bind(this.controller),
     );
   }
 }

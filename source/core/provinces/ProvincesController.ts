@@ -18,26 +18,26 @@ export class ProvincesController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pq = ProvincesQueries.parse(req);
-      if (pq.clientErrors.length > 0 || pq.validatedData === null) {
+      const queries = ProvincesQueries.parse(req);
+      if (queries.clientErrors.length > 0 || queries.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pq.clientErrors,
+          queries.clientErrors,
           [],
           null,
         );
       }
       // >-----------< LOGIC >-----------<
-      const mr = await this.manager.getProvinces(pq.validatedData);
+      const out = await this.manager.getProvinces(queries.data);
       // >-----------< RESPONSE >-----------<
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
         null,
         false,
       );
@@ -46,33 +46,33 @@ export class ProvincesController implements IController {
     }
   }
 
-  public async getProvinces$provinceId(
+  public async getProvinces$(
     req: ExpressRequest,
     res: ControllerResponse<ProvincesResponse | null, null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pp = ProvincesParams.parse(req);
-      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
+      const params = ProvincesParams.parse(req);
+      if (params.clientErrors.length > 0 || params.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pp.clientErrors,
+          params.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.getProvinces$provinceId(pp.validatedData);
+      const out = await this.manager.getProvinces$(params.data);
       // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
         null,
         false,
       );

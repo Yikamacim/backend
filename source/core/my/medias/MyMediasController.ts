@@ -5,7 +5,6 @@ import { PayloadHelper } from "../../../app/helpers/PayloadHelper";
 import type { IController } from "../../../app/interfaces/IController";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import type { MediaType } from "../../../common/enums/MediaType";
 import { AuthModule } from "../../../modules/auth/module";
 import { MyMediasManager } from "./MyMediasManager";
 import { MyMediasUploadParams } from "./schemas/MyMediasUploadParams";
@@ -15,51 +14,47 @@ import type { MyMediasUploadResponse } from "./schemas/MyMediasUploadResponse";
 export class MyMediasController implements IController {
   public constructor(private readonly manager = new MyMediasManager()) {}
 
-  public async getMyMediasUpload$mediaType(
+  public async getMyMediasUpload$(
     req: ExpressRequest,
     res: ControllerResponse<MyMediasUploadResponse | null, Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
-      const tokenPayload = PayloadHelper.getPayload(res);
+      const payload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const pp = MyMediasUploadParams.parse(req);
-      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
+      const params = MyMediasUploadParams.parse(req);
+      if (params.clientErrors.length > 0 || params.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pp.clientErrors,
+          params.clientErrors,
           null,
           null,
         );
       }
-      const pq = MyMediasUploadQueries.parse(req);
-      if (pq.clientErrors.length > 0 || pq.validatedData === null) {
+      const queries = MyMediasUploadQueries.parse(req);
+      if (queries.clientErrors.length > 0 || queries.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pq.clientErrors,
+          queries.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.getMyMediasUpload$mediaType(
-        tokenPayload.accountId,
-        pp.validatedData.mediaType.toUpperCase() as MediaType,
-        pq.validatedData.extension,
-      );
+      const out = await this.manager.getMyMediasUpload$(payload, params.data, queries.data);
       // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
-        await AuthModule.instance.refresh(tokenPayload),
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
+        await AuthModule.instance.refresh(payload),
       );
     } catch (error) {
       return next(error);

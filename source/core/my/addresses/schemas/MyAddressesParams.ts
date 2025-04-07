@@ -11,7 +11,7 @@ export class MyAddressesParams implements IParams {
 
   public static parse(req: ExpressRequest): ParserResponse<MyAddressesParams | null> {
     const preliminaryData: unknown = req.params["addressId"];
-    // V1: Existence validation
+    // >----------< EXISTENCE VALIDATION >----------<
     if (!ProtoUtil.isProtovalid(preliminaryData)) {
       return ResponseUtil.parserResponse(
         [new ClientError(ClientErrorCode.MISSING_PARAMETER)],
@@ -19,7 +19,7 @@ export class MyAddressesParams implements IParams {
       );
     }
     const protovalidData: unknown = { addressId: preliminaryData };
-    // V2: Schematic validation
+    // >----------< SCHEMATIC VALIDATION >----------<
     if (!MyAddressesParams.isBlueprint(protovalidData)) {
       return ResponseUtil.parserResponse(
         [new ClientError(ClientErrorCode.INVALID_PARAMETER)],
@@ -27,13 +27,13 @@ export class MyAddressesParams implements IParams {
       );
     }
     const blueprintData: MyAddressesParams = protovalidData;
-    // V3: Physical validation
+    // >----------< PHYSICAL VALIDATION >----------<
     const clientErrors: ClientError[] = [];
     if (!StringUtil.isIntParsable(blueprintData.addressId)) {
       clientErrors.push(new ClientError(ClientErrorCode.INVALID_ADDRESS_ID));
     }
     const validatedData = blueprintData;
-    // Return parser response
+    // >----------< RETURN >----------<
     return ResponseUtil.parserResponse(clientErrors, validatedData);
   }
 

@@ -17,14 +17,14 @@ export class CountriesController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >-----------< LOGIC >-----------<
-      const mr = await this.manager.getCountries();
+      const out = await this.manager.getCountries();
       // >-----------< RESPONSE >-----------<
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
         null,
       );
     } catch (error) {
@@ -32,33 +32,33 @@ export class CountriesController implements IController {
     }
   }
 
-  public async getCountries$countryId(
+  public async getCountries$(
     req: ExpressRequest,
     res: ControllerResponse<CountriesResponse | null, null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pp = CountriesParams.parse(req);
-      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
+      const params = CountriesParams.parse(req);
+      if (params.clientErrors.length > 0 || params.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pp.clientErrors,
+          params.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.getCountries$countryId(pp.validatedData);
+      const out = await this.manager.getCountries$(params.data);
       // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
         null,
         false,
       );

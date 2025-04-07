@@ -14,14 +14,9 @@ import { VerifyProvider } from "./VerifyProvider";
 export class VerifyManager implements IManager {
   public constructor(private readonly provider = new VerifyProvider()) {}
 
-  public async postVerify(
-    validatedData: VerifyRequest,
-  ): Promise<ManagerResponse<VerifyResponse | null>> {
-    // Try to get the account
-    const prGetAccount = await this.provider.getAccount(validatedData.phone);
-    // If no account found
-    if (prGetAccount.data === null) {
-      // Return with error
+  public async postVerify(request: VerifyRequest): Promise<ManagerResponse<VerifyResponse | null>> {
+    const myAccount = await this.provider.getAccount(request.phone);
+    if (myAccount === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -29,8 +24,7 @@ export class VerifyManager implements IManager {
         null,
       );
     }
-    // Account found, check verification
-    if (prGetAccount.data.isVerified) {
+    if (myAccount.isVerified) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.FORBIDDEN),
         null,
@@ -38,9 +32,8 @@ export class VerifyManager implements IManager {
         null,
       );
     }
-    // Try to get the verification
-    const prGetVerification = await this.provider.getVerification(validatedData.phone);
-    if (prGetVerification.data === null) {
+    const verification = await this.provider.getVerification(request.phone);
+    if (verification === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -48,8 +41,7 @@ export class VerifyManager implements IManager {
         null,
       );
     }
-    // Check if verification code not expired
-    if (DateUtil.isExpired(prGetVerification.data.sentAt, SmsConstants.SMS_CODE_EXPIRATION_TIME)) {
+    if (DateUtil.isExpired(verification.sentAt, SmsConstants.CODE_EXPIRATION_TIME)) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.FORBIDDEN),
         null,
@@ -57,8 +49,7 @@ export class VerifyManager implements IManager {
         null,
       );
     }
-    // Check if code is valid
-    if (!(await SmsModule.instance.verify(validatedData.phone, validatedData.code))) {
+    if (!(await SmsModule.instance.verify(request.phone, request.code))) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.FORBIDDEN),
         null,
@@ -66,22 +57,18 @@ export class VerifyManager implements IManager {
         null,
       );
     }
-    // Verification successful, update account
-    await this.provider.verifyAccount(prGetAccount.data.accountId);
-    // Return
+    await this.provider.verifyAccount(myAccount.accountId);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      VerifyResponse.fromModel(prGetAccount.data),
+      VerifyResponse.fromModel(myAccount),
     );
   }
 
-  public async getVerify$phone(validatedData: VerifyParams): Promise<ManagerResponse<null>> {
-    // Try to get the account
-    const prGetAccount = await this.provider.getAccount(validatedData.phone);
-    // If no account found
-    if (prGetAccount.data === null) {
+  public async getVerify$(data: VerifyParams): Promise<ManagerResponse<null>> {
+    const myAccount = await this.provider.getAccount(data.phone);
+    if (myAccount === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -89,8 +76,7 @@ export class VerifyManager implements IManager {
         null,
       );
     }
-    // Account found, check verification
-    if (prGetAccount.data.isVerified) {
+    if (myAccount.isVerified) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.FORBIDDEN),
         null,
@@ -98,12 +84,9 @@ export class VerifyManager implements IManager {
         null,
       );
     }
-    // Check if verification code not expired
-    const prGetVerification = await this.provider.getVerification(validatedData.phone);
-    if (prGetVerification.data !== null) {
-      if (
-        !DateUtil.isExpired(prGetVerification.data.sentAt, SmsConstants.SMS_CODE_EXPIRATION_TIME)
-      ) {
+    const verification = await this.provider.getVerification(data.phone);
+    if (verification !== null) {
+      if (!DateUtil.isExpired(verification.sentAt, SmsConstants.CODE_EXPIRATION_TIME)) {
         return ResponseUtil.managerResponse(
           new HttpStatus(HttpStatusCode.FORBIDDEN),
           null,
@@ -112,7 +95,6 @@ export class VerifyManager implements IManager {
         );
       }
     }
-    // Code expired or not found, return success
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.NO_CONTENT), null, [], null);
   }
 }

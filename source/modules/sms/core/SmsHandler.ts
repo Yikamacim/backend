@@ -31,12 +31,12 @@ export class SmsHandler implements IHandler {
   }
 
   public async verify(phone: string, code: Code): Promise<boolean> {
-    const prGetVerification = await this.provider.getVerification(phone);
+    const verification = await this.provider.getVerification(phone);
     // If no verification found
-    if (prGetVerification.data === null) {
+    if (verification === null) {
       throw new UnexpectedVerificationError();
     }
-    if (prGetVerification.data.code !== code) {
+    if (verification.code !== code) {
       return false;
     }
     return true;

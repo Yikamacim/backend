@@ -19,24 +19,24 @@ export class VerifyRequest implements IRequest {
 
   public static parse(req: ExpressRequest): ParserResponse<VerifyRequest | null> {
     const preliminaryData: unknown = req.body;
-    // V1: Existence validation
+    // >----------< EXISTENCE VALIDATION >----------<
     if (!ProtoUtil.isProtovalid(preliminaryData)) {
       return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.MISSING_BODY)], null);
     }
     const protovalidData: unknown = preliminaryData;
-    // V2: Schematic validation
+    // >----------< SCHEMATIC VALIDATION >----------<
     if (!VerifyRequest.isBlueprint(protovalidData)) {
       return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.INVALID_BODY)], null);
     }
     const blueprintData: VerifyRequest = protovalidData;
-    // V3: Physical validation
+    // >----------< PHYSICAL VALIDATION >----------<
     const clientErrors: ClientError[] = [];
     PhoneValidator.validate(blueprintData.phone, clientErrors);
     CodeValidator.validate(blueprintData.code, clientErrors);
     DeviceNameValidator.validate(blueprintData.deviceName, clientErrors);
     SessionKeyValidator.validate(blueprintData.sessionKey, clientErrors);
     const validatedData = blueprintData;
-    // Return parser response
+    // >----------< RETURN >----------<
     return ResponseUtil.parserResponse(clientErrors, validatedData);
   }
 

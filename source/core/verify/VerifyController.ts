@@ -21,41 +21,41 @@ export class VerifyController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pr = VerifyRequest.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      const request = VerifyRequest.parse(req);
+      if (request.clientErrors.length > 0 || request.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          request.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.postVerify(pr.validatedData);
+      const out = await this.manager.postVerify(request.data);
       // >----------< RESPONSE >----------<
-      if (!mr.httpStatus.isSuccess() || mr.data === null) {
+      if (!out.httpStatus.isSuccess() || out.data === null) {
         return ResponseUtil.controllerResponse(
           res,
-          mr.httpStatus,
-          mr.serverError,
-          mr.clientErrors,
-          mr.data,
+          out.httpStatus,
+          out.serverError,
+          out.clientErrors,
+          out.data,
           null,
         );
       }
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
         await AuthModule.instance.generate({
-          accountId: mr.data.accountId,
-          accountType: mr.data.accountType,
-          deviceName: pr.validatedData.deviceName,
-          sessionKey: pr.validatedData.sessionKey,
+          accountId: out.data.accountId,
+          accountType: out.data.accountType,
+          deviceName: request.data.deviceName,
+          sessionKey: request.data.sessionKey,
         }),
       );
     } catch (error) {
@@ -63,36 +63,36 @@ export class VerifyController implements IController {
     }
   }
 
-  public async getVerify$phone(
+  public async getVerify$(
     req: ExpressRequest,
     res: ControllerResponse<null, null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pp = VerifyParams.parse(req);
-      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
+      const params = VerifyParams.parse(req);
+      if (params.clientErrors.length > 0 || params.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pp.clientErrors,
+          params.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.getVerify$phone(pp.validatedData);
-      if (mr.httpStatus.isSuccess()) {
-        await SmsModule.instance.send(pp.validatedData.phone);
+      const out = await this.manager.getVerify$(params.data);
+      if (out.httpStatus.isSuccess()) {
+        await SmsModule.instance.send(params.data.phone);
       }
       // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
         null,
       );
     } catch (error) {

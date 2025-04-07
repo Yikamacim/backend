@@ -178,7 +178,7 @@ export class MyCarpetsProvider implements IProvider {
     name: string,
     description: string,
   ): Promise<void> {
-    await DbConstants.POOL.query(ItemQueries.UPDATE_ITEM_RT_$ITID_$NAME_$DESC, [
+    await DbConstants.POOL.query(ItemQueries.UPDATE_ITEM_$ITID_$NAME_$DESC, [
       itemId,
       name,
       description,
@@ -204,14 +204,14 @@ export class MyCarpetsProvider implements IProvider {
   }
 
   private async partialUpdateCarpet(
-    itemId: number,
+    carpetId: number,
     width: number | null,
     length: number | null,
     carpetMaterial: CarpetMaterial | null,
   ): Promise<CarpetModel> {
     const results = await DbConstants.POOL.query(
-      CarpetQueries.INSERT_CARPET_RT_$ITID_$WIDTH_$LENGTH_$CMAT,
-      [itemId, width, length, carpetMaterial],
+      CarpetQueries.UPDATE_CARPET_RT_$CPID_$WIDTH_$LENGTH_$CMAT,
+      [carpetId, width, length, carpetMaterial],
     );
     const record: unknown = results.rows[0];
     return CarpetModel.fromRecord(record);
@@ -223,7 +223,7 @@ export class MyCarpetsProvider implements IProvider {
 
   private async partialCreateItemMedias(itemId: number, mediaIds: number[]): Promise<void> {
     for (const mediaId of mediaIds) {
-      await DbConstants.POOL.query(ItemMediaQueries.INSERT_ITEM_MEDIA_RT_$ITID_$MDID, [
+      await DbConstants.POOL.query(ItemMediaQueries.INSERT_ITEM_MEDIA_$ITID_$MDID, [
         itemId,
         mediaId,
       ]);
@@ -241,7 +241,7 @@ export class MyCarpetsProvider implements IProvider {
 
   private async partialUpdateMediasIsUsed(mediaIds: number[], isUsed: boolean): Promise<void> {
     for (const mediaId of mediaIds) {
-      await DbConstants.POOL.query(MediaQueries.UPDATE_MEDIA_RT_$MDID_$ISUS, [mediaId, isUsed]);
+      await DbConstants.POOL.query(MediaQueries.UPDATE_MEDIA_$MDID_$ISUS, [mediaId, isUsed]);
     }
   }
 

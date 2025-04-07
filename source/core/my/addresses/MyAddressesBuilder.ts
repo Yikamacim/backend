@@ -35,21 +35,21 @@ export class MyAddressesBuilder implements IBuilder {
       { baseRoute: MyAddressesBuilder.BASE_ROUTE, route: "/:addressId" },
       RouteType.PRIVATE,
       Method.GET,
-      this.controller.getMyAddresses$addressId.bind(this.controller),
+      this.controller.getMyAddresses$.bind(this.controller),
     );
     RouteHelper.buildRoute(
       this.router,
       { baseRoute: MyAddressesBuilder.BASE_ROUTE, route: "/:addressId" },
       RouteType.PRIVATE,
       Method.PUT,
-      this.controller.putMyAddresses$addressId.bind(this.controller),
+      this.controller.putMyAddresses$.bind(this.controller),
     );
     RouteHelper.buildRoute(
       this.router,
       { baseRoute: MyAddressesBuilder.BASE_ROUTE, route: "/:addressId" },
       RouteType.PRIVATE,
       Method.DELETE,
-      this.controller.deleteMyAddresses$addressId.bind(this.controller),
+      this.controller.deleteMyAddresses$.bind(this.controller),
     );
   }
 }

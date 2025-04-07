@@ -20,77 +20,73 @@ export class MySessionsController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
-      const tokenPayload = PayloadHelper.getPayload(res);
+      const payload = PayloadHelper.getPayload(res);
       // >----------< LOGIC >----------<
-      const mr = await this.manager.getMySessions(tokenPayload.accountId, tokenPayload.sessionId);
+      const out = await this.manager.getMySessions(payload);
       // >----------< RESPONSE >----------<
-      if (!mr.httpStatus.isSuccess()) {
+      if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
           res,
-          mr.httpStatus,
-          mr.serverError,
-          mr.clientErrors,
-          mr.data,
+          out.httpStatus,
+          out.serverError,
+          out.clientErrors,
+          out.data,
           null,
         );
       }
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
-        await AuthModule.instance.refresh(tokenPayload),
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
+        await AuthModule.instance.refresh(payload),
       );
     } catch (error) {
       return next(error);
     }
   }
 
-  public async deleteMySessions$sessionId(
+  public async deleteMySessions$(
     req: ExpressRequest,
     res: ControllerResponse<null, Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
-      const tokenPayload = PayloadHelper.getPayload(res);
+      const payload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const pp = MySessionsParams.parse(req);
-      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
+      const params = MySessionsParams.parse(req);
+      if (params.clientErrors.length > 0 || params.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pp.clientErrors,
+          params.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.deleteMySessions$sessionId(
-        tokenPayload.accountId,
-        tokenPayload.sessionId,
-        parseInt(pp.validatedData.sessionId),
-      );
+      const out = await this.manager.deleteMySessions$(payload, params.data);
       // >----------< RESPONSE >----------<
-      if (!mr.httpStatus.isSuccess()) {
+      if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
           res,
-          mr.httpStatus,
-          mr.serverError,
-          mr.clientErrors,
-          mr.data,
+          out.httpStatus,
+          out.serverError,
+          out.clientErrors,
+          out.data,
           null,
         );
       }
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
-        await AuthModule.instance.refresh(tokenPayload),
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
+        await AuthModule.instance.refresh(payload),
       );
     } catch (error) {
       return next(error);

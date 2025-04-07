@@ -18,7 +18,7 @@ export class AuthMiddleware {
       try {
         // >----------< VALIDATION >----------<
         const pt = HeadersUtil.parseToken(req);
-        if (pt.clientErrors.length > 0 || pt.validatedData === null) {
+        if (pt.clientErrors.length > 0 || pt.data === null) {
           return ResponseUtil.middlewareResponse(
             res,
             new HttpStatus(HttpStatusCode.BAD_REQUEST),
@@ -27,8 +27,7 @@ export class AuthMiddleware {
           );
         }
         // >-----------< LOGIC >-----------<
-        const verificationErrors = await AuthModule.instance.verify(pt.validatedData);
-        // If there are verification errors
+        const verificationErrors = await AuthModule.instance.verify(pt.data);
         if (verificationErrors.length > 0) {
           return ResponseUtil.middlewareResponse(
             res,
@@ -38,9 +37,9 @@ export class AuthMiddleware {
           );
         }
         // Payload extraction
-        const tokenPayload = AuthModule.instance.getPayload(pt.validatedData);
+        const payload = AuthModule.instance.getPayload(pt.data);
         // Authorization check
-        if (!allowedAccountTypes.includes(tokenPayload.accountType)) {
+        if (!allowedAccountTypes.includes(payload.accountType)) {
           // Forbidden access
           return ResponseUtil.middlewareResponse(
             res,
@@ -49,7 +48,7 @@ export class AuthMiddleware {
             [new ClientError(ClientErrorCode.FORBIDDEN_ACCESS)],
           );
         }
-        res.locals[LocalsConstants.TOKEN_PAYLOAD] = tokenPayload;
+        res.locals[LocalsConstants.TOKEN_PAYLOAD] = payload;
         // >----------< CONTINUE >----------<
         return next();
       } catch (error) {

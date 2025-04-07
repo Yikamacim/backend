@@ -14,9 +14,9 @@ export class LogoutController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
-      const tokenPayload = PayloadHelper.getPayload(res);
+      const payload = PayloadHelper.getPayload(res);
       // >-----------< LOGIC >-----------<
-      await AuthModule.instance.revoke(tokenPayload);
+      await AuthModule.instance.revoke(payload);
       // >-----------< RESPONSE >-----------<
       return ResponseUtil.controllerResponse(
         res,

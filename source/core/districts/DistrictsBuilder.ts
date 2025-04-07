@@ -28,7 +28,7 @@ export class DistrictsBuilder implements IBuilder {
       { baseRoute: DistrictsBuilder.BASE_ROUTE, route: "/:districtId" },
       RouteType.PUBLIC,
       Method.GET,
-      this.controller.getDistricts$districtId.bind(this.controller),
+      this.controller.getDistricts$.bind(this.controller),
     );
   }
 }

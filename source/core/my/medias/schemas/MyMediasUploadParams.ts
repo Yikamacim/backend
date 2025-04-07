@@ -11,7 +11,7 @@ export class MyMediasUploadParams implements IParams {
 
   public static parse(req: ExpressRequest): ParserResponse<MyMediasUploadParams | null> {
     const preliminaryData: unknown = req.params["mediaType"];
-    // V1: Existence validation
+    // >----------< EXISTENCE VALIDATION >----------<
     if (!ProtoUtil.isProtovalid(preliminaryData)) {
       return ResponseUtil.parserResponse(
         [new ClientError(ClientErrorCode.MISSING_PARAMETER)],
@@ -19,7 +19,7 @@ export class MyMediasUploadParams implements IParams {
       );
     }
     const protovalidData: unknown = { mediaType: preliminaryData };
-    // V2: Schematic validation
+    // >----------< SCHEMATIC VALIDATION >----------<
     if (!MyMediasUploadParams.isBlueprint(protovalidData)) {
       return ResponseUtil.parserResponse(
         [new ClientError(ClientErrorCode.INVALID_PARAMETER)],
@@ -27,13 +27,13 @@ export class MyMediasUploadParams implements IParams {
       );
     }
     const blueprintData: MyMediasUploadParams = protovalidData;
-    // V3: Physical validation
+    // >----------< PHYSICAL VALIDATION >----------<
     const clientErrors: ClientError[] = [];
     if (!Object.values(MediaType).includes(blueprintData.mediaType.toUpperCase() as MediaType)) {
       clientErrors.push(new ClientError(ClientErrorCode.INVALID_MEDIA_TYPE));
     }
     const validatedData = blueprintData;
-    // Return parser response
+    // >----------< RETURN >----------<
     return ResponseUtil.parserResponse(clientErrors, validatedData);
   }
 

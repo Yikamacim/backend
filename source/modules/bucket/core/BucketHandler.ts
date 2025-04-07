@@ -1,10 +1,19 @@
-import { GetObjectCommand, HeadObjectCommand, NotFound, S3Client } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  HeadObjectCommand,
+  ListObjectsV2Command,
+  NotFound,
+  S3Client,
+  S3ServiceException,
+} from "@aws-sdk/client-s3";
 import { createPresignedPost, type PresignedPost } from "@aws-sdk/s3-presigned-post";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { EnvironmentHelper } from "../../../app/helpers/EnvironmentHelper";
+import { LogHelper } from "../../../app/helpers/LogHelper";
 import type { IHandler } from "../../../app/interfaces/IHandler";
 import type { MediaType } from "../../../common/enums/MediaType";
-import { UrlConstants } from "../app/constants/UrlConstants";
+import { BucketConstants } from "../app/constants/BucketConstants";
 import { ContentUtil } from "../app/utils/ContentUtil";
 
 export class BucketHandler implements IHandler {
@@ -14,14 +23,12 @@ export class BucketHandler implements IHandler {
   ) {}
 
   public async getAccessUrl(name: string): Promise<string> {
-    // Create the get object command
     const command = new GetObjectCommand({
       Bucket: this.bucketName,
       Key: name,
     });
-    // Generate the signed URL
     return await getSignedUrl(this.s3Client, command, {
-      expiresIn: UrlConstants.URL_EXPIRE_TIME,
+      expiresIn: BucketConstants.ACCESS_URL_EXPIRATION_TIME,
     });
   }
 
@@ -33,8 +40,29 @@ export class BucketHandler implements IHandler {
         ["starts-with", "$Content-Type", ContentUtil.getContentTypePrefix(mediaType)],
         ["content-length-range", 0, ContentUtil.getContentLength(mediaType)],
       ],
-      Expires: UrlConstants.URL_EXPIRE_TIME,
+      Expires: BucketConstants.UPLOAD_URL_EXPIRATION_TIME,
     });
+  }
+
+  public async listFiles(): Promise<string[]> {
+    const keys: string[] = [];
+    let continuationToken: string | undefined;
+    do {
+      const command = new ListObjectsV2Command({
+        Bucket: this.bucketName,
+        ContinuationToken: continuationToken,
+      });
+      const response = await this.s3Client.send(command);
+      if (response.Contents !== undefined) {
+        for (const object of response.Contents) {
+          if (object.Key !== undefined) {
+            keys.push(object.Key);
+          }
+        }
+      }
+      continuationToken = response.NextContinuationToken;
+    } while (continuationToken);
+    return keys;
   }
 
   public async checkFileExists(name: string): Promise<boolean> {
@@ -48,6 +76,27 @@ export class BucketHandler implements IHandler {
     } catch (error: unknown) {
       if (error instanceof NotFound) {
         return false;
+      }
+      throw error;
+    }
+  }
+
+  public async deleteFile(key: string): Promise<void> {
+    try {
+      const exists = await this.checkFileExists(key);
+      if (!exists) {
+        return;
+      }
+      const command = new DeleteObjectCommand({
+        Bucket: this.bucketName,
+        Key: key,
+      });
+      await this.s3Client.send(command);
+    } catch (error: unknown) {
+      if (error instanceof S3ServiceException) {
+        LogHelper.failure(error.name, error.message);
+      } else {
+        LogHelper.failure("UnknownError", "An unknown error occurred while deleting the file.");
       }
       throw error;
     }

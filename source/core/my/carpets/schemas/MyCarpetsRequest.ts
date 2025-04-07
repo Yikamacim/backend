@@ -21,23 +21,23 @@ export class MyCarpetsRequest implements IRequest {
 
   public static parse(req: ExpressRequest): ParserResponse<MyCarpetsRequest | null> {
     const preliminaryData: unknown = req.body;
-    // V1: Existence validation
+    // >----------< EXISTENCE VALIDATION >----------<
     if (!ProtoUtil.isProtovalid(preliminaryData)) {
       return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.MISSING_BODY)], null);
     }
     const protovalidData: unknown = preliminaryData;
-    // V2: Schematic validation
+    // >----------< SCHEMATIC VALIDATION >----------<
     if (!MyCarpetsRequest.isBlueprint(protovalidData)) {
       return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.INVALID_BODY)], null);
     }
     const blueprintData: MyCarpetsRequest = protovalidData;
-    // V3: Physical validation
+    // >----------< PHYSICAL VALIDATION >----------<
     const clientErrors: ClientError[] = [];
     ItemNameValidator.validate(blueprintData.name, clientErrors);
     ItemDescriptionValidator.validate(blueprintData.description, clientErrors);
     MediaIdsValidator.validate(blueprintData.mediaIds, clientErrors);
     const validatedData = blueprintData;
-    // Return parser response
+    // >----------< RETURN >----------<
     return ResponseUtil.parserResponse(clientErrors, validatedData);
   }
 

@@ -11,7 +11,7 @@ export class MyCarpetsParams implements IParams {
 
   public static parse(req: ExpressRequest): ParserResponse<MyCarpetsParams | null> {
     const preliminaryData: unknown = req.params["carpetId"];
-    // V1: Existence validation
+    // >----------< EXISTENCE VALIDATION >----------<
     if (!ProtoUtil.isProtovalid(preliminaryData)) {
       return ResponseUtil.parserResponse(
         [new ClientError(ClientErrorCode.MISSING_PARAMETER)],
@@ -19,7 +19,7 @@ export class MyCarpetsParams implements IParams {
       );
     }
     const protovalidData: unknown = { carpetId: preliminaryData };
-    // V2: Schematic validation
+    // >----------< SCHEMATIC VALIDATION >----------<
     if (!MyCarpetsParams.isBlueprint(protovalidData)) {
       return ResponseUtil.parserResponse(
         [new ClientError(ClientErrorCode.INVALID_PARAMETER)],
@@ -27,13 +27,13 @@ export class MyCarpetsParams implements IParams {
       );
     }
     const blueprintData: MyCarpetsParams = protovalidData;
-    // V3: Physical validation
+    // >----------< PHYSICAL VALIDATION >----------<
     const clientErrors: ClientError[] = [];
     if (!StringUtil.isIntParsable(blueprintData.carpetId)) {
       clientErrors.push(new ClientError(ClientErrorCode.INVALID_CARPET_ID));
     }
     const validatedData = blueprintData;
-    // Return parser response
+    // >----------< RETURN >----------<
     return ResponseUtil.parserResponse(clientErrors, validatedData);
   }
 

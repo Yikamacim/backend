@@ -28,7 +28,7 @@ export class NeighborhoodsBuilder implements IBuilder {
       { baseRoute: NeighborhoodsBuilder.BASE_ROUTE, route: "/:neighborhoodId" },
       RouteType.PUBLIC,
       Method.GET,
-      this.controller.getNeighborhoods$neighborhoodId.bind(this.controller),
+      this.controller.getNeighborhoods$.bind(this.controller),
     );
   }
 }

@@ -18,26 +18,26 @@ export class NeighborhoodsController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pq = NeighborhoodsQueries.parse(req);
-      if (pq.clientErrors.length > 0 || pq.validatedData === null) {
+      const queries = NeighborhoodsQueries.parse(req);
+      if (queries.clientErrors.length > 0 || queries.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pq.clientErrors,
+          queries.clientErrors,
           [],
           null,
         );
       }
       // >-----------< LOGIC >-----------<
-      const mr = await this.manager.getNeighborhoods(pq.validatedData);
+      const out = await this.manager.getNeighborhoods(queries.data);
       // >-----------< RESPONSE >-----------<
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
         null,
         false,
       );
@@ -46,33 +46,33 @@ export class NeighborhoodsController implements IController {
     }
   }
 
-  public async getNeighborhoods$neighborhoodId(
+  public async getNeighborhoods$(
     req: ExpressRequest,
     res: ControllerResponse<NeighborhoodsResponse | null, null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >----------< VALIDATION >----------<
-      const pp = NeighborhoodsParams.parse(req);
-      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
+      const params = NeighborhoodsParams.parse(req);
+      if (params.clientErrors.length > 0 || params.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pp.clientErrors,
+          params.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.getNeighborhoods$neighborhoodId(pp.validatedData);
+      const out = await this.manager.getNeighborhoods$(params.data);
       // >----------< RESPONSE >----------<
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
         null,
         false,
       );

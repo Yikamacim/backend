@@ -11,13 +11,9 @@ import { SignupResponse } from "./schemas/SignupResponse";
 export class SignupManager implements IManager {
   public constructor(private readonly provider = new SignupProvider()) {}
 
-  public async postSignup(
-    validatedData: SignupRequest,
-  ): Promise<ManagerResponse<SignupResponse | null>> {
-    // Try to get the account
-    const prGetAccount = await this.provider.getAccount(validatedData.phone);
-    // Account exists with phone, return conflict
-    if (prGetAccount.data) {
+  public async postSignup(request: SignupRequest): Promise<ManagerResponse<SignupResponse | null>> {
+    const account = await this.provider.getAccount(request.phone);
+    if (account !== null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -25,19 +21,18 @@ export class SignupManager implements IManager {
         null,
       );
     }
-    // Create account
-    const prCreateAccount = await this.provider.createAccount(
-      validatedData.phone,
-      await EncryptionHelper.encrypt(validatedData.password),
-      validatedData.name,
-      validatedData.surname,
-      validatedData.accountType,
+    const myAccount = await this.provider.createAccount(
+      request.phone,
+      await EncryptionHelper.encrypt(request.password),
+      request.name,
+      request.surname,
+      request.accountType,
     );
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      SignupResponse.fromModel(prCreateAccount.data),
+      SignupResponse.fromModel(myAccount),
     );
   }
 }

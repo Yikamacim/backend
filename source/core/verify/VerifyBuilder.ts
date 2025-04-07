@@ -28,7 +28,7 @@ export class VerifyBuilder implements IBuilder {
       { baseRoute: VerifyBuilder.BASE_ROUTE, route: "/:phone" },
       RouteType.PUBLIC,
       Method.GET,
-      this.controller.getVerify$phone.bind(this.controller),
+      this.controller.getVerify$.bind(this.controller),
     );
   }
 }

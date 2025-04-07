@@ -11,13 +11,10 @@ export class AccountsManager implements IManager {
   public constructor(private readonly provider = new AccountsProvider()) {}
 
   public async getAccount(
-    validatedData: AccountsParams,
+    params: AccountsParams,
   ): Promise<ManagerResponse<AccountsResponse | null>> {
-    // Try to get the account
-    const prGetAccount = await this.provider.getAccount(validatedData.phone);
-    // If no account found
-    if (prGetAccount.data === null) {
-      // Return with error
+    const account = await this.provider.getAccount(params.phone);
+    if (account === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -25,12 +22,11 @@ export class AccountsManager implements IManager {
         null,
       );
     }
-    // Return account
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      AccountsResponse.fromModel(prGetAccount.data),
+      AccountsResponse.fromModel(account),
     );
   }
 }

@@ -28,7 +28,7 @@ export class ProvincesBuilder implements IBuilder {
       { baseRoute: ProvincesBuilder.BASE_ROUTE, route: "/:provinceId" },
       RouteType.PUBLIC,
       Method.GET,
-      this.controller.getProvinces$provinceId.bind(this.controller),
+      this.controller.getProvinces$.bind(this.controller),
     );
   }
 }

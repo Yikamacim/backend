@@ -1,72 +1,63 @@
 import type { ManagerResponse } from "../../../@types/responses";
+import type { TokenPayload } from "../../../@types/tokens";
 import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
-import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { MyAddressesProvider } from "./MyAddressesProvider";
+import type { MyAddressesParams } from "./schemas/MyAddressesParams";
 import type { MyAddressesRequest } from "./schemas/MyAddressesRequest";
 import { MyAddressesResponse } from "./schemas/MyAddressesResponse";
 
 export class MyAddressesManager implements IManager {
   public constructor(private readonly provider = new MyAddressesProvider()) {}
 
-  public async getMyAddresses(accountId: number): Promise<ManagerResponse<MyAddressesResponse[]>> {
-    // Get my addresses
-    const prGetMyAddresses = await this.provider.getMyAddresses(accountId);
-    // Return
+  public async getMyAddresses(
+    payload: TokenPayload,
+  ): Promise<ManagerResponse<MyAddressesResponse[]>> {
+    const myAddresses = await this.provider.getMyAddresses(payload.accountId);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyAddressesResponse.fromModels(prGetMyAddresses.data),
+      MyAddressesResponse.fromModels(myAddresses),
     );
   }
 
   public async postMyAddresses(
-    accountId: number,
-    validatedData: MyAddressesRequest,
+    payload: TokenPayload,
+    request: MyAddressesRequest,
   ): Promise<ManagerResponse<MyAddressesResponse>> {
-    // Clear default address if new address is set as default
-    if (validatedData.isDefault) {
-      await this.provider.clearMyDefaultAddresses(accountId);
+    if (request.isDefault) {
+      await this.provider.clearMyDefaultAddresses(payload.accountId);
     }
-    // Create my address
-    const prCreateAddress = await this.provider.createAddress(
-      accountId,
-      validatedData.name,
-      validatedData.countryId,
-      validatedData.provinceId,
-      validatedData.districtId,
-      validatedData.neighborhoodId,
-      validatedData.explicitAddress,
-      validatedData.isDefault,
+    const myAddress = await this.provider.createAddress(
+      payload.accountId,
+      request.name,
+      request.countryId,
+      request.provinceId,
+      request.districtId,
+      request.neighborhoodId,
+      request.explicitAddress,
+      request.isDefault,
     );
-    // Get the created address
-    const prGetCreatedAddress = await this.provider.getMyAddress(
-      accountId,
-      prCreateAddress.data.addressId,
-    );
-    if (prGetCreatedAddress.data === null) {
-      throw new UnexpectedDatabaseStateError("Address was not created");
-    }
-    // Return the created address
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyAddressesResponse.fromModel(prGetCreatedAddress.data),
+      MyAddressesResponse.fromModel(myAddress),
     );
   }
 
-  public async getMyAddresses$addressId(
-    accountId: number,
-    addressId: number,
+  public async getMyAddresses$(
+    payload: TokenPayload,
+    params: MyAddressesParams,
   ): Promise<ManagerResponse<MyAddressesResponse | null>> {
-    // Try to get my address
-    const prGetMyAddress = await this.provider.getMyAddress(accountId, addressId);
-    // Check if address exists
-    if (prGetMyAddress.data === null) {
+    const myAddress = await this.provider.getMyAddress(
+      payload.accountId,
+      parseInt(params.addressId),
+    );
+    if (myAddress === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -74,24 +65,24 @@ export class MyAddressesManager implements IManager {
         null,
       );
     }
-    // Return my address
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyAddressesResponse.fromModel(prGetMyAddress.data),
+      MyAddressesResponse.fromModel(myAddress),
     );
   }
 
-  public async putMyAddresses$addressId(
-    accountId: number,
-    addressId: number,
-    validatedData: MyAddressesRequest,
+  public async putMyAddresses$(
+    payload: TokenPayload,
+    params: MyAddressesParams,
+    request: MyAddressesRequest,
   ): Promise<ManagerResponse<MyAddressesResponse | null>> {
-    // Try to get my address
-    const prGetMyAddress = await this.provider.getMyAddress(accountId, addressId);
-    // Check if address exists
-    if (prGetMyAddress.data === null) {
+    const myAddress = await this.provider.getMyAddress(
+      payload.accountId,
+      parseInt(params.addressId),
+    );
+    if (myAddress === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -99,30 +90,20 @@ export class MyAddressesManager implements IManager {
         null,
       );
     }
-    // Clear default address if new address is set as default
-    if (validatedData.isDefault) {
-      await this.provider.clearMyDefaultAddresses(accountId);
+    if (request.isDefault) {
+      await this.provider.clearMyDefaultAddresses(payload.accountId);
     }
-    // Update my address
-    const prUpdateAddress = await this.provider.updateAddress(
-      addressId,
-      validatedData.name,
-      validatedData.countryId,
-      validatedData.provinceId,
-      validatedData.districtId,
-      validatedData.neighborhoodId,
-      validatedData.explicitAddress,
-      validatedData.isDefault,
+    const myUpdatedAddress = await this.provider.updateAddress(
+      myAddress.addressId,
+      request.name,
+      request.countryId,
+      request.provinceId,
+      request.districtId,
+      request.neighborhoodId,
+      request.explicitAddress,
+      request.isDefault,
     );
-    if (prUpdateAddress.data === null) {
-      throw new UnexpectedDatabaseStateError("Address was not updated");
-    }
-    // Get updated address
-    const prGetUpdatedAddress = await this.provider.getMyAddress(
-      accountId,
-      prUpdateAddress.data.addressId,
-    );
-    if (prGetUpdatedAddress.data === null) {
+    if (myUpdatedAddress === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -130,22 +111,23 @@ export class MyAddressesManager implements IManager {
         null,
       );
     }
-    // Return updated address
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyAddressesResponse.fromModel(prGetUpdatedAddress.data),
+      MyAddressesResponse.fromModel(myUpdatedAddress),
     );
   }
 
-  public async deleteMyAddresses$addressId(
-    accountId: number,
-    addressId: number,
+  public async deleteMyAddresses$(
+    payload: TokenPayload,
+    params: MyAddressesParams,
   ): Promise<ManagerResponse<null>> {
-    // Try to get my address
-    const prGetMyAddress = await this.provider.getMyAddress(accountId, addressId);
-    if (prGetMyAddress.data === null) {
+    const myAddress = await this.provider.getMyAddress(
+      payload.accountId,
+      parseInt(params.addressId),
+    );
+    if (myAddress === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -153,8 +135,7 @@ export class MyAddressesManager implements IManager {
         null,
       );
     }
-    // Check if address is default
-    if (prGetMyAddress.data.isDefault) {
+    if (myAddress.isDefault) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -162,9 +143,7 @@ export class MyAddressesManager implements IManager {
         null,
       );
     }
-    // Delete my address
-    await this.provider.deleteAddress(addressId);
-    // Return success
+    await this.provider.deleteAddress(myAddress.addressId);
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.NO_CONTENT), null, [], null);
   }
 }

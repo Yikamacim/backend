@@ -10,18 +10,18 @@ export class MyMediasUploadQueries implements IQueries {
 
   public static parse(req: ExpressRequest): ParserResponse<MyMediasUploadQueries | null> {
     const preliminaryData: unknown = req.query["extension"];
-    // V1: Existence validation
+    // >----------< EXISTENCE VALIDATION >----------<
     if (!ProtoUtil.isProtovalid(preliminaryData)) {
       return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.MISSING_QUERY)], null);
     }
     const protovalidData: unknown = { extension: preliminaryData };
-    // V2: Schematic validation
+    // >----------< SCHEMATIC VALIDATION >----------<
     if (!MyMediasUploadQueries.isBlueprint(protovalidData)) {
       return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.INVALID_QUERY)], null);
     }
     const blueprintData: MyMediasUploadQueries = protovalidData;
     const validatedData = blueprintData;
-    // Return parser response
+    // >----------< RETURN >----------<
     return ResponseUtil.parserResponse([], validatedData);
   }
 

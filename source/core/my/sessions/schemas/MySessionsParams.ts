@@ -11,7 +11,7 @@ export class MySessionsParams implements IParams {
 
   public static parse(req: ExpressRequest): ParserResponse<MySessionsParams | null> {
     const preliminaryData: unknown = req.params["sessionId"];
-    // V1: Existence validation
+    // >----------< EXISTENCE VALIDATION >----------<
     if (!ProtoUtil.isProtovalid(preliminaryData)) {
       return ResponseUtil.parserResponse(
         [new ClientError(ClientErrorCode.MISSING_PARAMETER)],
@@ -19,7 +19,7 @@ export class MySessionsParams implements IParams {
       );
     }
     const protovalidData: unknown = { sessionId: preliminaryData };
-    // V2: Schematic validation
+    // >----------< SCHEMATIC VALIDATION >----------<
     if (!MySessionsParams.isBlueprint(protovalidData)) {
       return ResponseUtil.parserResponse(
         [new ClientError(ClientErrorCode.INVALID_PARAMETER)],
@@ -27,13 +27,13 @@ export class MySessionsParams implements IParams {
       );
     }
     const blueprintData: MySessionsParams = protovalidData;
-    // V3: Physical validation
+    // >----------< PHYSICAL VALIDATION >----------<
     const clientErrors: ClientError[] = [];
     if (!StringUtil.isIntParsable(blueprintData.sessionId)) {
       clientErrors.push(new ClientError(ClientErrorCode.INVALID_SESSION_ID));
     }
     const validatedData = blueprintData;
-    // Return parser response
+    // >----------< RETURN >----------<
     return ResponseUtil.parserResponse(clientErrors, validatedData);
   }
 

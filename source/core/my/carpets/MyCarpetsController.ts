@@ -21,27 +21,27 @@ export class MyCarpetsController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
-      const tokenPayload = PayloadHelper.getPayload(res);
+      const payload = PayloadHelper.getPayload(res);
       // >----------< LOGIC >----------<
-      const mr = await this.manager.getMyCarpets(tokenPayload.accountId);
+      const out = await this.manager.getMyCarpets(payload);
       // >----------< RESPONSE >----------<
-      if (!mr.httpStatus.isSuccess()) {
+      if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
           res,
-          mr.httpStatus,
-          mr.serverError,
-          mr.clientErrors,
-          mr.data,
+          out.httpStatus,
+          out.serverError,
+          out.clientErrors,
+          out.data,
           null,
         );
       }
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
-        await AuthModule.instance.refresh(tokenPayload),
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
+        await AuthModule.instance.refresh(payload),
       );
     } catch (error) {
       return next(error);
@@ -55,198 +55,188 @@ export class MyCarpetsController implements IController {
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
-      const tokenPayload = PayloadHelper.getPayload(res);
+      const payload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const pr = MyCarpetsRequest.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      const request = MyCarpetsRequest.parse(req);
+      if (request.clientErrors.length > 0 || request.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          request.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.postMyCarpets(tokenPayload.accountId, pr.validatedData);
+      const out = await this.manager.postMyCarpets(payload, request.data);
       // >----------< RESPONSE >----------<
-      if (!mr.httpStatus.isSuccess()) {
+      if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
           res,
-          mr.httpStatus,
-          mr.serverError,
-          mr.clientErrors,
-          mr.data,
+          out.httpStatus,
+          out.serverError,
+          out.clientErrors,
+          out.data,
           null,
         );
       }
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
-        await AuthModule.instance.refresh(tokenPayload),
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
+        await AuthModule.instance.refresh(payload),
       );
     } catch (error) {
       return next(error);
     }
   }
 
-  public async getMyCarpets$carpetId(
+  public async getMyCarpets$(
     req: ExpressRequest,
     res: ControllerResponse<MyCarpetsResponse | null, Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
-      const tokenPayload = PayloadHelper.getPayload(res);
+      const payload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const pp = MyCarpetsParams.parse(req);
-      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
+      const params = MyCarpetsParams.parse(req);
+      if (params.clientErrors.length > 0 || params.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pp.clientErrors,
+          params.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.getMyCarpets$carpetId(
-        tokenPayload.accountId,
-        parseInt(pp.validatedData.carpetId),
-      );
+      const out = await this.manager.getMyCarpets$(payload, params.data);
       // >----------< RESPONSE >----------<
-      if (!mr.httpStatus.isSuccess()) {
+      if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
           res,
-          mr.httpStatus,
-          mr.serverError,
-          mr.clientErrors,
-          mr.data,
+          out.httpStatus,
+          out.serverError,
+          out.clientErrors,
+          out.data,
           null,
         );
       }
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
-        await AuthModule.instance.refresh(tokenPayload),
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
+        await AuthModule.instance.refresh(payload),
       );
     } catch (error) {
       return next(error);
     }
   }
 
-  public async putMyCarpets$carpetId(
+  public async putMyCarpets$(
     req: ExpressRequest,
     res: ControllerResponse<MyCarpetsResponse | null, Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
-      const tokenPayload = PayloadHelper.getPayload(res);
+      const payload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const pp = MyCarpetsParams.parse(req);
-      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
+      const params = MyCarpetsParams.parse(req);
+      if (params.clientErrors.length > 0 || params.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pp.clientErrors,
+          params.clientErrors,
           null,
           null,
         );
       }
-      const pr = MyCarpetsRequest.parse(req);
-      if (pr.clientErrors.length > 0 || pr.validatedData === null) {
+      const request = MyCarpetsRequest.parse(req);
+      if (request.clientErrors.length > 0 || request.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pr.clientErrors,
+          request.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.putMyCarpets$carpetId(
-        tokenPayload.accountId,
-        parseInt(pp.validatedData.carpetId),
-        pr.validatedData,
-      );
+      const out = await this.manager.putMyCarpets$(payload, params.data, request.data);
       // >----------< RESPONSE >----------<
-      if (!mr.httpStatus.isSuccess()) {
+      if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
           res,
-          mr.httpStatus,
-          mr.serverError,
-          mr.clientErrors,
-          mr.data,
+          out.httpStatus,
+          out.serverError,
+          out.clientErrors,
+          out.data,
           null,
         );
       }
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
-        await AuthModule.instance.refresh(tokenPayload),
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
+        await AuthModule.instance.refresh(payload),
       );
     } catch (error) {
       return next(error);
     }
   }
 
-  public async deleteMyCarpets$carpetId(
+  public async deleteMyCarpets$(
     req: ExpressRequest,
     res: ControllerResponse<MyCarpetsResponse | null, Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
-      const tokenPayload = PayloadHelper.getPayload(res);
+      const payload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const pp = MyCarpetsParams.parse(req);
-      if (pp.clientErrors.length > 0 || pp.validatedData === null) {
+      const params = MyCarpetsParams.parse(req);
+      if (params.clientErrors.length > 0 || params.data === null) {
         return ResponseUtil.controllerResponse(
           res,
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          pp.clientErrors,
+          params.clientErrors,
           null,
           null,
         );
       }
       // >----------< LOGIC >----------<
-      const mr = await this.manager.deleteMyCarpets$carpetId(
-        tokenPayload.accountId,
-        parseInt(pp.validatedData.carpetId),
-      );
+      const out = await this.manager.deleteMyCarpets$(payload, params.data);
       // >----------< RESPONSE >----------<
-      if (!mr.httpStatus.isSuccess()) {
+      if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
           res,
-          mr.httpStatus,
-          mr.serverError,
-          mr.clientErrors,
-          mr.data,
+          out.httpStatus,
+          out.serverError,
+          out.clientErrors,
+          out.data,
           null,
         );
       }
       return ResponseUtil.controllerResponse(
         res,
-        mr.httpStatus,
-        mr.serverError,
-        mr.clientErrors,
-        mr.data,
-        await AuthModule.instance.refresh(tokenPayload),
+        out.httpStatus,
+        out.serverError,
+        out.clientErrors,
+        out.data,
+        await AuthModule.instance.refresh(payload),
       );
     } catch (error) {
       return next(error);

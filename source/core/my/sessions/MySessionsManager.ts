@@ -1,36 +1,33 @@
 import type { ManagerResponse } from "../../../@types/responses";
+import type { TokenPayload } from "../../../@types/tokens";
 import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { MySessionsProvider } from "./MySessionsProvider";
+import type { MySessionsParams } from "./schemas/MySessionsParams";
 import { MySessionsResponse } from "./schemas/MySessionsResponse";
 
 export class MySessionsManager implements IManager {
   public constructor(private readonly provider = new MySessionsProvider()) {}
 
   public async getMySessions(
-    accountId: number,
-    currentSessionId: number,
+    payload: TokenPayload,
   ): Promise<ManagerResponse<MySessionsResponse[]>> {
-    // Try to get my sessions
-    const prGetMySessions = await this.provider.getMySessions(accountId);
-    // Return my sessions
+    const mySessions = await this.provider.getMySessions(payload.accountId);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MySessionsResponse.fromModels(prGetMySessions.data, currentSessionId),
+      MySessionsResponse.fromModels(mySessions, payload.sessionId),
     );
   }
 
-  public async deleteMySessions$sessionId(
-    accountId: number,
-    currentSessionId: number,
-    sessionId: number,
+  public async deleteMySessions$(
+    payload: TokenPayload,
+    params: MySessionsParams,
   ): Promise<ManagerResponse<null>> {
-    // Check if the session is the current one
-    if (sessionId === currentSessionId) {
+    if (parseInt(params.sessionId) === payload.sessionId) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -38,10 +35,11 @@ export class MySessionsManager implements IManager {
         null,
       );
     }
-    // Try to get the session
-    const prGetMySession = await this.provider.getMySession(accountId, sessionId);
-    // Check if the session exists
-    if (prGetMySession.data === null) {
+    const mySession = await this.provider.getMySession(
+      payload.accountId,
+      parseInt(params.sessionId),
+    );
+    if (mySession === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -49,9 +47,7 @@ export class MySessionsManager implements IManager {
         null,
       );
     }
-    // Delete the session
-    await this.provider.deleteSession(sessionId);
-    // Return success
+    await this.provider.deleteSession(mySession.sessionId);
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.NO_CONTENT), null, [], null);
   }
 }

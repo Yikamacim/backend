@@ -55,11 +55,11 @@ export class ResponseUtil implements IUtil {
 
   public static parserResponse<T extends IRequest | IParams | IQueries | null>(
     clientErrors: ClientError[],
-    validatedData: T,
+    data: T,
   ): ParserResponse<T> {
     return {
       clientErrors,
-      validatedData,
+      data,
     };
   }
 
@@ -95,8 +95,6 @@ export class ResponseUtil implements IUtil {
       LogHelper.log("Provider response was:");
       LogHelper.detail(JSON.stringify(data, null, 2), 1);
     }
-    return {
-      data,
-    };
+    return data;
   }
 }

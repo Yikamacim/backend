@@ -12,30 +12,22 @@ export class ProvincesManager implements IManager {
   public constructor(private readonly provider = new ProvincesProvider()) {}
 
   public async getProvinces(
-    validatedData: ProvincesQueries,
+    queries: ProvincesQueries,
   ): Promise<ManagerResponse<ProvincesResponse[]>> {
-    // Get the provinces by country id
-    const prGetProvincesByCountryId = await this.provider.getProvincesByCountryId(
-      parseInt(validatedData.countryId),
-    );
-    // Return provinces
+    const provinces = await this.provider.getProvincesByCountryId(parseInt(queries.countryId));
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      ProvincesResponse.fromModels(prGetProvincesByCountryId.data),
+      ProvincesResponse.fromModels(provinces),
     );
   }
 
-  public async getProvinces$provinceId(
-    validatedData: ProvincesParams,
+  public async getProvinces$(
+    params: ProvincesParams,
   ): Promise<ManagerResponse<ProvincesResponse | null>> {
-    // Try to get the province
-    const prGetProvinceById = await this.provider.getProvinceById(
-      parseInt(validatedData.provinceId),
-    );
-    // If no province was found
-    if (prGetProvinceById.data === null) {
+    const province = await this.provider.getProvinceById(parseInt(params.provinceId));
+    if (province === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -43,12 +35,11 @@ export class ProvincesManager implements IManager {
         null,
       );
     }
-    // Return province
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      ProvincesResponse.fromModel(prGetProvinceById.data),
+      ProvincesResponse.fromModel(province),
     );
   }
 }

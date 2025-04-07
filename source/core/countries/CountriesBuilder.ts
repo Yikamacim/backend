@@ -28,7 +28,7 @@ export class CountriesBuilder implements IBuilder {
       { baseRoute: CountriesBuilder.BASE_ROUTE, route: "/:countryId" },
       RouteType.PUBLIC,
       Method.GET,
-      this.controller.getCountries$countryId.bind(this.controller),
+      this.controller.getCountries$.bind(this.controller),
     );
   }
 }

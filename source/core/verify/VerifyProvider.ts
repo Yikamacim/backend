@@ -23,7 +23,7 @@ export class VerifyProvider implements IProvider {
   public async verifyAccount(accountId: number): Promise<ProviderResponse<null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      await DbConstants.POOL.query(AccountQueries.VERIFY_ACCOUNT_RT_$ACID, [accountId]);
+      await DbConstants.POOL.query(AccountQueries.UPDATE_ACCOUNT_$ACID_$ISVF, [accountId, true]);
       return await ResponseUtil.providerResponse(null);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
