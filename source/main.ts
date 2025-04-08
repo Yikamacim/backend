@@ -10,6 +10,7 @@ import { MethodMiddleware } from "./app/middlewares/MethodMiddleware";
 import { PoolTest } from "./app/tests/PoolTest";
 import { AccountType } from "./common/enums/AccountType";
 import { EndpointsBuilder } from "./core/_internal/endpoints/EndpointsBuilder";
+import { PurgeBuilder } from "./core/_internal/purge/PurgeBuilder";
 import { RecordsBuilder } from "./core/_internal/records/RecordsBuilder";
 import { AccountsBuilder } from "./core/accounts/AccountsBuilder";
 import { CountriesBuilder } from "./core/countries/CountriesBuilder";
@@ -18,16 +19,16 @@ import { LoginBuilder } from "./core/login/LoginBuilder";
 import { LogoutBuilder } from "./core/logout/LogoutBuilder";
 import { MyAddressesBuilder } from "./core/my/addresses/MyAddressesBuilder";
 import { MyCarpetsBuilder } from "./core/my/carpets/MyCarpetsBuilder";
+import { MyCurtainsBuilder } from "./core/my/curtains/MyCurtainsBuilder";
 import { MyMediasBuilder } from "./core/my/medias/MyMediasBuilder";
 import { MySessionsBuilder } from "./core/my/sessions/MySessionsBuilder";
+import { MyVehiclesBuilder } from "./core/my/vehicles/MyVehiclesBuilder";
 import { NeighborhoodsBuilder } from "./core/neighborhoods/NeighborhoodsBuilder";
 import { ProvincesBuilder } from "./core/provinces/ProvincesBuilder";
 import { RefreshBuilder } from "./core/refresh/RefreshBuilder";
 import { SignupBuilder } from "./core/signup/SignupBuilder";
 import { VerifyBuilder } from "./core/verify/VerifyBuilder";
 import { PurgeTask } from "./tasks/purge/task";
-import { MyCurtainsBuilder } from "./core/my/curtains/MyCurtainsBuilder";
-import { MyVehiclesBuilder } from "./core/my/vehicles/MyVehiclesBuilder";
 
 // App
 const app: Express = express();
@@ -46,6 +47,11 @@ app.use(
   // _internal/endpoints
   EndpointsBuilder.BASE_ROUTE,
   new EndpointsBuilder().router,
+);
+app.use(
+  // _internal/endpoints
+  PurgeBuilder.BASE_ROUTE,
+  new PurgeBuilder().router,
 );
 app.use(
   // _internal/records
@@ -158,7 +164,7 @@ app.use(FailureMiddleware.serverFailure.bind(FailureMiddleware));
 void PoolTest.run();
 
 // Tasks
-PurgeTask.instance.start();
+PurgeTask.instance.schedule();
 
 // Server
 app.listen(ConfigConstants.PORT, (): void => {

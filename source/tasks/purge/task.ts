@@ -15,9 +15,13 @@ export class PurgeTask implements ITask {
 
   private constructor(private readonly purgeExecutor = new PurgeExecutor()) {}
 
-  public start(): void {
+  public schedule(): void {
     schedule(PurgeConstants.CRON_SCHEDULE, async () => {
       await this.purgeExecutor.execute();
     });
+  }
+
+  public async run(): Promise<void> {
+    await this.purgeExecutor.execute();
   }
 }
