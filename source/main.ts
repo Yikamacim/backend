@@ -18,6 +18,7 @@ import { DistrictsBuilder } from "./core/districts/DistrictsBuilder";
 import { LoginBuilder } from "./core/login/LoginBuilder";
 import { LogoutBuilder } from "./core/logout/LogoutBuilder";
 import { MyAddressesBuilder } from "./core/my/addresses/MyAddressesBuilder";
+import { MyBedsBuilder } from "./core/my/beds/MyBedsBuilder";
 import { MyCarpetsBuilder } from "./core/my/carpets/MyCarpetsBuilder";
 import { MyCurtainsBuilder } from "./core/my/curtains/MyCurtainsBuilder";
 import { MyMediasBuilder } from "./core/my/medias/MyMediasBuilder";
@@ -109,6 +110,12 @@ app.use(
   MyAddressesBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
   new MyAddressesBuilder().router,
+);
+app.use(
+  // my/beds
+  MyBedsBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  new MyBedsBuilder().router,
 );
 app.use(
   // my/carpets
