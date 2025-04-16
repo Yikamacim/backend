@@ -1,7 +1,6 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { CurtainMaterial } from "../enums/CurtainMaterial";
 import { CurtainType } from "../enums/CurtainType";
 
 export class CurtainModel implements IModel {
@@ -11,7 +10,6 @@ export class CurtainModel implements IModel {
     public readonly width: number | null,
     public readonly length: number | null,
     public readonly curtainType: CurtainType | null,
-    public readonly curtainMaterial: CurtainMaterial | null,
   ) {}
 
   public static fromRecord(record: unknown): CurtainModel {
@@ -24,7 +22,6 @@ export class CurtainModel implements IModel {
       record.width,
       record.length,
       record.curtainType,
-      record.curtainMaterial,
     );
   }
 
@@ -45,9 +42,7 @@ export class CurtainModel implements IModel {
       typeof model.itemId === "number" &&
       (model.width === null || typeof model.width === "number") &&
       (model.length === null || typeof model.length === "number") &&
-      (model.curtainType === null || Object.values(CurtainType).includes(model.curtainType)) &&
-      (model.curtainMaterial === null ||
-        Object.values(CurtainMaterial).includes(model.curtainMaterial))
+      (model.curtainType === null || Object.values(CurtainType).includes(model.curtainType))
     );
   }
 

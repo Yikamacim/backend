@@ -8,39 +8,39 @@ import { FileUtil } from "../../../app/utils/FileUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { MediaModel } from "../../../common/models/MediaModel";
 import { BucketModule } from "../../../modules/bucket/module";
-import { MyCarpetsProvider } from "./MyCarpetsProvider";
-import type { MyCarpetsParams } from "./schemas/MyCarpetsParams";
-import type { MyCarpetsRequest } from "./schemas/MyCarpetsRequest";
-import { MyCarpetsResponse } from "./schemas/MyCarpetsResponse";
+import { MyBedsProvider } from "./MyBedsProvider";
+import type { MyBedsParams } from "./schemas/MyBedsParams";
+import type { MyBedsRequest } from "./schemas/MyBedsRequest";
+import { MyBedsResponse } from "./schemas/MyCarpetsResponse";
 
-export class MyCarpetsManager implements IManager {
-  public constructor(private readonly provider = new MyCarpetsProvider()) {}
+export class MyBedsManager implements IManager {
+  public constructor(private readonly provider = new MyBedsProvider()) {}
 
-  public async getMyCarpets(payload: TokenPayload): Promise<ManagerResponse<MyCarpetsResponse[]>> {
-    const myCarpets = await this.provider.getMyCarpets(payload.accountId);
-    const responses: MyCarpetsResponse[] = [];
-    for (const myCarpet of myCarpets) {
-      const myCarpetMedias = await this.provider.getItemMedias(myCarpet.itemId);
-      const myCarpetMediasData: MediaData[] = [];
-      for (const myCarpetMedia of myCarpetMedias) {
-        myCarpetMediasData.push({
-          mediaId: myCarpetMedia.mediaId,
-          mediaType: myCarpetMedia.mediaType,
-          extension: myCarpetMedia.extension,
+  public async getMyBeds(payload: TokenPayload): Promise<ManagerResponse<MyBedsResponse[]>> {
+    const myBeds = await this.provider.getMyBeds(payload.accountId);
+    const responses: MyBedsResponse[] = [];
+    for (const myBed of myBeds) {
+      const myBedMedias = await this.provider.getItemMedias(myBed.itemId);
+      const myBedMediasData: MediaData[] = [];
+      for (const myBedMedia of myBedMedias) {
+        myBedMediasData.push({
+          mediaId: myBedMedia.mediaId,
+          mediaType: myBedMedia.mediaType,
+          extension: myBedMedia.extension,
           url: await BucketModule.instance.getAccessUrl(
-            FileUtil.getName(myCarpetMedia.mediaId.toString(), myCarpetMedia.extension),
+            FileUtil.getName(myBedMedia.mediaId.toString(), myBedMedia.extension),
           ),
         });
       }
-      responses.push(MyCarpetsResponse.fromModel(myCarpet, myCarpetMediasData));
+      responses.push(MyBedsResponse.fromModel(myBed, myBedMediasData));
     }
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
   }
 
-  public async postMyCarpets(
+  public async postMyBeds(
     payload: TokenPayload,
-    request: MyCarpetsRequest,
-  ): Promise<ManagerResponse<MyCarpetsResponse | null>> {
+    request: MyBedsRequest,
+  ): Promise<ManagerResponse<MyBedsResponse | null>> {
     const myMedias = await this.provider.getMyMedias(payload.accountId);
     const medias: MediaModel[] = [];
     for (const mediaId of request.mediaIds) {
@@ -69,14 +69,12 @@ export class MyCarpetsManager implements IManager {
         );
       }
     }
-    const myCarpet = await this.provider.createCarpet(
+    const myBed = await this.provider.createBed(
       payload.accountId,
       request.name,
       request.description,
       request.mediaIds,
-      request.width,
-      request.length,
-      request.carpetMaterial,
+      request.bedType,
     );
     const mediaData: MediaData[] = [];
     for (const media of medias) {
@@ -93,26 +91,26 @@ export class MyCarpetsManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyCarpetsResponse.fromModel(myCarpet, mediaData),
+      MyBedsResponse.fromModel(myBed, mediaData),
     );
   }
 
-  public async getMyCarpets$(
+  public async getMyBeds$(
     payload: TokenPayload,
-    params: MyCarpetsParams,
-  ): Promise<ManagerResponse<MyCarpetsResponse | null>> {
-    const myCarpet = await this.provider.getMyCarpet(payload.accountId, parseInt(params.carpetId));
-    if (myCarpet === null) {
+    params: MyBedsParams,
+  ): Promise<ManagerResponse<MyBedsResponse | null>> {
+    const myBed = await this.provider.getMyBed(payload.accountId, parseInt(params.bedId));
+    if (myBed === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.CARPET_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.BED_NOT_FOUND)],
         null,
       );
     }
-    const myCarpetMedias = await this.provider.getItemMedias(myCarpet.itemId);
+    const myBedMedias = await this.provider.getItemMedias(myBed.itemId);
     const mediaData: MediaData[] = [];
-    for (const itemMedia of myCarpetMedias) {
+    for (const itemMedia of myBedMedias) {
       mediaData.push({
         mediaId: itemMedia.mediaId,
         mediaType: itemMedia.mediaType,
@@ -126,21 +124,21 @@ export class MyCarpetsManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyCarpetsResponse.fromModel(myCarpet, mediaData),
+      MyBedsResponse.fromModel(myBed, mediaData),
     );
   }
 
-  public async putMyCarpets$(
+  public async putMyBeds$(
     payload: TokenPayload,
-    params: MyCarpetsParams,
-    request: MyCarpetsRequest,
-  ): Promise<ManagerResponse<MyCarpetsResponse | null>> {
-    const myCarpet = await this.provider.getMyCarpet(payload.accountId, parseInt(params.carpetId));
-    if (myCarpet === null) {
+    params: MyBedsParams,
+    request: MyBedsRequest,
+  ): Promise<ManagerResponse<MyBedsResponse | null>> {
+    const myBed = await this.provider.getMyBed(payload.accountId, parseInt(params.bedId));
+    if (myBed === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.CARPET_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.BED_NOT_FOUND)],
         null,
       );
     }
@@ -172,18 +170,16 @@ export class MyCarpetsManager implements IManager {
         );
       }
     }
-    const myCarpetMedias = await this.provider.getItemMedias(myCarpet.itemId);
-    const myUpdatedCarpet = await this.provider.updateCarpet(
+    const myBedMedias = await this.provider.getItemMedias(myBed.itemId);
+    const myUpdatedBed = await this.provider.updateBed(
       payload.accountId,
-      myCarpetMedias.map((itemMedia) => itemMedia.mediaId),
-      myCarpet.carpetId,
-      myCarpet.itemId,
+      myBedMedias.map((itemMedia) => itemMedia.mediaId),
+      myBed.bedId,
+      myBed.itemId,
       request.name,
       request.description,
       request.mediaIds,
-      request.width,
-      request.length,
-      request.carpetMaterial,
+      request.bedType,
     );
     const mediaData: MediaData[] = [];
     for (const media of medias) {
@@ -200,28 +196,28 @@ export class MyCarpetsManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyCarpetsResponse.fromModel(myUpdatedCarpet, mediaData),
+      MyBedsResponse.fromModel(myUpdatedBed, mediaData),
     );
   }
 
-  public async deleteMyCarpets$(
+  public async deleteMyBeds$(
     payload: TokenPayload,
-    params: MyCarpetsParams,
+    params: MyBedsParams,
   ): Promise<ManagerResponse<null>> {
-    const myCarpet = await this.provider.getMyCarpet(payload.accountId, parseInt(params.carpetId));
-    if (myCarpet === null) {
+    const myBed = await this.provider.getMyBed(payload.accountId, parseInt(params.bedId));
+    if (myBed === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.CARPET_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.BED_NOT_FOUND)],
         null,
       );
     }
-    const myCarpetMedias = await this.provider.getItemMedias(myCarpet.itemId);
-    await this.provider.deleteCarpet(
-      myCarpet.itemId,
-      myCarpet.carpetId,
-      myCarpetMedias.map((myCarpetMedia) => myCarpetMedia.mediaId),
+    const myBedMedias = await this.provider.getItemMedias(myBed.itemId);
+    await this.provider.deleteBed(
+      myBed.itemId,
+      myBed.bedId,
+      myBedMedias.map((myBedMedia) => myBedMedia.mediaId),
     );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);
   }

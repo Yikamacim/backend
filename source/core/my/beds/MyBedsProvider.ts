@@ -4,16 +4,16 @@ import type { IProvider } from "../../../app/interfaces/IProvider";
 import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import type { CurtainType } from "../../../common/enums/CurtainType";
-import { CurtainModel } from "../../../common/models/CurtainModel";
-import { CurtainViewModel } from "../../../common/models/CurtainViewModel";
+import type { BedType } from "../../../common/enums/BedType";
+import { BedModel } from "../../../common/models/BedModel";
+import { BedViewModel } from "../../../common/models/BedViewModel";
 import { ItemMediaProvider } from "../../../common/providers/ItemMediaProvider";
 import { ItemProvider } from "../../../common/providers/ItemProvider";
 import { MediaProvider } from "../../../common/providers/MediaProvider";
-import { CurtainQueries } from "../../../common/queries/CurtainQueries";
-import { CurtainViewQueries } from "../../../common/queries/CurtainViewQueries";
+import { BedQueries } from "../../../common/queries/BedQueries";
+import { BedViewQueries } from "../../../common/queries/BedViewQueries";
 
-export class MyCurtainsProvider implements IProvider {
+export class MyBedsProvider implements IProvider {
   public constructor(
     private readonly itemProvider = new ItemProvider(),
     private readonly itemMediaProvider = new ItemMediaProvider(),
@@ -42,102 +42,96 @@ export class MyCurtainsProvider implements IProvider {
   public getMyMedias: typeof this.mediaProvider.getMyMedias;
   public partialUpdateMedias: typeof this.mediaProvider.partialUpdateMedias;
 
-  public async getMyCurtains(accountId: number): Promise<ProviderResponse<CurtainViewModel[]>> {
+  public async getMyBeds(accountId: number): Promise<ProviderResponse<BedViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(CurtainViewQueries.GET_CURTAINS_$ACID, [
-        accountId,
-      ]);
+      const results = await DbConstants.POOL.query(BedViewQueries.GET_BEDS_$ACID, [accountId]);
       const records: unknown[] = results.rows;
-      return await ResponseUtil.providerResponse(CurtainViewModel.fromRecords(records));
+      return await ResponseUtil.providerResponse(BedViewModel.fromRecords(records));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async getMyCurtain(
+  public async getMyBed(
     accountId: number,
-    curtainId: number,
-  ): Promise<ProviderResponse<CurtainViewModel | null>> {
+    bedId: number,
+  ): Promise<ProviderResponse<BedViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const myCurtain = await this.partialGetMyCurtain(accountId, curtainId);
-      if (myCurtain === null) {
+      const myBed = await this.partialGetMyBed(accountId, bedId);
+      if (myBed === null) {
         return await ResponseUtil.providerResponse(null);
       }
-      return await ResponseUtil.providerResponse(myCurtain);
+      return await ResponseUtil.providerResponse(myBed);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async createCurtain(
+  public async createBed(
     accountId: number,
     name: string,
     description: string,
     mediaIds: number[],
-    width: number | null,
-    length: number | null,
-    curtainType: CurtainType | null,
-  ): Promise<ProviderResponse<CurtainViewModel>> {
+    bedType: BedType | null,
+  ): Promise<ProviderResponse<BedViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const item = await this.partialCreateItem(accountId, name, description);
-      const curtain = await this.partialCreateCurtain(item.itemId, width, length, curtainType);
+      const bed = await this.partialCreateBed(item.itemId, bedType);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, true);
-      const curtainView = await this.partialGetMyCurtain(accountId, curtain.curtainId);
-      if (curtainView === null) {
-        throw new UnexpectedDatabaseStateError("Curtain was not created");
+      const carpetView = await this.partialGetMyBed(accountId, bed.bedId);
+      if (carpetView === null) {
+        throw new UnexpectedDatabaseStateError("Bed was not created");
       }
-      return await ResponseUtil.providerResponse(curtainView);
+      return await ResponseUtil.providerResponse(carpetView);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async updateCurtain(
+  public async updateBed(
     accountId: number,
     oldMediaIds: number[],
-    carpetId: number,
+    bedId: number,
     itemId: number,
     name: string,
     description: string,
     mediaIds: number[],
-    width: number | null,
-    length: number | null,
-    curtainType: CurtainType | null,
-  ): Promise<ProviderResponse<CurtainViewModel>> {
+    bedType: BedType | null,
+  ): Promise<ProviderResponse<BedViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await this.partialDeleteItemMedias(itemId, oldMediaIds);
       await this.partialUpdateMedias(oldMediaIds, false);
       await this.partialUpdateItem(itemId, name, description);
-      await this.partialUpdateCurtain(carpetId, width, length, curtainType);
+      await this.partialUpdateBed(bedId, bedType);
       await this.partialCreateItemMedias(itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, true);
-      const curtainView = await this.partialGetMyCurtain(accountId, carpetId);
-      if (curtainView === null) {
-        throw new UnexpectedDatabaseStateError("Curtain was not updated");
+      const bedView = await this.partialGetMyBed(accountId, bedId);
+      if (bedView === null) {
+        throw new UnexpectedDatabaseStateError("Bed was not updated");
       }
-      return await ResponseUtil.providerResponse(curtainView);
+      return await ResponseUtil.providerResponse(bedView);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async deleteCurtain(
+  public async deleteBed(
     itemId: number,
-    curtainId: number,
+    bedId: number,
     mediaIds: number[],
   ): Promise<ProviderResponse<null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      await this.partialDeleteCurtain(curtainId);
+      await this.partialDeleteBed(bedId);
       await this.partialDeleteItemMedias(itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, false);
       await this.partialDeleteItem(itemId);
@@ -150,50 +144,37 @@ export class MyCurtainsProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialCreateCurtain(
-    itemId: number,
-    width: number | null,
-    length: number | null,
-    curtainType: CurtainType | null,
-  ): Promise<CurtainModel> {
-    const results = await DbConstants.POOL.query(
-      CurtainQueries.INSERT_CURTAIN_RT_$ITID_$WIDTH_$LENGTH_$CTYP,
-      [itemId, width, length, curtainType],
-    );
+  private async partialCreateBed(itemId: number, bedType: BedType | null): Promise<BedModel> {
+    const results = await DbConstants.POOL.query(BedQueries.INSERT_BED_RT_$ITID_$BDTP, [
+      itemId,
+      bedType,
+    ]);
     const record: unknown = results.rows[0];
-    return CurtainModel.fromRecord(record);
+    return BedModel.fromRecord(record);
   }
 
-  private async partialUpdateCurtain(
-    curtainId: number,
-    width: number | null,
-    length: number | null,
-    curtainType: CurtainType | null,
-  ): Promise<CurtainModel> {
-    const results = await DbConstants.POOL.query(
-      CurtainQueries.UPDATE_CURTAIN_RT_$CPID_$WIDTH_$LENGTH_$CTYP,
-      [curtainId, width, length, curtainType],
-    );
+  private async partialUpdateBed(carpetId: number, bedType: BedType | null): Promise<BedModel> {
+    const results = await DbConstants.POOL.query(BedQueries.UPDATE_BED_RT_$BDID_$BDTP, [
+      carpetId,
+      bedType,
+    ]);
     const record: unknown = results.rows[0];
-    return CurtainModel.fromRecord(record);
+    return BedModel.fromRecord(record);
   }
 
-  private async partialDeleteCurtain(curtainId: number): Promise<void> {
-    await DbConstants.POOL.query(CurtainQueries.DELETE_CURTAIN_$CRID, [curtainId]);
+  private async partialDeleteBed(bedId: number): Promise<void> {
+    await DbConstants.POOL.query(BedQueries.DELETE_BED_$BDID, [bedId]);
   }
 
-  private async partialGetMyCurtain(
-    accountId: number,
-    curtainId: number,
-  ): Promise<CurtainViewModel | null> {
-    const results = await DbConstants.POOL.query(CurtainViewQueries.GET_CURTAIN_$ACID_$CRID, [
+  private async partialGetMyBed(accountId: number, bedId: number): Promise<BedViewModel | null> {
+    const results = await DbConstants.POOL.query(BedViewQueries.GET_BED_$ACID_$BDID, [
       accountId,
-      curtainId,
+      bedId,
     ]);
     const record: unknown = results.rows[0];
     if (!ProtoUtil.isProtovalid(record)) {
       return null;
     }
-    return CurtainViewModel.fromRecord(record);
+    return BedViewModel.fromRecord(record);
   }
 }

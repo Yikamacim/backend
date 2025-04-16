@@ -1,6 +1,5 @@
 import type { MediaData } from "../../../../@types/medias";
 import type { IResponse } from "../../../../app/interfaces/IResponse";
-import type { CurtainMaterial } from "../../../../common/enums/CurtainMaterial";
 import type { CurtainType } from "../../../../common/enums/CurtainType";
 import type { CurtainViewModel } from "../../../../common/models/CurtainViewModel";
 
@@ -13,7 +12,6 @@ export class MyCurtainsResponse implements IResponse {
     public readonly width: number | null,
     public readonly length: number | null,
     public readonly curtainType: CurtainType | null,
-    public readonly curtain: CurtainMaterial | null,
   ) {}
 
   public static fromModel(model: CurtainViewModel, medias: MediaData[]): MyCurtainsResponse {
@@ -25,7 +23,6 @@ export class MyCurtainsResponse implements IResponse {
       model.width,
       model.length,
       model.curtainType,
-      model.curtainMaterial,
     );
   }
 }

@@ -4,22 +4,20 @@ import type { IRequest } from "../../../../app/interfaces/IRequest";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
-import { CurtainType } from "../../../../common/enums/CurtainType";
+import { BedType } from "../../../../common/enums/BedType";
 import { ItemDescriptionValidator } from "../../../../common/validators/ItemDescriptionValidator";
 import { ItemNameValidator } from "../../../../common/validators/ItemNameValidator";
 import { MediaIdsValidator } from "../../../../common/validators/MediaIdsValidator";
 
-export class MyCurtainsRequest implements IRequest {
+export class MyBedsRequest implements IRequest {
   public constructor(
     public readonly name: string,
     public readonly description: string,
     public readonly mediaIds: number[],
-    public readonly width: number | null,
-    public readonly length: number | null,
-    public readonly curtainType: CurtainType | null,
+    public readonly bedType: BedType | null,
   ) {}
 
-  public static parse(req: ExpressRequest): ParserResponse<MyCurtainsRequest | null> {
+  public static parse(req: ExpressRequest): ParserResponse<MyBedsRequest | null> {
     const preliminaryData: unknown = req.body;
     // >----------< EXISTENCE VALIDATION >----------<
     if (!ProtoUtil.isProtovalid(preliminaryData)) {
@@ -27,10 +25,10 @@ export class MyCurtainsRequest implements IRequest {
     }
     const protovalidData: unknown = preliminaryData;
     // >----------< SCHEMATIC VALIDATION >----------<
-    if (!MyCurtainsRequest.isBlueprint(protovalidData)) {
+    if (!MyBedsRequest.isBlueprint(protovalidData)) {
       return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.INVALID_BODY)], null);
     }
-    const blueprintData: MyCurtainsRequest = protovalidData;
+    const blueprintData: MyBedsRequest = protovalidData;
     // >----------< PHYSICAL VALIDATION >----------<
     const clientErrors: ClientError[] = [];
     ItemNameValidator.validate(blueprintData.name, clientErrors);
@@ -41,19 +39,17 @@ export class MyCurtainsRequest implements IRequest {
     return ResponseUtil.parserResponse(clientErrors, validatedData);
   }
 
-  private static isBlueprint(obj: unknown): obj is MyCurtainsRequest {
+  private static isBlueprint(obj: unknown): obj is MyBedsRequest {
     if (typeof obj !== "object" || obj === null) {
       return false;
     }
-    const blueprint = obj as MyCurtainsRequest;
+    const blueprint = obj as MyBedsRequest;
     return (
       typeof blueprint.name === "string" &&
       typeof blueprint.description === "string" &&
       Array.isArray(blueprint.mediaIds) &&
       blueprint.mediaIds.every((mediaId: unknown): boolean => typeof mediaId === "number") &&
-      (blueprint.width === null || typeof blueprint.width === "number") &&
-      (blueprint.length === null || typeof blueprint.length === "number") &&
-      (blueprint.curtainType === null || Object.values(CurtainType).includes(blueprint.curtainType))
+      (blueprint.bedType === null || Object.values(BedType).includes(blueprint.bedType))
     );
   }
 }

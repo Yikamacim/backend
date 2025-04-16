@@ -122,6 +122,9 @@ export enum ClientErrorCode {
   //  *  *  812XX: /my/curtains errors
   INVALID_CURTAIN_ID = 81200,
   CURTAIN_NOT_FOUND = 81201,
+  //  *  *  813XX: /my/beds errors
+  INVALID_BED_ID = 81300,
+  BED_NOT_FOUND = 81301,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -240,6 +243,9 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   //  *  *  812XX: /my/curtains errors
   [ClientErrorCode.INVALID_CURTAIN_ID]: "Provided curtain id was invalid.",
   [ClientErrorCode.CURTAIN_NOT_FOUND]: "Account doesn't have a curtain with the provided id.",
+  //  *  *  813XX: /my/beds errors
+  [ClientErrorCode.INVALID_BED_ID]: "Provided bed id was invalid.",
+  [ClientErrorCode.BED_NOT_FOUND]: "Account doesn't have a bed with the provided id.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

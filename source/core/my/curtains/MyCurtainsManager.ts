@@ -79,7 +79,6 @@ export class MyCurtainsManager implements IManager {
       request.width,
       request.length,
       request.curtainType,
-      request.curtainMaterial,
     );
     const mediaData: MediaData[] = [];
     for (const media of medias) {
@@ -193,7 +192,6 @@ export class MyCurtainsManager implements IManager {
       request.width,
       request.length,
       request.curtainType,
-      request.curtainMaterial,
     );
     const mediaData: MediaData[] = [];
     for (const media of medias) {
@@ -236,6 +234,6 @@ export class MyCurtainsManager implements IManager {
       myCurtain.curtainId,
       myCurtainMedias.map((myCurtainMedia) => myCurtainMedia.mediaId),
     );
-    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.NO_CONTENT), null, [], null);
+    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);
   }
 }

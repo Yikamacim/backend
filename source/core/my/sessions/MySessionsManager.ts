@@ -48,6 +48,6 @@ export class MySessionsManager implements IManager {
       );
     }
     await this.provider.deleteSession(mySession.sessionId);
-    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.NO_CONTENT), null, [], null);
+    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);
   }
 }

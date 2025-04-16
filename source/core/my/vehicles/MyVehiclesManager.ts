@@ -234,6 +234,6 @@ export class MyVehiclesManager implements IManager {
       myVehicle.vehicleId,
       myVehicleMedias.map((myVehicleMedia) => myVehicleMedia.mediaId),
     );
-    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.NO_CONTENT), null, [], null);
+    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);
   }
 }

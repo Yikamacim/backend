@@ -144,6 +144,6 @@ export class MyAddressesManager implements IManager {
       );
     }
     await this.provider.deleteAddress(myAddress.addressId);
-    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.NO_CONTENT), null, [], null);
+    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);
   }
 }
