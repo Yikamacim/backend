@@ -19,10 +19,12 @@ import { LoginBuilder } from "./core/login/LoginBuilder";
 import { LogoutBuilder } from "./core/logout/LogoutBuilder";
 import { MyAddressesBuilder } from "./core/my/addresses/MyAddressesBuilder";
 import { MyBedsBuilder } from "./core/my/beds/MyBedsBuilder";
+import { MyBlanketsBuilder } from "./core/my/blankets/MyBlanketsBuilder";
 import { MyCarpetsBuilder } from "./core/my/carpets/MyCarpetsBuilder";
 import { MyChairsBuilder } from "./core/my/chairs/MyChairsBuilder";
 import { MyCurtainsBuilder } from "./core/my/curtains/MyCurtainsBuilder";
 import { MyMediasBuilder } from "./core/my/medias/MyMediasBuilder";
+import { MyQuiltsBuilder } from "./core/my/quilts/MyQuiltsBuilder";
 import { MySessionsBuilder } from "./core/my/sessions/MySessionsBuilder";
 import { MySofasBuilder } from "./core/my/sofas/MySofasBuilder";
 import { MyVehiclesBuilder } from "./core/my/vehicles/MyVehiclesBuilder";
@@ -120,6 +122,12 @@ app.use(
   new MyBedsBuilder().router,
 );
 app.use(
+  // my/blankets
+  MyBlanketsBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  new MyBlanketsBuilder().router,
+);
+app.use(
   // my/carpets
   MyCarpetsBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
@@ -142,6 +150,12 @@ app.use(
   MyMediasBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
   new MyMediasBuilder().router,
+);
+app.use(
+  // my/quilts
+  MyQuiltsBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  new MyQuiltsBuilder().router,
 );
 app.use(
   // my/sessions

@@ -8,39 +8,39 @@ import { FileUtil } from "../../../app/utils/FileUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { MediaModel } from "../../../common/models/MediaModel";
 import { BucketModule } from "../../../modules/bucket/module";
-import { MySofasProvider } from "./MySofasProvider";
-import type { MySofasParams } from "./schemas/MySofasParams";
-import type { MySofasRequest } from "./schemas/MySofasRequest";
-import { MySofasResponse } from "./schemas/MySofasResponse";
+import { MyQuiltsProvider } from "./MyQuiltsProvider";
+import type { MyQuiltsParams } from "./schemas/MyQuiltsParams";
+import type { MyQuiltsRequest } from "./schemas/MyQuiltsRequest";
+import { MyQuiltsResponse } from "./schemas/MyQuiltsResponse";
 
-export class MySofasManager implements IManager {
-  public constructor(private readonly provider = new MySofasProvider()) {}
+export class MyQuiltsManager implements IManager {
+  public constructor(private readonly provider = new MyQuiltsProvider()) {}
 
-  public async getMySofas(payload: TokenPayload): Promise<ManagerResponse<MySofasResponse[]>> {
-    const mySofas = await this.provider.getMySofas(payload.accountId);
-    const responses: MySofasResponse[] = [];
-    for (const mySofa of mySofas) {
-      const mySofaMedias = await this.provider.getItemMedias(mySofa.itemId);
-      const mySofaMediasData: MediaData[] = [];
-      for (const mySofaMedia of mySofaMedias) {
-        mySofaMediasData.push({
-          mediaId: mySofaMedia.mediaId,
-          mediaType: mySofaMedia.mediaType,
-          extension: mySofaMedia.extension,
+  public async getMyQuilts(payload: TokenPayload): Promise<ManagerResponse<MyQuiltsResponse[]>> {
+    const myQuilts = await this.provider.getMyQuilts(payload.accountId);
+    const responses: MyQuiltsResponse[] = [];
+    for (const myQuilt of myQuilts) {
+      const myQuiltMedias = await this.provider.getItemMedias(myQuilt.itemId);
+      const myQuiltMediasData: MediaData[] = [];
+      for (const myQuiltMedia of myQuiltMedias) {
+        myQuiltMediasData.push({
+          mediaId: myQuiltMedia.mediaId,
+          mediaType: myQuiltMedia.mediaType,
+          extension: myQuiltMedia.extension,
           url: await BucketModule.instance.getAccessUrl(
-            FileUtil.getName(mySofaMedia.mediaId.toString(), mySofaMedia.extension),
+            FileUtil.getName(myQuiltMedia.mediaId.toString(), myQuiltMedia.extension),
           ),
         });
       }
-      responses.push(MySofasResponse.fromModel(mySofa, mySofaMediasData));
+      responses.push(MyQuiltsResponse.fromModel(myQuilt, myQuiltMediasData));
     }
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
   }
 
-  public async postMySofas(
+  public async postMyQuilts(
     payload: TokenPayload,
-    request: MySofasRequest,
-  ): Promise<ManagerResponse<MySofasResponse | null>> {
+    request: MyQuiltsRequest,
+  ): Promise<ManagerResponse<MyQuiltsResponse | null>> {
     const myMedias = await this.provider.getMyMedias(payload.accountId);
     const medias: MediaModel[] = [];
     for (const mediaId of request.mediaIds) {
@@ -69,14 +69,13 @@ export class MySofasManager implements IManager {
         );
       }
     }
-    const mySofa = await this.provider.createSofa(
+    const myQuilt = await this.provider.createQuilt(
       payload.accountId,
       request.name,
       request.description,
       request.mediaIds,
-      request.isCushioned,
-      request.sofaType,
-      request.sofaMaterial,
+      request.quiltSize,
+      request.quiltMaterial,
     );
     const mediaData: MediaData[] = [];
     for (const media of medias) {
@@ -93,26 +92,26 @@ export class MySofasManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MySofasResponse.fromModel(mySofa, mediaData),
+      MyQuiltsResponse.fromModel(myQuilt, mediaData),
     );
   }
 
-  public async getMySofas$(
+  public async getMyQuilts$(
     payload: TokenPayload,
-    params: MySofasParams,
-  ): Promise<ManagerResponse<MySofasResponse | null>> {
-    const mySofa = await this.provider.getMySofa(payload.accountId, parseInt(params.sofaId));
-    if (mySofa === null) {
+    params: MyQuiltsParams,
+  ): Promise<ManagerResponse<MyQuiltsResponse | null>> {
+    const myQuilt = await this.provider.getMyQuilt(payload.accountId, parseInt(params.quiltId));
+    if (myQuilt === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.SOFA_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.QUILT_NOT_FOUND)],
         null,
       );
     }
-    const mySofaMedias = await this.provider.getItemMedias(mySofa.itemId);
+    const myQuiltMedias = await this.provider.getItemMedias(myQuilt.itemId);
     const mediaData: MediaData[] = [];
-    for (const itemMedia of mySofaMedias) {
+    for (const itemMedia of myQuiltMedias) {
       mediaData.push({
         mediaId: itemMedia.mediaId,
         mediaType: itemMedia.mediaType,
@@ -126,21 +125,21 @@ export class MySofasManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MySofasResponse.fromModel(mySofa, mediaData),
+      MyQuiltsResponse.fromModel(myQuilt, mediaData),
     );
   }
 
-  public async putMySofas$(
+  public async putMyQuilts$(
     payload: TokenPayload,
-    params: MySofasParams,
-    request: MySofasRequest,
-  ): Promise<ManagerResponse<MySofasResponse | null>> {
-    const mySofa = await this.provider.getMySofa(payload.accountId, parseInt(params.sofaId));
-    if (mySofa === null) {
+    params: MyQuiltsParams,
+    request: MyQuiltsRequest,
+  ): Promise<ManagerResponse<MyQuiltsResponse | null>> {
+    const myQuilt = await this.provider.getMyQuilt(payload.accountId, parseInt(params.quiltId));
+    if (myQuilt === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.SOFA_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.QUILT_NOT_FOUND)],
         null,
       );
     }
@@ -172,18 +171,17 @@ export class MySofasManager implements IManager {
         );
       }
     }
-    const mySofaMedias = await this.provider.getItemMedias(mySofa.itemId);
-    const myUpdatedSofa = await this.provider.updateSofa(
+    const myQuiltMedias = await this.provider.getItemMedias(myQuilt.itemId);
+    const myUpdatedQuilt = await this.provider.updateQuilt(
       payload.accountId,
-      mySofaMedias.map((itemMedia) => itemMedia.mediaId),
-      mySofa.sofaId,
-      mySofa.itemId,
+      myQuiltMedias.map((itemMedia) => itemMedia.mediaId),
+      myQuilt.quiltId,
+      myQuilt.itemId,
       request.name,
       request.description,
       request.mediaIds,
-      request.isCushioned,
-      request.sofaType,
-      request.sofaMaterial,
+      request.quiltSize,
+      request.quiltMaterial,
     );
     const mediaData: MediaData[] = [];
     for (const media of medias) {
@@ -200,28 +198,28 @@ export class MySofasManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MySofasResponse.fromModel(myUpdatedSofa, mediaData),
+      MyQuiltsResponse.fromModel(myUpdatedQuilt, mediaData),
     );
   }
 
-  public async deleteMySofas$(
+  public async deleteMyQuilts$(
     payload: TokenPayload,
-    params: MySofasParams,
+    params: MyQuiltsParams,
   ): Promise<ManagerResponse<null>> {
-    const mySofa = await this.provider.getMySofa(payload.accountId, parseInt(params.sofaId));
-    if (mySofa === null) {
+    const myQuilt = await this.provider.getMyQuilt(payload.accountId, parseInt(params.quiltId));
+    if (myQuilt === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.SOFA_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.QUILT_NOT_FOUND)],
         null,
       );
     }
-    const mySofaMedias = await this.provider.getItemMedias(mySofa.itemId);
-    await this.provider.deleteSofa(
-      mySofa.itemId,
-      mySofa.sofaId,
-      mySofaMedias.map((mySofaMedia) => mySofaMedia.mediaId),
+    const myQuiltMedias = await this.provider.getItemMedias(myQuilt.itemId);
+    await this.provider.deleteQuilt(
+      myQuilt.itemId,
+      myQuilt.quiltId,
+      myQuiltMedias.map((myQuiltMedia) => myQuiltMedia.mediaId),
     );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);
   }

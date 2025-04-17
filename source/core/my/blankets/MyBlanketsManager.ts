@@ -8,39 +8,41 @@ import { FileUtil } from "../../../app/utils/FileUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { MediaModel } from "../../../common/models/MediaModel";
 import { BucketModule } from "../../../modules/bucket/module";
-import { MySofasProvider } from "./MySofasProvider";
-import type { MySofasParams } from "./schemas/MySofasParams";
-import type { MySofasRequest } from "./schemas/MySofasRequest";
-import { MySofasResponse } from "./schemas/MySofasResponse";
+import { MyBlanketsProvider } from "./MyBlanketsProvider";
+import type { MyBlanketsParams } from "./schemas/MyBlanketsParams";
+import type { MyBlanketsRequest } from "./schemas/MyBlanketsRequest";
+import { MyBlanketsResponse } from "./schemas/MyBlanketsResponse";
 
-export class MySofasManager implements IManager {
-  public constructor(private readonly provider = new MySofasProvider()) {}
+export class MyBlanketsManager implements IManager {
+  public constructor(private readonly provider = new MyBlanketsProvider()) {}
 
-  public async getMySofas(payload: TokenPayload): Promise<ManagerResponse<MySofasResponse[]>> {
-    const mySofas = await this.provider.getMySofas(payload.accountId);
-    const responses: MySofasResponse[] = [];
-    for (const mySofa of mySofas) {
-      const mySofaMedias = await this.provider.getItemMedias(mySofa.itemId);
-      const mySofaMediasData: MediaData[] = [];
-      for (const mySofaMedia of mySofaMedias) {
-        mySofaMediasData.push({
-          mediaId: mySofaMedia.mediaId,
-          mediaType: mySofaMedia.mediaType,
-          extension: mySofaMedia.extension,
+  public async getMyBlankets(
+    payload: TokenPayload,
+  ): Promise<ManagerResponse<MyBlanketsResponse[]>> {
+    const myBlankets = await this.provider.getMyBlankets(payload.accountId);
+    const responses: MyBlanketsResponse[] = [];
+    for (const myBlanket of myBlankets) {
+      const myBlanketMedias = await this.provider.getItemMedias(myBlanket.itemId);
+      const myBlanketMediasData: MediaData[] = [];
+      for (const myBlanketMedia of myBlanketMedias) {
+        myBlanketMediasData.push({
+          mediaId: myBlanketMedia.mediaId,
+          mediaType: myBlanketMedia.mediaType,
+          extension: myBlanketMedia.extension,
           url: await BucketModule.instance.getAccessUrl(
-            FileUtil.getName(mySofaMedia.mediaId.toString(), mySofaMedia.extension),
+            FileUtil.getName(myBlanketMedia.mediaId.toString(), myBlanketMedia.extension),
           ),
         });
       }
-      responses.push(MySofasResponse.fromModel(mySofa, mySofaMediasData));
+      responses.push(MyBlanketsResponse.fromModel(myBlanket, myBlanketMediasData));
     }
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
   }
 
-  public async postMySofas(
+  public async postMyBlankets(
     payload: TokenPayload,
-    request: MySofasRequest,
-  ): Promise<ManagerResponse<MySofasResponse | null>> {
+    request: MyBlanketsRequest,
+  ): Promise<ManagerResponse<MyBlanketsResponse | null>> {
     const myMedias = await this.provider.getMyMedias(payload.accountId);
     const medias: MediaModel[] = [];
     for (const mediaId of request.mediaIds) {
@@ -69,14 +71,13 @@ export class MySofasManager implements IManager {
         );
       }
     }
-    const mySofa = await this.provider.createSofa(
+    const myBlanket = await this.provider.createBlanket(
       payload.accountId,
       request.name,
       request.description,
       request.mediaIds,
-      request.isCushioned,
-      request.sofaType,
-      request.sofaMaterial,
+      request.blanketSize,
+      request.blanketMaterial,
     );
     const mediaData: MediaData[] = [];
     for (const media of medias) {
@@ -93,26 +94,29 @@ export class MySofasManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MySofasResponse.fromModel(mySofa, mediaData),
+      MyBlanketsResponse.fromModel(myBlanket, mediaData),
     );
   }
 
-  public async getMySofas$(
+  public async getMyBlankets$(
     payload: TokenPayload,
-    params: MySofasParams,
-  ): Promise<ManagerResponse<MySofasResponse | null>> {
-    const mySofa = await this.provider.getMySofa(payload.accountId, parseInt(params.sofaId));
-    if (mySofa === null) {
+    params: MyBlanketsParams,
+  ): Promise<ManagerResponse<MyBlanketsResponse | null>> {
+    const myBlanket = await this.provider.getMyBlanket(
+      payload.accountId,
+      parseInt(params.blanketId),
+    );
+    if (myBlanket === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.SOFA_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.BLANKET_NOT_FOUND)],
         null,
       );
     }
-    const mySofaMedias = await this.provider.getItemMedias(mySofa.itemId);
+    const myBlanketMedias = await this.provider.getItemMedias(myBlanket.itemId);
     const mediaData: MediaData[] = [];
-    for (const itemMedia of mySofaMedias) {
+    for (const itemMedia of myBlanketMedias) {
       mediaData.push({
         mediaId: itemMedia.mediaId,
         mediaType: itemMedia.mediaType,
@@ -126,21 +130,24 @@ export class MySofasManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MySofasResponse.fromModel(mySofa, mediaData),
+      MyBlanketsResponse.fromModel(myBlanket, mediaData),
     );
   }
 
-  public async putMySofas$(
+  public async putMyBlankets$(
     payload: TokenPayload,
-    params: MySofasParams,
-    request: MySofasRequest,
-  ): Promise<ManagerResponse<MySofasResponse | null>> {
-    const mySofa = await this.provider.getMySofa(payload.accountId, parseInt(params.sofaId));
-    if (mySofa === null) {
+    params: MyBlanketsParams,
+    request: MyBlanketsRequest,
+  ): Promise<ManagerResponse<MyBlanketsResponse | null>> {
+    const myBlanket = await this.provider.getMyBlanket(
+      payload.accountId,
+      parseInt(params.blanketId),
+    );
+    if (myBlanket === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.SOFA_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.BLANKET_NOT_FOUND)],
         null,
       );
     }
@@ -172,18 +179,17 @@ export class MySofasManager implements IManager {
         );
       }
     }
-    const mySofaMedias = await this.provider.getItemMedias(mySofa.itemId);
-    const myUpdatedSofa = await this.provider.updateSofa(
+    const myBlanketMedias = await this.provider.getItemMedias(myBlanket.itemId);
+    const myUpdatedBlanket = await this.provider.updateBlanket(
       payload.accountId,
-      mySofaMedias.map((itemMedia) => itemMedia.mediaId),
-      mySofa.sofaId,
-      mySofa.itemId,
+      myBlanketMedias.map((itemMedia) => itemMedia.mediaId),
+      myBlanket.blanketId,
+      myBlanket.itemId,
       request.name,
       request.description,
       request.mediaIds,
-      request.isCushioned,
-      request.sofaType,
-      request.sofaMaterial,
+      request.blanketSize,
+      request.blanketMaterial,
     );
     const mediaData: MediaData[] = [];
     for (const media of medias) {
@@ -200,28 +206,31 @@ export class MySofasManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MySofasResponse.fromModel(myUpdatedSofa, mediaData),
+      MyBlanketsResponse.fromModel(myUpdatedBlanket, mediaData),
     );
   }
 
-  public async deleteMySofas$(
+  public async deleteMyBlankets$(
     payload: TokenPayload,
-    params: MySofasParams,
+    params: MyBlanketsParams,
   ): Promise<ManagerResponse<null>> {
-    const mySofa = await this.provider.getMySofa(payload.accountId, parseInt(params.sofaId));
-    if (mySofa === null) {
+    const myBlanket = await this.provider.getMyBlanket(
+      payload.accountId,
+      parseInt(params.blanketId),
+    );
+    if (myBlanket === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.SOFA_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.BLANKET_NOT_FOUND)],
         null,
       );
     }
-    const mySofaMedias = await this.provider.getItemMedias(mySofa.itemId);
-    await this.provider.deleteSofa(
-      mySofa.itemId,
-      mySofa.sofaId,
-      mySofaMedias.map((mySofaMedia) => mySofaMedia.mediaId),
+    const myBlanketMedias = await this.provider.getItemMedias(myBlanket.itemId);
+    await this.provider.deleteBlanket(
+      myBlanket.itemId,
+      myBlanket.blanketId,
+      myBlanketMedias.map((myBlanketMedia) => myBlanketMedia.mediaId),
     );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);
   }

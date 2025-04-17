@@ -9,10 +9,20 @@ export class MySofasResponse implements IResponse {
     public readonly name: string,
     public readonly description: string,
     public readonly medias: MediaData[],
+    public readonly isCushioned: boolean | null,
     public readonly sofaType: SofaType | null,
+    public readonly sofaMaterial: string | null,
   ) {}
 
   public static fromModel(model: SofaViewModel, medias: MediaData[]): MySofasResponse {
-    return new MySofasResponse(model.sofaId, model.name, model.description, medias, model.sofaType);
+    return new MySofasResponse(
+      model.sofaId,
+      model.name,
+      model.description,
+      medias,
+      model.isCushioned,
+      model.sofaType,
+      model.sofaMaterial,
+    );
   }
 }

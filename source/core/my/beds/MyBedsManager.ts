@@ -74,7 +74,7 @@ export class MyBedsManager implements IManager {
       request.name,
       request.description,
       request.mediaIds,
-      request.bedType,
+      request.bedSize,
     );
     const mediaData: MediaData[] = [];
     for (const media of medias) {
@@ -179,7 +179,7 @@ export class MyBedsManager implements IManager {
       request.name,
       request.description,
       request.mediaIds,
-      request.bedType,
+      request.bedSize,
     );
     const mediaData: MediaData[] = [];
     for (const media of medias) {

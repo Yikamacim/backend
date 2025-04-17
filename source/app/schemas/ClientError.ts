@@ -131,6 +131,12 @@ export enum ClientErrorCode {
   //  *  *  815XX: /my/chairs errors
   INVALID_CHAIR_ID = 81500,
   CHAIR_NOT_FOUND = 81501,
+  //  *  *  816XX: /my/quilts errors
+  INVALID_QUILT_ID = 81600,
+  QUILT_NOT_FOUND = 81601,
+  //  *  *  817XX: /my/blankets errors
+  INVALID_BLANKET_ID = 81700,
+  BLANKET_NOT_FOUND = 81701,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -258,6 +264,12 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   //  *  *  815XX: /my/chairs errors
   [ClientErrorCode.INVALID_CHAIR_ID]: "Provided chair id was invalid.",
   [ClientErrorCode.CHAIR_NOT_FOUND]: "Account doesn't have a chair with the provided id.",
+  //  *  *  816XX: /my/quilts errors
+  [ClientErrorCode.INVALID_QUILT_ID]: "Provided quilt id was invalid.",
+  [ClientErrorCode.QUILT_NOT_FOUND]: "Account doesn't have a quilt with the provided id.",
+  // *  *  817XX: /my/blankets errors
+  [ClientErrorCode.INVALID_BLANKET_ID]: "Provided blanket id was invalid.",
+  [ClientErrorCode.BLANKET_NOT_FOUND]: "Account doesn't have a blanket with the provided id.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

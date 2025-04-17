@@ -4,17 +4,17 @@ import type { IProvider } from "../../../app/interfaces/IProvider";
 import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import type { SofaMaterial } from "../../../common/enums/SofaMaterial";
-import type { SofaType } from "../../../common/enums/SofaType";
-import { SofaModel } from "../../../common/models/SofaModel";
-import { SofaViewModel } from "../../../common/models/SofaViewModel";
+import type { BlanketMaterial } from "../../../common/enums/BlanketMaterial";
+import type { BlanketSize } from "../../../common/enums/BlanketSize";
+import { BlanketModel } from "../../../common/models/BlanketModel";
+import { BlanketViewModel } from "../../../common/models/BlanketViewModel";
 import { ItemMediaProvider } from "../../../common/providers/ItemMediaProvider";
 import { ItemProvider } from "../../../common/providers/ItemProvider";
 import { MediaProvider } from "../../../common/providers/MediaProvider";
-import { SofaQueries } from "../../../common/queries/SofaQueries";
-import { SofaViewQueries } from "../../../common/queries/SofaViewQueries";
+import { BlanketQueries } from "../../../common/queries/BlanketQueries";
+import { BlanketViewQueries } from "../../../common/queries/BlanketViewQueries";
 
-export class MySofasProvider implements IProvider {
+export class MyBlanketsProvider implements IProvider {
   public constructor(
     private readonly itemProvider = new ItemProvider(),
     private readonly itemMediaProvider = new ItemMediaProvider(),
@@ -43,100 +43,100 @@ export class MySofasProvider implements IProvider {
   public getMyMedias: typeof this.mediaProvider.getMyMedias;
   public partialUpdateMedias: typeof this.mediaProvider.partialUpdateMedias;
 
-  public async getMySofas(accountId: number): Promise<ProviderResponse<SofaViewModel[]>> {
+  public async getMyBlankets(accountId: number): Promise<ProviderResponse<BlanketViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(SofaViewQueries.GET_SOFAS_$ACID, [accountId]);
+      const results = await DbConstants.POOL.query(BlanketViewQueries.GET_BLANKETS_$ACID, [
+        accountId,
+      ]);
       const records: unknown[] = results.rows;
-      return await ResponseUtil.providerResponse(SofaViewModel.fromRecords(records));
+      return await ResponseUtil.providerResponse(BlanketViewModel.fromRecords(records));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async getMySofa(
+  public async getMyBlanket(
     accountId: number,
-    sofaId: number,
-  ): Promise<ProviderResponse<SofaViewModel | null>> {
+    blanketId: number,
+  ): Promise<ProviderResponse<BlanketViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const mySofa = await this.partialGetMySofa(accountId, sofaId);
-      if (mySofa === null) {
+      const myBlanket = await this.partialGetMyBlanket(accountId, blanketId);
+      if (myBlanket === null) {
         return await ResponseUtil.providerResponse(null);
       }
-      return await ResponseUtil.providerResponse(mySofa);
+      return await ResponseUtil.providerResponse(myBlanket);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async createSofa(
+  public async createBlanket(
     accountId: number,
     name: string,
     description: string,
     mediaIds: number[],
-    isCushioned: boolean | null,
-    sofaType: SofaType | null,
-    sofaMaterial: SofaMaterial | null,
-  ): Promise<ProviderResponse<SofaViewModel>> {
+    blanketSize: BlanketSize | null,
+    blanketMaterial: BlanketMaterial | null,
+  ): Promise<ProviderResponse<BlanketViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const item = await this.partialCreateItem(accountId, name, description);
-      const sofa = await this.partialCreateSofa(item.itemId, isCushioned, sofaType, sofaMaterial);
+      const blanket = await this.partialCreateBlanket(item.itemId, blanketSize, blanketMaterial);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, true);
-      const sofaView = await this.partialGetMySofa(accountId, sofa.sofaId);
-      if (sofaView === null) {
-        throw new UnexpectedDatabaseStateError("Sofa was not created");
+      const blanketView = await this.partialGetMyBlanket(accountId, blanket.blanketId);
+      if (blanketView === null) {
+        throw new UnexpectedDatabaseStateError("Blanket was not created");
       }
-      return await ResponseUtil.providerResponse(sofaView);
+      return await ResponseUtil.providerResponse(blanketView);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async updateSofa(
+  public async updateBlanket(
     accountId: number,
     oldMediaIds: number[],
-    sofaId: number,
+    blanketId: number,
     itemId: number,
     name: string,
     description: string,
     mediaIds: number[],
-    isCushioned: boolean | null,
-    sofaType: SofaType | null,
-    sofaMaterial: SofaMaterial | null,
-  ): Promise<ProviderResponse<SofaViewModel>> {
+    blanketSize: BlanketSize | null,
+    blanketMaterial: BlanketMaterial | null,
+  ): Promise<ProviderResponse<BlanketViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await this.partialDeleteItemMedias(itemId, oldMediaIds);
       await this.partialUpdateMedias(oldMediaIds, false);
       await this.partialUpdateItem(itemId, name, description);
-      await this.partialUpdateSofa(sofaId, isCushioned, sofaType, sofaMaterial);
+      await this.partialUpdateBlanket(blanketId, blanketSize, blanketMaterial);
       await this.partialCreateItemMedias(itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, true);
-      const sofaView = await this.partialGetMySofa(accountId, sofaId);
-      if (sofaView === null) {
-        throw new UnexpectedDatabaseStateError("Sofa was not updated");
+      const blanketView = await this.partialGetMyBlanket(accountId, blanketId);
+      if (blanketView === null) {
+        throw new UnexpectedDatabaseStateError("Blanket was not updated");
       }
-      return await ResponseUtil.providerResponse(sofaView);
+      return await ResponseUtil.providerResponse(blanketView);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async deleteSofa(
+  public async deleteBlanket(
     itemId: number,
-    sofaId: number,
+    blanketId: number,
     mediaIds: number[],
   ): Promise<ProviderResponse<null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      await this.partialDeleteSofa(sofaId);
+      await this.partialDeleteBlanket(blanketId);
       await this.partialDeleteItemMedias(itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, false);
       await this.partialDeleteItem(itemId);
@@ -149,47 +149,48 @@ export class MySofasProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialCreateSofa(
+  private async partialCreateBlanket(
     itemId: number,
-    isCushioned: boolean | null,
-    sofaType: SofaType | null,
-    sofaMaterial: SofaMaterial | null,
-  ): Promise<SofaModel> {
+    blanketSize: BlanketSize | null,
+    blanketMaterial: BlanketMaterial | null,
+  ): Promise<BlanketModel> {
     const results = await DbConstants.POOL.query(
-      SofaQueries.INSERT_SOFA_RT_$ITID_$ISCH_$SFTP_$SMAT,
-      [itemId, isCushioned, sofaType, sofaMaterial],
+      BlanketQueries.INSERT_BLANKET_RT_$ITID_$QLSZ_$QMAT,
+      [itemId, blanketSize, blanketMaterial],
     );
     const record: unknown = results.rows[0];
-    return SofaModel.fromRecord(record);
+    return BlanketModel.fromRecord(record);
   }
 
-  private async partialUpdateSofa(
-    sofaId: number,
-    isCushioned: boolean | null,
-    sofaType: SofaType | null,
-    sofaMaterial: SofaMaterial | null,
-  ): Promise<SofaModel> {
+  private async partialUpdateBlanket(
+    blanketId: number,
+    blanketSize: BlanketSize | null,
+    blanketMaterial: BlanketMaterial | null,
+  ): Promise<BlanketModel> {
     const results = await DbConstants.POOL.query(
-      SofaQueries.UPDATE_SOFA_RT_$SFID_$ISCH_$SFTP_$SMAT,
-      [sofaId, isCushioned, sofaType, sofaMaterial],
+      BlanketQueries.UPDATE_BLANKET_RT_$BLID_$BLSZ_$BMAT,
+      [blanketId, blanketSize, blanketMaterial],
     );
     const record: unknown = results.rows[0];
-    return SofaModel.fromRecord(record);
+    return BlanketModel.fromRecord(record);
   }
 
-  private async partialDeleteSofa(sofaId: number): Promise<void> {
-    await DbConstants.POOL.query(SofaQueries.DELETE_SOFA_$SFID, [sofaId]);
+  private async partialDeleteBlanket(blanketId: number): Promise<void> {
+    await DbConstants.POOL.query(BlanketQueries.DELETE_BLANKET_$BLID, [blanketId]);
   }
 
-  private async partialGetMySofa(accountId: number, sofaId: number): Promise<SofaViewModel | null> {
-    const results = await DbConstants.POOL.query(SofaViewQueries.GET_SOFA_$ACID_$SFID, [
+  private async partialGetMyBlanket(
+    accountId: number,
+    blanketId: number,
+  ): Promise<BlanketViewModel | null> {
+    const results = await DbConstants.POOL.query(BlanketViewQueries.GET_BLANKET_$ACID_$BLID, [
       accountId,
-      sofaId,
+      blanketId,
     ]);
     const record: unknown = results.rows[0];
     if (!ProtoUtil.isProtovalid(record)) {
       return null;
     }
-    return SofaViewModel.fromRecord(record);
+    return BlanketViewModel.fromRecord(record);
   }
 }
