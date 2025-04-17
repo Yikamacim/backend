@@ -125,6 +125,12 @@ export enum ClientErrorCode {
   //  *  *  813XX: /my/beds errors
   INVALID_BED_ID = 81300,
   BED_NOT_FOUND = 81301,
+  //  *  *  814XX: /my/sofas errors
+  INVALID_SOFA_ID = 81400,
+  SOFA_NOT_FOUND = 81401,
+  //  *  *  815XX: /my/chairs errors
+  INVALID_CHAIR_ID = 81500,
+  CHAIR_NOT_FOUND = 81501,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -246,6 +252,12 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   //  *  *  813XX: /my/beds errors
   [ClientErrorCode.INVALID_BED_ID]: "Provided bed id was invalid.",
   [ClientErrorCode.BED_NOT_FOUND]: "Account doesn't have a bed with the provided id.",
+  //  *  *  814XX: /my/sofas errors
+  [ClientErrorCode.INVALID_SOFA_ID]: "Provided sofa id was invalid.",
+  [ClientErrorCode.SOFA_NOT_FOUND]: "Account doesn't have a sofa with the provided id.",
+  //  *  *  815XX: /my/chairs errors
+  [ClientErrorCode.INVALID_CHAIR_ID]: "Provided chair id was invalid.",
+  [ClientErrorCode.CHAIR_NOT_FOUND]: "Account doesn't have a chair with the provided id.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

@@ -4,16 +4,15 @@ import type { IProvider } from "../../../app/interfaces/IProvider";
 import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import type { BedType } from "../../../common/enums/BedType";
-import { BedModel } from "../../../common/models/BedModel";
-import { BedViewModel } from "../../../common/models/BedViewModel";
+import { ChairModel } from "../../../common/models/ChairModel";
+import { ChairViewModel } from "../../../common/models/ChairViewModel";
 import { ItemMediaProvider } from "../../../common/providers/ItemMediaProvider";
 import { ItemProvider } from "../../../common/providers/ItemProvider";
 import { MediaProvider } from "../../../common/providers/MediaProvider";
-import { BedQueries } from "../../../common/queries/BedQueries";
-import { BedViewQueries } from "../../../common/queries/BedViewQueries";
+import { ChairQueries } from "../../../common/queries/ChairQueries";
+import { ChairViewQueries } from "../../../common/queries/ChairViewQueries";
 
-export class MyBedsProvider implements IProvider {
+export class MyChairsProvider implements IProvider {
   public constructor(
     private readonly itemProvider = new ItemProvider(),
     private readonly itemMediaProvider = new ItemMediaProvider(),
@@ -42,96 +41,96 @@ export class MyBedsProvider implements IProvider {
   public getMyMedias: typeof this.mediaProvider.getMyMedias;
   public partialUpdateMedias: typeof this.mediaProvider.partialUpdateMedias;
 
-  public async getMyBeds(accountId: number): Promise<ProviderResponse<BedViewModel[]>> {
+  public async getMyChairs(accountId: number): Promise<ProviderResponse<ChairViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(BedViewQueries.GET_BEDS_$ACID, [accountId]);
+      const results = await DbConstants.POOL.query(ChairViewQueries.GET_CHAIRS_$ACID, [accountId]);
       const records: unknown[] = results.rows;
-      return await ResponseUtil.providerResponse(BedViewModel.fromRecords(records));
+      return await ResponseUtil.providerResponse(ChairViewModel.fromRecords(records));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async getMyBed(
+  public async getMyChair(
     accountId: number,
-    bedId: number,
-  ): Promise<ProviderResponse<BedViewModel | null>> {
+    chairId: number,
+  ): Promise<ProviderResponse<ChairViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const myBed = await this.partialGetMyBed(accountId, bedId);
-      if (myBed === null) {
+      const myChair = await this.partialGetMyChair(accountId, chairId);
+      if (myChair === null) {
         return await ResponseUtil.providerResponse(null);
       }
-      return await ResponseUtil.providerResponse(myBed);
+      return await ResponseUtil.providerResponse(myChair);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async createBed(
+  public async createChair(
     accountId: number,
     name: string,
     description: string,
     mediaIds: number[],
-    bedType: BedType | null,
-  ): Promise<ProviderResponse<BedViewModel>> {
+    quantity: number,
+  ): Promise<ProviderResponse<ChairViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const item = await this.partialCreateItem(accountId, name, description);
-      const bed = await this.partialCreateBed(item.itemId, bedType);
+      const chair = await this.partialCreateChair(item.itemId, quantity);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, true);
-      const bedView = await this.partialGetMyBed(accountId, bed.bedId);
-      if (bedView === null) {
-        throw new UnexpectedDatabaseStateError("Bed was not created");
+      const chairView = await this.partialGetMyChair(accountId, chair.chairId);
+      if (chairView === null) {
+        throw new UnexpectedDatabaseStateError("Chair was not created");
       }
-      return await ResponseUtil.providerResponse(bedView);
+      return await ResponseUtil.providerResponse(chairView);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async updateBed(
+  public async updateChair(
     accountId: number,
     oldMediaIds: number[],
-    bedId: number,
+    chairId: number,
     itemId: number,
     name: string,
     description: string,
     mediaIds: number[],
-    bedType: BedType | null,
-  ): Promise<ProviderResponse<BedViewModel>> {
+    quantity: number,
+  ): Promise<ProviderResponse<ChairViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await this.partialDeleteItemMedias(itemId, oldMediaIds);
       await this.partialUpdateMedias(oldMediaIds, false);
       await this.partialUpdateItem(itemId, name, description);
-      await this.partialUpdateBed(bedId, bedType);
+      await this.partialUpdateChair(chairId, quantity);
       await this.partialCreateItemMedias(itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, true);
-      const bedView = await this.partialGetMyBed(accountId, bedId);
-      if (bedView === null) {
-        throw new UnexpectedDatabaseStateError("Bed was not updated");
+      const chairView = await this.partialGetMyChair(accountId, chairId);
+      if (chairView === null) {
+        throw new UnexpectedDatabaseStateError("Chair was not updated");
       }
-      return await ResponseUtil.providerResponse(bedView);
+      return await ResponseUtil.providerResponse(chairView);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async deleteBed(
+  public async deleteChair(
     itemId: number,
-    bedId: number,
+    chairId: number,
     mediaIds: number[],
   ): Promise<ProviderResponse<null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      await this.partialDeleteBed(bedId);
+      await this.partialDeleteChair(chairId);
       await this.partialDeleteItemMedias(itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, false);
       await this.partialDeleteItem(itemId);
@@ -144,37 +143,40 @@ export class MyBedsProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialCreateBed(itemId: number, bedType: BedType | null): Promise<BedModel> {
-    const results = await DbConstants.POOL.query(BedQueries.INSERT_BED_RT_$ITID_$BDTP, [
+  private async partialCreateChair(itemId: number, quantity: number): Promise<ChairModel> {
+    const results = await DbConstants.POOL.query(ChairQueries.INSERT_CHAIR_RT_$ITID_$QTTY, [
       itemId,
-      bedType,
+      quantity,
     ]);
     const record: unknown = results.rows[0];
-    return BedModel.fromRecord(record);
+    return ChairModel.fromRecord(record);
   }
 
-  private async partialUpdateBed(bedId: number, bedType: BedType | null): Promise<BedModel> {
-    const results = await DbConstants.POOL.query(BedQueries.UPDATE_BED_RT_$BDID_$BDTP, [
-      bedId,
-      bedType,
+  private async partialUpdateChair(chairId: number, quantity: number): Promise<ChairModel> {
+    const results = await DbConstants.POOL.query(ChairQueries.UPDATE_CHAIR_RT_$CHID_$QTTY, [
+      chairId,
+      quantity,
     ]);
     const record: unknown = results.rows[0];
-    return BedModel.fromRecord(record);
+    return ChairModel.fromRecord(record);
   }
 
-  private async partialDeleteBed(bedId: number): Promise<void> {
-    await DbConstants.POOL.query(BedQueries.DELETE_BED_$BDID, [bedId]);
+  private async partialDeleteChair(chairId: number): Promise<void> {
+    await DbConstants.POOL.query(ChairQueries.DELETE_CHAIR_$CHID, [chairId]);
   }
 
-  private async partialGetMyBed(accountId: number, bedId: number): Promise<BedViewModel | null> {
-    const results = await DbConstants.POOL.query(BedViewQueries.GET_BED_$ACID_$BDID, [
+  private async partialGetMyChair(
+    accountId: number,
+    chairId: number,
+  ): Promise<ChairViewModel | null> {
+    const results = await DbConstants.POOL.query(ChairViewQueries.GET_CHAIR_$ACID_$SFID, [
       accountId,
-      bedId,
+      chairId,
     ]);
     const record: unknown = results.rows[0];
     if (!ProtoUtil.isProtovalid(record)) {
       return null;
     }
-    return BedViewModel.fromRecord(record);
+    return ChairViewModel.fromRecord(record);
   }
 }

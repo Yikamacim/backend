@@ -4,16 +4,16 @@ import type { IProvider } from "../../../app/interfaces/IProvider";
 import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import type { BedType } from "../../../common/enums/BedType";
-import { BedModel } from "../../../common/models/BedModel";
-import { BedViewModel } from "../../../common/models/BedViewModel";
+import type { SofaType } from "../../../common/enums/SofaType";
+import { SofaModel } from "../../../common/models/SofaModel";
+import { SofaViewModel } from "../../../common/models/SofaViewModel";
 import { ItemMediaProvider } from "../../../common/providers/ItemMediaProvider";
 import { ItemProvider } from "../../../common/providers/ItemProvider";
 import { MediaProvider } from "../../../common/providers/MediaProvider";
-import { BedQueries } from "../../../common/queries/BedQueries";
-import { BedViewQueries } from "../../../common/queries/BedViewQueries";
+import { SofaQueries } from "../../../common/queries/SofaQueries";
+import { SofaViewQueries } from "../../../common/queries/SofaViewQueries";
 
-export class MyBedsProvider implements IProvider {
+export class MySofasProvider implements IProvider {
   public constructor(
     private readonly itemProvider = new ItemProvider(),
     private readonly itemMediaProvider = new ItemMediaProvider(),
@@ -42,96 +42,96 @@ export class MyBedsProvider implements IProvider {
   public getMyMedias: typeof this.mediaProvider.getMyMedias;
   public partialUpdateMedias: typeof this.mediaProvider.partialUpdateMedias;
 
-  public async getMyBeds(accountId: number): Promise<ProviderResponse<BedViewModel[]>> {
+  public async getMySofas(accountId: number): Promise<ProviderResponse<SofaViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(BedViewQueries.GET_BEDS_$ACID, [accountId]);
+      const results = await DbConstants.POOL.query(SofaViewQueries.GET_SOFAS_$ACID, [accountId]);
       const records: unknown[] = results.rows;
-      return await ResponseUtil.providerResponse(BedViewModel.fromRecords(records));
+      return await ResponseUtil.providerResponse(SofaViewModel.fromRecords(records));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async getMyBed(
+  public async getMySofa(
     accountId: number,
-    bedId: number,
-  ): Promise<ProviderResponse<BedViewModel | null>> {
+    sofaId: number,
+  ): Promise<ProviderResponse<SofaViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const myBed = await this.partialGetMyBed(accountId, bedId);
-      if (myBed === null) {
+      const mySofa = await this.partialGetMySofa(accountId, sofaId);
+      if (mySofa === null) {
         return await ResponseUtil.providerResponse(null);
       }
-      return await ResponseUtil.providerResponse(myBed);
+      return await ResponseUtil.providerResponse(mySofa);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async createBed(
+  public async createSofa(
     accountId: number,
     name: string,
     description: string,
     mediaIds: number[],
-    bedType: BedType | null,
-  ): Promise<ProviderResponse<BedViewModel>> {
+    sofaType: SofaType | null,
+  ): Promise<ProviderResponse<SofaViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const item = await this.partialCreateItem(accountId, name, description);
-      const bed = await this.partialCreateBed(item.itemId, bedType);
+      const sofa = await this.partialCreateSofa(item.itemId, sofaType);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, true);
-      const bedView = await this.partialGetMyBed(accountId, bed.bedId);
-      if (bedView === null) {
-        throw new UnexpectedDatabaseStateError("Bed was not created");
+      const sofaView = await this.partialGetMySofa(accountId, sofa.sofaId);
+      if (sofaView === null) {
+        throw new UnexpectedDatabaseStateError("Sofa was not created");
       }
-      return await ResponseUtil.providerResponse(bedView);
+      return await ResponseUtil.providerResponse(sofaView);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async updateBed(
+  public async updateSofa(
     accountId: number,
     oldMediaIds: number[],
-    bedId: number,
+    sofaId: number,
     itemId: number,
     name: string,
     description: string,
     mediaIds: number[],
-    bedType: BedType | null,
-  ): Promise<ProviderResponse<BedViewModel>> {
+    sofaType: SofaType | null,
+  ): Promise<ProviderResponse<SofaViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await this.partialDeleteItemMedias(itemId, oldMediaIds);
       await this.partialUpdateMedias(oldMediaIds, false);
       await this.partialUpdateItem(itemId, name, description);
-      await this.partialUpdateBed(bedId, bedType);
+      await this.partialUpdateSofa(sofaId, sofaType);
       await this.partialCreateItemMedias(itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, true);
-      const bedView = await this.partialGetMyBed(accountId, bedId);
-      if (bedView === null) {
-        throw new UnexpectedDatabaseStateError("Bed was not updated");
+      const sofaView = await this.partialGetMySofa(accountId, sofaId);
+      if (sofaView === null) {
+        throw new UnexpectedDatabaseStateError("Sofa was not updated");
       }
-      return await ResponseUtil.providerResponse(bedView);
+      return await ResponseUtil.providerResponse(sofaView);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async deleteBed(
+  public async deleteSofa(
     itemId: number,
-    bedId: number,
+    sofaId: number,
     mediaIds: number[],
   ): Promise<ProviderResponse<null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      await this.partialDeleteBed(bedId);
+      await this.partialDeleteSofa(sofaId);
       await this.partialDeleteItemMedias(itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, false);
       await this.partialDeleteItem(itemId);
@@ -144,37 +144,37 @@ export class MyBedsProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialCreateBed(itemId: number, bedType: BedType | null): Promise<BedModel> {
-    const results = await DbConstants.POOL.query(BedQueries.INSERT_BED_RT_$ITID_$BDTP, [
+  private async partialCreateSofa(itemId: number, sofaType: SofaType | null): Promise<SofaModel> {
+    const results = await DbConstants.POOL.query(SofaQueries.INSERT_SOFA_RT_$ITID_$SFTP, [
       itemId,
-      bedType,
+      sofaType,
     ]);
     const record: unknown = results.rows[0];
-    return BedModel.fromRecord(record);
+    return SofaModel.fromRecord(record);
   }
 
-  private async partialUpdateBed(bedId: number, bedType: BedType | null): Promise<BedModel> {
-    const results = await DbConstants.POOL.query(BedQueries.UPDATE_BED_RT_$BDID_$BDTP, [
-      bedId,
-      bedType,
+  private async partialUpdateSofa(sofaId: number, sofaType: SofaType | null): Promise<SofaModel> {
+    const results = await DbConstants.POOL.query(SofaQueries.UPDATE_SOFA_RT_$SFID_$SFTP, [
+      sofaId,
+      sofaType,
     ]);
     const record: unknown = results.rows[0];
-    return BedModel.fromRecord(record);
+    return SofaModel.fromRecord(record);
   }
 
-  private async partialDeleteBed(bedId: number): Promise<void> {
-    await DbConstants.POOL.query(BedQueries.DELETE_BED_$BDID, [bedId]);
+  private async partialDeleteSofa(sofaId: number): Promise<void> {
+    await DbConstants.POOL.query(SofaQueries.DELETE_SOFA_$SFID, [sofaId]);
   }
 
-  private async partialGetMyBed(accountId: number, bedId: number): Promise<BedViewModel | null> {
-    const results = await DbConstants.POOL.query(BedViewQueries.GET_BED_$ACID_$BDID, [
+  private async partialGetMySofa(accountId: number, sofaId: number): Promise<SofaViewModel | null> {
+    const results = await DbConstants.POOL.query(SofaViewQueries.GET_SOFA_$ACID_$SFID, [
       accountId,
-      bedId,
+      sofaId,
     ]);
     const record: unknown = results.rows[0];
     if (!ProtoUtil.isProtovalid(record)) {
       return null;
     }
-    return BedViewModel.fromRecord(record);
+    return SofaViewModel.fromRecord(record);
   }
 }

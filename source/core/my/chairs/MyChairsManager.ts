@@ -8,39 +8,39 @@ import { FileUtil } from "../../../app/utils/FileUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { MediaModel } from "../../../common/models/MediaModel";
 import { BucketModule } from "../../../modules/bucket/module";
-import { MyBedsProvider } from "./MyBedsProvider";
-import type { MyBedsParams } from "./schemas/MyBedsParams";
-import type { MyBedsRequest } from "./schemas/MyBedsRequest";
-import { MyBedsResponse } from "./schemas/MyBedsResponse";
+import { MyChairsProvider } from "./MyChairsProvider";
+import type { MyChairsParams } from "./schemas/MyChairsParams";
+import type { MyChairsRequest } from "./schemas/MyChairsRequest";
+import { MyChairsResponse } from "./schemas/MyChairsResponse";
 
-export class MyBedsManager implements IManager {
-  public constructor(private readonly provider = new MyBedsProvider()) {}
+export class MyChairsManager implements IManager {
+  public constructor(private readonly provider = new MyChairsProvider()) {}
 
-  public async getMyBeds(payload: TokenPayload): Promise<ManagerResponse<MyBedsResponse[]>> {
-    const myBeds = await this.provider.getMyBeds(payload.accountId);
-    const responses: MyBedsResponse[] = [];
-    for (const myBed of myBeds) {
-      const myBedMedias = await this.provider.getItemMedias(myBed.itemId);
-      const myBedMediasData: MediaData[] = [];
-      for (const myBedMedia of myBedMedias) {
-        myBedMediasData.push({
-          mediaId: myBedMedia.mediaId,
-          mediaType: myBedMedia.mediaType,
-          extension: myBedMedia.extension,
+  public async getMyChairs(payload: TokenPayload): Promise<ManagerResponse<MyChairsResponse[]>> {
+    const myChairs = await this.provider.getMyChairs(payload.accountId);
+    const responses: MyChairsResponse[] = [];
+    for (const myChair of myChairs) {
+      const myChairMedias = await this.provider.getItemMedias(myChair.itemId);
+      const myChairMediasData: MediaData[] = [];
+      for (const myChairMedia of myChairMedias) {
+        myChairMediasData.push({
+          mediaId: myChairMedia.mediaId,
+          mediaType: myChairMedia.mediaType,
+          extension: myChairMedia.extension,
           url: await BucketModule.instance.getAccessUrl(
-            FileUtil.getName(myBedMedia.mediaId.toString(), myBedMedia.extension),
+            FileUtil.getName(myChairMedia.mediaId.toString(), myChairMedia.extension),
           ),
         });
       }
-      responses.push(MyBedsResponse.fromModel(myBed, myBedMediasData));
+      responses.push(MyChairsResponse.fromModel(myChair, myChairMediasData));
     }
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
   }
 
-  public async postMyBeds(
+  public async postMyChairs(
     payload: TokenPayload,
-    request: MyBedsRequest,
-  ): Promise<ManagerResponse<MyBedsResponse | null>> {
+    request: MyChairsRequest,
+  ): Promise<ManagerResponse<MyChairsResponse | null>> {
     const myMedias = await this.provider.getMyMedias(payload.accountId);
     const medias: MediaModel[] = [];
     for (const mediaId of request.mediaIds) {
@@ -69,12 +69,12 @@ export class MyBedsManager implements IManager {
         );
       }
     }
-    const myBed = await this.provider.createBed(
+    const myChair = await this.provider.createChair(
       payload.accountId,
       request.name,
       request.description,
       request.mediaIds,
-      request.bedType,
+      request.quantity,
     );
     const mediaData: MediaData[] = [];
     for (const media of medias) {
@@ -91,26 +91,26 @@ export class MyBedsManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyBedsResponse.fromModel(myBed, mediaData),
+      MyChairsResponse.fromModel(myChair, mediaData),
     );
   }
 
-  public async getMyBeds$(
+  public async getMyChairs$(
     payload: TokenPayload,
-    params: MyBedsParams,
-  ): Promise<ManagerResponse<MyBedsResponse | null>> {
-    const myBed = await this.provider.getMyBed(payload.accountId, parseInt(params.bedId));
-    if (myBed === null) {
+    params: MyChairsParams,
+  ): Promise<ManagerResponse<MyChairsResponse | null>> {
+    const myChair = await this.provider.getMyChair(payload.accountId, parseInt(params.chairId));
+    if (myChair === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BED_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.SOFA_NOT_FOUND)],
         null,
       );
     }
-    const myBedMedias = await this.provider.getItemMedias(myBed.itemId);
+    const myChairMedias = await this.provider.getItemMedias(myChair.itemId);
     const mediaData: MediaData[] = [];
-    for (const itemMedia of myBedMedias) {
+    for (const itemMedia of myChairMedias) {
       mediaData.push({
         mediaId: itemMedia.mediaId,
         mediaType: itemMedia.mediaType,
@@ -124,21 +124,21 @@ export class MyBedsManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBedsResponse.fromModel(myBed, mediaData),
+      MyChairsResponse.fromModel(myChair, mediaData),
     );
   }
 
-  public async putMyBeds$(
+  public async putMyChairs$(
     payload: TokenPayload,
-    params: MyBedsParams,
-    request: MyBedsRequest,
-  ): Promise<ManagerResponse<MyBedsResponse | null>> {
-    const myBed = await this.provider.getMyBed(payload.accountId, parseInt(params.bedId));
-    if (myBed === null) {
+    params: MyChairsParams,
+    request: MyChairsRequest,
+  ): Promise<ManagerResponse<MyChairsResponse | null>> {
+    const myChair = await this.provider.getMyChair(payload.accountId, parseInt(params.chairId));
+    if (myChair === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BED_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.SOFA_NOT_FOUND)],
         null,
       );
     }
@@ -170,16 +170,16 @@ export class MyBedsManager implements IManager {
         );
       }
     }
-    const myBedMedias = await this.provider.getItemMedias(myBed.itemId);
-    const myUpdatedBed = await this.provider.updateBed(
+    const myChairMedias = await this.provider.getItemMedias(myChair.itemId);
+    const myUpdatedChair = await this.provider.updateChair(
       payload.accountId,
-      myBedMedias.map((itemMedia) => itemMedia.mediaId),
-      myBed.bedId,
-      myBed.itemId,
+      myChairMedias.map((itemMedia) => itemMedia.mediaId),
+      myChair.chairId,
+      myChair.itemId,
       request.name,
       request.description,
       request.mediaIds,
-      request.bedType,
+      request.quantity,
     );
     const mediaData: MediaData[] = [];
     for (const media of medias) {
@@ -196,28 +196,28 @@ export class MyBedsManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyBedsResponse.fromModel(myUpdatedBed, mediaData),
+      MyChairsResponse.fromModel(myUpdatedChair, mediaData),
     );
   }
 
-  public async deleteMyBeds$(
+  public async deleteMyChairs$(
     payload: TokenPayload,
-    params: MyBedsParams,
+    params: MyChairsParams,
   ): Promise<ManagerResponse<null>> {
-    const myBed = await this.provider.getMyBed(payload.accountId, parseInt(params.bedId));
-    if (myBed === null) {
+    const myChair = await this.provider.getMyChair(payload.accountId, parseInt(params.chairId));
+    if (myChair === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BED_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.SOFA_NOT_FOUND)],
         null,
       );
     }
-    const myBedMedias = await this.provider.getItemMedias(myBed.itemId);
-    await this.provider.deleteBed(
-      myBed.itemId,
-      myBed.bedId,
-      myBedMedias.map((myBedMedia) => myBedMedia.mediaId),
+    const myChairMedias = await this.provider.getItemMedias(myChair.itemId);
+    await this.provider.deleteChair(
+      myChair.itemId,
+      myChair.chairId,
+      myChairMedias.map((myChairMedia) => myChairMedia.mediaId),
     );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);
   }

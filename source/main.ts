@@ -20,9 +20,11 @@ import { LogoutBuilder } from "./core/logout/LogoutBuilder";
 import { MyAddressesBuilder } from "./core/my/addresses/MyAddressesBuilder";
 import { MyBedsBuilder } from "./core/my/beds/MyBedsBuilder";
 import { MyCarpetsBuilder } from "./core/my/carpets/MyCarpetsBuilder";
+import { MyChairsBuilder } from "./core/my/chairs/MyChairsBuilder";
 import { MyCurtainsBuilder } from "./core/my/curtains/MyCurtainsBuilder";
 import { MyMediasBuilder } from "./core/my/medias/MyMediasBuilder";
 import { MySessionsBuilder } from "./core/my/sessions/MySessionsBuilder";
+import { MySofasBuilder } from "./core/my/sofas/MySofasBuilder";
 import { MyVehiclesBuilder } from "./core/my/vehicles/MyVehiclesBuilder";
 import { NeighborhoodsBuilder } from "./core/neighborhoods/NeighborhoodsBuilder";
 import { ProvincesBuilder } from "./core/provinces/ProvincesBuilder";
@@ -124,6 +126,12 @@ app.use(
   new MyCarpetsBuilder().router,
 );
 app.use(
+  // my/chairs
+  MyChairsBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  new MyChairsBuilder().router,
+);
+app.use(
   // my/curtains
   MyCurtainsBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
@@ -140,6 +148,12 @@ app.use(
   MySessionsBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
   new MySessionsBuilder().router,
+);
+app.use(
+  // my/sofas
+  MySofasBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  new MySofasBuilder().router,
 );
 app.use(
   // my/vehicles

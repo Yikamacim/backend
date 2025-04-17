@@ -6,24 +6,24 @@ import type { IController } from "../../../app/interfaces/IController";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { AuthModule } from "../../../modules/auth/module";
-import { MyBedsManager } from "./MyBedsManager";
-import { MyBedsParams } from "./schemas/MyBedsParams";
-import { MyBedsRequest } from "./schemas/MyBedsRequest";
-import type { MyBedsResponse } from "./schemas/MyBedsResponse";
+import { MyChairsManager } from "./MyChairsManager";
+import { MyChairsParams } from "./schemas/MyChairsParams";
+import { MyChairsRequest } from "./schemas/MyChairsRequest";
+import type { MyChairsResponse } from "./schemas/MyChairsResponse";
 
-export class MyBedsController implements IController {
-  public constructor(private readonly manager = new MyBedsManager()) {}
+export class MyChairsController implements IController {
+  public constructor(private readonly manager = new MyChairsManager()) {}
 
-  public async getMyBeds(
+  public async getMyChairs(
     _: ExpressRequest,
-    res: ControllerResponse<MyBedsResponse[], Tokens | null>,
+    res: ControllerResponse<MyChairsResponse[], Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
       const payload = PayloadHelper.getPayload(res);
       // >----------< LOGIC >----------<
-      const out = await this.manager.getMyBeds(payload);
+      const out = await this.manager.getMyChairs(payload);
       // >----------< RESPONSE >----------<
       if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
@@ -48,16 +48,16 @@ export class MyBedsController implements IController {
     }
   }
 
-  public async postMyBeds(
+  public async postMyChairs(
     req: ExpressRequest,
-    res: ControllerResponse<MyBedsResponse | null, Tokens | null>,
+    res: ControllerResponse<MyChairsResponse | null, Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
       const payload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const request = MyBedsRequest.parse(req);
+      const request = MyChairsRequest.parse(req);
       if (request.clientErrors.length > 0 || request.data === null) {
         return ResponseUtil.controllerResponse(
           res,
@@ -69,7 +69,7 @@ export class MyBedsController implements IController {
         );
       }
       // >----------< LOGIC >----------<
-      const out = await this.manager.postMyBeds(payload, request.data);
+      const out = await this.manager.postMyChairs(payload, request.data);
       // >----------< RESPONSE >----------<
       if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
@@ -94,16 +94,16 @@ export class MyBedsController implements IController {
     }
   }
 
-  public async getMyBeds$(
+  public async getMyChairs$(
     req: ExpressRequest,
-    res: ControllerResponse<MyBedsResponse | null, Tokens | null>,
+    res: ControllerResponse<MyChairsResponse | null, Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
       const payload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const params = MyBedsParams.parse(req);
+      const params = MyChairsParams.parse(req);
       if (params.clientErrors.length > 0 || params.data === null) {
         return ResponseUtil.controllerResponse(
           res,
@@ -115,7 +115,7 @@ export class MyBedsController implements IController {
         );
       }
       // >----------< LOGIC >----------<
-      const out = await this.manager.getMyBeds$(payload, params.data);
+      const out = await this.manager.getMyChairs$(payload, params.data);
       // >----------< RESPONSE >----------<
       if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
@@ -140,16 +140,16 @@ export class MyBedsController implements IController {
     }
   }
 
-  public async putMyBeds$(
+  public async putMyChairs$(
     req: ExpressRequest,
-    res: ControllerResponse<MyBedsResponse | null, Tokens | null>,
+    res: ControllerResponse<MyChairsResponse | null, Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
       const payload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const params = MyBedsParams.parse(req);
+      const params = MyChairsParams.parse(req);
       if (params.clientErrors.length > 0 || params.data === null) {
         return ResponseUtil.controllerResponse(
           res,
@@ -160,7 +160,7 @@ export class MyBedsController implements IController {
           null,
         );
       }
-      const request = MyBedsRequest.parse(req);
+      const request = MyChairsRequest.parse(req);
       if (request.clientErrors.length > 0 || request.data === null) {
         return ResponseUtil.controllerResponse(
           res,
@@ -172,7 +172,7 @@ export class MyBedsController implements IController {
         );
       }
       // >----------< LOGIC >----------<
-      const out = await this.manager.putMyBeds$(payload, params.data, request.data);
+      const out = await this.manager.putMyChairs$(payload, params.data, request.data);
       // >----------< RESPONSE >----------<
       if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
@@ -197,16 +197,16 @@ export class MyBedsController implements IController {
     }
   }
 
-  public async deleteMyBeds$(
+  public async deleteMyChairs$(
     req: ExpressRequest,
-    res: ControllerResponse<MyBedsResponse | null, Tokens | null>,
+    res: ControllerResponse<MyChairsResponse | null, Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
       const payload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const params = MyBedsParams.parse(req);
+      const params = MyChairsParams.parse(req);
       if (params.clientErrors.length > 0 || params.data === null) {
         return ResponseUtil.controllerResponse(
           res,
@@ -218,7 +218,7 @@ export class MyBedsController implements IController {
         );
       }
       // >----------< LOGIC >----------<
-      const out = await this.manager.deleteMyBeds$(payload, params.data);
+      const out = await this.manager.deleteMyChairs$(payload, params.data);
       // >----------< RESPONSE >----------<
       if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
