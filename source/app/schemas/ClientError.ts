@@ -1,5 +1,6 @@
 import { AccountRules } from "../../common/rules/AccountRules";
 import { AddressRules } from "../../common/rules/AddressRules";
+import { ChairRules } from "../../common/rules/ChairRules";
 import { ItemRules } from "../../common/rules/ItemRules";
 import { SessionRules } from "../../common/rules/SessionRules";
 import { VehicleRules } from "../../common/rules/VehicleRules";
@@ -76,6 +77,7 @@ export enum ClientErrorCode {
   DUPLICATE_MEDIA_IDS = 70011,
   INVALID_VEHICLE_BRAND_CONTENT = 70012,
   INVALID_VEHICLE_MODEL_CONTENT = 70013,
+  INVALID_CHAIR_QUANTITY = 70014,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -207,6 +209,7 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
     "Provided vehicle brand contained invalid characters.",
   [ClientErrorCode.INVALID_VEHICLE_MODEL_CONTENT]:
     "Provided vehicle model contained invalid characters.",
+  [ClientErrorCode.INVALID_CHAIR_QUANTITY]: `Provided chair quantity wasn't in the range of ${ChairRules.QUANTITY_MIN} to ${ChairRules.QUANTITY_MAX}.`,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors

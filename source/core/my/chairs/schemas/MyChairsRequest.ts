@@ -4,6 +4,7 @@ import type { IRequest } from "../../../../app/interfaces/IRequest";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
+import { ChairQuantityValidator } from "../../../../common/validators/ChairQuantityValidator";
 import { ItemDescriptionValidator } from "../../../../common/validators/ItemDescriptionValidator";
 import { ItemNameValidator } from "../../../../common/validators/ItemNameValidator";
 import { MediaIdsValidator } from "../../../../common/validators/MediaIdsValidator";
@@ -33,6 +34,7 @@ export class MyChairsRequest implements IRequest {
     ItemNameValidator.validate(blueprintData.name, clientErrors);
     ItemDescriptionValidator.validate(blueprintData.description, clientErrors);
     MediaIdsValidator.validate(blueprintData.mediaIds, clientErrors);
+    ChairQuantityValidator.validate(blueprintData.quantity, clientErrors);
     const validatedData = blueprintData;
     // >----------< RETURN >----------<
     return ResponseUtil.parserResponse(clientErrors, validatedData);
