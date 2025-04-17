@@ -4,7 +4,7 @@ import type { IRequest } from "../../../../app/interfaces/IRequest";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
-import { BedType } from "../../../../common/enums/BedType";
+import { BedSize } from "../../../../common/enums/BedSize";
 import { ItemDescriptionValidator } from "../../../../common/validators/ItemDescriptionValidator";
 import { ItemNameValidator } from "../../../../common/validators/ItemNameValidator";
 import { MediaIdsValidator } from "../../../../common/validators/MediaIdsValidator";
@@ -14,7 +14,7 @@ export class MyBedsRequest implements IRequest {
     public readonly name: string,
     public readonly description: string,
     public readonly mediaIds: number[],
-    public readonly bedType: BedType | null,
+    public readonly bedSize: BedSize | null,
   ) {}
 
   public static parse(req: ExpressRequest): ParserResponse<MyBedsRequest | null> {
@@ -49,7 +49,7 @@ export class MyBedsRequest implements IRequest {
       typeof blueprint.description === "string" &&
       Array.isArray(blueprint.mediaIds) &&
       blueprint.mediaIds.every((mediaId: unknown): boolean => typeof mediaId === "number") &&
-      (blueprint.bedType === null || Object.values(BedType).includes(blueprint.bedType))
+      (blueprint.bedSize === null || Object.values(BedSize).includes(blueprint.bedSize))
     );
   }
 }

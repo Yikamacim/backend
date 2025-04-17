@@ -4,7 +4,7 @@ import type { IProvider } from "../../../app/interfaces/IProvider";
 import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import type { BedType } from "../../../common/enums/BedType";
+import type { BedSize } from "../../../common/enums/BedSize";
 import { BedModel } from "../../../common/models/BedModel";
 import { BedViewModel } from "../../../common/models/BedViewModel";
 import { ItemMediaProvider } from "../../../common/providers/ItemMediaProvider";
@@ -76,12 +76,12 @@ export class MyBedsProvider implements IProvider {
     name: string,
     description: string,
     mediaIds: number[],
-    bedType: BedType | null,
+    bedSize: BedSize | null,
   ): Promise<ProviderResponse<BedViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const item = await this.partialCreateItem(accountId, name, description);
-      const bed = await this.partialCreateBed(item.itemId, bedType);
+      const bed = await this.partialCreateBed(item.itemId, bedSize);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, true);
       const bedView = await this.partialGetMyBed(accountId, bed.bedId);
@@ -103,14 +103,14 @@ export class MyBedsProvider implements IProvider {
     name: string,
     description: string,
     mediaIds: number[],
-    bedType: BedType | null,
+    bedSize: BedSize | null,
   ): Promise<ProviderResponse<BedViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await this.partialDeleteItemMedias(itemId, oldMediaIds);
       await this.partialUpdateMedias(oldMediaIds, false);
       await this.partialUpdateItem(itemId, name, description);
-      await this.partialUpdateBed(bedId, bedType);
+      await this.partialUpdateBed(bedId, bedSize);
       await this.partialCreateItemMedias(itemId, mediaIds);
       await this.partialUpdateMedias(mediaIds, true);
       const bedView = await this.partialGetMyBed(accountId, bedId);
@@ -144,19 +144,19 @@ export class MyBedsProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialCreateBed(itemId: number, bedType: BedType | null): Promise<BedModel> {
-    const results = await DbConstants.POOL.query(BedQueries.INSERT_BED_RT_$ITID_$BDTP, [
+  private async partialCreateBed(itemId: number, bedSize: BedSize | null): Promise<BedModel> {
+    const results = await DbConstants.POOL.query(BedQueries.INSERT_BED_RT_$ITID_$BDSZ, [
       itemId,
-      bedType,
+      bedSize,
     ]);
     const record: unknown = results.rows[0];
     return BedModel.fromRecord(record);
   }
 
-  private async partialUpdateBed(bedId: number, bedType: BedType | null): Promise<BedModel> {
-    const results = await DbConstants.POOL.query(BedQueries.UPDATE_BED_RT_$BDID_$BDTP, [
+  private async partialUpdateBed(bedId: number, bedSize: BedSize | null): Promise<BedModel> {
+    const results = await DbConstants.POOL.query(BedQueries.UPDATE_BED_RT_$BDID_$BDSZ, [
       bedId,
-      bedType,
+      bedSize,
     ]);
     const record: unknown = results.rows[0];
     return BedModel.fromRecord(record);

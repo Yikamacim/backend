@@ -1,7 +1,7 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { BedType } from "../enums/BedType";
+import { BedSize } from "../enums/BedSize";
 
 export class BedViewModel implements IModel {
   private constructor(
@@ -10,7 +10,7 @@ export class BedViewModel implements IModel {
     public readonly itemId: number,
     public readonly name: string,
     public readonly description: string,
-    public readonly bedType: BedType | null,
+    public readonly bedSize: BedSize | null,
   ) {}
 
   public static fromRecord(record: unknown): BedViewModel {
@@ -23,7 +23,7 @@ export class BedViewModel implements IModel {
       record.itemId,
       record.name,
       record.description,
-      record.bedType,
+      record.bedSize,
     );
   }
 
@@ -45,7 +45,7 @@ export class BedViewModel implements IModel {
       typeof model.itemId === "number" &&
       typeof model.name === "string" &&
       typeof model.description === "string" &&
-      (model.bedType === null || Object.values(BedType).includes(model.bedType))
+      (model.bedSize === null || Object.values(BedSize).includes(model.bedSize))
     );
   }
 
