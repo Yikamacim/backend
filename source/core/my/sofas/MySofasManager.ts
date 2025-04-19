@@ -1,13 +1,10 @@
-import type { MediaData } from "../../../@types/medias";
 import type { ManagerResponse } from "../../../@types/responses";
 import type { TokenPayload } from "../../../@types/tokens";
 import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
-import { FileUtil } from "../../../app/utils/FileUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import { MediaModel } from "../../../common/models/MediaModel";
-import { BucketModule } from "../../../modules/bucket/module";
+import { MediaHelper } from "../../../common/helpers/MediaHelper";
 import { MySofasProvider } from "./MySofasProvider";
 import type { MySofasParams } from "./schemas/MySofasParams";
 import type { MySofasRequest } from "./schemas/MySofasRequest";
@@ -20,19 +17,9 @@ export class MySofasManager implements IManager {
     const mySofas = await this.provider.getMySofas(payload.accountId);
     const responses: MySofasResponse[] = [];
     for (const mySofa of mySofas) {
-      const mySofaMedias = await this.provider.getItemMedias(mySofa.itemId);
-      const mySofaMediasData: MediaData[] = [];
-      for (const mySofaMedia of mySofaMedias) {
-        mySofaMediasData.push({
-          mediaId: mySofaMedia.mediaId,
-          mediaType: mySofaMedia.mediaType,
-          extension: mySofaMedia.extension,
-          url: await BucketModule.instance.getAccessUrl(
-            FileUtil.getName(mySofaMedia.mediaId.toString(), mySofaMedia.extension),
-          ),
-        });
-      }
-      responses.push(MySofasResponse.fromModel(mySofa, mySofaMediasData));
+      const medias = await this.provider.getItemMedias(mySofa.itemId);
+      const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+      responses.push(MySofasResponse.fromModel(mySofa, mediaDatas));
     }
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
   }
@@ -41,33 +28,14 @@ export class MySofasManager implements IManager {
     payload: TokenPayload,
     request: MySofasRequest,
   ): Promise<ManagerResponse<MySofasResponse | null>> {
-    const myMedias = await this.provider.getMyMedias(payload.accountId);
-    const medias: MediaModel[] = [];
-    for (const mediaId of request.mediaIds) {
-      const myMedia = myMedias.find((myMedia) => myMedia.mediaId === mediaId);
-      if (myMedia === undefined) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
-          null,
-        );
-      }
-      medias.push(myMedia);
+    const findMediasResult = await MediaHelper.findMedias(payload.accountId, request.mediaIds);
+    if (findMediasResult.isLeft()) {
+      return findMediasResult.get();
     }
-    for (const media of medias) {
-      if (
-        !(await BucketModule.instance.checkFileExists(
-          FileUtil.getName(media.mediaId.toString(), media.extension),
-        ))
-      ) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_UPLOADED)],
-          null,
-        );
-      }
+    const medias = findMediasResult.get();
+    const checkMediasResult = await MediaHelper.checkMedias(medias);
+    if (checkMediasResult.isLeft()) {
+      return checkMediasResult.get();
     }
     const mySofa = await this.provider.createSofa(
       payload.accountId,
@@ -78,22 +46,12 @@ export class MySofasManager implements IManager {
       request.sofaType,
       request.sofaMaterial,
     );
-    const mediaData: MediaData[] = [];
-    for (const media of medias) {
-      mediaData.push({
-        mediaId: media.mediaId,
-        mediaType: media.mediaType,
-        extension: media.extension,
-        url: await BucketModule.instance.getAccessUrl(
-          FileUtil.getName(media.mediaId.toString(), media.extension),
-        ),
-      });
-    }
+    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MySofasResponse.fromModel(mySofa, mediaData),
+      MySofasResponse.fromModel(mySofa, mediaDatas),
     );
   }
 
@@ -110,23 +68,13 @@ export class MySofasManager implements IManager {
         null,
       );
     }
-    const mySofaMedias = await this.provider.getItemMedias(mySofa.itemId);
-    const mediaData: MediaData[] = [];
-    for (const itemMedia of mySofaMedias) {
-      mediaData.push({
-        mediaId: itemMedia.mediaId,
-        mediaType: itemMedia.mediaType,
-        extension: itemMedia.extension,
-        url: await BucketModule.instance.getAccessUrl(
-          FileUtil.getName(itemMedia.mediaId.toString(), itemMedia.extension),
-        ),
-      });
-    }
+    const medias = await this.provider.getItemMedias(mySofa.itemId);
+    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MySofasResponse.fromModel(mySofa, mediaData),
+      MySofasResponse.fromModel(mySofa, mediaDatas),
     );
   }
 
@@ -144,38 +92,19 @@ export class MySofasManager implements IManager {
         null,
       );
     }
-    const myMedias = await this.provider.getMyMedias(payload.accountId);
-    const medias: MediaModel[] = [];
-    for (const mediaId of request.mediaIds) {
-      const myMedia = myMedias.find((myMedia) => myMedia.mediaId === mediaId);
-      if (myMedia === undefined) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
-          null,
-        );
-      }
-      medias.push(myMedia);
+    const findMediasResult = await MediaHelper.findMedias(payload.accountId, request.mediaIds);
+    if (findMediasResult.isLeft()) {
+      return findMediasResult.get();
     }
-    for (const media of medias) {
-      if (
-        !(await BucketModule.instance.checkFileExists(
-          FileUtil.getName(media.mediaId.toString(), media.extension),
-        ))
-      ) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_UPLOADED)],
-          null,
-        );
-      }
+    const medias = findMediasResult.get();
+    const checkMediasResult = await MediaHelper.checkMedias(medias);
+    if (checkMediasResult.isLeft()) {
+      return checkMediasResult.get();
     }
-    const mySofaMedias = await this.provider.getItemMedias(mySofa.itemId);
+    const oldMedias = await this.provider.getItemMedias(mySofa.itemId);
     const myUpdatedSofa = await this.provider.updateSofa(
       payload.accountId,
-      mySofaMedias.map((itemMedia) => itemMedia.mediaId),
+      oldMedias.map((oldMedia) => oldMedia.mediaId),
       mySofa.sofaId,
       mySofa.itemId,
       request.name,
@@ -185,22 +114,12 @@ export class MySofasManager implements IManager {
       request.sofaType,
       request.sofaMaterial,
     );
-    const mediaData: MediaData[] = [];
-    for (const media of medias) {
-      mediaData.push({
-        mediaId: media.mediaId,
-        mediaType: media.mediaType,
-        extension: media.extension,
-        url: await BucketModule.instance.getAccessUrl(
-          FileUtil.getName(media.mediaId.toString(), media.extension),
-        ),
-      });
-    }
+    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
     return ResponseUtil.managerResponse(
-      new HttpStatus(HttpStatusCode.CREATED),
+      new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MySofasResponse.fromModel(myUpdatedSofa, mediaData),
+      MySofasResponse.fromModel(myUpdatedSofa, mediaDatas),
     );
   }
 
@@ -217,11 +136,11 @@ export class MySofasManager implements IManager {
         null,
       );
     }
-    const mySofaMedias = await this.provider.getItemMedias(mySofa.itemId);
+    const medias = await this.provider.getItemMedias(mySofa.itemId);
     await this.provider.deleteSofa(
       mySofa.itemId,
       mySofa.sofaId,
-      mySofaMedias.map((mySofaMedia) => mySofaMedia.mediaId),
+      medias.map((media) => media.mediaId),
     );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);
   }

@@ -3,7 +3,7 @@ import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
 import { MediaType } from "../enums/MediaType";
 
-export class MediaModel implements IModel {
+export class MediaViewModel implements IModel {
   private constructor(
     public readonly mediaId: number,
     public readonly accountId: number,
@@ -13,11 +13,11 @@ export class MediaModel implements IModel {
     public readonly createdAt: Date,
   ) {}
 
-  public static fromRecord(record: unknown): MediaModel {
+  public static fromRecord(record: unknown): MediaViewModel {
     if (!this.isValidModel(record)) {
       throw new ModelMismatchError(record);
     }
-    return new MediaModel(
+    return new MediaViewModel(
       record.mediaId,
       record.accountId,
       record.mediaType,
@@ -27,18 +27,18 @@ export class MediaModel implements IModel {
     );
   }
 
-  public static fromRecords(records: unknown[]): MediaModel[] {
+  public static fromRecords(records: unknown[]): MediaViewModel[] {
     if (!this.areValidModels(records)) {
       throw new ModelMismatchError(records);
     }
-    return records.map((record: unknown): MediaModel => this.fromRecord(record));
+    return records.map((record: unknown): MediaViewModel => this.fromRecord(record));
   }
 
-  private static isValidModel(data: unknown): data is MediaModel {
+  private static isValidModel(data: unknown): data is MediaViewModel {
     if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
-    const model = data as MediaModel;
+    const model = data as MediaViewModel;
     return (
       typeof model.mediaId === "number" &&
       typeof model.accountId === "number" &&
@@ -49,7 +49,7 @@ export class MediaModel implements IModel {
     );
   }
 
-  private static areValidModels(data: unknown[]): data is MediaModel[] {
+  private static areValidModels(data: unknown[]): data is MediaViewModel[] {
     if (!Array.isArray(data)) {
       return false;
     }

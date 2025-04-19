@@ -30,7 +30,6 @@ export class MyBedsProvider implements IProvider {
       this.itemMediaProvider,
     );
     this.getMyMedias = this.mediaProvider.getMyMedias.bind(this.mediaProvider);
-    this.partialUpdateMedias = this.mediaProvider.partialUpdateMedias.bind(this.mediaProvider);
   }
 
   public partialCreateItem: typeof this.itemProvider.partialCreateItem;
@@ -40,7 +39,6 @@ export class MyBedsProvider implements IProvider {
   public partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   public partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
   public getMyMedias: typeof this.mediaProvider.getMyMedias;
-  public partialUpdateMedias: typeof this.mediaProvider.partialUpdateMedias;
 
   public async getMyBeds(accountId: number): Promise<ProviderResponse<BedViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
@@ -83,7 +81,6 @@ export class MyBedsProvider implements IProvider {
       const item = await this.partialCreateItem(accountId, name, description);
       const bed = await this.partialCreateBed(item.itemId, bedSize);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, true);
       const bedView = await this.partialGetMyBed(accountId, bed.bedId);
       if (bedView === null) {
         throw new UnexpectedDatabaseStateError("Bed was not created");
@@ -108,11 +105,9 @@ export class MyBedsProvider implements IProvider {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await this.partialDeleteItemMedias(itemId, oldMediaIds);
-      await this.partialUpdateMedias(oldMediaIds, false);
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateBed(bedId, bedSize);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, true);
       const bedView = await this.partialGetMyBed(accountId, bedId);
       if (bedView === null) {
         throw new UnexpectedDatabaseStateError("Bed was not updated");
@@ -133,7 +128,6 @@ export class MyBedsProvider implements IProvider {
     try {
       await this.partialDeleteBed(bedId);
       await this.partialDeleteItemMedias(itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, false);
       await this.partialDeleteItem(itemId);
       return await ResponseUtil.providerResponse(null);
     } catch (error) {

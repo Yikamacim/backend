@@ -1,13 +1,10 @@
-import type { MediaData } from "../../../@types/medias";
 import type { ManagerResponse } from "../../../@types/responses";
 import type { TokenPayload } from "../../../@types/tokens";
 import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
-import { FileUtil } from "../../../app/utils/FileUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import { MediaModel } from "../../../common/models/MediaModel";
-import { BucketModule } from "../../../modules/bucket/module";
+import { MediaHelper } from "../../../common/helpers/MediaHelper";
 import { MyVehiclesProvider } from "./MyVehiclesProvider";
 import type { MyVehiclesParams } from "./schemas/MyVehiclesParams";
 import type { MyVehiclesRequest } from "./schemas/MyVehiclesRequest";
@@ -22,19 +19,9 @@ export class MyVehiclesManager implements IManager {
     const myVehicles = await this.provider.getMyVehicles(payload.accountId);
     const responses: MyVehiclesResponse[] = [];
     for (const myVehicle of myVehicles) {
-      const myVehicleMedias = await this.provider.getItemMedias(myVehicle.itemId);
-      const myVehicleMediasData: MediaData[] = [];
-      for (const myVehicleMedia of myVehicleMedias) {
-        myVehicleMediasData.push({
-          mediaId: myVehicleMedia.mediaId,
-          mediaType: myVehicleMedia.mediaType,
-          extension: myVehicleMedia.extension,
-          url: await BucketModule.instance.getAccessUrl(
-            FileUtil.getName(myVehicleMedia.mediaId.toString(), myVehicleMedia.extension),
-          ),
-        });
-      }
-      responses.push(MyVehiclesResponse.fromModel(myVehicle, myVehicleMediasData));
+      const medias = await this.provider.getItemMedias(myVehicle.itemId);
+      const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+      responses.push(MyVehiclesResponse.fromModel(myVehicle, mediaDatas));
     }
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
   }
@@ -43,33 +30,14 @@ export class MyVehiclesManager implements IManager {
     payload: TokenPayload,
     request: MyVehiclesRequest,
   ): Promise<ManagerResponse<MyVehiclesResponse | null>> {
-    const myMedias = await this.provider.getMyMedias(payload.accountId);
-    const medias: MediaModel[] = [];
-    for (const mediaId of request.mediaIds) {
-      const myMedia = myMedias.find((myMedia) => myMedia.mediaId === mediaId);
-      if (myMedia === undefined) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
-          null,
-        );
-      }
-      medias.push(myMedia);
+    const findMediasResult = await MediaHelper.findMedias(payload.accountId, request.mediaIds);
+    if (findMediasResult.isLeft()) {
+      return findMediasResult.get();
     }
-    for (const media of medias) {
-      if (
-        !(await BucketModule.instance.checkFileExists(
-          FileUtil.getName(media.mediaId.toString(), media.extension),
-        ))
-      ) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_UPLOADED)],
-          null,
-        );
-      }
+    const medias = findMediasResult.get();
+    const checkMediasResult = await MediaHelper.checkMedias(medias);
+    if (checkMediasResult.isLeft()) {
+      return checkMediasResult.get();
     }
     const myVehicle = await this.provider.createVehicle(
       payload.accountId,
@@ -80,22 +48,12 @@ export class MyVehiclesManager implements IManager {
       request.model,
       request.vehicleType,
     );
-    const mediaData: MediaData[] = [];
-    for (const media of medias) {
-      mediaData.push({
-        mediaId: media.mediaId,
-        mediaType: media.mediaType,
-        extension: media.extension,
-        url: await BucketModule.instance.getAccessUrl(
-          FileUtil.getName(media.mediaId.toString(), media.extension),
-        ),
-      });
-    }
+    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyVehiclesResponse.fromModel(myVehicle, mediaData),
+      MyVehiclesResponse.fromModel(myVehicle, mediaDatas),
     );
   }
 
@@ -115,23 +73,13 @@ export class MyVehiclesManager implements IManager {
         null,
       );
     }
-    const itemMedias = await this.provider.getItemMedias(myVehicle.itemId);
-    const mediaData: MediaData[] = [];
-    for (const itemMedia of itemMedias) {
-      mediaData.push({
-        mediaId: itemMedia.mediaId,
-        mediaType: itemMedia.mediaType,
-        extension: itemMedia.extension,
-        url: await BucketModule.instance.getAccessUrl(
-          FileUtil.getName(itemMedia.mediaId.toString(), itemMedia.extension),
-        ),
-      });
-    }
+    const medias = await this.provider.getItemMedias(myVehicle.itemId);
+    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyVehiclesResponse.fromModel(myVehicle, mediaData),
+      MyVehiclesResponse.fromModel(myVehicle, mediaDatas),
     );
   }
 
@@ -152,38 +100,19 @@ export class MyVehiclesManager implements IManager {
         null,
       );
     }
-    const myMedias = await this.provider.getMyMedias(payload.accountId);
-    const medias: MediaModel[] = [];
-    for (const mediaId of request.mediaIds) {
-      const myMedia = myMedias.find((myMedia) => myMedia.mediaId === mediaId);
-      if (myMedia === undefined) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
-          null,
-        );
-      }
-      medias.push(myMedia);
+    const findMediasResult = await MediaHelper.findMedias(payload.accountId, request.mediaIds);
+    if (findMediasResult.isLeft()) {
+      return findMediasResult.get();
     }
-    for (const media of medias) {
-      if (
-        !(await BucketModule.instance.checkFileExists(
-          FileUtil.getName(media.mediaId.toString(), media.extension),
-        ))
-      ) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_UPLOADED)],
-          null,
-        );
-      }
+    const medias = findMediasResult.get();
+    const checkMediasResult = await MediaHelper.checkMedias(medias);
+    if (checkMediasResult.isLeft()) {
+      return checkMediasResult.get();
     }
-    const itemMedias = await this.provider.getItemMedias(myVehicle.itemId);
+    const oldMedias = await this.provider.getItemMedias(myVehicle.itemId);
     const myUpdatedVehicle = await this.provider.updateVehicle(
       payload.accountId,
-      itemMedias.map((itemMedia) => itemMedia.mediaId),
+      oldMedias.map((oldMedia) => oldMedia.mediaId),
       myVehicle.vehicleId,
       myVehicle.itemId,
       request.name,
@@ -193,22 +122,12 @@ export class MyVehiclesManager implements IManager {
       request.model,
       request.vehicleType,
     );
-    const mediaData: MediaData[] = [];
-    for (const media of medias) {
-      mediaData.push({
-        mediaId: media.mediaId,
-        mediaType: media.mediaType,
-        extension: media.extension,
-        url: await BucketModule.instance.getAccessUrl(
-          FileUtil.getName(media.mediaId.toString(), media.extension),
-        ),
-      });
-    }
+    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
     return ResponseUtil.managerResponse(
-      new HttpStatus(HttpStatusCode.CREATED),
+      new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyVehiclesResponse.fromModel(myUpdatedVehicle, mediaData),
+      MyVehiclesResponse.fromModel(myUpdatedVehicle, mediaDatas),
     );
   }
 
@@ -228,11 +147,11 @@ export class MyVehiclesManager implements IManager {
         null,
       );
     }
-    const myVehicleMedias = await this.provider.getItemMedias(myVehicle.itemId);
+    const medias = await this.provider.getItemMedias(myVehicle.itemId);
     await this.provider.deleteVehicle(
       myVehicle.itemId,
       myVehicle.vehicleId,
-      myVehicleMedias.map((myVehicleMedia) => myVehicleMedia.mediaId),
+      medias.map((media) => media.mediaId),
     );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);
   }

@@ -1,13 +1,10 @@
-import type { MediaData } from "../../../@types/medias";
 import type { ManagerResponse } from "../../../@types/responses";
 import type { TokenPayload } from "../../../@types/tokens";
 import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
-import { FileUtil } from "../../../app/utils/FileUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import { MediaModel } from "../../../common/models/MediaModel";
-import { BucketModule } from "../../../modules/bucket/module";
+import { MediaHelper } from "../../../common/helpers/MediaHelper";
 import { MyBedsProvider } from "./MyBedsProvider";
 import type { MyBedsParams } from "./schemas/MyBedsParams";
 import type { MyBedsRequest } from "./schemas/MyBedsRequest";
@@ -20,19 +17,9 @@ export class MyBedsManager implements IManager {
     const myBeds = await this.provider.getMyBeds(payload.accountId);
     const responses: MyBedsResponse[] = [];
     for (const myBed of myBeds) {
-      const myBedMedias = await this.provider.getItemMedias(myBed.itemId);
-      const myBedMediasData: MediaData[] = [];
-      for (const myBedMedia of myBedMedias) {
-        myBedMediasData.push({
-          mediaId: myBedMedia.mediaId,
-          mediaType: myBedMedia.mediaType,
-          extension: myBedMedia.extension,
-          url: await BucketModule.instance.getAccessUrl(
-            FileUtil.getName(myBedMedia.mediaId.toString(), myBedMedia.extension),
-          ),
-        });
-      }
-      responses.push(MyBedsResponse.fromModel(myBed, myBedMediasData));
+      const medias = await this.provider.getItemMedias(myBed.itemId);
+      const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+      responses.push(MyBedsResponse.fromModel(myBed, mediaDatas));
     }
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
   }
@@ -41,33 +28,14 @@ export class MyBedsManager implements IManager {
     payload: TokenPayload,
     request: MyBedsRequest,
   ): Promise<ManagerResponse<MyBedsResponse | null>> {
-    const myMedias = await this.provider.getMyMedias(payload.accountId);
-    const medias: MediaModel[] = [];
-    for (const mediaId of request.mediaIds) {
-      const myMedia = myMedias.find((myMedia) => myMedia.mediaId === mediaId);
-      if (myMedia === undefined) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
-          null,
-        );
-      }
-      medias.push(myMedia);
+    const findMediasResult = await MediaHelper.findMedias(payload.accountId, request.mediaIds);
+    if (findMediasResult.isLeft()) {
+      return findMediasResult.get();
     }
-    for (const media of medias) {
-      if (
-        !(await BucketModule.instance.checkFileExists(
-          FileUtil.getName(media.mediaId.toString(), media.extension),
-        ))
-      ) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_UPLOADED)],
-          null,
-        );
-      }
+    const medias = findMediasResult.get();
+    const checkMediasResult = await MediaHelper.checkMedias(medias);
+    if (checkMediasResult.isLeft()) {
+      return checkMediasResult.get();
     }
     const myBed = await this.provider.createBed(
       payload.accountId,
@@ -76,22 +44,12 @@ export class MyBedsManager implements IManager {
       request.mediaIds,
       request.bedSize,
     );
-    const mediaData: MediaData[] = [];
-    for (const media of medias) {
-      mediaData.push({
-        mediaId: media.mediaId,
-        mediaType: media.mediaType,
-        extension: media.extension,
-        url: await BucketModule.instance.getAccessUrl(
-          FileUtil.getName(media.mediaId.toString(), media.extension),
-        ),
-      });
-    }
+    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyBedsResponse.fromModel(myBed, mediaData),
+      MyBedsResponse.fromModel(myBed, mediaDatas),
     );
   }
 
@@ -108,23 +66,13 @@ export class MyBedsManager implements IManager {
         null,
       );
     }
-    const myBedMedias = await this.provider.getItemMedias(myBed.itemId);
-    const mediaData: MediaData[] = [];
-    for (const itemMedia of myBedMedias) {
-      mediaData.push({
-        mediaId: itemMedia.mediaId,
-        mediaType: itemMedia.mediaType,
-        extension: itemMedia.extension,
-        url: await BucketModule.instance.getAccessUrl(
-          FileUtil.getName(itemMedia.mediaId.toString(), itemMedia.extension),
-        ),
-      });
-    }
+    const medias = await this.provider.getItemMedias(myBed.itemId);
+    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBedsResponse.fromModel(myBed, mediaData),
+      MyBedsResponse.fromModel(myBed, mediaDatas),
     );
   }
 
@@ -142,38 +90,19 @@ export class MyBedsManager implements IManager {
         null,
       );
     }
-    const myMedias = await this.provider.getMyMedias(payload.accountId);
-    const medias: MediaModel[] = [];
-    for (const mediaId of request.mediaIds) {
-      const myMedia = myMedias.find((myMedia) => myMedia.mediaId === mediaId);
-      if (myMedia === undefined) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
-          null,
-        );
-      }
-      medias.push(myMedia);
+    const findMediasResult = await MediaHelper.findMedias(payload.accountId, request.mediaIds);
+    if (findMediasResult.isLeft()) {
+      return findMediasResult.get();
     }
-    for (const media of medias) {
-      if (
-        !(await BucketModule.instance.checkFileExists(
-          FileUtil.getName(media.mediaId.toString(), media.extension),
-        ))
-      ) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_UPLOADED)],
-          null,
-        );
-      }
+    const medias = findMediasResult.get();
+    const checkMediasResult = await MediaHelper.checkMedias(medias);
+    if (checkMediasResult.isLeft()) {
+      return checkMediasResult.get();
     }
-    const myBedMedias = await this.provider.getItemMedias(myBed.itemId);
+    const oldMedias = await this.provider.getItemMedias(myBed.itemId);
     const myUpdatedBed = await this.provider.updateBed(
       payload.accountId,
-      myBedMedias.map((itemMedia) => itemMedia.mediaId),
+      oldMedias.map((oldMedia) => oldMedia.mediaId),
       myBed.bedId,
       myBed.itemId,
       request.name,
@@ -181,22 +110,12 @@ export class MyBedsManager implements IManager {
       request.mediaIds,
       request.bedSize,
     );
-    const mediaData: MediaData[] = [];
-    for (const media of medias) {
-      mediaData.push({
-        mediaId: media.mediaId,
-        mediaType: media.mediaType,
-        extension: media.extension,
-        url: await BucketModule.instance.getAccessUrl(
-          FileUtil.getName(media.mediaId.toString(), media.extension),
-        ),
-      });
-    }
+    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
     return ResponseUtil.managerResponse(
-      new HttpStatus(HttpStatusCode.CREATED),
+      new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBedsResponse.fromModel(myUpdatedBed, mediaData),
+      MyBedsResponse.fromModel(myUpdatedBed, mediaDatas),
     );
   }
 
@@ -213,11 +132,11 @@ export class MyBedsManager implements IManager {
         null,
       );
     }
-    const myBedMedias = await this.provider.getItemMedias(myBed.itemId);
+    const medias = await this.provider.getItemMedias(myBed.itemId);
     await this.provider.deleteBed(
       myBed.itemId,
       myBed.bedId,
-      myBedMedias.map((myBedMedia) => myBedMedia.mediaId),
+      medias.map((media) => media.mediaId),
     );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);
   }

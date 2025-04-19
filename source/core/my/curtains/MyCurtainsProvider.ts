@@ -30,7 +30,6 @@ export class MyCurtainsProvider implements IProvider {
       this.itemMediaProvider,
     );
     this.getMyMedias = this.mediaProvider.getMyMedias.bind(this.mediaProvider);
-    this.partialUpdateMedias = this.mediaProvider.partialUpdateMedias.bind(this.mediaProvider);
   }
 
   public partialCreateItem: typeof this.itemProvider.partialCreateItem;
@@ -40,7 +39,6 @@ export class MyCurtainsProvider implements IProvider {
   public partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   public partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
   public getMyMedias: typeof this.mediaProvider.getMyMedias;
-  public partialUpdateMedias: typeof this.mediaProvider.partialUpdateMedias;
 
   public async getMyCurtains(accountId: number): Promise<ProviderResponse<CurtainViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
@@ -87,7 +85,6 @@ export class MyCurtainsProvider implements IProvider {
       const item = await this.partialCreateItem(accountId, name, description);
       const curtain = await this.partialCreateCurtain(item.itemId, width, length, curtainType);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, true);
       const curtainView = await this.partialGetMyCurtain(accountId, curtain.curtainId);
       if (curtainView === null) {
         throw new UnexpectedDatabaseStateError("Curtain was not created");
@@ -114,11 +111,9 @@ export class MyCurtainsProvider implements IProvider {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await this.partialDeleteItemMedias(itemId, oldMediaIds);
-      await this.partialUpdateMedias(oldMediaIds, false);
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateCurtain(carpetId, width, length, curtainType);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, true);
       const curtainView = await this.partialGetMyCurtain(accountId, carpetId);
       if (curtainView === null) {
         throw new UnexpectedDatabaseStateError("Curtain was not updated");
@@ -139,7 +134,6 @@ export class MyCurtainsProvider implements IProvider {
     try {
       await this.partialDeleteCurtain(curtainId);
       await this.partialDeleteItemMedias(itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, false);
       await this.partialDeleteItem(itemId);
       return await ResponseUtil.providerResponse(null);
     } catch (error) {

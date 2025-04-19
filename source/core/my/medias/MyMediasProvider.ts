@@ -3,7 +3,7 @@ import { DbConstants } from "../../../app/constants/DbConstants";
 import type { IProvider } from "../../../app/interfaces/IProvider";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import type { MediaType } from "../../../common/enums/MediaType";
-import { MediaModel } from "../../../common/models/MediaModel";
+import { MediaViewModel } from "../../../common/models/MediaViewModel";
 import { MediaQueries } from "../../../common/queries/MediaQueries";
 
 export class MyMediasProvider implements IProvider {
@@ -11,7 +11,7 @@ export class MyMediasProvider implements IProvider {
     accountId: number,
     mediaType: MediaType,
     extension: string,
-  ): Promise<ProviderResponse<MediaModel>> {
+  ): Promise<ProviderResponse<MediaViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(MediaQueries.INSERT_MEDIA_RT_$ACID_$MTYP_$EXTN, [
@@ -20,7 +20,7 @@ export class MyMediasProvider implements IProvider {
         extension,
       ]);
       const record: unknown = results.rows[0];
-      return await ResponseUtil.providerResponse(MediaModel.fromRecord(record));
+      return await ResponseUtil.providerResponse(MediaViewModel.fromRecord(record));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;

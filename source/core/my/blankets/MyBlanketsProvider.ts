@@ -31,7 +31,6 @@ export class MyBlanketsProvider implements IProvider {
       this.itemMediaProvider,
     );
     this.getMyMedias = this.mediaProvider.getMyMedias.bind(this.mediaProvider);
-    this.partialUpdateMedias = this.mediaProvider.partialUpdateMedias.bind(this.mediaProvider);
   }
 
   public partialCreateItem: typeof this.itemProvider.partialCreateItem;
@@ -41,7 +40,6 @@ export class MyBlanketsProvider implements IProvider {
   public partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   public partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
   public getMyMedias: typeof this.mediaProvider.getMyMedias;
-  public partialUpdateMedias: typeof this.mediaProvider.partialUpdateMedias;
 
   public async getMyBlankets(accountId: number): Promise<ProviderResponse<BlanketViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
@@ -87,7 +85,6 @@ export class MyBlanketsProvider implements IProvider {
       const item = await this.partialCreateItem(accountId, name, description);
       const blanket = await this.partialCreateBlanket(item.itemId, blanketSize, blanketMaterial);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, true);
       const blanketView = await this.partialGetMyBlanket(accountId, blanket.blanketId);
       if (blanketView === null) {
         throw new UnexpectedDatabaseStateError("Blanket was not created");
@@ -113,11 +110,9 @@ export class MyBlanketsProvider implements IProvider {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await this.partialDeleteItemMedias(itemId, oldMediaIds);
-      await this.partialUpdateMedias(oldMediaIds, false);
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateBlanket(blanketId, blanketSize, blanketMaterial);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, true);
       const blanketView = await this.partialGetMyBlanket(accountId, blanketId);
       if (blanketView === null) {
         throw new UnexpectedDatabaseStateError("Blanket was not updated");
@@ -138,7 +133,6 @@ export class MyBlanketsProvider implements IProvider {
     try {
       await this.partialDeleteBlanket(blanketId);
       await this.partialDeleteItemMedias(itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, false);
       await this.partialDeleteItem(itemId);
       return await ResponseUtil.providerResponse(null);
     } catch (error) {

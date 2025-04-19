@@ -1,6 +1,7 @@
 import { AccountRules } from "../../common/rules/AccountRules";
 import { AddressRules } from "../../common/rules/AddressRules";
 import { ChairRules } from "../../common/rules/ChairRules";
+import { ItemMediaRules } from "../../common/rules/ItemMediaRules";
 import { ItemRules } from "../../common/rules/ItemRules";
 import { SessionRules } from "../../common/rules/SessionRules";
 import { VehicleRules } from "../../common/rules/VehicleRules";
@@ -117,7 +118,8 @@ export enum ClientErrorCode {
   INVALID_CARPET_ID = 81000,
   CARPET_NOT_FOUND = 81001,
   MEDIA_NOT_FOUND = 81002,
-  MEDIA_NOT_UPLOADED = 81003,
+  MEDIA_TYPE_NOT_ALLOWED = 81003,
+  MEDIA_NOT_UPLOADED = 81004,
   //  *  *  811XX: /my/vehicles errors
   INVALID_VEHICLE_ID = 81100,
   VEHICLE_NOT_FOUND = 81101,
@@ -251,6 +253,7 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_CARPET_ID]: "Provided carpet id was invalid.",
   [ClientErrorCode.CARPET_NOT_FOUND]: "Account doesn't have a carpet with the provided id.",
   [ClientErrorCode.MEDIA_NOT_FOUND]: "Account doesn't have a media with the provided id.",
+  [ClientErrorCode.MEDIA_TYPE_NOT_ALLOWED]: `Provided media type wasn't in the allowed types: ${ItemMediaRules.ALLOWED_TYPES.join(", ")}.`,
   [ClientErrorCode.MEDIA_NOT_UPLOADED]: "Media wasn't uploaded to the bucket.",
   //  *  *  811XX: /my/vehicles errors
   [ClientErrorCode.INVALID_VEHICLE_ID]: "Provided vehicle id was invalid.",

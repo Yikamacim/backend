@@ -12,7 +12,13 @@ export class MyBedsResponse implements IResponse {
     public readonly bedSize: BedSize | null,
   ) {}
 
-  public static fromModel(model: BedViewModel, medias: MediaData[]): MyBedsResponse {
-    return new MyBedsResponse(model.bedId, model.name, model.description, medias, model.bedSize);
+  public static fromModel(model: BedViewModel, mediaDatas: MediaData[]): MyBedsResponse {
+    return new MyBedsResponse(
+      model.bedId,
+      model.name,
+      model.description,
+      mediaDatas,
+      model.bedSize,
+    );
   }
 }

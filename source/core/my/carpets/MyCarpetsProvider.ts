@@ -30,7 +30,6 @@ export class MyCarpetsProvider implements IProvider {
       this.itemMediaProvider,
     );
     this.getMyMedias = this.mediaProvider.getMyMedias.bind(this.mediaProvider);
-    this.partialUpdateMedias = this.mediaProvider.partialUpdateMedias.bind(this.mediaProvider);
   }
 
   public partialCreateItem: typeof this.itemProvider.partialCreateItem;
@@ -40,7 +39,6 @@ export class MyCarpetsProvider implements IProvider {
   public partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   public partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
   public getMyMedias: typeof this.mediaProvider.getMyMedias;
-  public partialUpdateMedias: typeof this.mediaProvider.partialUpdateMedias;
 
   public async getMyCarpets(accountId: number): Promise<ProviderResponse<CarpetViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
@@ -87,7 +85,6 @@ export class MyCarpetsProvider implements IProvider {
       const item = await this.partialCreateItem(accountId, name, description);
       const carpet = await this.partialCreateCarpet(item.itemId, width, length, carpetMaterial);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, true);
       const carpetView = await this.partialGetMyCarpet(accountId, carpet.carpetId);
       if (carpetView === null) {
         throw new UnexpectedDatabaseStateError("Carpet was not created");
@@ -114,11 +111,9 @@ export class MyCarpetsProvider implements IProvider {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await this.partialDeleteItemMedias(itemId, oldMediaIds);
-      await this.partialUpdateMedias(oldMediaIds, false);
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateCarpet(carpetId, width, length, carpetMaterial);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, true);
       const carpetView = await this.partialGetMyCarpet(accountId, carpetId);
       if (carpetView === null) {
         throw new UnexpectedDatabaseStateError("Carpet was not updated");
@@ -139,7 +134,6 @@ export class MyCarpetsProvider implements IProvider {
     try {
       await this.partialDeleteCarpet(carpetId);
       await this.partialDeleteItemMedias(itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, false);
       await this.partialDeleteItem(itemId);
       return await ResponseUtil.providerResponse(null);
     } catch (error) {

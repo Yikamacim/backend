@@ -1,13 +1,10 @@
-import type { MediaData } from "../../../@types/medias";
 import type { ManagerResponse } from "../../../@types/responses";
 import type { TokenPayload } from "../../../@types/tokens";
 import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
-import { FileUtil } from "../../../app/utils/FileUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import { MediaModel } from "../../../common/models/MediaModel";
-import { BucketModule } from "../../../modules/bucket/module";
+import { MediaHelper } from "../../../common/helpers/MediaHelper";
 import { MyBlanketsProvider } from "./MyBlanketsProvider";
 import type { MyBlanketsParams } from "./schemas/MyBlanketsParams";
 import type { MyBlanketsRequest } from "./schemas/MyBlanketsRequest";
@@ -22,19 +19,9 @@ export class MyBlanketsManager implements IManager {
     const myBlankets = await this.provider.getMyBlankets(payload.accountId);
     const responses: MyBlanketsResponse[] = [];
     for (const myBlanket of myBlankets) {
-      const myBlanketMedias = await this.provider.getItemMedias(myBlanket.itemId);
-      const myBlanketMediasData: MediaData[] = [];
-      for (const myBlanketMedia of myBlanketMedias) {
-        myBlanketMediasData.push({
-          mediaId: myBlanketMedia.mediaId,
-          mediaType: myBlanketMedia.mediaType,
-          extension: myBlanketMedia.extension,
-          url: await BucketModule.instance.getAccessUrl(
-            FileUtil.getName(myBlanketMedia.mediaId.toString(), myBlanketMedia.extension),
-          ),
-        });
-      }
-      responses.push(MyBlanketsResponse.fromModel(myBlanket, myBlanketMediasData));
+      const medias = await this.provider.getItemMedias(myBlanket.itemId);
+      const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+      responses.push(MyBlanketsResponse.fromModel(myBlanket, mediaDatas));
     }
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
   }
@@ -43,33 +30,14 @@ export class MyBlanketsManager implements IManager {
     payload: TokenPayload,
     request: MyBlanketsRequest,
   ): Promise<ManagerResponse<MyBlanketsResponse | null>> {
-    const myMedias = await this.provider.getMyMedias(payload.accountId);
-    const medias: MediaModel[] = [];
-    for (const mediaId of request.mediaIds) {
-      const myMedia = myMedias.find((myMedia) => myMedia.mediaId === mediaId);
-      if (myMedia === undefined) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
-          null,
-        );
-      }
-      medias.push(myMedia);
+    const findMediasResult = await MediaHelper.findMedias(payload.accountId, request.mediaIds);
+    if (findMediasResult.isLeft()) {
+      return findMediasResult.get();
     }
-    for (const media of medias) {
-      if (
-        !(await BucketModule.instance.checkFileExists(
-          FileUtil.getName(media.mediaId.toString(), media.extension),
-        ))
-      ) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_UPLOADED)],
-          null,
-        );
-      }
+    const medias = findMediasResult.get();
+    const checkMediasResult = await MediaHelper.checkMedias(medias);
+    if (checkMediasResult.isLeft()) {
+      return checkMediasResult.get();
     }
     const myBlanket = await this.provider.createBlanket(
       payload.accountId,
@@ -79,22 +47,12 @@ export class MyBlanketsManager implements IManager {
       request.blanketSize,
       request.blanketMaterial,
     );
-    const mediaData: MediaData[] = [];
-    for (const media of medias) {
-      mediaData.push({
-        mediaId: media.mediaId,
-        mediaType: media.mediaType,
-        extension: media.extension,
-        url: await BucketModule.instance.getAccessUrl(
-          FileUtil.getName(media.mediaId.toString(), media.extension),
-        ),
-      });
-    }
+    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyBlanketsResponse.fromModel(myBlanket, mediaData),
+      MyBlanketsResponse.fromModel(myBlanket, mediaDatas),
     );
   }
 
@@ -114,23 +72,13 @@ export class MyBlanketsManager implements IManager {
         null,
       );
     }
-    const myBlanketMedias = await this.provider.getItemMedias(myBlanket.itemId);
-    const mediaData: MediaData[] = [];
-    for (const itemMedia of myBlanketMedias) {
-      mediaData.push({
-        mediaId: itemMedia.mediaId,
-        mediaType: itemMedia.mediaType,
-        extension: itemMedia.extension,
-        url: await BucketModule.instance.getAccessUrl(
-          FileUtil.getName(itemMedia.mediaId.toString(), itemMedia.extension),
-        ),
-      });
-    }
+    const medias = await this.provider.getItemMedias(myBlanket.itemId);
+    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBlanketsResponse.fromModel(myBlanket, mediaData),
+      MyBlanketsResponse.fromModel(myBlanket, mediaDatas),
     );
   }
 
@@ -151,38 +99,19 @@ export class MyBlanketsManager implements IManager {
         null,
       );
     }
-    const myMedias = await this.provider.getMyMedias(payload.accountId);
-    const medias: MediaModel[] = [];
-    for (const mediaId of request.mediaIds) {
-      const myMedia = myMedias.find((myMedia) => myMedia.mediaId === mediaId);
-      if (myMedia === undefined) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
-          null,
-        );
-      }
-      medias.push(myMedia);
+    const findMediasResult = await MediaHelper.findMedias(payload.accountId, request.mediaIds);
+    if (findMediasResult.isLeft()) {
+      return findMediasResult.get();
     }
-    for (const media of medias) {
-      if (
-        !(await BucketModule.instance.checkFileExists(
-          FileUtil.getName(media.mediaId.toString(), media.extension),
-        ))
-      ) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_UPLOADED)],
-          null,
-        );
-      }
+    const medias = findMediasResult.get();
+    const checkMediasResult = await MediaHelper.checkMedias(medias);
+    if (checkMediasResult.isLeft()) {
+      return checkMediasResult.get();
     }
-    const myBlanketMedias = await this.provider.getItemMedias(myBlanket.itemId);
+    const oldMedias = await this.provider.getItemMedias(myBlanket.itemId);
     const myUpdatedBlanket = await this.provider.updateBlanket(
       payload.accountId,
-      myBlanketMedias.map((itemMedia) => itemMedia.mediaId),
+      oldMedias.map((oldMedia) => oldMedia.mediaId),
       myBlanket.blanketId,
       myBlanket.itemId,
       request.name,
@@ -191,22 +120,12 @@ export class MyBlanketsManager implements IManager {
       request.blanketSize,
       request.blanketMaterial,
     );
-    const mediaData: MediaData[] = [];
-    for (const media of medias) {
-      mediaData.push({
-        mediaId: media.mediaId,
-        mediaType: media.mediaType,
-        extension: media.extension,
-        url: await BucketModule.instance.getAccessUrl(
-          FileUtil.getName(media.mediaId.toString(), media.extension),
-        ),
-      });
-    }
+    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
     return ResponseUtil.managerResponse(
-      new HttpStatus(HttpStatusCode.CREATED),
+      new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBlanketsResponse.fromModel(myUpdatedBlanket, mediaData),
+      MyBlanketsResponse.fromModel(myUpdatedBlanket, mediaDatas),
     );
   }
 
@@ -226,11 +145,11 @@ export class MyBlanketsManager implements IManager {
         null,
       );
     }
-    const myBlanketMedias = await this.provider.getItemMedias(myBlanket.itemId);
+    const medias = await this.provider.getItemMedias(myBlanket.itemId);
     await this.provider.deleteBlanket(
       myBlanket.itemId,
       myBlanket.blanketId,
-      myBlanketMedias.map((myBlanketMedia) => myBlanketMedia.mediaId),
+      medias.map((media) => media.mediaId),
     );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);
   }

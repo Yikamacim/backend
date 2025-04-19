@@ -29,7 +29,6 @@ export class MyChairsProvider implements IProvider {
       this.itemMediaProvider,
     );
     this.getMyMedias = this.mediaProvider.getMyMedias.bind(this.mediaProvider);
-    this.partialUpdateMedias = this.mediaProvider.partialUpdateMedias.bind(this.mediaProvider);
   }
 
   public partialCreateItem: typeof this.itemProvider.partialCreateItem;
@@ -39,7 +38,6 @@ export class MyChairsProvider implements IProvider {
   public partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   public partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
   public getMyMedias: typeof this.mediaProvider.getMyMedias;
-  public partialUpdateMedias: typeof this.mediaProvider.partialUpdateMedias;
 
   public async getMyChairs(accountId: number): Promise<ProviderResponse<ChairViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
@@ -82,7 +80,6 @@ export class MyChairsProvider implements IProvider {
       const item = await this.partialCreateItem(accountId, name, description);
       const chair = await this.partialCreateChair(item.itemId, quantity);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, true);
       const chairView = await this.partialGetMyChair(accountId, chair.chairId);
       if (chairView === null) {
         throw new UnexpectedDatabaseStateError("Chair was not created");
@@ -107,11 +104,9 @@ export class MyChairsProvider implements IProvider {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await this.partialDeleteItemMedias(itemId, oldMediaIds);
-      await this.partialUpdateMedias(oldMediaIds, false);
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateChair(chairId, quantity);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, true);
       const chairView = await this.partialGetMyChair(accountId, chairId);
       if (chairView === null) {
         throw new UnexpectedDatabaseStateError("Chair was not updated");
@@ -132,7 +127,6 @@ export class MyChairsProvider implements IProvider {
     try {
       await this.partialDeleteChair(chairId);
       await this.partialDeleteItemMedias(itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, false);
       await this.partialDeleteItem(itemId);
       return await ResponseUtil.providerResponse(null);
     } catch (error) {

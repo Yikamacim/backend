@@ -31,7 +31,6 @@ export class MySofasProvider implements IProvider {
       this.itemMediaProvider,
     );
     this.getMyMedias = this.mediaProvider.getMyMedias.bind(this.mediaProvider);
-    this.partialUpdateMedias = this.mediaProvider.partialUpdateMedias.bind(this.mediaProvider);
   }
 
   public partialCreateItem: typeof this.itemProvider.partialCreateItem;
@@ -41,7 +40,6 @@ export class MySofasProvider implements IProvider {
   public partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   public partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
   public getMyMedias: typeof this.mediaProvider.getMyMedias;
-  public partialUpdateMedias: typeof this.mediaProvider.partialUpdateMedias;
 
   public async getMySofas(accountId: number): Promise<ProviderResponse<SofaViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
@@ -86,7 +84,6 @@ export class MySofasProvider implements IProvider {
       const item = await this.partialCreateItem(accountId, name, description);
       const sofa = await this.partialCreateSofa(item.itemId, isCushioned, sofaType, sofaMaterial);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, true);
       const sofaView = await this.partialGetMySofa(accountId, sofa.sofaId);
       if (sofaView === null) {
         throw new UnexpectedDatabaseStateError("Sofa was not created");
@@ -113,11 +110,9 @@ export class MySofasProvider implements IProvider {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await this.partialDeleteItemMedias(itemId, oldMediaIds);
-      await this.partialUpdateMedias(oldMediaIds, false);
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateSofa(sofaId, isCushioned, sofaType, sofaMaterial);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, true);
       const sofaView = await this.partialGetMySofa(accountId, sofaId);
       if (sofaView === null) {
         throw new UnexpectedDatabaseStateError("Sofa was not updated");
@@ -138,7 +133,6 @@ export class MySofasProvider implements IProvider {
     try {
       await this.partialDeleteSofa(sofaId);
       await this.partialDeleteItemMedias(itemId, mediaIds);
-      await this.partialUpdateMedias(mediaIds, false);
       await this.partialDeleteItem(itemId);
       return await ResponseUtil.providerResponse(null);
     } catch (error) {
