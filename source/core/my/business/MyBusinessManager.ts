@@ -56,6 +56,14 @@ export class MyBusinessManager implements IManager {
     payload: TokenPayload,
     request: MyBusinessRequest,
   ): Promise<ManagerResponse<MyBusinessResponse | null>> {
+    if ((await this.provider.getMyBusiness(payload.accountId)) !== null) {
+      return ResponseUtil.managerResponse(
+        new HttpStatus(HttpStatusCode.CONFLICT),
+        null,
+        [new ClientError(ClientErrorCode.BUSINESS_ALREADY_EXISTS)],
+        null,
+      );
+    }
     let mediaData: MediaData | null = null;
     if (request.mediaId !== null) {
       const findMediaResult = await MediaHelper.findMedia(payload.accountId, request.mediaId);
