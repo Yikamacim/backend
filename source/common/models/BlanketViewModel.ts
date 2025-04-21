@@ -5,7 +5,7 @@ import { BlanketMaterial } from "../enums/BlanketMaterial";
 import { BlanketSize } from "../enums/BlanketSize";
 
 export class BlanketViewModel implements IModel {
-  private constructor(
+  protected constructor(
     public readonly blanketId: number,
     public readonly accountId: number,
     public readonly itemId: number,
@@ -37,7 +37,7 @@ export class BlanketViewModel implements IModel {
     return records.map((record: unknown): BlanketViewModel => this.fromRecord(record));
   }
 
-  private static isValidModel(data: unknown): data is BlanketViewModel {
+  protected static isValidModel(data: unknown): data is BlanketViewModel {
     if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
@@ -54,7 +54,7 @@ export class BlanketViewModel implements IModel {
     );
   }
 
-  private static areValidModels(data: unknown[]): data is BlanketViewModel[] {
+  protected static areValidModels(data: unknown[]): data is BlanketViewModel[] {
     if (!Array.isArray(data)) {
       return false;
     }

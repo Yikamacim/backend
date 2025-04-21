@@ -4,7 +4,7 @@ import { ProtoUtil } from "../../app/utils/ProtoUtil";
 import { AccountType } from "../enums/AccountType";
 
 export class AccountModel implements IModel {
-  private constructor(
+  protected constructor(
     public readonly accountId: number,
     public readonly phone: string,
     public readonly password: string,
@@ -36,7 +36,7 @@ export class AccountModel implements IModel {
     return records.map((record: unknown): AccountModel => this.fromRecord(record));
   }
 
-  private static isValidModel(data: unknown): data is AccountModel {
+  protected static isValidModel(data: unknown): data is AccountModel {
     if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
@@ -52,7 +52,7 @@ export class AccountModel implements IModel {
     );
   }
 
-  private static areValidModels(data: unknown[]): data is AccountModel[] {
+  protected static areValidModels(data: unknown[]): data is AccountModel[] {
     if (!Array.isArray(data)) {
       return false;
     }

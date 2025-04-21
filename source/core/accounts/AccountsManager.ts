@@ -18,7 +18,7 @@ export class AccountsManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.NO_ACCOUNT_FOUND)],
+        [new ClientError(ClientErrorCode.ACCOUNT_NOT_FOUND)],
         null,
       );
     }

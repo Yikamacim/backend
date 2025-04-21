@@ -5,6 +5,7 @@ import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { MediaHelper } from "../../../common/helpers/MediaHelper";
+import { ItemMediaRules } from "../../../common/rules/ItemMediaRules";
 import { MyBlanketsProvider } from "./MyBlanketsProvider";
 import type { MyBlanketsParams } from "./schemas/MyBlanketsParams";
 import type { MyBlanketsRequest } from "./schemas/MyBlanketsRequest";
@@ -35,7 +36,7 @@ export class MyBlanketsManager implements IManager {
       return findMediasResult.get();
     }
     const medias = findMediasResult.get();
-    const checkMediasResult = await MediaHelper.checkMedias(medias);
+    const checkMediasResult = await MediaHelper.checkMedias(medias, ItemMediaRules.ALLOWED_TYPES);
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }
@@ -104,7 +105,7 @@ export class MyBlanketsManager implements IManager {
       return findMediasResult.get();
     }
     const medias = findMediasResult.get();
-    const checkMediasResult = await MediaHelper.checkMedias(medias);
+    const checkMediasResult = await MediaHelper.checkMedias(medias, ItemMediaRules.ALLOWED_TYPES);
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }

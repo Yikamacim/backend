@@ -4,7 +4,7 @@ import { ProtoUtil } from "../../app/utils/ProtoUtil";
 import { VehicleType } from "../enums/VehicleType";
 
 export class VehicleViewModel implements IModel {
-  private constructor(
+  protected constructor(
     public readonly vehicleId: number,
     public readonly accountId: number,
     public readonly itemId: number,
@@ -38,7 +38,7 @@ export class VehicleViewModel implements IModel {
     return records.map((record: unknown): VehicleViewModel => this.fromRecord(record));
   }
 
-  private static isValidModel(data: unknown): data is VehicleViewModel {
+  protected static isValidModel(data: unknown): data is VehicleViewModel {
     if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
@@ -55,7 +55,7 @@ export class VehicleViewModel implements IModel {
     );
   }
 
-  private static areValidModels(data: unknown[]): data is VehicleViewModel[] {
+  protected static areValidModels(data: unknown[]): data is VehicleViewModel[] {
     if (!Array.isArray(data)) {
       return false;
     }

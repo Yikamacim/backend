@@ -3,7 +3,7 @@ import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
 
 export class ChairViewModel implements IModel {
-  private constructor(
+  protected constructor(
     public readonly chairId: number,
     public readonly accountId: number,
     public readonly itemId: number,
@@ -33,7 +33,7 @@ export class ChairViewModel implements IModel {
     return records.map((record: unknown): ChairViewModel => this.fromRecord(record));
   }
 
-  private static isValidModel(data: unknown): data is ChairViewModel {
+  protected static isValidModel(data: unknown): data is ChairViewModel {
     if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
@@ -48,7 +48,7 @@ export class ChairViewModel implements IModel {
     );
   }
 
-  private static areValidModels(data: unknown[]): data is ChairViewModel[] {
+  protected static areValidModels(data: unknown[]): data is ChairViewModel[] {
     if (!Array.isArray(data)) {
       return false;
     }

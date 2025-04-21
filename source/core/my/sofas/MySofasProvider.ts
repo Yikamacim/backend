@@ -59,11 +59,7 @@ export class MySofasProvider implements IProvider {
   ): Promise<ProviderResponse<SofaViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const mySofa = await this.partialGetMySofa(accountId, sofaId);
-      if (mySofa === null) {
-        return await ResponseUtil.providerResponse(null);
-      }
-      return await ResponseUtil.providerResponse(mySofa);
+      return await ResponseUtil.providerResponse(await this.partialGetMySofa(accountId, sofaId));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -143,6 +139,18 @@ export class MySofasProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
+  private async partialGetMySofa(accountId: number, sofaId: number): Promise<SofaViewModel | null> {
+    const results = await DbConstants.POOL.query(SofaViewQueries.GET_SOFA_$ACID_$SFID, [
+      accountId,
+      sofaId,
+    ]);
+    const record: unknown = results.rows[0];
+    if (!ProtoUtil.isProtovalid(record)) {
+      return null;
+    }
+    return SofaViewModel.fromRecord(record);
+  }
+
   private async partialCreateSofa(
     itemId: number,
     isCushioned: boolean | null,
@@ -173,17 +181,5 @@ export class MySofasProvider implements IProvider {
 
   private async partialDeleteSofa(sofaId: number): Promise<void> {
     await DbConstants.POOL.query(SofaQueries.DELETE_SOFA_$SFID, [sofaId]);
-  }
-
-  private async partialGetMySofa(accountId: number, sofaId: number): Promise<SofaViewModel | null> {
-    const results = await DbConstants.POOL.query(SofaViewQueries.GET_SOFA_$ACID_$SFID, [
-      accountId,
-      sofaId,
-    ]);
-    const record: unknown = results.rows[0];
-    if (!ProtoUtil.isProtovalid(record)) {
-      return null;
-    }
-    return SofaViewModel.fromRecord(record);
   }
 }

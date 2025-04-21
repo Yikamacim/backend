@@ -4,7 +4,7 @@ import { ProtoUtil } from "../../app/utils/ProtoUtil";
 import { CarpetMaterial } from "../enums/CarpetMaterial";
 
 export class CarpetViewModel implements IModel {
-  private constructor(
+  protected constructor(
     public readonly carpetId: number,
     public readonly accountId: number,
     public readonly itemId: number,
@@ -38,7 +38,7 @@ export class CarpetViewModel implements IModel {
     return records.map((record: unknown): CarpetViewModel => this.fromRecord(record));
   }
 
-  private static isValidModel(data: unknown): data is CarpetViewModel {
+  protected static isValidModel(data: unknown): data is CarpetViewModel {
     if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
@@ -56,7 +56,7 @@ export class CarpetViewModel implements IModel {
     );
   }
 
-  private static areValidModels(data: unknown[]): data is CarpetViewModel[] {
+  protected static areValidModels(data: unknown[]): data is CarpetViewModel[] {
     if (!Array.isArray(data)) {
       return false;
     }

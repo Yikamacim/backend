@@ -3,7 +3,7 @@ import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
 
 export class AddressModel implements IModel {
-  private constructor(
+  protected constructor(
     public readonly addressId: number,
     public readonly accountId: number,
     public readonly name: string,
@@ -39,7 +39,7 @@ export class AddressModel implements IModel {
     return records.map((record: unknown): AddressModel => this.fromRecord(record));
   }
 
-  private static isValidModel(data: unknown): data is AddressModel {
+  protected static isValidModel(data: unknown): data is AddressModel {
     if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
@@ -57,7 +57,7 @@ export class AddressModel implements IModel {
     );
   }
 
-  private static areValidModels(data: unknown[]): data is AddressModel[] {
+  protected static areValidModels(data: unknown[]): data is AddressModel[] {
     if (!Array.isArray(data)) {
       return false;
     }

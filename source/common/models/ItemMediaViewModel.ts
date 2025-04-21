@@ -1,17 +1,19 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
-import { ProtoUtil } from "../../app/utils/ProtoUtil";
+import { MediaBase } from "../bases/MediaBase";
 import { MediaType } from "../enums/MediaType";
 
-export class ItemMediaViewModel implements IModel {
-  private constructor(
+export class ItemMediaViewModel extends MediaBase implements IModel {
+  protected constructor(
     public readonly itemId: number,
-    public readonly mediaId: number,
-    public readonly mediaType: MediaType,
-    public readonly extension: string,
-  ) {}
+    mediaId: number,
+    mediaType: MediaType,
+    extension: string,
+  ) {
+    super(mediaId, mediaType, extension);
+  }
 
-  public static fromRecord(record: unknown): ItemMediaViewModel {
+  public static override fromRecord(record: unknown): ItemMediaViewModel {
     if (!this.isValidModel(record)) {
       throw new ModelMismatchError(record);
     }
@@ -23,27 +25,20 @@ export class ItemMediaViewModel implements IModel {
     );
   }
 
-  public static fromRecords(records: unknown[]): ItemMediaViewModel[] {
+  public static override fromRecords(records: unknown[]): ItemMediaViewModel[] {
     if (!this.areValidModels(records)) {
       throw new ModelMismatchError(records);
     }
     return records.map((record: unknown): ItemMediaViewModel => this.fromRecord(record));
   }
 
-  private static isValidModel(data: unknown): data is ItemMediaViewModel {
-    if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
-      return false;
-    }
+  protected static override isValidModel(data: unknown): data is ItemMediaViewModel {
+    const isSuperValid = super.isValidModel(data);
     const model = data as ItemMediaViewModel;
-    return (
-      typeof model.itemId === "number" &&
-      typeof model.mediaId === "number" &&
-      Object.values(MediaType).includes(model.mediaType) &&
-      typeof model.extension === "string"
-    );
+    return isSuperValid && typeof model.itemId === "number";
   }
 
-  private static areValidModels(data: unknown[]): data is ItemMediaViewModel[] {
+  protected static override areValidModels(data: unknown[]): data is ItemMediaViewModel[] {
     if (!Array.isArray(data)) {
       return false;
     }

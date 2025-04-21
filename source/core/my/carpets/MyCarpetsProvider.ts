@@ -60,11 +60,9 @@ export class MyCarpetsProvider implements IProvider {
   ): Promise<ProviderResponse<CarpetViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const myCarpet = await this.partialGetMyCarpet(accountId, carpetId);
-      if (myCarpet === null) {
-        return await ResponseUtil.providerResponse(null);
-      }
-      return await ResponseUtil.providerResponse(myCarpet);
+      return await ResponseUtil.providerResponse(
+        await this.partialGetMyCarpet(accountId, carpetId),
+      );
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -144,6 +142,21 @@ export class MyCarpetsProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
+  private async partialGetMyCarpet(
+    accountId: number,
+    carpetId: number,
+  ): Promise<CarpetViewModel | null> {
+    const results = await DbConstants.POOL.query(CarpetViewQueries.GET_CARPET_$ACID_$CPID, [
+      accountId,
+      carpetId,
+    ]);
+    const record: unknown = results.rows[0];
+    if (!ProtoUtil.isProtovalid(record)) {
+      return null;
+    }
+    return CarpetViewModel.fromRecord(record);
+  }
+
   private async partialCreateCarpet(
     itemId: number,
     width: number | null,
@@ -174,20 +187,5 @@ export class MyCarpetsProvider implements IProvider {
 
   private async partialDeleteCarpet(carpetId: number): Promise<void> {
     await DbConstants.POOL.query(CarpetQueries.DELETE_CARPET_$CPID, [carpetId]);
-  }
-
-  private async partialGetMyCarpet(
-    accountId: number,
-    carpetId: number,
-  ): Promise<CarpetViewModel | null> {
-    const results = await DbConstants.POOL.query(CarpetViewQueries.GET_CARPET_$ACID_$CPID, [
-      accountId,
-      carpetId,
-    ]);
-    const record: unknown = results.rows[0];
-    if (!ProtoUtil.isProtovalid(record)) {
-      return null;
-    }
-    return CarpetViewModel.fromRecord(record);
   }
 }

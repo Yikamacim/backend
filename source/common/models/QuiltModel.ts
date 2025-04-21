@@ -5,7 +5,7 @@ import { QuiltMaterial } from "../enums/QuiltMaterial";
 import { QuiltSize } from "../enums/QuiltSize";
 
 export class QuiltModel implements IModel {
-  private constructor(
+  protected constructor(
     public readonly quiltId: number,
     public readonly itemId: number,
     public readonly quiltSize: QuiltSize | null,
@@ -26,7 +26,7 @@ export class QuiltModel implements IModel {
     return records.map((record: unknown): QuiltModel => this.fromRecord(record));
   }
 
-  private static isValidModel(data: unknown): data is QuiltModel {
+  protected static isValidModel(data: unknown): data is QuiltModel {
     if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
@@ -39,7 +39,7 @@ export class QuiltModel implements IModel {
     );
   }
 
-  private static areValidModels(data: unknown[]): data is QuiltModel[] {
+  protected static areValidModels(data: unknown[]): data is QuiltModel[] {
     if (!Array.isArray(data)) {
       return false;
     }

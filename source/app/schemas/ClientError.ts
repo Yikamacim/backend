@@ -1,7 +1,8 @@
 import { AccountRules } from "../../common/rules/AccountRules";
 import { AddressRules } from "../../common/rules/AddressRules";
+import { BusinessRules } from "../../common/rules/BusinessRules";
 import { ChairRules } from "../../common/rules/ChairRules";
-import { ItemMediaRules } from "../../common/rules/ItemMediaRules";
+import { ContactRules } from "../../common/rules/ContactRules";
 import { ItemRules } from "../../common/rules/ItemRules";
 import { SessionRules } from "../../common/rules/SessionRules";
 import { VehicleRules } from "../../common/rules/VehicleRules";
@@ -65,6 +66,9 @@ export enum ClientErrorCode {
   INVALID_ITEM_DESCRIPTION_LENGTH = 60008,
   INVALID_VEHICLE_BRAND_LENGTH = 60009,
   INVALID_VEHICLE_MODEL_LENGTH = 60010,
+  INVALID_EMAIL_LENGTH = 60011,
+  INVALID_BUSINESS_NAME_LENGTH = 60012,
+  INVALID_BUSINESS_DESCRIPTION_LENGTH = 60013,
   //  *  7XXXX: Content errors
   INVALID_PHONE_CONTENT = 70002,
   INVALID_PASSWORD_CONTENT = 70003,
@@ -76,14 +80,18 @@ export enum ClientErrorCode {
   INVALID_ITEM_NAME_CONTENT = 70009,
   INVALID_ITEM_DESCRIPTION_CONTENT = 70010,
   DUPLICATE_MEDIA_IDS = 70011,
-  INVALID_VEHICLE_BRAND_CONTENT = 70012,
-  INVALID_VEHICLE_MODEL_CONTENT = 70013,
-  INVALID_CHAIR_QUANTITY = 70014,
+  MEDIA_TYPE_NOT_ALLOWED = 70012,
+  INVALID_VEHICLE_BRAND_CONTENT = 70013,
+  INVALID_VEHICLE_MODEL_CONTENT = 70014,
+  INVALID_CHAIR_QUANTITY = 70015,
+  INVALID_EMAIL_CONTENT = 70016,
+  INVALID_BUSINESS_NAME_CONTENT = 70017,
+  INVALID_BUSINESS_DESCRIPTION_CONTENT = 70018,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
   //  *  *  800XX: /login errors
-  NO_ACCOUNT_FOUND = 80004,
+  ACCOUNT_NOT_FOUND = 80004,
   INCORRECT_PASSWORD = 80005,
   //  *  *  801XX: /signup errors
   ACCOUNT_ALREADY_EXISTS = 80104,
@@ -118,7 +126,6 @@ export enum ClientErrorCode {
   INVALID_CARPET_ID = 81000,
   CARPET_NOT_FOUND = 81001,
   MEDIA_NOT_FOUND = 81002,
-  MEDIA_TYPE_NOT_ALLOWED = 81003,
   MEDIA_NOT_UPLOADED = 81004,
   //  *  *  811XX: /my/vehicles errors
   INVALID_VEHICLE_ID = 81100,
@@ -141,6 +148,8 @@ export enum ClientErrorCode {
   //  *  *  817XX: /my/blankets errors
   INVALID_BLANKET_ID = 81700,
   BLANKET_NOT_FOUND = 81701,
+  //  *  *  818XX: /my/business errors
+  BUSINESS_NOT_FOUND = 81800,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -181,7 +190,7 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
 
   // VALIDATION ERRORS (6XXXX - 7XXXX)
   //  *  6XXXX: Length errors
-  [ClientErrorCode.INVALID_PHONE_LENGTH]: `Provided phone wasn't in the length range of ${AccountRules.PHONE_MIN_LENGTH} to ${AccountRules.PHONE_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_PHONE_LENGTH]: `Provided phone wasn't in the length range of ${ContactRules.PHONE_MIN_LENGTH} to ${ContactRules.PHONE_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_PASSWORD_LENGTH]: `Provided password wasn't in the length range of ${AccountRules.PASSWORD_MIN_LENGTH} to ${AccountRules.PASSWORD_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_NAME_LENGTH]: `Provided name wasn't in the length range of ${AccountRules.NAME_MIN_LENGTH} to ${AccountRules.NAME_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_SURNAME_LENGTH]: `Provided surname wasn't in the length range of ${AccountRules.SURNAME_MIN_LENGTH} to ${AccountRules.SURNAME_MAX_LENGTH}.`,
@@ -192,6 +201,9 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_ITEM_DESCRIPTION_LENGTH]: `Provided item description wasn't in the length range of ${ItemRules.DESCRIPTION_MIN_LENGTH} to ${ItemRules.DESCRIPTION_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_VEHICLE_BRAND_LENGTH]: `Provided vehicle brand wasn't in the length range of ${VehicleRules.BRAND_MIN_LENGTH} to ${VehicleRules.BRAND_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_VEHICLE_MODEL_LENGTH]: `Provided vehicle model wasn't in the length range of ${VehicleRules.MODEL_MIN_LENGTH} to ${VehicleRules.MODEL_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_EMAIL_LENGTH]: `Provided email wasn't in the length range of ${ContactRules.EMAIL_MIN_LENGTH} to ${ContactRules.EMAIL_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_BUSINESS_NAME_LENGTH]: `Provided business name wasn't in the length range of ${BusinessRules.NAME_MIN_LENGTH} to ${BusinessRules.NAME_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_BUSINESS_DESCRIPTION_LENGTH]: `Provided business description wasn't in the length range of ${BusinessRules.DESCRIPTION_MIN_LENGTH} to ${BusinessRules.DESCRIPTION_MAX_LENGTH}.`,
   //  *  7XXXX: Content errors
   [ClientErrorCode.INVALID_PHONE_CONTENT]: "Provided phone contained invalid characters.",
   [ClientErrorCode.INVALID_PASSWORD_CONTENT]:
@@ -207,16 +219,22 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_ITEM_DESCRIPTION_CONTENT]:
     "Provided item description contained invalid characters.",
   [ClientErrorCode.DUPLICATE_MEDIA_IDS]: "Provided media ids contained duplicates.",
+  [ClientErrorCode.MEDIA_TYPE_NOT_ALLOWED]: `Provided media type wasn't in the allowed types.`,
   [ClientErrorCode.INVALID_VEHICLE_BRAND_CONTENT]:
     "Provided vehicle brand contained invalid characters.",
   [ClientErrorCode.INVALID_VEHICLE_MODEL_CONTENT]:
     "Provided vehicle model contained invalid characters.",
   [ClientErrorCode.INVALID_CHAIR_QUANTITY]: `Provided chair quantity wasn't in the range of ${ChairRules.QUANTITY_MIN} to ${ChairRules.QUANTITY_MAX}.`,
+  [ClientErrorCode.INVALID_EMAIL_CONTENT]: "Provided email contained invalid characters.",
+  [ClientErrorCode.INVALID_BUSINESS_NAME_CONTENT]:
+    "Provided business name contained invalid characters.",
+  [ClientErrorCode.INVALID_BUSINESS_DESCRIPTION_CONTENT]:
+    "Provided business description contained invalid characters.",
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
   //  *  *  800XX: /login errors
-  [ClientErrorCode.NO_ACCOUNT_FOUND]: "No account was found with the provided phone.",
+  [ClientErrorCode.ACCOUNT_NOT_FOUND]: "No account was found with the provided phone.",
   [ClientErrorCode.INCORRECT_PASSWORD]: "Provided password was incorrect.",
   //  *  *  801XX: /signup errors
   [ClientErrorCode.ACCOUNT_ALREADY_EXISTS]: "An account already exists with the provided phone.",
@@ -253,7 +271,6 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_CARPET_ID]: "Provided carpet id was invalid.",
   [ClientErrorCode.CARPET_NOT_FOUND]: "Account doesn't have a carpet with the provided id.",
   [ClientErrorCode.MEDIA_NOT_FOUND]: "Account doesn't have a media with the provided id.",
-  [ClientErrorCode.MEDIA_TYPE_NOT_ALLOWED]: `Provided media type wasn't in the allowed types: ${ItemMediaRules.ALLOWED_TYPES.join(", ")}.`,
   [ClientErrorCode.MEDIA_NOT_UPLOADED]: "Media wasn't uploaded to the bucket.",
   //  *  *  811XX: /my/vehicles errors
   [ClientErrorCode.INVALID_VEHICLE_ID]: "Provided vehicle id was invalid.",
@@ -276,6 +293,8 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   // *  *  817XX: /my/blankets errors
   [ClientErrorCode.INVALID_BLANKET_ID]: "Provided blanket id was invalid.",
   [ClientErrorCode.BLANKET_NOT_FOUND]: "Account doesn't have a blanket with the provided id.",
+  //  *  *  818XX: /my/business errors
+  [ClientErrorCode.BUSINESS_NOT_FOUND]: "Account doesn't have a business.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

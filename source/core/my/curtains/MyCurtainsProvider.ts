@@ -60,11 +60,9 @@ export class MyCurtainsProvider implements IProvider {
   ): Promise<ProviderResponse<CurtainViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const myCurtain = await this.partialGetMyCurtain(accountId, curtainId);
-      if (myCurtain === null) {
-        return await ResponseUtil.providerResponse(null);
-      }
-      return await ResponseUtil.providerResponse(myCurtain);
+      return await ResponseUtil.providerResponse(
+        await this.partialGetMyCurtain(accountId, curtainId),
+      );
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -144,6 +142,21 @@ export class MyCurtainsProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
+  private async partialGetMyCurtain(
+    accountId: number,
+    curtainId: number,
+  ): Promise<CurtainViewModel | null> {
+    const results = await DbConstants.POOL.query(CurtainViewQueries.GET_CURTAIN_$ACID_$CRID, [
+      accountId,
+      curtainId,
+    ]);
+    const record: unknown = results.rows[0];
+    if (!ProtoUtil.isProtovalid(record)) {
+      return null;
+    }
+    return CurtainViewModel.fromRecord(record);
+  }
+
   private async partialCreateCurtain(
     itemId: number,
     width: number | null,
@@ -174,20 +187,5 @@ export class MyCurtainsProvider implements IProvider {
 
   private async partialDeleteCurtain(curtainId: number): Promise<void> {
     await DbConstants.POOL.query(CurtainQueries.DELETE_CURTAIN_$CRID, [curtainId]);
-  }
-
-  private async partialGetMyCurtain(
-    accountId: number,
-    curtainId: number,
-  ): Promise<CurtainViewModel | null> {
-    const results = await DbConstants.POOL.query(CurtainViewQueries.GET_CURTAIN_$ACID_$CRID, [
-      accountId,
-      curtainId,
-    ]);
-    const record: unknown = results.rows[0];
-    if (!ProtoUtil.isProtovalid(record)) {
-      return null;
-    }
-    return CurtainViewModel.fromRecord(record);
   }
 }

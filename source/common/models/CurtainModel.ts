@@ -4,7 +4,7 @@ import { ProtoUtil } from "../../app/utils/ProtoUtil";
 import { CurtainType } from "../enums/CurtainType";
 
 export class CurtainModel implements IModel {
-  private constructor(
+  protected constructor(
     public readonly curtainId: number,
     public readonly itemId: number,
     public readonly width: number | null,
@@ -32,7 +32,7 @@ export class CurtainModel implements IModel {
     return records.map((record: unknown): CurtainModel => this.fromRecord(record));
   }
 
-  private static isValidModel(data: unknown): data is CurtainModel {
+  protected static isValidModel(data: unknown): data is CurtainModel {
     if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
@@ -46,7 +46,7 @@ export class CurtainModel implements IModel {
     );
   }
 
-  private static areValidModels(data: unknown[]): data is CurtainModel[] {
+  protected static areValidModels(data: unknown[]): data is CurtainModel[] {
     if (!Array.isArray(data)) {
       return false;
     }

@@ -5,6 +5,7 @@ import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { MediaHelper } from "../../../common/helpers/MediaHelper";
+import { ItemMediaRules } from "../../../common/rules/ItemMediaRules";
 import { MyCurtainsProvider } from "./MyCurtainsProvider";
 import type { MyCurtainsParams } from "./schemas/MyCurtainsParams";
 import type { MyCurtainsRequest } from "./schemas/MyCurtainsRequest";
@@ -35,7 +36,7 @@ export class MyCurtainsManager implements IManager {
       return findMediasResult.get();
     }
     const medias = findMediasResult.get();
-    const checkMediasResult = await MediaHelper.checkMedias(medias);
+    const checkMediasResult = await MediaHelper.checkMedias(medias, ItemMediaRules.ALLOWED_TYPES);
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }
@@ -105,7 +106,7 @@ export class MyCurtainsManager implements IManager {
       return findMediasResult.get();
     }
     const medias = findMediasResult.get();
-    const checkMediasResult = await MediaHelper.checkMedias(medias);
+    const checkMediasResult = await MediaHelper.checkMedias(medias, ItemMediaRules.ALLOWED_TYPES);
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }

@@ -5,7 +5,7 @@ import { SofaMaterial } from "../enums/SofaMaterial";
 import { SofaType } from "../enums/SofaType";
 
 export class SofaModel implements IModel {
-  private constructor(
+  protected constructor(
     public readonly sofaId: number,
     public readonly itemId: number,
     public readonly isCushioned: boolean | null,
@@ -33,7 +33,7 @@ export class SofaModel implements IModel {
     return records.map((record: unknown): SofaModel => this.fromRecord(record));
   }
 
-  private static isValidModel(data: unknown): data is SofaModel {
+  protected static isValidModel(data: unknown): data is SofaModel {
     if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
@@ -47,7 +47,7 @@ export class SofaModel implements IModel {
     );
   }
 
-  private static areValidModels(data: unknown[]): data is SofaModel[] {
+  protected static areValidModels(data: unknown[]): data is SofaModel[] {
     if (!Array.isArray(data)) {
       return false;
     }

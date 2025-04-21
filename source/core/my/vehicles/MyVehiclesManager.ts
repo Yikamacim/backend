@@ -5,6 +5,7 @@ import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { MediaHelper } from "../../../common/helpers/MediaHelper";
+import { ItemMediaRules } from "../../../common/rules/ItemMediaRules";
 import { MyVehiclesProvider } from "./MyVehiclesProvider";
 import type { MyVehiclesParams } from "./schemas/MyVehiclesParams";
 import type { MyVehiclesRequest } from "./schemas/MyVehiclesRequest";
@@ -35,7 +36,7 @@ export class MyVehiclesManager implements IManager {
       return findMediasResult.get();
     }
     const medias = findMediasResult.get();
-    const checkMediasResult = await MediaHelper.checkMedias(medias);
+    const checkMediasResult = await MediaHelper.checkMedias(medias, ItemMediaRules.ALLOWED_TYPES);
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }
@@ -105,7 +106,7 @@ export class MyVehiclesManager implements IManager {
       return findMediasResult.get();
     }
     const medias = findMediasResult.get();
-    const checkMediasResult = await MediaHelper.checkMedias(medias);
+    const checkMediasResult = await MediaHelper.checkMedias(medias, ItemMediaRules.ALLOWED_TYPES);
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }

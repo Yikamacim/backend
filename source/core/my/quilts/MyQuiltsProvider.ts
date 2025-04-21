@@ -59,11 +59,7 @@ export class MyQuiltsProvider implements IProvider {
   ): Promise<ProviderResponse<QuiltViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const myQuilt = await this.partialGetMyQuilt(accountId, quiltId);
-      if (myQuilt === null) {
-        return await ResponseUtil.providerResponse(null);
-      }
-      return await ResponseUtil.providerResponse(myQuilt);
+      return await ResponseUtil.providerResponse(await this.partialGetMyQuilt(accountId, quiltId));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -141,6 +137,21 @@ export class MyQuiltsProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
+  private async partialGetMyQuilt(
+    accountId: number,
+    quiltId: number,
+  ): Promise<QuiltViewModel | null> {
+    const results = await DbConstants.POOL.query(QuiltViewQueries.GET_QUILT_$ACID_$QLID, [
+      accountId,
+      quiltId,
+    ]);
+    const record: unknown = results.rows[0];
+    if (!ProtoUtil.isProtovalid(record)) {
+      return null;
+    }
+    return QuiltViewModel.fromRecord(record);
+  }
+
   private async partialCreateQuilt(
     itemId: number,
     quiltSize: QuiltSize | null,
@@ -171,20 +182,5 @@ export class MyQuiltsProvider implements IProvider {
 
   private async partialDeleteQuilt(quiltId: number): Promise<void> {
     await DbConstants.POOL.query(QuiltQueries.DELETE_QUILT_$QLID, [quiltId]);
-  }
-
-  private async partialGetMyQuilt(
-    accountId: number,
-    quiltId: number,
-  ): Promise<QuiltViewModel | null> {
-    const results = await DbConstants.POOL.query(QuiltViewQueries.GET_QUILT_$ACID_$QLID, [
-      accountId,
-      quiltId,
-    ]);
-    const record: unknown = results.rows[0];
-    if (!ProtoUtil.isProtovalid(record)) {
-      return null;
-    }
-    return QuiltViewModel.fromRecord(record);
   }
 }

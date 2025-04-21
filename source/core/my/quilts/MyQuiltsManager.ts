@@ -5,6 +5,7 @@ import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { MediaHelper } from "../../../common/helpers/MediaHelper";
+import { ItemMediaRules } from "../../../common/rules/ItemMediaRules";
 import { MyQuiltsProvider } from "./MyQuiltsProvider";
 import type { MyQuiltsParams } from "./schemas/MyQuiltsParams";
 import type { MyQuiltsRequest } from "./schemas/MyQuiltsRequest";
@@ -33,7 +34,7 @@ export class MyQuiltsManager implements IManager {
       return findMediasResult.get();
     }
     const medias = findMediasResult.get();
-    const checkMediasResult = await MediaHelper.checkMedias(medias);
+    const checkMediasResult = await MediaHelper.checkMedias(medias, ItemMediaRules.ALLOWED_TYPES);
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }
@@ -96,7 +97,7 @@ export class MyQuiltsManager implements IManager {
       return findMediasResult.get();
     }
     const medias = findMediasResult.get();
-    const checkMediasResult = await MediaHelper.checkMedias(medias);
+    const checkMediasResult = await MediaHelper.checkMedias(medias, ItemMediaRules.ALLOWED_TYPES);
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }

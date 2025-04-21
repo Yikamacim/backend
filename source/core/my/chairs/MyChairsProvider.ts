@@ -57,11 +57,7 @@ export class MyChairsProvider implements IProvider {
   ): Promise<ProviderResponse<ChairViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const myChair = await this.partialGetMyChair(accountId, chairId);
-      if (myChair === null) {
-        return await ResponseUtil.providerResponse(null);
-      }
-      return await ResponseUtil.providerResponse(myChair);
+      return await ResponseUtil.providerResponse(await this.partialGetMyChair(accountId, chairId));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -137,6 +133,21 @@ export class MyChairsProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
+  private async partialGetMyChair(
+    accountId: number,
+    chairId: number,
+  ): Promise<ChairViewModel | null> {
+    const results = await DbConstants.POOL.query(ChairViewQueries.GET_CHAIR_$ACID_$SFID, [
+      accountId,
+      chairId,
+    ]);
+    const record: unknown = results.rows[0];
+    if (!ProtoUtil.isProtovalid(record)) {
+      return null;
+    }
+    return ChairViewModel.fromRecord(record);
+  }
+
   private async partialCreateChair(itemId: number, quantity: number): Promise<ChairModel> {
     const results = await DbConstants.POOL.query(ChairQueries.INSERT_CHAIR_RT_$ITID_$QTTY, [
       itemId,
@@ -157,20 +168,5 @@ export class MyChairsProvider implements IProvider {
 
   private async partialDeleteChair(chairId: number): Promise<void> {
     await DbConstants.POOL.query(ChairQueries.DELETE_CHAIR_$CHID, [chairId]);
-  }
-
-  private async partialGetMyChair(
-    accountId: number,
-    chairId: number,
-  ): Promise<ChairViewModel | null> {
-    const results = await DbConstants.POOL.query(ChairViewQueries.GET_CHAIR_$ACID_$SFID, [
-      accountId,
-      chairId,
-    ]);
-    const record: unknown = results.rows[0];
-    if (!ProtoUtil.isProtovalid(record)) {
-      return null;
-    }
-    return ChairViewModel.fromRecord(record);
   }
 }

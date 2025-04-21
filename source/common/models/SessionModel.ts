@@ -33,7 +33,7 @@ export class SessionModel implements IModel {
     return records.map((record: unknown): SessionModel => this.fromRecord(record));
   }
 
-  private static isValidModel(data: unknown): data is SessionModel {
+  protected static isValidModel(data: unknown): data is SessionModel {
     if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
@@ -48,7 +48,7 @@ export class SessionModel implements IModel {
     );
   }
 
-  private static areValidModels(data: unknown[]): data is SessionModel[] {
+  protected static areValidModels(data: unknown[]): data is SessionModel[] {
     if (!Array.isArray(data)) {
       return false;
     }

@@ -4,13 +4,14 @@ import type { IProvider } from "../../../app/interfaces/IProvider";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { MediaViewModel } from "../../../common/models/MediaViewModel";
 import { MediaQueries } from "../../../common/queries/MediaQueries";
+import { MediaViewQueries } from "../../../common/queries/MediaViewQueries";
 import { PurgeConstants } from "../app/constants/PurgeConstants";
 
 export class PurgeProvider implements IProvider {
   public async getMedias(): Promise<ProviderResponse<MediaViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(MediaQueries.GET_MEDIAS);
+      const results = await DbConstants.POOL.query(MediaViewQueries.GET_MEDIAS);
       const records: unknown[] = results.rows;
       return await ResponseUtil.providerResponse(MediaViewModel.fromRecords(records));
     } catch (error) {

@@ -6,5 +6,5 @@ export class SessionRules implements IRules {
 
   public static readonly DEVICE_NAME_MIN_LENGTH = 1;
   public static readonly DEVICE_NAME_MAX_LENGTH = 256;
-  public static readonly DEVICE_NAME_REGEX = /^\P{C}*$/u;
+  public static readonly DEVICE_NAME_REGEX = /^\P{C}+$/u;
 }

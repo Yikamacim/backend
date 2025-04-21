@@ -61,11 +61,9 @@ export class MyBlanketsProvider implements IProvider {
   ): Promise<ProviderResponse<BlanketViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const myBlanket = await this.partialGetMyBlanket(accountId, blanketId);
-      if (myBlanket === null) {
-        return await ResponseUtil.providerResponse(null);
-      }
-      return await ResponseUtil.providerResponse(myBlanket);
+      return await ResponseUtil.providerResponse(
+        await this.partialGetMyBlanket(accountId, blanketId),
+      );
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -143,6 +141,21 @@ export class MyBlanketsProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
+  private async partialGetMyBlanket(
+    accountId: number,
+    blanketId: number,
+  ): Promise<BlanketViewModel | null> {
+    const results = await DbConstants.POOL.query(BlanketViewQueries.GET_BLANKET_$ACID_$BLID, [
+      accountId,
+      blanketId,
+    ]);
+    const record: unknown = results.rows[0];
+    if (!ProtoUtil.isProtovalid(record)) {
+      return null;
+    }
+    return BlanketViewModel.fromRecord(record);
+  }
+
   private async partialCreateBlanket(
     itemId: number,
     blanketSize: BlanketSize | null,
@@ -171,20 +184,5 @@ export class MyBlanketsProvider implements IProvider {
 
   private async partialDeleteBlanket(blanketId: number): Promise<void> {
     await DbConstants.POOL.query(BlanketQueries.DELETE_BLANKET_$BLID, [blanketId]);
-  }
-
-  private async partialGetMyBlanket(
-    accountId: number,
-    blanketId: number,
-  ): Promise<BlanketViewModel | null> {
-    const results = await DbConstants.POOL.query(BlanketViewQueries.GET_BLANKET_$ACID_$BLID, [
-      accountId,
-      blanketId,
-    ]);
-    const record: unknown = results.rows[0];
-    if (!ProtoUtil.isProtovalid(record)) {
-      return null;
-    }
-    return BlanketViewModel.fromRecord(record);
   }
 }

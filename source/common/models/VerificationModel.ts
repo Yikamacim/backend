@@ -24,7 +24,7 @@ export class VerificationModel implements IModel {
     return records.map((record: unknown): VerificationModel => this.fromRecord(record));
   }
 
-  private static isValidModel(data: unknown): data is VerificationModel {
+  protected static isValidModel(data: unknown): data is VerificationModel {
     if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
@@ -37,7 +37,7 @@ export class VerificationModel implements IModel {
     );
   }
 
-  private static areValidModels(data: unknown[]): data is VerificationModel[] {
+  protected static areValidModels(data: unknown[]): data is VerificationModel[] {
     if (!Array.isArray(data)) {
       return false;
     }

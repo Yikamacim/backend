@@ -3,7 +3,7 @@ import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
 
 export class DistrictModel implements IModel {
-  private constructor(
+  protected constructor(
     public readonly districtId: number,
     public readonly provinceId: number,
     public readonly name: string,
@@ -23,7 +23,7 @@ export class DistrictModel implements IModel {
     return records.map((record: unknown): DistrictModel => this.fromRecord(record));
   }
 
-  private static isValidModel(data: unknown): data is DistrictModel {
+  protected static isValidModel(data: unknown): data is DistrictModel {
     if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
@@ -35,7 +35,7 @@ export class DistrictModel implements IModel {
     );
   }
 
-  private static areValidModels(data: unknown[]): data is DistrictModel[] {
+  protected static areValidModels(data: unknown[]): data is DistrictModel[] {
     if (!Array.isArray(data)) {
       return false;
     }

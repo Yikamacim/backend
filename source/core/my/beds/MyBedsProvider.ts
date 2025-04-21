@@ -58,11 +58,7 @@ export class MyBedsProvider implements IProvider {
   ): Promise<ProviderResponse<BedViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const myBed = await this.partialGetMyBed(accountId, bedId);
-      if (myBed === null) {
-        return await ResponseUtil.providerResponse(null);
-      }
-      return await ResponseUtil.providerResponse(myBed);
+      return await ResponseUtil.providerResponse(await this.partialGetMyBed(accountId, bedId));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -138,6 +134,18 @@ export class MyBedsProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
+  private async partialGetMyBed(accountId: number, bedId: number): Promise<BedViewModel | null> {
+    const results = await DbConstants.POOL.query(BedViewQueries.GET_BED_$ACID_$BDID, [
+      accountId,
+      bedId,
+    ]);
+    const record: unknown = results.rows[0];
+    if (!ProtoUtil.isProtovalid(record)) {
+      return null;
+    }
+    return BedViewModel.fromRecord(record);
+  }
+
   private async partialCreateBed(itemId: number, bedSize: BedSize | null): Promise<BedModel> {
     const results = await DbConstants.POOL.query(BedQueries.INSERT_BED_RT_$ITID_$BDSZ, [
       itemId,
@@ -158,17 +166,5 @@ export class MyBedsProvider implements IProvider {
 
   private async partialDeleteBed(bedId: number): Promise<void> {
     await DbConstants.POOL.query(BedQueries.DELETE_BED_$BDID, [bedId]);
-  }
-
-  private async partialGetMyBed(accountId: number, bedId: number): Promise<BedViewModel | null> {
-    const results = await DbConstants.POOL.query(BedViewQueries.GET_BED_$ACID_$BDID, [
-      accountId,
-      bedId,
-    ]);
-    const record: unknown = results.rows[0];
-    if (!ProtoUtil.isProtovalid(record)) {
-      return null;
-    }
-    return BedViewModel.fromRecord(record);
   }
 }

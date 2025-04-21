@@ -4,7 +4,7 @@ import { ProtoUtil } from "../../app/utils/ProtoUtil";
 import { BedSize } from "../enums/BedSize";
 
 export class BedViewModel implements IModel {
-  private constructor(
+  protected constructor(
     public readonly bedId: number,
     public readonly accountId: number,
     public readonly itemId: number,
@@ -34,7 +34,7 @@ export class BedViewModel implements IModel {
     return records.map((record: unknown): BedViewModel => this.fromRecord(record));
   }
 
-  private static isValidModel(data: unknown): data is BedViewModel {
+  protected static isValidModel(data: unknown): data is BedViewModel {
     if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
@@ -49,7 +49,7 @@ export class BedViewModel implements IModel {
     );
   }
 
-  private static areValidModels(data: unknown[]): data is BedViewModel[] {
+  protected static areValidModels(data: unknown[]): data is BedViewModel[] {
     if (!Array.isArray(data)) {
       return false;
     }
