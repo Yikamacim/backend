@@ -72,14 +72,14 @@ export class MyBusinessManager implements IManager {
       }
       mediaData = await MediaHelper.mediaToMediaData(media);
     }
-    const myBusiness = await this.provider.createCarpet(
+    const myBusiness = await this.provider.createBusiness(
       payload.accountId,
       request.name,
+      request.mediaId,
+      request.address,
+      request.phone,
+      request.email,
       request.description,
-      request.mediaIds,
-      request.width,
-      request.length,
-      request.carpetMaterial,
     );
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),

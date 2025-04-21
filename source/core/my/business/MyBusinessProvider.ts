@@ -1,14 +1,39 @@
 import type { ProviderResponse } from "../../../@types/responses";
+import { BusinessConstants } from "../../../app/constants/BusinessConstants";
 import { DbConstants } from "../../../app/constants/DbConstants";
 import type { IProvider } from "../../../app/interfaces/IProvider";
+import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { BusinessModel } from "../../../common/models/BusinessModel";
 import { BusinessViewModel } from "../../../common/models/BusinessViewModel";
+import { AddressProvider } from "../../../common/providers/AddressProvider";
+import { BusinessMediaProvider } from "../../../common/providers/BusinessMediaProvider";
 import { BusinessQueries } from "../../../common/queries/BusinessQueries";
 import { BusinessViewQueries } from "../../../common/queries/BusinessViewQueries";
 
 export class MyBusinessProvider implements IProvider {
+  public constructor(
+    private readonly businessMediaProvider = new BusinessMediaProvider(),
+    private readonly addressProvider = new AddressProvider(),
+  ) {
+    this.partialCreateBusinessMedia = this.businessMediaProvider.partialCreateBusinessMedia.bind(
+      this.businessMediaProvider,
+    );
+    this.partialDeleteBusinessMedia = this.businessMediaProvider.partialDeleteBusinessMedia.bind(
+      this.businessMediaProvider,
+    );
+    this.createAddress = this.addressProvider.createAddress.bind(this.addressProvider);
+    this.updateAddress = this.addressProvider.updateAddress.bind(this.addressProvider);
+    this.deleteAddress = this.addressProvider.deleteAddress.bind(this.addressProvider);
+  }
+
+  public partialCreateBusinessMedia: typeof this.businessMediaProvider.partialCreateBusinessMedia;
+  public partialDeleteBusinessMedia: typeof this.businessMediaProvider.partialDeleteBusinessMedia;
+  public createAddress: typeof this.addressProvider.createAddress;
+  public updateAddress: typeof this.addressProvider.updateAddress;
+  public deleteAddress: typeof this.addressProvider.deleteAddress;
+
   public async getMyBusiness(
     accountId: number,
   ): Promise<ProviderResponse<BusinessViewModel | null>> {
@@ -35,14 +60,28 @@ export class MyBusinessProvider implements IProvider {
     phone: string,
     email: string,
     description: string,
-  ): Promise<ProviderResponse<BusinessViewModel | null>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      return await ResponseUtil.providerResponse(await this.partialGetMyCarpet(accountId));
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
+  ): Promise<ProviderResponse<BusinessViewModel>> {
+    if (mediaId !== null) {
+      await this.partialCreateBusinessMedia(accountId, mediaId, true);
     }
+    const addressId = (
+      await this.createAddress(
+        accountId,
+        BusinessConstants.ADDRESS_NAME,
+        address.countryId,
+        address.provinceId,
+        address.districtId,
+        address.neighborhoodId,
+        address.explicitAddress,
+        BusinessConstants.ADDRESS_IS_DEFAULT,
+      )
+    ).addressId;
+    await this.partialCreateBusiness(accountId, name, addressId, phone, email, description);
+    const businessView = await this.partialGetMyBusiness(accountId);
+    if (businessView === null) {
+      throw new UnexpectedDatabaseStateError("Business was not created");
+    }
+    return await ResponseUtil.providerResponse(businessView);
   }
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
