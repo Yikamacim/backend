@@ -5,7 +5,7 @@
 -- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
 -- Dumped by pg_dump version 16.8 (Debian 16.8-1.pgdg120+1)
 
--- Started on 2025-04-21 11:37:38 UTC
+-- Started on 2025-04-21 12:11:25 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -707,7 +707,7 @@ CREATE TABLE public."Review" (
 ALTER TABLE public."Review" OWNER TO "UYikamacim";
 
 --
--- TOC entry 278 (class 1259 OID 25647)
+-- TOC entry 278 (class 1259 OID 25652)
 -- Name: BusinessView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -747,7 +747,7 @@ CREATE VIEW public."BusinessView" AS
     "Business".description,
     "Business"."isOpen",
     "ReviewStats".stars,
-    COALESCE("ReviewStats"."reviewsCount", (0)::bigint) AS "reviewsCount",
+    (COALESCE("ReviewStats"."reviewsCount", (0)::bigint))::integer AS "reviewsCount",
     "LatestApproval"."approvalState"
    FROM ((((((((public."Business"
      JOIN public."Address" ON (("Business"."addressId" = "Address"."addressId")))
@@ -77217,7 +77217,7 @@ ALTER TABLE ONLY public."Vehicle"
     ADD CONSTRAINT "Vehicle_Item_fk" FOREIGN KEY ("itemId") REFERENCES public."Item"("itemId");
 
 
--- Completed on 2025-04-21 11:37:38 UTC
+-- Completed on 2025-04-21 12:11:25 UTC
 
 --
 -- PostgreSQL database dump complete
