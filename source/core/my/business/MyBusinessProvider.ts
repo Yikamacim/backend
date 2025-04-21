@@ -60,9 +60,6 @@ export class MyBusinessProvider implements IProvider {
     email: string,
     description: string,
   ): Promise<ProviderResponse<BusinessViewModel>> {
-    if (mediaId !== null) {
-      await this.partialCreateBusinessMedia(accountId, mediaId, true);
-    }
     const addressId = (
       await this.createAddress(
         accountId,
@@ -79,6 +76,9 @@ export class MyBusinessProvider implements IProvider {
     const businessView = await this.partialGetMyBusiness(accountId);
     if (businessView === null) {
       throw new UnexpectedDatabaseStateError("Business was not created");
+    }
+    if (mediaId !== null) {
+      await this.partialCreateBusinessMedia(businessView.businessId, mediaId, true);
     }
     return await ResponseUtil.providerResponse(businessView);
   }
@@ -99,10 +99,6 @@ export class MyBusinessProvider implements IProvider {
     email: string,
     description: string,
   ): Promise<ProviderResponse<BusinessViewModel>> {
-    if (mediaId !== null) {
-      await this.partialDeleteBusinessMainMedia(accountId);
-      await this.partialCreateBusinessMedia(accountId, mediaId, true);
-    }
     await this.updateAddress(
       addressId,
       BusinessConstants.ADDRESS_NAME,
@@ -117,6 +113,10 @@ export class MyBusinessProvider implements IProvider {
     const businessView = await this.partialGetMyBusiness(accountId);
     if (businessView === null) {
       throw new UnexpectedDatabaseStateError("Business was not created");
+    }
+    if (mediaId !== null) {
+      await this.partialDeleteBusinessMainMedia(accountId);
+      await this.partialCreateBusinessMedia(businessView.businessId, mediaId, true);
     }
     return await ResponseUtil.providerResponse(businessView);
   }
