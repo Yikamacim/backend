@@ -34,11 +34,15 @@ export class MyBusinessManager implements IManager {
         MyBusinessResponse.fromModel(myBusiness, null),
       );
     }
-    const findMediaResult = await MediaHelper.findMedia(payload.accountId, myBusiness.mediaId);
-    if (findMediaResult.isLeft()) {
-      return findMediaResult.get();
+    const media = await this.provider.getMedia(myBusiness.mediaId);
+    if (media === null) {
+      return ResponseUtil.managerResponse(
+        new HttpStatus(HttpStatusCode.NOT_FOUND),
+        null,
+        [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
+        null,
+      );
     }
-    const media = findMediaResult.get();
     const checkMediaResult = await MediaHelper.checkMedia(media, BusinessMediaRules.ALLOWED_TYPES);
     if (checkMediaResult.isLeft()) {
       return checkMediaResult.get();

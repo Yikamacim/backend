@@ -9,29 +9,33 @@ import { BusinessModel } from "../../../common/models/BusinessModel";
 import { BusinessViewModel } from "../../../common/models/BusinessViewModel";
 import { AddressProvider } from "../../../common/providers/AddressProvider";
 import { BusinessMediaProvider } from "../../../common/providers/BusinessMediaProvider";
+import { MediaProvider } from "../../../common/providers/MediaProvider";
 import { BusinessQueries } from "../../../common/queries/BusinessQueries";
 import { BusinessViewQueries } from "../../../common/queries/BusinessViewQueries";
 
 export class MyBusinessProvider implements IProvider {
   public constructor(
-    private readonly businessMediaProvider = new BusinessMediaProvider(),
     private readonly addressProvider = new AddressProvider(),
+    private readonly mediaProvider = new MediaProvider(),
+    private readonly businessMediaProvider = new BusinessMediaProvider(),
   ) {
+    this.createAddress = this.addressProvider.createAddress.bind(this.addressProvider);
+    this.updateAddress = this.addressProvider.updateAddress.bind(this.addressProvider);
+    this.deleteAddress = this.addressProvider.deleteAddress.bind(this.addressProvider);
     this.partialCreateBusinessMedia = this.businessMediaProvider.partialCreateBusinessMedia.bind(
       this.businessMediaProvider,
     );
     this.partialDeleteBusinessMainMedia =
       this.businessMediaProvider.partialDeleteBusinessMainMedia.bind(this.businessMediaProvider);
-    this.createAddress = this.addressProvider.createAddress.bind(this.addressProvider);
-    this.updateAddress = this.addressProvider.updateAddress.bind(this.addressProvider);
-    this.deleteAddress = this.addressProvider.deleteAddress.bind(this.addressProvider);
+    this.getMedia = this.mediaProvider.getMedia.bind(this.mediaProvider);
   }
 
-  public partialCreateBusinessMedia: typeof this.businessMediaProvider.partialCreateBusinessMedia;
-  public partialDeleteBusinessMainMedia: typeof this.businessMediaProvider.partialDeleteBusinessMainMedia;
   public createAddress: typeof this.addressProvider.createAddress;
   public updateAddress: typeof this.addressProvider.updateAddress;
   public deleteAddress: typeof this.addressProvider.deleteAddress;
+  public partialCreateBusinessMedia: typeof this.businessMediaProvider.partialCreateBusinessMedia;
+  public partialDeleteBusinessMainMedia: typeof this.businessMediaProvider.partialDeleteBusinessMainMedia;
+  public getMedia: typeof this.mediaProvider.getMedia;
 
   public async getMyBusiness(
     accountId: number,

@@ -38,7 +38,7 @@ export class MediaHelper implements IHelper {
     accountId: number,
     mediaIds: number[],
   ): Promise<Either<ManagerResponse<null>, MediaViewModel[]>> {
-    const myMedias = await new MediaProvider().getMyMedias(accountId);
+    const myMedias = await new MediaProvider().getMyUnusedMedias(accountId);
     const foundMedias: MediaViewModel[] = [];
     for (const mediaId of mediaIds) {
       const findMediaResult = await MediaHelper.findMedia(accountId, mediaId, myMedias);
@@ -57,7 +57,7 @@ export class MediaHelper implements IHelper {
     myMedias: MediaViewModel[] | null = null,
   ): Promise<Either<ManagerResponse<null>, MediaViewModel>> {
     if (myMedias === null) {
-      myMedias = await new MediaProvider().getMyMedias(accountId);
+      myMedias = await new MediaProvider().getMyUnusedMedias(accountId);
     }
     const myMedia = myMedias.find((myMedia) => myMedia.mediaId === mediaId);
     if (myMedia === undefined) {

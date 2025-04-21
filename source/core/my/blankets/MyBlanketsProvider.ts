@@ -30,7 +30,7 @@ export class MyBlanketsProvider implements IProvider {
     this.partialDeleteItemMedias = this.itemMediaProvider.partialDeleteItemMedias.bind(
       this.itemMediaProvider,
     );
-    this.getMyMedias = this.mediaProvider.getMyMedias.bind(this.mediaProvider);
+    this.getMyMedias = this.mediaProvider.getMyUnusedMedias.bind(this.mediaProvider);
   }
 
   public partialCreateItem: typeof this.itemProvider.partialCreateItem;
@@ -39,7 +39,7 @@ export class MyBlanketsProvider implements IProvider {
   public getItemMedias: typeof this.itemMediaProvider.getItemMedias;
   public partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   public partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
-  public getMyMedias: typeof this.mediaProvider.getMyMedias;
+  public getMyMedias: typeof this.mediaProvider.getMyUnusedMedias;
 
   public async getMyBlankets(accountId: number): Promise<ProviderResponse<BlanketViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
