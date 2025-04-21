@@ -124,11 +124,15 @@ export class MyBusinessManager implements IManager {
     }
     let mediaData: MediaData | null = null;
     if (request.mediaId !== null) {
-      const findMediaResult = await MediaHelper.findMedia(payload.accountId, request.mediaId);
-      if (findMediaResult.isLeft()) {
-        return findMediaResult.get();
+      const media = await this.provider.getMedia(request.mediaId);
+      if (media === null) {
+        return ResponseUtil.managerResponse(
+          new HttpStatus(HttpStatusCode.NOT_FOUND),
+          null,
+          [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
+          null,
+        );
       }
-      const media = findMediaResult.get();
       const checkMediaResult = await MediaHelper.checkMedia(
         media,
         BusinessMediaRules.ALLOWED_TYPES,
