@@ -97,47 +97,58 @@ export class MyBusinessManager implements IManager {
     );
   }
 
-  // public async putMyBusiness(
-  //   payload: TokenPayload,
-  //   request: MyBusinessRequest,
-  // ): Promise<ManagerResponse<MyBusinessResponse | null>> {
-  //   const myCarpet = await this.provider.getMyCarpet(payload.accountId, parseInt(params.carpetId));
-  //   if (myCarpet === null) {
-  //     return ResponseUtil.managerResponse(
-  //       new HttpStatus(HttpStatusCode.NOT_FOUND),
-  //       null,
-  //       [new ClientError(ClientErrorCode.CARPET_NOT_FOUND)],
-  //       null,
-  //     );
-  //   }
-  //   const findMediasResult = await MediaHelper.findMedias(payload.accountId, request.mediaIds);
-  //   if (findMediasResult.isLeft()) {
-  //     return findMediasResult.get();
-  //   }
-  //   const medias = findMediasResult.get();
-  //   const checkMediasResult = await MediaHelper.checkMedias(medias);
-  //   if (checkMediasResult.isLeft()) {
-  //     return checkMediasResult.get();
-  //   }
-  //   const oldMedias = await this.provider.getItemMedias(myCarpet.itemId);
-  //   const myUpdatedCarpet = await this.provider.updateCarpet(
-  //     payload.accountId,
-  //     oldMedias.map((oldMedia) => oldMedia.mediaId),
-  //     myCarpet.carpetId,
-  //     myCarpet.itemId,
-  //     request.name,
-  //     request.description,
-  //     request.mediaIds,
-  //     request.width,
-  //     request.length,
-  //     request.carpetMaterial,
-  //   );
-  //   const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
-  //   return ResponseUtil.managerResponse(
-  //     new HttpStatus(HttpStatusCode.OK),
-  //     null,
-  //     [],
-  //     MyBusinessResponse.fromModel(myUpdatedCarpet, mediaDatas),
-  //   );
-  // }
+  public async putMyBusiness(
+    payload: TokenPayload,
+    request: MyBusinessRequest,
+  ): Promise<ManagerResponse<MyBusinessResponse | null>> {
+    const myBusiness = await this.provider.getMyBusiness(payload.accountId);
+    if (myBusiness === null) {
+      return ResponseUtil.managerResponse(
+        new HttpStatus(HttpStatusCode.CONFLICT),
+        null,
+        [new ClientError(ClientErrorCode.BUSINESS_NOT_FOUND)],
+        null,
+      );
+    }
+    if (myBusiness.isOpen) {
+      return ResponseUtil.managerResponse(
+        new HttpStatus(HttpStatusCode.CONFLICT),
+        null,
+        [new ClientError(ClientErrorCode.BUSINESS_IS_OPEN)],
+        null,
+      );
+    }
+    let mediaData: MediaData | null = null;
+    if (request.mediaId !== null) {
+      const findMediaResult = await MediaHelper.findMedia(payload.accountId, request.mediaId);
+      if (findMediaResult.isLeft()) {
+        return findMediaResult.get();
+      }
+      const media = findMediaResult.get();
+      const checkMediaResult = await MediaHelper.checkMedia(
+        media,
+        BusinessMediaRules.ALLOWED_TYPES,
+      );
+      if (checkMediaResult.isLeft()) {
+        return checkMediaResult.get();
+      }
+      mediaData = await MediaHelper.mediaToMediaData(media);
+    }
+    const myUpdatedBusiness = await this.provider.updateBusiness(
+      payload.accountId,
+      request.name,
+      request.mediaId,
+      myBusiness.addressId,
+      request.address,
+      request.phone,
+      request.email,
+      request.description,
+    );
+    return ResponseUtil.managerResponse(
+      new HttpStatus(HttpStatusCode.OK),
+      null,
+      [],
+      MyBusinessResponse.fromModel(myUpdatedBusiness, mediaData),
+    );
+  }
 }

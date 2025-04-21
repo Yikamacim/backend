@@ -30,12 +30,12 @@ export class MyBusinessBuilder implements IBuilder {
       Method.POST,
       this.controller.postMyBusiness.bind(this.controller),
     );
-    // RouteHelper.buildRoute(
-    //   this.router,
-    //   { baseRoute: MyBusinessBuilder.BASE_ROUTE, route: "/" },
-    //   RouteType.PRIVATE,
-    //   Method.PUT,
-    //   this.controller.putMyBusiness.bind(this.controller),
-    // );
+    RouteHelper.buildRoute(
+      this.router,
+      { baseRoute: MyBusinessBuilder.BASE_ROUTE, route: "/" },
+      RouteType.PRIVATE,
+      Method.PUT,
+      this.controller.putMyBusiness.bind(this.controller),
+    );
   }
 }

@@ -151,6 +151,7 @@ export enum ClientErrorCode {
   //  *  *  818XX: /my/business errors
   BUSINESS_NOT_FOUND = 81800,
   BUSINESS_ALREADY_EXISTS = 81801,
+  BUSINESS_IS_OPEN = 81802,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -297,6 +298,7 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   //  *  *  818XX: /my/business errors
   [ClientErrorCode.BUSINESS_NOT_FOUND]: "Account doesn't have a business.",
   [ClientErrorCode.BUSINESS_ALREADY_EXISTS]: "Account already has a business.",
+  [ClientErrorCode.BUSINESS_IS_OPEN]: "Business is open. It can't be edited or deleted.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

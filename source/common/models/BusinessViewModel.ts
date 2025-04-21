@@ -9,6 +9,7 @@ export class BusinessViewModel implements IModel {
     public readonly accountId: number,
     public readonly name: string,
     public readonly mediaId: number | null,
+    public readonly addressId: number,
     public readonly countryId: number,
     public readonly countryName: string,
     public readonly provinceId: number,
@@ -36,6 +37,7 @@ export class BusinessViewModel implements IModel {
       record.accountId,
       record.name,
       record.mediaId,
+      record.addressId,
       record.countryId,
       record.countryName,
       record.provinceId,
@@ -72,6 +74,7 @@ export class BusinessViewModel implements IModel {
       typeof model.accountId === "number" &&
       typeof model.name === "string" &&
       (model.mediaId === null || typeof model.mediaId === "number") &&
+      typeof model.addressId === "number" &&
       typeof model.countryId === "number" &&
       typeof model.countryName === "string" &&
       typeof model.provinceId === "number" &&

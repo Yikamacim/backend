@@ -17,10 +17,10 @@ export class BusinessMediaProvider implements IProvider {
     ]);
   }
 
-  public async partialDeleteBusinessMedia(businessId: number, isMain: boolean): Promise<void> {
+  public async partialDeleteBusinessMainMedia(businessId: number): Promise<void> {
     await DbConstants.POOL.query(BusinessMediaQueries.DELETE_BUSINESS_MEDIA_$BSID_$ISMN, [
       businessId,
-      isMain,
+      true,
     ]);
   }
 }

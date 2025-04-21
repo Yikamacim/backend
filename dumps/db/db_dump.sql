@@ -5,7 +5,7 @@
 -- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
 -- Dumped by pg_dump version 16.8 (Debian 16.8-1.pgdg120+1)
 
--- Started on 2025-04-21 12:11:25 UTC
+-- Started on 2025-04-21 18:15:12 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -707,7 +707,7 @@ CREATE TABLE public."Review" (
 ALTER TABLE public."Review" OWNER TO "UYikamacim";
 
 --
--- TOC entry 278 (class 1259 OID 25652)
+-- TOC entry 278 (class 1259 OID 25657)
 -- Name: BusinessView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -733,6 +733,7 @@ CREATE VIEW public."BusinessView" AS
     "Business"."accountId",
     "Business".name,
     "MainMedia"."mediaId",
+    "Address"."addressId",
     "Address"."countryId",
     "Country".name AS "countryName",
     "Address"."provinceId",
@@ -77217,7 +77218,7 @@ ALTER TABLE ONLY public."Vehicle"
     ADD CONSTRAINT "Vehicle_Item_fk" FOREIGN KEY ("itemId") REFERENCES public."Item"("itemId");
 
 
--- Completed on 2025-04-21 12:11:25 UTC
+-- Completed on 2025-04-21 18:15:12 UTC
 
 --
 -- PostgreSQL database dump complete
