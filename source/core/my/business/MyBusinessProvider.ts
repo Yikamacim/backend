@@ -119,7 +119,7 @@ export class MyBusinessProvider implements IProvider {
       throw new UnexpectedDatabaseStateError("Business was not created");
     }
     if (mediaId !== null) {
-      await this.partialDeleteBusinessMainMedia(accountId);
+      await this.partialDeleteBusinessMainMedia(businessView.businessId);
       await this.partialCreateBusinessMedia(businessView.businessId, mediaId, true);
     }
     return await ResponseUtil.providerResponse(businessView);
