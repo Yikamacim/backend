@@ -6,6 +6,7 @@ import { ApprovalState } from "../enums/ApprovalState";
 export class BusinessViewModel implements IModel {
   protected constructor(
     public readonly businessId: number,
+    public readonly accountId: number,
     public readonly name: string,
     public readonly mediaId: number | null,
     public readonly countryId: number,
@@ -32,6 +33,7 @@ export class BusinessViewModel implements IModel {
     }
     return new BusinessViewModel(
       record.businessId,
+      record.accountId,
       record.name,
       record.mediaId,
       record.countryId,
@@ -67,6 +69,7 @@ export class BusinessViewModel implements IModel {
     const model = data as BusinessViewModel;
     return (
       typeof model.businessId === "number" &&
+      typeof model.accountId === "number" &&
       typeof model.name === "string" &&
       (model.mediaId === null || typeof model.mediaId === "number") &&
       typeof model.countryId === "number" &&

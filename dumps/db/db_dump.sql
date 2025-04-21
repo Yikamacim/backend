@@ -5,7 +5,7 @@
 -- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
 -- Dumped by pg_dump version 16.8 (Debian 16.8-1.pgdg120+1)
 
--- Started on 2025-04-21 10:33:04 UTC
+-- Started on 2025-04-21 11:37:38 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -475,7 +475,7 @@ CREATE TABLE public."Approval" (
 ALTER TABLE public."Approval" OWNER TO "UYikamacim";
 
 --
--- TOC entry 278 (class 1259 OID 25630)
+-- TOC entry 277 (class 1259 OID 25630)
 -- Name: ApprovalMedia; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -707,7 +707,7 @@ CREATE TABLE public."Review" (
 ALTER TABLE public."Review" OWNER TO "UYikamacim";
 
 --
--- TOC entry 277 (class 1259 OID 25624)
+-- TOC entry 278 (class 1259 OID 25647)
 -- Name: BusinessView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -730,6 +730,7 @@ CREATE VIEW public."BusinessView" AS
           WHERE ("BusinessMedia"."isMain" = true)
         )
  SELECT "Business"."businessId",
+    "Business"."accountId",
     "Business".name,
     "MainMedia"."mediaId",
     "Address"."countryId",
@@ -1807,8 +1808,6 @@ ALTER TABLE ONLY public."Verification" ALTER COLUMN "verificationId" SET DEFAULT
 
 COPY public."Account" ("accountId", phone, password, name, surname, "accountType", "isVerified") FROM stdin;
 12	+905554443322	$2b$10$ltdEnbrSlYx/Bgbb9m8WX.WJg8LMj2629iYdVKyJ34hNaCMd2epVi	Postman	Client	USER	t
-13	+905345814471	$2b$10$.O5/WYR30rtMVs34KcKdpu5DIa3bGsDir0e2Bfa3NqWXTQTKcGK6K	Veysel Karani	Saydam	USER	t
-14	+905331991562	$2b$10$Ba/Pno4zwQxuqg7f/0FqG.kP4EiEpDfvEaO7E/jtAvlC3FPaGkEjK	Emrecan	Karaçayır	USER	f
 \.
 
 
@@ -1836,7 +1835,7 @@ COPY public."Approval" ("approvalId", "businessId", message, "approvalState", re
 
 --
 -- TOC entry 3760 (class 0 OID 25630)
--- Dependencies: 278
+-- Dependencies: 277
 -- Data for Name: ApprovalMedia; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -76383,7 +76382,6 @@ COPY public."Review" ("reviewId", "accountId", "businessId", stars, comment) FRO
 --
 
 COPY public."Session" ("sessionId", "accountId", "deviceName", "sessionKey", "refreshToken", "lastActivityDate") FROM stdin;
-11	13	Postman Client	01876e626dae1931ede393903b8af7de327b828c52b37113ac3a24f373c1f0c5	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjEzLCJhY2NvdW50VHlwZSI6IlVTRVIiLCJzZXNzaW9uSWQiOjExLCJpYXQiOjE3NDI5ODk5MzMsImV4cCI6MTc0NTU4MTkzM30.pYaCel1wPKpbUIXfEqDowaUkDDSr_OQwcazLj0pai88	2025-03-26
 10	12	Postman Client	01876e626dae1931ede393903b8af7de327b828c52b37113ac3a24f373c1f0c5	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjEyLCJhY2NvdW50VHlwZSI6IlVTRVIiLCJzZXNzaW9uSWQiOjEwLCJpYXQiOjE3NDMwMzE2NzYsImV4cCI6MTc0NTYyMzY3Nn0.SYb-Y9eVmJ2zc7T1GatjUpiFyzmBDnotN23s3SXiGmY	2025-03-26
 \.
 
@@ -77219,7 +77217,7 @@ ALTER TABLE ONLY public."Vehicle"
     ADD CONSTRAINT "Vehicle_Item_fk" FOREIGN KEY ("itemId") REFERENCES public."Item"("itemId");
 
 
--- Completed on 2025-04-21 10:33:04 UTC
+-- Completed on 2025-04-21 11:37:38 UTC
 
 --
 -- PostgreSQL database dump complete
