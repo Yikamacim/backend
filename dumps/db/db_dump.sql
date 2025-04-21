@@ -5,7 +5,7 @@
 -- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
 -- Dumped by pg_dump version 16.8 (Debian 16.8-1.pgdg120+1)
 
--- Started on 2025-04-21 18:15:12 UTC
+-- Started on 2025-04-21 18:19:53 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1809,6 +1809,8 @@ ALTER TABLE ONLY public."Verification" ALTER COLUMN "verificationId" SET DEFAULT
 
 COPY public."Account" ("accountId", phone, password, name, surname, "accountType", "isVerified") FROM stdin;
 12	+905554443322	$2b$10$ltdEnbrSlYx/Bgbb9m8WX.WJg8LMj2629iYdVKyJ34hNaCMd2epVi	Postman	Client	USER	t
+15	+905417332300	$2b$10$Uk/d7S/Upnp69HCfw0E8.OMJHqlezhQ79dc0c/Y6Pl2/cBBg3tTvG	Ömer Faruk	Saydam	BUSINESS	t
+16	+905345814471	$2b$10$61GImH8EeyhtcylD6Lq7TOLjmF24V/z1wWmmNcyy5FGA6Wj5gnBIu	Veysel Karani	Sayddam	USER	t
 \.
 
 
@@ -76384,6 +76386,7 @@ COPY public."Review" ("reviewId", "accountId", "businessId", stars, comment) FRO
 
 COPY public."Session" ("sessionId", "accountId", "deviceName", "sessionKey", "refreshToken", "lastActivityDate") FROM stdin;
 10	12	Postman Client	01876e626dae1931ede393903b8af7de327b828c52b37113ac3a24f373c1f0c5	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjEyLCJhY2NvdW50VHlwZSI6IlVTRVIiLCJzZXNzaW9uSWQiOjEwLCJpYXQiOjE3NDMwMzE2NzYsImV4cCI6MTc0NTYyMzY3Nn0.SYb-Y9eVmJ2zc7T1GatjUpiFyzmBDnotN23s3SXiGmY	2025-03-26
+13	16	Redmi Redmi Note 9 Pro	8cc385a18de2ee9c71b6cef41eaf27b37b23da625a1d2bbe447edeaa3fcf5139	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjE2LCJhY2NvdW50VHlwZSI6IlVTRVIiLCJzZXNzaW9uSWQiOjEzLCJpYXQiOjE3NDUyMzc5NjgsImV4cCI6MTc0NzgyOTk2OH0.6ji_zazUzvC6HLP9ipBctXUWlrdyy1xrLQap20C9T54	2025-04-21
 \.
 
 
@@ -77218,7 +77221,7 @@ ALTER TABLE ONLY public."Vehicle"
     ADD CONSTRAINT "Vehicle_Item_fk" FOREIGN KEY ("itemId") REFERENCES public."Item"("itemId");
 
 
--- Completed on 2025-04-21 18:15:12 UTC
+-- Completed on 2025-04-21 18:19:53 UTC
 
 --
 -- PostgreSQL database dump complete
