@@ -79,6 +79,7 @@ export class MyBusinessBankManager implements IManager {
     }
     const myBusinessBank = await this.provider.createBusinessBank(
       myBusiness.businessId,
+      request.owner,
       request.iban,
     );
     return ResponseUtil.managerResponse(
@@ -121,6 +122,7 @@ export class MyBusinessBankManager implements IManager {
     }
     const myUpdatedBusinessBank = await this.provider.updateBusinessBank(
       myBusiness.businessId,
+      request.owner,
       request.iban,
     );
     return ResponseUtil.managerResponse(

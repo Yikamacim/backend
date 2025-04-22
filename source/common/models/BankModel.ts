@@ -5,6 +5,7 @@ import { ProtoUtil } from "../../app/utils/ProtoUtil";
 export class BankModel implements IModel {
   protected constructor(
     public readonly businessId: number,
+    public readonly owner: string,
     public readonly iban: string,
     public readonly balance: number,
   ) {}
@@ -13,7 +14,7 @@ export class BankModel implements IModel {
     if (!this.isValidModel(record)) {
       throw new ModelMismatchError(record);
     }
-    return new BankModel(record.businessId, record.iban, record.balance);
+    return new BankModel(record.businessId, record.owner, record.iban, record.balance);
   }
 
   public static fromRecords(records: unknown[]): BankModel[] {
@@ -30,6 +31,7 @@ export class BankModel implements IModel {
     const model = data as BankModel;
     return (
       typeof model.businessId === "number" &&
+      typeof model.owner === "string" &&
       typeof model.iban === "string" &&
       typeof model.balance === "number"
     );

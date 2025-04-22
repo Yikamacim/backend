@@ -72,6 +72,7 @@ export enum ClientErrorCode {
   INVALID_BUSINESS_DESCRIPTION_LENGTH = 60013,
   INVALID_BUSINESS_HOUR_LENGTH = 60014,
   INVALID_IBAN_LENGTH = 60015,
+  INVALIDD_OWNER_LENGTH = 60016,
   //  *  7XXXX: Content errors
   INVALID_PHONE_CONTENT = 70002,
   INVALID_PASSWORD_CONTENT = 70003,
@@ -92,6 +93,7 @@ export enum ClientErrorCode {
   INVALID_BUSINESS_DESCRIPTION_CONTENT = 70018,
   INVALID_BUSINESS_HOUR_CONTENT = 70019,
   INVALID_IBAN_CONTENT = 70020,
+  INVALID_OWNER_CONTENT = 70021,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -219,6 +221,7 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_BUSINESS_DESCRIPTION_LENGTH]: `Provided business description wasn't in the length range of ${BusinessRules.DESCRIPTION_MIN_LENGTH} to ${BusinessRules.DESCRIPTION_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_BUSINESS_HOUR_LENGTH]: `Provided business hour wasn't in the length of ${BusinessRules.HOUR_LENGTH}.`,
   [ClientErrorCode.INVALID_IBAN_LENGTH]: `Provided IBAN wasn't in the length range of ${BankRules.IBAN_MIN_LENGTH} to ${BankRules.IBAN_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALIDD_OWNER_LENGTH]: `Provided bank owner wasn't in the length range of ${BankRules.OWNER_MIN_LENGTH} to ${BankRules.OWNER_MAX_LENGTH}.`,
   //  *  7XXXX: Content errors
   [ClientErrorCode.INVALID_PHONE_CONTENT]: "Provided phone contained invalid characters.",
   [ClientErrorCode.INVALID_PASSWORD_CONTENT]:
@@ -248,6 +251,7 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_BUSINESS_HOUR_CONTENT]:
     "Provided business hour contained invalid characters.",
   [ClientErrorCode.INVALID_IBAN_CONTENT]: "Provided IBAN contained invalid characters.",
+  [ClientErrorCode.INVALID_OWNER_CONTENT]: "Provided bank owner contained invalid characters.",
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors

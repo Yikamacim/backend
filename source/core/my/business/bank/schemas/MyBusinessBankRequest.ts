@@ -4,10 +4,14 @@ import type { IRequest } from "../../../../../app/interfaces/IRequest";
 import { ClientError, ClientErrorCode } from "../../../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../../app/utils/ResponseUtil";
+import { BankOwnerValidator } from "../../../../../common/validators/BankOwnerValidator";
 import { IbanValidator } from "../../../../../common/validators/IbanValidator";
 
 export class MyBusinessBankRequest implements IRequest {
-  public constructor(public readonly iban: string) {}
+  public constructor(
+    public readonly owner: string,
+    public readonly iban: string,
+  ) {}
 
   public static parse(req: ExpressRequest): ParserResponse<MyBusinessBankRequest | null> {
     const preliminaryData: unknown = req.body;
@@ -23,6 +27,7 @@ export class MyBusinessBankRequest implements IRequest {
     const blueprintData: MyBusinessBankRequest = protovalidData;
     // >----------< PHYSICAL VALIDATION >----------<
     const clientErrors: ClientError[] = [];
+    BankOwnerValidator.validate(blueprintData.owner, clientErrors);
     IbanValidator.validate(blueprintData.iban, clientErrors);
     const validatedData = blueprintData;
     // >----------< RETURN >----------<

@@ -5,7 +5,7 @@
 -- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
 -- Dumped by pg_dump version 16.8 (Debian 16.8-1.pgdg120+1)
 
--- Started on 2025-04-21 18:19:53 UTC
+-- Started on 2025-04-22 12:25:31 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -33,7 +33,7 @@ CREATE TYPE public."AccountType" AS ENUM (
 ALTER TYPE public."AccountType" OWNER TO "UYikamacim";
 
 --
--- TOC entry 1053 (class 1247 OID 25594)
+-- TOC entry 1050 (class 1247 OID 25594)
 -- Name: ApprovalState; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
@@ -458,7 +458,7 @@ ALTER SEQUENCE public."Address_addressId_seq" OWNED BY public."Address"."address
 
 
 --
--- TOC entry 276 (class 1259 OID 25602)
+-- TOC entry 275 (class 1259 OID 25602)
 -- Name: Approval; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -475,7 +475,7 @@ CREATE TABLE public."Approval" (
 ALTER TABLE public."Approval" OWNER TO "UYikamacim";
 
 --
--- TOC entry 277 (class 1259 OID 25630)
+-- TOC entry 276 (class 1259 OID 25630)
 -- Name: ApprovalMedia; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -488,7 +488,7 @@ CREATE TABLE public."ApprovalMedia" (
 ALTER TABLE public."ApprovalMedia" OWNER TO "UYikamacim";
 
 --
--- TOC entry 275 (class 1259 OID 25601)
+-- TOC entry 274 (class 1259 OID 25601)
 -- Name: Approval_approvalId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -505,7 +505,7 @@ ALTER SEQUENCE public."Approval_approvalId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3768 (class 0 OID 0)
--- Dependencies: 275
+-- Dependencies: 274
 -- Name: Approval_approvalId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -513,12 +513,13 @@ ALTER SEQUENCE public."Approval_approvalId_seq" OWNED BY public."Approval"."appr
 
 
 --
--- TOC entry 266 (class 1259 OID 25474)
+-- TOC entry 278 (class 1259 OID 25662)
 -- Name: Bank; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
 CREATE TABLE public."Bank" (
     "businessId" integer NOT NULL,
+    owner character varying(256) NOT NULL,
     iban character varying(34) NOT NULL,
     balance integer DEFAULT 0 NOT NULL
 );
@@ -658,7 +659,7 @@ ALTER SEQUENCE public."Blanket_blanketId_seq" OWNED BY public."Blanket"."blanket
 
 
 --
--- TOC entry 274 (class 1259 OID 25545)
+-- TOC entry 273 (class 1259 OID 25545)
 -- Name: Business; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -691,7 +692,7 @@ CREATE TABLE public."BusinessMedia" (
 ALTER TABLE public."BusinessMedia" OWNER TO "UYikamacim";
 
 --
--- TOC entry 270 (class 1259 OID 25493)
+-- TOC entry 269 (class 1259 OID 25493)
 -- Name: Review; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -707,7 +708,7 @@ CREATE TABLE public."Review" (
 ALTER TABLE public."Review" OWNER TO "UYikamacim";
 
 --
--- TOC entry 278 (class 1259 OID 25657)
+-- TOC entry 277 (class 1259 OID 25657)
 -- Name: BusinessView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -764,7 +765,7 @@ CREATE VIEW public."BusinessView" AS
 ALTER VIEW public."BusinessView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 273 (class 1259 OID 25544)
+-- TOC entry 272 (class 1259 OID 25544)
 -- Name: Business_businessId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -781,7 +782,7 @@ ALTER SEQUENCE public."Business_businessId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3771 (class 0 OID 0)
--- Dependencies: 273
+-- Dependencies: 272
 -- Name: Business_businessId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -789,7 +790,7 @@ ALTER SEQUENCE public."Business_businessId_seq" OWNED BY public."Business"."busi
 
 
 --
--- TOC entry 268 (class 1259 OID 25479)
+-- TOC entry 267 (class 1259 OID 25479)
 -- Name: Card; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -810,7 +811,7 @@ CREATE TABLE public."Card" (
 ALTER TABLE public."Card" OWNER TO "UYikamacim";
 
 --
--- TOC entry 267 (class 1259 OID 25478)
+-- TOC entry 266 (class 1259 OID 25478)
 -- Name: Card_cardId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -827,7 +828,7 @@ ALTER SEQUENCE public."Card_cardId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3772 (class 0 OID 0)
--- Dependencies: 267
+-- Dependencies: 266
 -- Name: Card_cardId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -953,7 +954,7 @@ ALTER SEQUENCE public."Chair_chairId_seq" OWNED BY public."Chair"."chairId";
 
 
 --
--- TOC entry 272 (class 1259 OID 25512)
+-- TOC entry 271 (class 1259 OID 25512)
 -- Name: Comment; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -967,7 +968,7 @@ CREATE TABLE public."Comment" (
 ALTER TABLE public."Comment" OWNER TO "UYikamacim";
 
 --
--- TOC entry 271 (class 1259 OID 25511)
+-- TOC entry 270 (class 1259 OID 25511)
 -- Name: Comment_commentId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -984,7 +985,7 @@ ALTER SEQUENCE public."Comment_commentId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3775 (class 0 OID 0)
--- Dependencies: 271
+-- Dependencies: 270
 -- Name: Comment_commentId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1356,7 +1357,7 @@ ALTER SEQUENCE public."Quilt_quiltId_seq" OWNED BY public."Quilt"."quiltId";
 
 
 --
--- TOC entry 269 (class 1259 OID 25492)
+-- TOC entry 268 (class 1259 OID 25492)
 -- Name: Review_reviewId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1373,7 +1374,7 @@ ALTER SEQUENCE public."Review_reviewId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3784 (class 0 OID 0)
--- Dependencies: 269
+-- Dependencies: 268
 -- Name: Review_reviewId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1626,7 +1627,7 @@ ALTER TABLE ONLY public."Address" ALTER COLUMN "addressId" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3455 (class 2604 OID 25605)
+-- TOC entry 3454 (class 2604 OID 25605)
 -- Name: Approval approvalId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1650,7 +1651,7 @@ ALTER TABLE ONLY public."Blanket" ALTER COLUMN "blanketId" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3453 (class 2604 OID 25548)
+-- TOC entry 3452 (class 2604 OID 25548)
 -- Name: Business businessId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1658,7 +1659,7 @@ ALTER TABLE ONLY public."Business" ALTER COLUMN "businessId" SET DEFAULT nextval
 
 
 --
--- TOC entry 3449 (class 2604 OID 25482)
+-- TOC entry 3448 (class 2604 OID 25482)
 -- Name: Card cardId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1682,7 +1683,7 @@ ALTER TABLE ONLY public."Chair" ALTER COLUMN "chairId" SET DEFAULT nextval('publ
 
 
 --
--- TOC entry 3452 (class 2604 OID 25515)
+-- TOC entry 3451 (class 2604 OID 25515)
 -- Name: Comment commentId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1754,7 +1755,7 @@ ALTER TABLE ONLY public."Quilt" ALTER COLUMN "quiltId" SET DEFAULT nextval('publ
 
 
 --
--- TOC entry 3451 (class 2604 OID 25496)
+-- TOC entry 3450 (class 2604 OID 25496)
 -- Name: Review reviewId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1827,8 +1828,8 @@ COPY public."Address" ("addressId", "accountId", name, "countryId", "provinceId"
 
 
 --
--- TOC entry 3759 (class 0 OID 25602)
--- Dependencies: 276
+-- TOC entry 3758 (class 0 OID 25602)
+-- Dependencies: 275
 -- Data for Name: Approval; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -1837,8 +1838,8 @@ COPY public."Approval" ("approvalId", "businessId", message, "approvalState", re
 
 
 --
--- TOC entry 3760 (class 0 OID 25630)
--- Dependencies: 277
+-- TOC entry 3759 (class 0 OID 25630)
+-- Dependencies: 276
 -- Data for Name: ApprovalMedia; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -1847,12 +1848,12 @@ COPY public."ApprovalMedia" ("approvalId", "mediaId") FROM stdin;
 
 
 --
--- TOC entry 3749 (class 0 OID 25474)
--- Dependencies: 266
+-- TOC entry 3760 (class 0 OID 25662)
+-- Dependencies: 278
 -- Data for Name: Bank; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
-COPY public."Bank" ("businessId", iban, balance) FROM stdin;
+COPY public."Bank" ("businessId", owner, iban, balance) FROM stdin;
 \.
 
 
@@ -1877,8 +1878,8 @@ COPY public."Blanket" ("blanketId", "itemId", "blanketSize", "blanketMaterial") 
 
 
 --
--- TOC entry 3757 (class 0 OID 25545)
--- Dependencies: 274
+-- TOC entry 3756 (class 0 OID 25545)
+-- Dependencies: 273
 -- Data for Name: Business; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -1897,8 +1898,8 @@ COPY public."BusinessMedia" ("businessId", "mediaId", "isMain") FROM stdin;
 
 
 --
--- TOC entry 3751 (class 0 OID 25479)
--- Dependencies: 268
+-- TOC entry 3750 (class 0 OID 25479)
+-- Dependencies: 267
 -- Data for Name: Card; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -1927,8 +1928,8 @@ COPY public."Chair" ("chairId", "itemId", quantity) FROM stdin;
 
 
 --
--- TOC entry 3755 (class 0 OID 25512)
--- Dependencies: 272
+-- TOC entry 3754 (class 0 OID 25512)
+-- Dependencies: 271
 -- Data for Name: Comment; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -76369,8 +76370,8 @@ COPY public."Quilt" ("quiltId", "itemId", "quiltSize", "quiltMaterial") FROM std
 
 
 --
--- TOC entry 3753 (class 0 OID 25493)
--- Dependencies: 270
+-- TOC entry 3752 (class 0 OID 25493)
+-- Dependencies: 269
 -- Data for Name: Review; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -76440,7 +76441,7 @@ SELECT pg_catalog.setval('public."Address_addressId_seq"', 3, true);
 
 --
 -- TOC entry 3792 (class 0 OID 0)
--- Dependencies: 275
+-- Dependencies: 274
 -- Name: Approval_approvalId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76467,7 +76468,7 @@ SELECT pg_catalog.setval('public."Blanket_blanketId_seq"', 1, false);
 
 --
 -- TOC entry 3795 (class 0 OID 0)
--- Dependencies: 273
+-- Dependencies: 272
 -- Name: Business_businessId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76476,7 +76477,7 @@ SELECT pg_catalog.setval('public."Business_businessId_seq"', 2, true);
 
 --
 -- TOC entry 3796 (class 0 OID 0)
--- Dependencies: 267
+-- Dependencies: 266
 -- Name: Card_cardId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76503,7 +76504,7 @@ SELECT pg_catalog.setval('public."Chair_chairId_seq"', 1, false);
 
 --
 -- TOC entry 3799 (class 0 OID 0)
--- Dependencies: 271
+-- Dependencies: 270
 -- Name: Comment_commentId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76584,7 +76585,7 @@ SELECT pg_catalog.setval('public."Quilt_quiltId_seq"', 1, false);
 
 --
 -- TOC entry 3808 (class 0 OID 0)
--- Dependencies: 269
+-- Dependencies: 268
 -- Name: Review_reviewId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76664,7 +76665,7 @@ ALTER TABLE ONLY public."Address"
 
 
 --
--- TOC entry 3519 (class 2606 OID 25634)
+-- TOC entry 3517 (class 2606 OID 25634)
 -- Name: ApprovalMedia ApprovalMedia_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76673,7 +76674,7 @@ ALTER TABLE ONLY public."ApprovalMedia"
 
 
 --
--- TOC entry 3517 (class 2606 OID 25611)
+-- TOC entry 3515 (class 2606 OID 25611)
 -- Name: Approval Approval_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76682,7 +76683,7 @@ ALTER TABLE ONLY public."Approval"
 
 
 --
--- TOC entry 3505 (class 2606 OID 25570)
+-- TOC entry 3519 (class 2606 OID 25667)
 -- Name: Bank Bank_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76709,7 +76710,7 @@ ALTER TABLE ONLY public."Blanket"
 
 
 --
--- TOC entry 3513 (class 2606 OID 25646)
+-- TOC entry 3511 (class 2606 OID 25646)
 -- Name: Business Business_accountId_uk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76718,7 +76719,7 @@ ALTER TABLE ONLY public."Business"
 
 
 --
--- TOC entry 3515 (class 2606 OID 25553)
+-- TOC entry 3513 (class 2606 OID 25553)
 -- Name: Business Business_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76727,7 +76728,7 @@ ALTER TABLE ONLY public."Business"
 
 
 --
--- TOC entry 3507 (class 2606 OID 25486)
+-- TOC entry 3505 (class 2606 OID 25486)
 -- Name: Card Card_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76754,7 +76755,7 @@ ALTER TABLE ONLY public."Chair"
 
 
 --
--- TOC entry 3511 (class 2606 OID 25519)
+-- TOC entry 3509 (class 2606 OID 25519)
 -- Name: Comment Comment_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76853,7 +76854,7 @@ ALTER TABLE ONLY public."Quilt"
 
 
 --
--- TOC entry 3509 (class 2606 OID 25500)
+-- TOC entry 3507 (class 2606 OID 25500)
 -- Name: Review Review_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76961,7 +76962,7 @@ ALTER TABLE ONLY public."Address"
 
 
 --
--- TOC entry 3552 (class 2606 OID 25635)
+-- TOC entry 3551 (class 2606 OID 25635)
 -- Name: ApprovalMedia ApprovalMedia_Approval_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76970,7 +76971,7 @@ ALTER TABLE ONLY public."ApprovalMedia"
 
 
 --
--- TOC entry 3553 (class 2606 OID 25640)
+-- TOC entry 3552 (class 2606 OID 25640)
 -- Name: ApprovalMedia ApprovalMedia_Media_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76979,7 +76980,7 @@ ALTER TABLE ONLY public."ApprovalMedia"
 
 
 --
--- TOC entry 3551 (class 2606 OID 25612)
+-- TOC entry 3550 (class 2606 OID 25612)
 -- Name: Approval Approval_Business_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76988,7 +76989,7 @@ ALTER TABLE ONLY public."Approval"
 
 
 --
--- TOC entry 3544 (class 2606 OID 25571)
+-- TOC entry 3553 (class 2606 OID 25668)
 -- Name: Bank Bank_Business_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77033,7 +77034,7 @@ ALTER TABLE ONLY public."BusinessMedia"
 
 
 --
--- TOC entry 3549 (class 2606 OID 25554)
+-- TOC entry 3548 (class 2606 OID 25554)
 -- Name: Business Business_Account_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77042,7 +77043,7 @@ ALTER TABLE ONLY public."Business"
 
 
 --
--- TOC entry 3550 (class 2606 OID 25559)
+-- TOC entry 3549 (class 2606 OID 25559)
 -- Name: Business Business_Address_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77051,7 +77052,7 @@ ALTER TABLE ONLY public."Business"
 
 
 --
--- TOC entry 3545 (class 2606 OID 25487)
+-- TOC entry 3544 (class 2606 OID 25487)
 -- Name: Card Card_Account_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77078,7 +77079,7 @@ ALTER TABLE ONLY public."Chair"
 
 
 --
--- TOC entry 3548 (class 2606 OID 25520)
+-- TOC entry 3547 (class 2606 OID 25520)
 -- Name: Comment Comment_Review_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77177,7 +77178,7 @@ ALTER TABLE ONLY public."Quilt"
 
 
 --
--- TOC entry 3546 (class 2606 OID 25501)
+-- TOC entry 3545 (class 2606 OID 25501)
 -- Name: Review Review_Account_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77186,7 +77187,7 @@ ALTER TABLE ONLY public."Review"
 
 
 --
--- TOC entry 3547 (class 2606 OID 25588)
+-- TOC entry 3546 (class 2606 OID 25588)
 -- Name: Review Review_Business_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77221,7 +77222,7 @@ ALTER TABLE ONLY public."Vehicle"
     ADD CONSTRAINT "Vehicle_Item_fk" FOREIGN KEY ("itemId") REFERENCES public."Item"("itemId");
 
 
--- Completed on 2025-04-21 18:19:53 UTC
+-- Completed on 2025-04-22 12:25:31 UTC
 
 --
 -- PostgreSQL database dump complete

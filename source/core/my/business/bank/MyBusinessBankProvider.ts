@@ -31,12 +31,14 @@ export class MyBusinessBankProvider implements IProvider {
 
   public async createBusinessBank(
     businessId: number,
+    owner: string,
     iban: string,
   ): Promise<ProviderResponse<BankModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(BankQueries.INSERT_BANK_$BSID_$IBAN, [
+      const results = await DbConstants.POOL.query(BankQueries.INSERT_BANK_$BSID_$OWNER_$IBAN, [
         businessId,
+        owner,
         iban,
       ]);
       const record: unknown = results.rows[0];
@@ -49,15 +51,15 @@ export class MyBusinessBankProvider implements IProvider {
 
   public async updateBusinessBank(
     businessId: number,
+    owner: string,
     iban: string,
   ): Promise<ProviderResponse<BankModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(BankQueries.UPDATE_BANK_$BSID_$IBAN_$BLCH, [
-        businessId,
-        iban,
-        0,
-      ]);
+      const results = await DbConstants.POOL.query(
+        BankQueries.UPDATE_BANK_$BSID_$OWNER_$IBAN_$BLCH,
+        [businessId, owner, iban, 0],
+      );
       const record: unknown = results.rows[0];
       return await ResponseUtil.providerResponse(BankModel.fromRecord(record));
     } catch (error) {
