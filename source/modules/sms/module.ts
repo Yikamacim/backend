@@ -16,6 +16,6 @@ export class SmsModule implements IModule {
     this.verify = this.handler.verify.bind(this.handler);
   }
 
-  public send: typeof this.handler.send;
-  public verify: typeof this.handler.verify;
+  public readonly send: typeof this.handler.send;
+  public readonly verify: typeof this.handler.verify;
 }

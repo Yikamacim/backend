@@ -12,7 +12,7 @@ export class MySessionsProvider implements IProvider {
     this.getMySessions = this.sessionProvider.getSessionsByAccountId.bind(this.sessionProvider);
   }
 
-  public getMySessions: typeof this.sessionProvider.getSessionsByAccountId;
+  public readonly getMySessions: typeof this.sessionProvider.getSessionsByAccountId;
 
   public async getMySession(
     accountId: number,

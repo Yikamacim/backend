@@ -32,13 +32,14 @@ export class MyVehiclesProvider implements IProvider {
     this.getMyMedias = this.mediaProvider.getMyUnusedMedias.bind(this.mediaProvider);
   }
 
-  public partialCreateItem: typeof this.itemProvider.partialCreateItem;
-  public partialUpdateItem: typeof this.itemProvider.partialUpdateItem;
-  public partialDeleteItem: typeof this.itemProvider.partialDeleteItem;
-  public getItemMedias: typeof this.itemMediaProvider.getItemMedias;
-  public partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
-  public partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
-  public getMyMedias: typeof this.mediaProvider.getMyUnusedMedias;
+  public readonly getItemMedias: typeof this.itemMediaProvider.getItemMedias;
+  public readonly getMyMedias: typeof this.mediaProvider.getMyUnusedMedias;
+
+  private readonly partialCreateItem: typeof this.itemProvider.partialCreateItem;
+  private readonly partialUpdateItem: typeof this.itemProvider.partialUpdateItem;
+  private readonly partialDeleteItem: typeof this.itemProvider.partialDeleteItem;
+  private readonly partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
+  private readonly partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
 
   public async getMyVehicles(accountId: number): Promise<ProviderResponse<VehicleViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);

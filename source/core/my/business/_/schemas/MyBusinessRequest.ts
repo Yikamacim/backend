@@ -1,13 +1,13 @@
-import type { ParserResponse } from "../../../../@types/responses";
-import type { ExpressRequest } from "../../../../@types/wrappers";
-import type { IRequest } from "../../../../app/interfaces/IRequest";
-import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
-import { ProtoUtil } from "../../../../app/utils/ProtoUtil";
-import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
-import { BusinessDescriptionValidator } from "../../../../common/validators/BusinessDescriptionValidator";
-import { BusinessNameValidator } from "../../../../common/validators/BusinessNameValidator";
-import { EmailValidator } from "../../../../common/validators/EmailValidator";
-import { PhoneValidator } from "../../../../common/validators/PhoneValidator";
+import type { ParserResponse } from "../../../../../@types/responses";
+import type { ExpressRequest } from "../../../../../@types/wrappers";
+import type { IRequest } from "../../../../../app/interfaces/IRequest";
+import { ClientError, ClientErrorCode } from "../../../../../app/schemas/ClientError";
+import { ProtoUtil } from "../../../../../app/utils/ProtoUtil";
+import { ResponseUtil } from "../../../../../app/utils/ResponseUtil";
+import { BusinessDescriptionValidator } from "../../../../../common/validators/BusinessDescriptionValidator";
+import { BusinessNameValidator } from "../../../../../common/validators/BusinessNameValidator";
+import { EmailValidator } from "../../../../../common/validators/EmailValidator";
+import { PhoneValidator } from "../../../../../common/validators/PhoneValidator";
 
 export class MyBusinessRequest implements IRequest {
   public constructor(

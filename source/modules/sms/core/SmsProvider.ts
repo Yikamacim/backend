@@ -14,7 +14,7 @@ export class SmsProvider implements IProvider {
     );
   }
 
-  public getVerification: typeof this.verificationProvider.getVerification;
+  public readonly getVerification: typeof this.verificationProvider.getVerification;
 
   public async createOrUpdateVerification(
     verificationData: VerificationData,

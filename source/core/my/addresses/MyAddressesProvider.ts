@@ -15,9 +15,9 @@ export class MyAddressesProvider implements IProvider {
     this.deleteAddress = this.addressProvider.deleteAddress.bind(this.addressProvider);
   }
 
-  public createAddress: typeof this.addressProvider.createAddress;
-  public updateAddress: typeof this.addressProvider.updateAddress;
-  public deleteAddress: typeof this.addressProvider.deleteAddress;
+  public readonly createAddress: typeof this.addressProvider.createAddress;
+  public readonly updateAddress: typeof this.addressProvider.updateAddress;
+  public readonly deleteAddress: typeof this.addressProvider.deleteAddress;
 
   public async getMyAddresses(accountId: number): Promise<ProviderResponse<AddressViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);

@@ -1,28 +1,28 @@
-import type { ControllerResponse } from "../../../@types/responses";
-import type { Tokens } from "../../../@types/tokens";
-import type { ExpressNextFunction, ExpressRequest } from "../../../@types/wrappers";
-import { PayloadHelper } from "../../../app/helpers/PayloadHelper";
-import type { IController } from "../../../app/interfaces/IController";
-import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
-import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import { AuthModule } from "../../../modules/auth/module";
-import { MyBusinessManager } from "./MyBusinessManager";
-import { MyBusinessRequest } from "./schemas/MyBusinessRequest";
-import type { MyBusinessResponse } from "./schemas/MyBusinessResponse";
+import type { ControllerResponse } from "../../../../@types/responses";
+import type { Tokens } from "../../../../@types/tokens";
+import type { ExpressNextFunction, ExpressRequest } from "../../../../@types/wrappers";
+import { PayloadHelper } from "../../../../app/helpers/PayloadHelper";
+import type { IController } from "../../../../app/interfaces/IController";
+import { HttpStatus, HttpStatusCode } from "../../../../app/schemas/HttpStatus";
+import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
+import { AuthModule } from "../../../../modules/auth/module";
+import { MyBusinessHoursManager } from "./MyBusinessHoursManager";
+import { MyBusinessHoursRequest } from "./schemas/MyBusinessHoursRequest";
+import type { MyBusinessHoursResponse } from "./schemas/MyBusinessHoursResponse";
 
-export class MyBusinessController implements IController {
-  public constructor(private readonly manager = new MyBusinessManager()) {}
+export class MyBusinessHoursController implements IController {
+  public constructor(private readonly manager = new MyBusinessHoursManager()) {}
 
-  public async getMyBusiness(
+  public async getMyBusinessHours(
     _: ExpressRequest,
-    res: ControllerResponse<MyBusinessResponse | null, Tokens | null>,
+    res: ControllerResponse<MyBusinessHoursResponse | null, Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
       const payload = PayloadHelper.getPayload(res);
       // >----------< LOGIC >----------<
-      const out = await this.manager.getMyBusiness(payload);
+      const out = await this.manager.getMyBusinessHours(payload);
       // >----------< RESPONSE >----------<
       if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
@@ -47,16 +47,16 @@ export class MyBusinessController implements IController {
     }
   }
 
-  public async postMyBusiness(
+  public async postMyBusinessHours(
     req: ExpressRequest,
-    res: ControllerResponse<MyBusinessResponse | null, Tokens | null>,
+    res: ControllerResponse<MyBusinessHoursResponse | null, Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
       const payload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const request = MyBusinessRequest.parse(req);
+      const request = MyBusinessHoursRequest.parse(req);
       if (request.clientErrors.length > 0 || request.data === null) {
         return ResponseUtil.controllerResponse(
           res,
@@ -68,7 +68,7 @@ export class MyBusinessController implements IController {
         );
       }
       // >----------< LOGIC >----------<
-      const out = await this.manager.postMyBusiness(payload, request.data);
+      const out = await this.manager.postMyBusinessHours(payload, request.data);
       // >----------< RESPONSE >----------<
       if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(
@@ -93,16 +93,16 @@ export class MyBusinessController implements IController {
     }
   }
 
-  public async putMyBusiness(
+  public async putMyBusinessHours(
     req: ExpressRequest,
-    res: ControllerResponse<MyBusinessResponse | null, Tokens | null>,
+    res: ControllerResponse<MyBusinessHoursResponse | null, Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
       // >-----------< AUTHORIZATION >-----------<
       const payload = PayloadHelper.getPayload(res);
       // >----------< VALIDATION >----------<
-      const request = MyBusinessRequest.parse(req);
+      const request = MyBusinessHoursRequest.parse(req);
       if (request.clientErrors.length > 0 || request.data === null) {
         return ResponseUtil.controllerResponse(
           res,
@@ -114,7 +114,7 @@ export class MyBusinessController implements IController {
         );
       }
       // >----------< LOGIC >----------<
-      const out = await this.manager.putMyBusiness(payload, request.data);
+      const out = await this.manager.putMyBusinessHours(payload, request.data);
       // >----------< RESPONSE >----------<
       if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(

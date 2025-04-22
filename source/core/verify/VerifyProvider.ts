@@ -17,8 +17,8 @@ export class VerifyProvider implements IProvider {
     );
   }
 
-  public getAccount: typeof this.accountProvider.getAccountByPhone;
-  public getVerification: typeof this.verificationProvider.getVerification;
+  public readonly getAccount: typeof this.accountProvider.getAccountByPhone;
+  public readonly getVerification: typeof this.verificationProvider.getVerification;
 
   public async verifyAccount(accountId: number): Promise<ProviderResponse<null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);

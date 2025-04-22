@@ -19,9 +19,9 @@ export class BucketModule implements IModule {
     this.deleteFile = this.handler.deleteFile.bind(this.handler);
   }
 
-  public getAccessUrl: typeof this.handler.getAccessUrl;
-  public getUploadUrl: typeof this.handler.getUploadUrl;
-  public listFiles: typeof this.handler.listFiles;
-  public checkFileExists: typeof this.handler.checkFileExists;
-  public deleteFile: typeof this.handler.deleteFile;
+  public readonly getAccessUrl: typeof this.handler.getAccessUrl;
+  public readonly getUploadUrl: typeof this.handler.getUploadUrl;
+  public readonly listFiles: typeof this.handler.listFiles;
+  public readonly checkFileExists: typeof this.handler.checkFileExists;
+  public readonly deleteFile: typeof this.handler.deleteFile;
 }

@@ -20,8 +20,8 @@ export class AuthProvider implements IProvider {
     this.getSession = this.sessionProvider.getSessionById.bind(this.accountProvider);
   }
 
-  public getAccount: typeof this.accountProvider.getAccountById;
-  public getSession: typeof this.sessionProvider.getSessionById;
+  public readonly getAccount: typeof this.accountProvider.getAccountById;
+  public readonly getSession: typeof this.sessionProvider.getSessionById;
 
   public async createOrUpdateSession(sessionData: SessionData): Promise<ProviderResponse<Tokens>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);

@@ -20,7 +20,8 @@ import { LogoutBuilder } from "./core/logout/LogoutBuilder";
 import { MyAddressesBuilder } from "./core/my/addresses/MyAddressesBuilder";
 import { MyBedsBuilder } from "./core/my/beds/MyBedsBuilder";
 import { MyBlanketsBuilder } from "./core/my/blankets/MyBlanketsBuilder";
-import { MyBusinessBuilder } from "./core/my/business/MyBusinessBuilder";
+import { MyBusinessBuilder } from "./core/my/business/_/MyBusinessBuilder";
+import { MyBusinessHoursBuilder } from "./core/my/business/hours/MyBusinessHoursBuilder";
 import { MyCarpetsBuilder } from "./core/my/carpets/MyCarpetsBuilder";
 import { MyChairsBuilder } from "./core/my/chairs/MyChairsBuilder";
 import { MyCurtainsBuilder } from "./core/my/curtains/MyCurtainsBuilder";
@@ -133,6 +134,12 @@ app.use(
   MyBusinessBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
   new MyBusinessBuilder().router,
+);
+app.use(
+  // my/business/hours
+  MyBusinessHoursBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
+  new MyBusinessHoursBuilder().router,
 );
 app.use(
   // my/carpets

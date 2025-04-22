@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { Method } from "../../../app/enums/Method";
-import { RouteType } from "../../../app/enums/RouteType";
-import { RouteHelper } from "../../../app/helpers/RouteHelper";
-import type { IBuilder } from "../../../app/interfaces/IBuilder";
+import { Method } from "../../../../app/enums/Method";
+import { RouteType } from "../../../../app/enums/RouteType";
+import { RouteHelper } from "../../../../app/helpers/RouteHelper";
+import type { IBuilder } from "../../../../app/interfaces/IBuilder";
 import { MyBusinessController } from "./MyBusinessController";
 
 export class MyBusinessBuilder implements IBuilder {

@@ -6,5 +6,5 @@ export class LoginProvider implements IProvider {
     this.getAccount = this.accountProvider.getAccountByPhone.bind(this.accountProvider);
   }
 
-  public getAccount: typeof this.accountProvider.getAccountByPhone;
+  public readonly getAccount: typeof this.accountProvider.getAccountByPhone;
 }

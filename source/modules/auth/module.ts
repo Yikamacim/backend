@@ -19,9 +19,9 @@ export class AuthModule implements IModule {
     this.revoke = this.handler.revoke.bind(this.handler);
   }
 
-  public verify: typeof this.handler.verify;
-  public getPayload: typeof this.handler.getPayload;
-  public generate: typeof this.handler.generate;
-  public refresh: typeof this.handler.refresh;
-  public revoke: typeof this.handler.revoke;
+  public readonly verify: typeof this.handler.verify;
+  public readonly getPayload: typeof this.handler.getPayload;
+  public readonly generate: typeof this.handler.generate;
+  public readonly refresh: typeof this.handler.refresh;
+  public readonly revoke: typeof this.handler.revoke;
 }

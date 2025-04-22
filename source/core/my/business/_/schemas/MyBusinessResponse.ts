@@ -1,7 +1,7 @@
-import type { MediaData } from "../../../../@types/medias";
-import type { IResponse } from "../../../../app/interfaces/IResponse";
-import type { ApprovalState } from "../../../../common/enums/ApprovalState";
-import type { BusinessViewModel } from "../../../../common/models/BusinessViewModel";
+import type { MediaData } from "../../../../../@types/medias";
+import type { IResponse } from "../../../../../app/interfaces/IResponse";
+import type { ApprovalState } from "../../../../../common/enums/ApprovalState";
+import type { BusinessViewModel } from "../../../../../common/models/BusinessViewModel";
 
 export class MyBusinessResponse implements IResponse {
   private constructor(

@@ -69,6 +69,7 @@ export enum ClientErrorCode {
   INVALID_EMAIL_LENGTH = 60011,
   INVALID_BUSINESS_NAME_LENGTH = 60012,
   INVALID_BUSINESS_DESCRIPTION_LENGTH = 60013,
+  INVALID_BUSINESS_HOUR_LENGTH = 60014,
   //  *  7XXXX: Content errors
   INVALID_PHONE_CONTENT = 70002,
   INVALID_PASSWORD_CONTENT = 70003,
@@ -87,6 +88,7 @@ export enum ClientErrorCode {
   INVALID_EMAIL_CONTENT = 70016,
   INVALID_BUSINESS_NAME_CONTENT = 70017,
   INVALID_BUSINESS_DESCRIPTION_CONTENT = 70018,
+  INVALID_BUSINESS_HOUR_CONTENT = 70019,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -152,6 +154,9 @@ export enum ClientErrorCode {
   BUSINESS_NOT_FOUND = 81800,
   BUSINESS_ALREADY_EXISTS = 81801,
   BUSINESS_IS_OPEN = 81802,
+  //  *  *  819XX: /my/business/hours errors
+  BUSINESS_HOURS_NOT_FOUND = 81900,
+  BUSINESS_HOURS_ALREADY_EXISTS = 81901,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -206,6 +211,7 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_EMAIL_LENGTH]: `Provided email wasn't in the length range of ${ContactRules.EMAIL_MIN_LENGTH} to ${ContactRules.EMAIL_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_BUSINESS_NAME_LENGTH]: `Provided business name wasn't in the length range of ${BusinessRules.NAME_MIN_LENGTH} to ${BusinessRules.NAME_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_BUSINESS_DESCRIPTION_LENGTH]: `Provided business description wasn't in the length range of ${BusinessRules.DESCRIPTION_MIN_LENGTH} to ${BusinessRules.DESCRIPTION_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_BUSINESS_HOUR_LENGTH]: `Provided business hour wasn't in the length of ${BusinessRules.HOUR_LENGTH}.`,
   //  *  7XXXX: Content errors
   [ClientErrorCode.INVALID_PHONE_CONTENT]: "Provided phone contained invalid characters.",
   [ClientErrorCode.INVALID_PASSWORD_CONTENT]:
@@ -232,6 +238,8 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
     "Provided business name contained invalid characters.",
   [ClientErrorCode.INVALID_BUSINESS_DESCRIPTION_CONTENT]:
     "Provided business description contained invalid characters.",
+  [ClientErrorCode.INVALID_BUSINESS_HOUR_CONTENT]:
+    "Provided business hour contained invalid characters.",
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -299,6 +307,9 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.BUSINESS_NOT_FOUND]: "Account doesn't have a business.",
   [ClientErrorCode.BUSINESS_ALREADY_EXISTS]: "Account already has a business.",
   [ClientErrorCode.BUSINESS_IS_OPEN]: "Business is open. It can't be edited or deleted.",
+  //  *  *  819XX: /my/business/hours errors
+  [ClientErrorCode.BUSINESS_HOURS_NOT_FOUND]: "Business doesn't have hours.",
+  [ClientErrorCode.BUSINESS_HOURS_ALREADY_EXISTS]: "Business already has hours.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };
