@@ -1,5 +1,6 @@
 import { AccountRules } from "../../common/rules/AccountRules";
 import { AddressRules } from "../../common/rules/AddressRules";
+import { BankRules } from "../../common/rules/BankRules";
 import { BusinessRules } from "../../common/rules/BusinessRules";
 import { ChairRules } from "../../common/rules/ChairRules";
 import { ContactRules } from "../../common/rules/ContactRules";
@@ -70,6 +71,7 @@ export enum ClientErrorCode {
   INVALID_BUSINESS_NAME_LENGTH = 60012,
   INVALID_BUSINESS_DESCRIPTION_LENGTH = 60013,
   INVALID_BUSINESS_HOUR_LENGTH = 60014,
+  INVALID_IBAN_LENGTH = 60015,
   //  *  7XXXX: Content errors
   INVALID_PHONE_CONTENT = 70002,
   INVALID_PASSWORD_CONTENT = 70003,
@@ -89,6 +91,7 @@ export enum ClientErrorCode {
   INVALID_BUSINESS_NAME_CONTENT = 70017,
   INVALID_BUSINESS_DESCRIPTION_CONTENT = 70018,
   INVALID_BUSINESS_HOUR_CONTENT = 70019,
+  INVALID_IBAN_CONTENT = 70020,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -157,6 +160,9 @@ export enum ClientErrorCode {
   //  *  *  819XX: /my/business/hours errors
   BUSINESS_HOURS_NOT_FOUND = 81900,
   BUSINESS_HOURS_ALREADY_EXISTS = 81901,
+  //  *  *  820XX: /my/business/bank errors
+  BANK_NOT_FOUND = 82000,
+  BANK_ALREADY_EXISTS = 82001,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -212,6 +218,7 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_BUSINESS_NAME_LENGTH]: `Provided business name wasn't in the length range of ${BusinessRules.NAME_MIN_LENGTH} to ${BusinessRules.NAME_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_BUSINESS_DESCRIPTION_LENGTH]: `Provided business description wasn't in the length range of ${BusinessRules.DESCRIPTION_MIN_LENGTH} to ${BusinessRules.DESCRIPTION_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_BUSINESS_HOUR_LENGTH]: `Provided business hour wasn't in the length of ${BusinessRules.HOUR_LENGTH}.`,
+  [ClientErrorCode.INVALID_IBAN_LENGTH]: `Provided IBAN wasn't in the length range of ${BankRules.IBAN_MIN_LENGTH} to ${BankRules.IBAN_MAX_LENGTH}.`,
   //  *  7XXXX: Content errors
   [ClientErrorCode.INVALID_PHONE_CONTENT]: "Provided phone contained invalid characters.",
   [ClientErrorCode.INVALID_PASSWORD_CONTENT]:
@@ -240,6 +247,7 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
     "Provided business description contained invalid characters.",
   [ClientErrorCode.INVALID_BUSINESS_HOUR_CONTENT]:
     "Provided business hour contained invalid characters.",
+  [ClientErrorCode.INVALID_IBAN_CONTENT]: "Provided IBAN contained invalid characters.",
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -310,6 +318,9 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   //  *  *  819XX: /my/business/hours errors
   [ClientErrorCode.BUSINESS_HOURS_NOT_FOUND]: "Business doesn't have hours.",
   [ClientErrorCode.BUSINESS_HOURS_ALREADY_EXISTS]: "Business already has hours.",
+  //  *  *  820XX: /my/business/bank errors
+  [ClientErrorCode.BANK_NOT_FOUND]: "Business doesn't have a bank.",
+  [ClientErrorCode.BANK_ALREADY_EXISTS]: "Business already has a bank.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };
