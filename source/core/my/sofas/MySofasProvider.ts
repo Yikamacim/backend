@@ -10,7 +10,6 @@ import { SofaModel } from "../../../common/models/SofaModel";
 import { SofaViewModel } from "../../../common/models/SofaViewModel";
 import { ItemMediaProvider } from "../../../common/providers/ItemMediaProvider";
 import { ItemProvider } from "../../../common/providers/ItemProvider";
-import { MediaProvider } from "../../../common/providers/MediaProvider";
 import { SofaQueries } from "../../../common/queries/SofaQueries";
 import { SofaViewQueries } from "../../../common/queries/SofaViewQueries";
 
@@ -18,7 +17,6 @@ export class MySofasProvider implements IProvider {
   public constructor(
     private readonly itemProvider = new ItemProvider(),
     private readonly itemMediaProvider = new ItemMediaProvider(),
-    private readonly mediaProvider = new MediaProvider(),
   ) {
     this.partialCreateItem = this.itemProvider.partialCreateItem.bind(this.itemProvider);
     this.partialUpdateItem = this.itemProvider.partialUpdateItem.bind(this.itemProvider);
@@ -30,11 +28,9 @@ export class MySofasProvider implements IProvider {
     this.partialDeleteItemMedias = this.itemMediaProvider.partialDeleteItemMedias.bind(
       this.itemMediaProvider,
     );
-    this.getMyMedias = this.mediaProvider.getMyUnusedMedias.bind(this.mediaProvider);
   }
 
   public readonly getItemMedias: typeof this.itemMediaProvider.getItemMedias;
-  public readonly getMyMedias: typeof this.mediaProvider.getMyUnusedMedias;
 
   private readonly partialCreateItem: typeof this.itemProvider.partialCreateItem;
   private readonly partialUpdateItem: typeof this.itemProvider.partialUpdateItem;

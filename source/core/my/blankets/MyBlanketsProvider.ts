@@ -10,7 +10,6 @@ import { BlanketModel } from "../../../common/models/BlanketModel";
 import { BlanketViewModel } from "../../../common/models/BlanketViewModel";
 import { ItemMediaProvider } from "../../../common/providers/ItemMediaProvider";
 import { ItemProvider } from "../../../common/providers/ItemProvider";
-import { MediaProvider } from "../../../common/providers/MediaProvider";
 import { BlanketQueries } from "../../../common/queries/BlanketQueries";
 import { BlanketViewQueries } from "../../../common/queries/BlanketViewQueries";
 
@@ -18,7 +17,6 @@ export class MyBlanketsProvider implements IProvider {
   public constructor(
     private readonly itemProvider = new ItemProvider(),
     private readonly itemMediaProvider = new ItemMediaProvider(),
-    private readonly mediaProvider = new MediaProvider(),
   ) {
     this.partialCreateItem = this.itemProvider.partialCreateItem.bind(this.itemProvider);
     this.partialUpdateItem = this.itemProvider.partialUpdateItem.bind(this.itemProvider);
@@ -30,11 +28,9 @@ export class MyBlanketsProvider implements IProvider {
     this.partialDeleteItemMedias = this.itemMediaProvider.partialDeleteItemMedias.bind(
       this.itemMediaProvider,
     );
-    this.getMyMedias = this.mediaProvider.getMyUnusedMedias.bind(this.mediaProvider);
   }
 
   public readonly getItemMedias: typeof this.itemMediaProvider.getItemMedias;
-  public readonly getMyMedias: typeof this.mediaProvider.getMyUnusedMedias;
 
   private readonly partialCreateItem: typeof this.itemProvider.partialCreateItem;
   private readonly partialUpdateItem: typeof this.itemProvider.partialUpdateItem;

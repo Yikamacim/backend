@@ -34,30 +34,33 @@ export class MediaHelper implements IHelper {
     };
   }
 
-  public static async findMedias(
+  public static async findMyMedias(
     accountId: number,
     mediaIds: number[],
   ): Promise<Either<ManagerResponse<null>, MediaViewModel[]>> {
-    const myMedias = await new MediaProvider().getMyUnusedMedias(accountId);
+    const myMedias = (await new MediaProvider().getMyMedias(accountId)).filter(
+      (myMedia) => myMedia.isUsed === false,
+    );
     const foundMedias: MediaViewModel[] = [];
     for (const mediaId of mediaIds) {
-      const findMediaResult = await MediaHelper.findMedia(accountId, mediaId, myMedias);
-      if (findMediaResult.isLeft()) {
-        return Left.of(findMediaResult.get());
+      const getMediaResult = await MediaHelper.findMyMedia(accountId, mediaId, myMedias);
+      if (getMediaResult.isLeft()) {
+        return Left.of(getMediaResult.get());
       }
-      const myMedia = findMediaResult.get();
-      foundMedias.push(myMedia);
+      foundMedias.push(getMediaResult.get());
     }
     return Right.of(foundMedias);
   }
 
-  public static async findMedia(
+  public static async findMyMedia(
     accountId: number,
     mediaId: number,
     myMedias: MediaViewModel[] | null = null,
   ): Promise<Either<ManagerResponse<null>, MediaViewModel>> {
     if (myMedias === null) {
-      myMedias = await new MediaProvider().getMyUnusedMedias(accountId);
+      myMedias = (await new MediaProvider().getMyMedias(accountId)).filter(
+        (myMedia) => myMedia.isUsed === false,
+      );
     }
     const myMedia = myMedias.find((myMedia) => myMedia.mediaId === mediaId);
     if (myMedia === undefined) {

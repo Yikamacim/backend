@@ -31,7 +31,7 @@ export class MyBlanketsManager implements IManager {
     payload: TokenPayload,
     request: MyBlanketsRequest,
   ): Promise<ManagerResponse<MyBlanketsResponse | null>> {
-    const findMediasResult = await MediaHelper.findMedias(payload.accountId, request.mediaIds);
+    const findMediasResult = await MediaHelper.findMyMedias(payload.accountId, request.mediaIds);
     if (findMediasResult.isLeft()) {
       return findMediasResult.get();
     }
@@ -100,7 +100,7 @@ export class MyBlanketsManager implements IManager {
         null,
       );
     }
-    const findMediasResult = await MediaHelper.findMedias(payload.accountId, request.mediaIds);
+    const findMediasResult = await MediaHelper.findMyMedias(payload.accountId, request.mediaIds);
     if (findMediasResult.isLeft()) {
       return findMediasResult.get();
     }

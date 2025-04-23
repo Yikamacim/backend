@@ -34,7 +34,7 @@ export class MyBusinessManager implements IManager {
         MyBusinessResponse.fromModel(myBusiness, null),
       );
     }
-    const media = await this.provider.getMedia(myBusiness.mediaId);
+    const media = await this.provider.getBusinessMedia(myBusiness.businessId, myBusiness.mediaId);
     if (media === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -42,10 +42,6 @@ export class MyBusinessManager implements IManager {
         [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
         null,
       );
-    }
-    const checkMediaResult = await MediaHelper.checkMedia(media, BusinessMediaRules.ALLOWED_TYPES);
-    if (checkMediaResult.isLeft()) {
-      return checkMediaResult.get();
     }
     const mediaData = await MediaHelper.mediaToMediaData(media);
     return ResponseUtil.managerResponse(
@@ -70,7 +66,7 @@ export class MyBusinessManager implements IManager {
     }
     let mediaData: MediaData | null = null;
     if (request.mediaId !== null) {
-      const findMediaResult = await MediaHelper.findMedia(payload.accountId, request.mediaId);
+      const findMediaResult = await MediaHelper.findMyMedia(payload.accountId, request.mediaId);
       if (findMediaResult.isLeft()) {
         return findMediaResult.get();
       }
@@ -124,15 +120,11 @@ export class MyBusinessManager implements IManager {
     }
     let mediaData: MediaData | null = null;
     if (request.mediaId !== null) {
-      const media = await this.provider.getMedia(request.mediaId);
-      if (media === null) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
-          null,
-        );
+      const mediaResult = await MediaHelper.findMyMedia(payload.accountId, request.mediaId);
+      if (mediaResult.isLeft()) {
+        return mediaResult.get();
       }
+      const media = mediaResult.get();
       const checkMediaResult = await MediaHelper.checkMedia(
         media,
         BusinessMediaRules.ALLOWED_TYPES,

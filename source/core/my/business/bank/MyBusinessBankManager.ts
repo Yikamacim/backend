@@ -23,14 +23,6 @@ export class MyBusinessBankManager implements IManager {
         null,
       );
     }
-    if (myBusiness.isOpen) {
-      return ResponseUtil.managerResponse(
-        new HttpStatus(HttpStatusCode.CONFLICT),
-        null,
-        [new ClientError(ClientErrorCode.BUSINESS_IS_OPEN)],
-        null,
-      );
-    }
     const myBusinessBank = await this.provider.getMyBusinessBank(myBusiness.businessId);
     if (myBusinessBank === null) {
       return ResponseUtil.managerResponse(

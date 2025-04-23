@@ -9,7 +9,6 @@ import { CarpetModel } from "../../../common/models/CarpetModel";
 import { CarpetViewModel } from "../../../common/models/CarpetViewModel";
 import { ItemMediaProvider } from "../../../common/providers/ItemMediaProvider";
 import { ItemProvider } from "../../../common/providers/ItemProvider";
-import { MediaProvider } from "../../../common/providers/MediaProvider";
 import { CarpetQueries } from "../../../common/queries/CarpetQueries";
 import { CarpetViewQueries } from "../../../common/queries/CarpetViewQueries";
 
@@ -17,7 +16,6 @@ export class MyCarpetsProvider implements IProvider {
   public constructor(
     private readonly itemProvider = new ItemProvider(),
     private readonly itemMediaProvider = new ItemMediaProvider(),
-    private readonly mediaProvider = new MediaProvider(),
   ) {
     this.partialCreateItem = this.itemProvider.partialCreateItem.bind(this.itemProvider);
     this.partialUpdateItem = this.itemProvider.partialUpdateItem.bind(this.itemProvider);
@@ -29,11 +27,9 @@ export class MyCarpetsProvider implements IProvider {
     this.partialDeleteItemMedias = this.itemMediaProvider.partialDeleteItemMedias.bind(
       this.itemMediaProvider,
     );
-    this.getMyMedias = this.mediaProvider.getMyUnusedMedias.bind(this.mediaProvider);
   }
 
   public readonly getItemMedias: typeof this.itemMediaProvider.getItemMedias;
-  public readonly getMyMedias: typeof this.mediaProvider.getMyUnusedMedias;
 
   private readonly partialCreateItem: typeof this.itemProvider.partialCreateItem;
   private readonly partialUpdateItem: typeof this.itemProvider.partialUpdateItem;

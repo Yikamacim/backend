@@ -9,18 +9,18 @@ import { BusinessViewModel } from "../../../../common/models/BusinessViewModel";
 import { AddressProvider } from "../../../../common/providers/AddressProvider";
 import { BusinessMediaProvider } from "../../../../common/providers/BusinessMediaProvider";
 import { BusinessProvider } from "../../../../common/providers/BusinessProvider";
-import { MediaProvider } from "../../../../common/providers/MediaProvider";
 import { BusinessQueries } from "../../../../common/queries/BusinessQueries";
 
 export class MyBusinessProvider implements IProvider {
   public constructor(
     private readonly businessProvider = new BusinessProvider(),
     private readonly addressProvider = new AddressProvider(),
-    private readonly mediaProvider = new MediaProvider(),
     private readonly businessMediaProvider = new BusinessMediaProvider(),
   ) {
-    this.getMedia = this.mediaProvider.getMedia.bind(this.mediaProvider);
     this.getMyBusiness = this.businessProvider.getMyBusiness.bind(this.businessProvider);
+    this.getBusinessMedia = this.businessMediaProvider.getBusinessMedia.bind(
+      this.businessMediaProvider,
+    );
     this.partialGetMyBusiness = this.businessProvider.partialGetMyBusiness.bind(
       this.businessProvider,
     );
@@ -34,7 +34,7 @@ export class MyBusinessProvider implements IProvider {
   }
 
   public readonly getMyBusiness: typeof this.businessProvider.getMyBusiness;
-  public readonly getMedia: typeof this.mediaProvider.getMedia;
+  public readonly getBusinessMedia: typeof this.businessMediaProvider.getBusinessMedia;
 
   private readonly partialGetMyBusiness: typeof this.businessProvider.partialGetMyBusiness;
   private readonly createAddress: typeof this.addressProvider.createAddress;

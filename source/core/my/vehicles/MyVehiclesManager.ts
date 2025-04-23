@@ -31,7 +31,7 @@ export class MyVehiclesManager implements IManager {
     payload: TokenPayload,
     request: MyVehiclesRequest,
   ): Promise<ManagerResponse<MyVehiclesResponse | null>> {
-    const findMediasResult = await MediaHelper.findMedias(payload.accountId, request.mediaIds);
+    const findMediasResult = await MediaHelper.findMyMedias(payload.accountId, request.mediaIds);
     if (findMediasResult.isLeft()) {
       return findMediasResult.get();
     }
@@ -101,7 +101,7 @@ export class MyVehiclesManager implements IManager {
         null,
       );
     }
-    const findMediasResult = await MediaHelper.findMedias(payload.accountId, request.mediaIds);
+    const findMediasResult = await MediaHelper.findMyMedias(payload.accountId, request.mediaIds);
     if (findMediasResult.isLeft()) {
       return findMediasResult.get();
     }

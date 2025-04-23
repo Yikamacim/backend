@@ -165,6 +165,9 @@ export enum ClientErrorCode {
   //  *  *  820XX: /my/business/bank errors
   BANK_NOT_FOUND = 82000,
   BANK_ALREADY_EXISTS = 82001,
+  //  *  *  821XX: /my/business/medias errors
+  INVALID_MEDIA_ID = 82100,
+  BUSINESS_MEDIA_NOT_FOUND = 82101,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -325,6 +328,9 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   //  *  *  820XX: /my/business/bank errors
   [ClientErrorCode.BANK_NOT_FOUND]: "Business doesn't have a bank.",
   [ClientErrorCode.BANK_ALREADY_EXISTS]: "Business already has a bank.",
+  //  *  *  821XX: /my/business/medias errors
+  [ClientErrorCode.INVALID_MEDIA_ID]: "Provided media id was invalid.",
+  [ClientErrorCode.BUSINESS_MEDIA_NOT_FOUND]: "Business doesn't have a media with the provided id.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

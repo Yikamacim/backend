@@ -29,7 +29,7 @@ export class MyQuiltsManager implements IManager {
     payload: TokenPayload,
     request: MyQuiltsRequest,
   ): Promise<ManagerResponse<MyQuiltsResponse | null>> {
-    const findMediasResult = await MediaHelper.findMedias(payload.accountId, request.mediaIds);
+    const findMediasResult = await MediaHelper.findMyMedias(payload.accountId, request.mediaIds);
     if (findMediasResult.isLeft()) {
       return findMediasResult.get();
     }
@@ -92,7 +92,7 @@ export class MyQuiltsManager implements IManager {
         null,
       );
     }
-    const findMediasResult = await MediaHelper.findMedias(payload.accountId, request.mediaIds);
+    const findMediasResult = await MediaHelper.findMyMedias(payload.accountId, request.mediaIds);
     if (findMediasResult.isLeft()) {
       return findMediasResult.get();
     }

@@ -23,6 +23,7 @@ import { MyBlanketsBuilder } from "./core/my/blankets/MyBlanketsBuilder";
 import { MyBusinessBuilder } from "./core/my/business/_/MyBusinessBuilder";
 import { MyBusinessBankBuilder } from "./core/my/business/bank/MyBusinessBankBuilder";
 import { MyBusinessHoursBuilder } from "./core/my/business/hours/MyBusinessHoursBuilder";
+import { MyBusinessMediasBuilder } from "./core/my/business/medias/MyBusinessMediasBuilder";
 import { MyCarpetsBuilder } from "./core/my/carpets/MyCarpetsBuilder";
 import { MyChairsBuilder } from "./core/my/chairs/MyChairsBuilder";
 import { MyCurtainsBuilder } from "./core/my/curtains/MyCurtainsBuilder";
@@ -147,6 +148,12 @@ app.use(
   MyBusinessHoursBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
   new MyBusinessHoursBuilder().router,
+);
+app.use(
+  // my/business/medias
+  MyBusinessMediasBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
+  new MyBusinessMediasBuilder().router,
 );
 app.use(
   // my/carpets

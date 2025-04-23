@@ -23,14 +23,6 @@ export class MyBusinessHoursManager implements IManager {
         null,
       );
     }
-    if (myBusiness.isOpen) {
-      return ResponseUtil.managerResponse(
-        new HttpStatus(HttpStatusCode.CONFLICT),
-        null,
-        [new ClientError(ClientErrorCode.BUSINESS_IS_OPEN)],
-        null,
-      );
-    }
     const myBusinessHours = await this.provider.getMyBusinessHours(myBusiness.businessId);
     if (myBusinessHours === null) {
       return ResponseUtil.managerResponse(

@@ -29,7 +29,7 @@ export class MySofasManager implements IManager {
     payload: TokenPayload,
     request: MySofasRequest,
   ): Promise<ManagerResponse<MySofasResponse | null>> {
-    const findMediasResult = await MediaHelper.findMedias(payload.accountId, request.mediaIds);
+    const findMediasResult = await MediaHelper.findMyMedias(payload.accountId, request.mediaIds);
     if (findMediasResult.isLeft()) {
       return findMediasResult.get();
     }
@@ -93,7 +93,7 @@ export class MySofasManager implements IManager {
         null,
       );
     }
-    const findMediasResult = await MediaHelper.findMedias(payload.accountId, request.mediaIds);
+    const findMediasResult = await MediaHelper.findMyMedias(payload.accountId, request.mediaIds);
     if (findMediasResult.isLeft()) {
       return findMediasResult.get();
     }
