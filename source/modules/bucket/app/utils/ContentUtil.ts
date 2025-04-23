@@ -8,6 +8,8 @@ export class ContentUtil implements IUtil {
     switch (mediaType) {
       case MediaType.AUDIO:
         return "audio/";
+      case MediaType.DOCUMENT:
+        return "application/";
       case MediaType.IMAGE:
         return "image/";
       case MediaType.VIDEO:
@@ -21,6 +23,8 @@ export class ContentUtil implements IUtil {
     switch (mediaType) {
       case MediaType.AUDIO:
         return MediaConstants.AUDIO_MAX_SIZE;
+      case MediaType.DOCUMENT:
+        return MediaConstants.DOCUMENT_MAX_SIZE;
       case MediaType.IMAGE:
         return MediaConstants.IMAGE_MAX_SIZE;
       case MediaType.VIDEO:
