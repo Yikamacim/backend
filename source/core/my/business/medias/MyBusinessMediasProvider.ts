@@ -41,8 +41,8 @@ export class MyBusinessMediasProvider implements IProvider {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(
-        BusinessMediaViewQueries.GET_BUSINESS_MEDIAS_$BSID,
-        [businessId],
+        BusinessMediaViewQueries.GET_BUSINESS_MEDIAS_$BSID_$ISMN,
+        [businessId, false],
       );
       const record: unknown[] = results.rows;
       return await ResponseUtil.providerResponse(BusinessMediaViewModel.fromRecords(record));
