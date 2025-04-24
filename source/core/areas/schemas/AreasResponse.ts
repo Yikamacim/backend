@@ -24,7 +24,7 @@ export class AreasResponse implements IResponse {
       model.districtName,
       model.neighborhoodId,
       model.neighborhoodName,
-      model.areas,
+      model.area,
     );
   }
 

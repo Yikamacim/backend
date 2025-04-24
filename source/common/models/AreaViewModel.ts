@@ -12,7 +12,7 @@ export class AreaViewModel implements IModel {
     public readonly districtName: string,
     public readonly neighborhoodId: number,
     public readonly neighborhoodName: string,
-    public readonly areas: string,
+    public readonly area: string,
   ) {}
 
   public static fromRecord(record: unknown): AreaViewModel {
@@ -28,7 +28,7 @@ export class AreaViewModel implements IModel {
       record.districtName,
       record.neighborhoodId,
       record.neighborhoodName,
-      record.areas,
+      record.area,
     );
   }
 
@@ -53,7 +53,7 @@ export class AreaViewModel implements IModel {
       typeof model.districtName === "string" &&
       typeof model.neighborhoodId === "number" &&
       typeof model.neighborhoodName === "string" &&
-      typeof model.areas === "string"
+      typeof model.area === "string"
     );
   }
 
