@@ -168,6 +168,8 @@ export enum ClientErrorCode {
   //  *  *  821XX: /my/business/medias errors
   INVALID_MEDIA_ID = 82100,
   BUSINESS_MEDIA_NOT_FOUND = 82101,
+  //  *  *  822XX: /my/business/areas errors
+  BUSINESS_AREA_ALREADY_EXISTS = 82200,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -331,6 +333,9 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   //  *  *  821XX: /my/business/medias errors
   [ClientErrorCode.INVALID_MEDIA_ID]: "Provided media id was invalid.",
   [ClientErrorCode.BUSINESS_MEDIA_NOT_FOUND]: "Business doesn't have a media with the provided id.",
+  //  *  *  822XX: /my/business/areas errors
+  [ClientErrorCode.BUSINESS_AREA_ALREADY_EXISTS]:
+    "Business already has an area with the provided id.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

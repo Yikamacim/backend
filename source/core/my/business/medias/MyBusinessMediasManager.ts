@@ -29,11 +29,12 @@ export class MyBusinessMediasManager implements IManager {
     }
     const myBusinessMedias = await this.provider.getMyBusinessMedias(myBusiness.businessId);
     const mediaDatas = await MediaHelper.mediasToMediaDatas(myBusinessMedias);
-    const responses: MyBusinessMediasResponse[] = [];
-    for (const mediaData of mediaDatas) {
-      responses.push(MyBusinessMediasResponse.fromModel(mediaData));
-    }
-    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
+    return ResponseUtil.managerResponse(
+      new HttpStatus(HttpStatusCode.OK),
+      null,
+      [],
+      MyBusinessMediasResponse.fromModels(mediaDatas),
+    );
   }
 
   public async postMyBusinessMedias(

@@ -13,4 +13,8 @@ export class MyBusinessMediasResponse implements IResponse {
   public static fromModel(model: MediaData): MyBusinessMediasResponse {
     return new MyBusinessMediasResponse(model.mediaId, model.mediaType, model.extension, model.url);
   }
+
+  public static fromModels(models: MediaData[]): MyBusinessMediasResponse[] {
+    return models.map((model: MediaData) => MyBusinessMediasResponse.fromModel(model));
+  }
 }

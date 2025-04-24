@@ -13,6 +13,7 @@ import { EndpointsBuilder } from "./core/_internal/endpoints/EndpointsBuilder";
 import { PurgeBuilder } from "./core/_internal/purge/PurgeBuilder";
 import { RecordsBuilder } from "./core/_internal/records/RecordsBuilder";
 import { AccountsBuilder } from "./core/accounts/AccountsBuilder";
+import { AreasBuilder } from "./core/areas/AreasBuilder";
 import { CountriesBuilder } from "./core/countries/CountriesBuilder";
 import { DistrictsBuilder } from "./core/districts/DistrictsBuilder";
 import { LoginBuilder } from "./core/login/LoginBuilder";
@@ -21,6 +22,7 @@ import { MyAddressesBuilder } from "./core/my/addresses/MyAddressesBuilder";
 import { MyBedsBuilder } from "./core/my/beds/MyBedsBuilder";
 import { MyBlanketsBuilder } from "./core/my/blankets/MyBlanketsBuilder";
 import { MyBusinessBuilder } from "./core/my/business/_/MyBusinessBuilder";
+import { MyBusinessAreasBuilder } from "./core/my/business/areas/MyBusinessAreasBuilder";
 import { MyBusinessBankBuilder } from "./core/my/business/bank/MyBusinessBankBuilder";
 import { MyBusinessHoursBuilder } from "./core/my/business/hours/MyBusinessHoursBuilder";
 import { MyBusinessMediasBuilder } from "./core/my/business/medias/MyBusinessMediasBuilder";
@@ -92,6 +94,11 @@ app.use(
   new AccountsBuilder().router,
 );
 app.use(
+  // areas
+  AreasBuilder.BASE_ROUTE,
+  new AreasBuilder().router,
+);
+app.use(
   // countries
   CountriesBuilder.BASE_ROUTE,
   new CountriesBuilder().router,
@@ -136,6 +143,12 @@ app.use(
   MyBusinessBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
   new MyBusinessBuilder().router,
+);
+app.use(
+  // my/business/areas
+  MyBusinessAreasBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
+  new MyBusinessAreasBuilder().router,
 );
 app.use(
   // my/business/bank
