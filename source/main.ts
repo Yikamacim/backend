@@ -13,6 +13,7 @@ import { EndpointsBuilder } from "./core/_internal/endpoints/EndpointsBuilder";
 import { PurgeBuilder } from "./core/_internal/purge/PurgeBuilder";
 import { RecordsBuilder } from "./core/_internal/records/RecordsBuilder";
 import { AccountsBuilder } from "./core/accounts/AccountsBuilder";
+import { AdminApprovalsBuilder } from "./core/admin/approvals/AdminApprovalsBuilder";
 import { AreasBuilder } from "./core/areas/AreasBuilder";
 import { CountriesBuilder } from "./core/countries/CountriesBuilder";
 import { DistrictsBuilder } from "./core/districts/DistrictsBuilder";
@@ -121,6 +122,12 @@ app.use(
 );
 
 // PRIVATE ROUTES
+app.use(
+  // admin/approvals
+  AdminApprovalsBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([AccountType.ADMIN]).bind(AuthMiddleware),
+  new AdminApprovalsBuilder().router,
+);
 app.use(
   // my/addresses
   MyAddressesBuilder.BASE_ROUTE,
