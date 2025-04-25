@@ -7,6 +7,7 @@ import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
 import { BusinessModel } from "../../../../common/models/BusinessModel";
 import { BusinessViewModel } from "../../../../common/models/BusinessViewModel";
 import { AddressProvider } from "../../../../common/providers/AddressProvider";
+import { ApprovalProvider } from "../../../../common/providers/ApprovalProvider";
 import { BusinessMediaProvider } from "../../../../common/providers/BusinessMediaProvider";
 import { BusinessProvider } from "../../../../common/providers/BusinessProvider";
 import { BusinessQueries } from "../../../../common/queries/BusinessQueries";
@@ -14,13 +15,16 @@ import { BusinessQueries } from "../../../../common/queries/BusinessQueries";
 export class MyBusinessProvider implements IProvider {
   public constructor(
     private readonly businessProvider = new BusinessProvider(),
-    private readonly addressProvider = new AddressProvider(),
     private readonly businessMediaProvider = new BusinessMediaProvider(),
+    private readonly addressProvider = new AddressProvider(),
+    private readonly approvalProvider = new ApprovalProvider(),
   ) {
     this.getMyBusiness = this.businessProvider.getMyBusiness.bind(this.businessProvider);
     this.getBusinessMedia = this.businessMediaProvider.getBusinessMedia.bind(
       this.businessMediaProvider,
     );
+    this.getApproval = this.approvalProvider.getApproval.bind(this.approvalProvider);
+    this.updateApproval = this.approvalProvider.updateApproval.bind(this.approvalProvider);
     this.partialGetMyBusiness = this.businessProvider.partialGetMyBusiness.bind(
       this.businessProvider,
     );
@@ -35,6 +39,8 @@ export class MyBusinessProvider implements IProvider {
 
   public readonly getMyBusiness: typeof this.businessProvider.getMyBusiness;
   public readonly getBusinessMedia: typeof this.businessMediaProvider.getBusinessMedia;
+  public readonly getApproval: typeof this.approvalProvider.getApproval;
+  public readonly updateApproval: typeof this.approvalProvider.updateApproval;
 
   private readonly partialGetMyBusiness: typeof this.businessProvider.partialGetMyBusiness;
   private readonly createAddress: typeof this.addressProvider.createAddress;

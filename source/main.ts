@@ -22,6 +22,7 @@ import { MyAddressesBuilder } from "./core/my/addresses/MyAddressesBuilder";
 import { MyBedsBuilder } from "./core/my/beds/MyBedsBuilder";
 import { MyBlanketsBuilder } from "./core/my/blankets/MyBlanketsBuilder";
 import { MyBusinessBuilder } from "./core/my/business/_/MyBusinessBuilder";
+import { MyBusinessApprovalBuilder } from "./core/my/business/approval/MyBusinessApprovalBuilder";
 import { MyBusinessAreasBuilder } from "./core/my/business/areas/MyBusinessAreasBuilder";
 import { MyBusinessBankBuilder } from "./core/my/business/bank/MyBusinessBankBuilder";
 import { MyBusinessHoursBuilder } from "./core/my/business/hours/MyBusinessHoursBuilder";
@@ -145,6 +146,12 @@ app.use(
   new MyBusinessBuilder().router,
 );
 app.use(
+  // my/business/approval
+  MyBusinessApprovalBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
+  new MyBusinessApprovalBuilder().router,
+);
+app.use(
   // my/business/areas
   MyBusinessAreasBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
@@ -189,7 +196,7 @@ app.use(
 app.use(
   // my/medias
   MyMediasBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([AccountType.USER, AccountType.BUSINESS]).bind(AuthMiddleware),
   new MyMediasBuilder().router,
 );
 app.use(

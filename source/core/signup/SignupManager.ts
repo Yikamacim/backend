@@ -12,6 +12,14 @@ export class SignupManager implements IManager {
   public constructor(private readonly provider = new SignupProvider()) {}
 
   public async postSignup(request: SignupRequest): Promise<ManagerResponse<SignupResponse | null>> {
+    // if (request.accountType === AccountType.ADMIN) {
+    //   return ResponseUtil.managerResponse(
+    //     new HttpStatus(HttpStatusCode.FORBIDDEN),
+    //     null,
+    //     [new ClientError(ClientErrorCode.FORBIDDEN_ACCOUNT_TYPE)],
+    //     null,
+    //   );
+    // }
     const account = await this.provider.getAccount(request.phone);
     if (account !== null) {
       return ResponseUtil.managerResponse(

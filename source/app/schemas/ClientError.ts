@@ -1,5 +1,6 @@
 import { AccountRules } from "../../common/rules/AccountRules";
 import { AddressRules } from "../../common/rules/AddressRules";
+import { ApprovalRules } from "../../common/rules/ApprovalRules";
 import { BankRules } from "../../common/rules/BankRules";
 import { BusinessRules } from "../../common/rules/BusinessRules";
 import { ChairRules } from "../../common/rules/ChairRules";
@@ -72,36 +73,41 @@ export enum ClientErrorCode {
   INVALID_BUSINESS_DESCRIPTION_LENGTH = 60013,
   INVALID_BUSINESS_HOUR_LENGTH = 60014,
   INVALID_IBAN_LENGTH = 60015,
-  INVALIDD_OWNER_LENGTH = 60016,
+  INVALID_OWNER_LENGTH = 60016,
+  INVALID_APPROVAL_MESSAGE_LENGTH = 60017,
+  INVALID_APPROVAL_REASON_LENGTH = 60018,
   //  *  7XXXX: Content errors
-  INVALID_PHONE_CONTENT = 70002,
-  INVALID_PASSWORD_CONTENT = 70003,
-  INVALID_NAME_CONTENT = 70004,
-  INVALID_SURNAME_CONTENT = 70005,
-  INVALID_CODE_CONTENT = 70006,
-  INVALID_ADDRESS_NAME_CONTENT = 70007,
-  INVALID_EXPLICIT_ADDRESS_CONTENT = 70008,
-  INVALID_ITEM_NAME_CONTENT = 70009,
-  INVALID_ITEM_DESCRIPTION_CONTENT = 70010,
-  DUPLICATE_MEDIA_IDS = 70011,
-  MEDIA_TYPE_NOT_ALLOWED = 70012,
-  INVALID_VEHICLE_BRAND_CONTENT = 70013,
-  INVALID_VEHICLE_MODEL_CONTENT = 70014,
-  INVALID_CHAIR_QUANTITY = 70015,
-  INVALID_EMAIL_CONTENT = 70016,
-  INVALID_BUSINESS_NAME_CONTENT = 70017,
-  INVALID_BUSINESS_DESCRIPTION_CONTENT = 70018,
-  INVALID_BUSINESS_HOUR_CONTENT = 70019,
-  INVALID_IBAN_CONTENT = 70020,
-  INVALID_OWNER_CONTENT = 70021,
+  INVALID_PHONE_CONTENT = 70001,
+  INVALID_PASSWORD_CONTENT = 70002,
+  INVALID_NAME_CONTENT = 70003,
+  INVALID_SURNAME_CONTENT = 70004,
+  INVALID_CODE_CONTENT = 70005,
+  INVALID_ADDRESS_NAME_CONTENT = 70006,
+  INVALID_EXPLICIT_ADDRESS_CONTENT = 70007,
+  INVALID_ITEM_NAME_CONTENT = 70008,
+  INVALID_ITEM_DESCRIPTION_CONTENT = 70009,
+  DUPLICATE_MEDIA_IDS = 70010,
+  MEDIA_TYPE_NOT_ALLOWED = 70011,
+  INVALID_VEHICLE_BRAND_CONTENT = 70012,
+  INVALID_VEHICLE_MODEL_CONTENT = 70013,
+  INVALID_CHAIR_QUANTITY = 70014,
+  INVALID_EMAIL_CONTENT = 70015,
+  INVALID_BUSINESS_NAME_CONTENT = 70016,
+  INVALID_BUSINESS_DESCRIPTION_CONTENT = 70017,
+  INVALID_BUSINESS_HOUR_CONTENT = 70018,
+  INVALID_IBAN_CONTENT = 70019,
+  INVALID_OWNER_CONTENT = 70020,
+  INVALID_APPROVAL_MESSAGE_CONTENT = 70021,
+  INVALID_APPROVAL_REASON_CONTENT = 70022,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
   //  *  *  800XX: /login errors
-  ACCOUNT_NOT_FOUND = 80004,
-  INCORRECT_PASSWORD = 80005,
+  ACCOUNT_NOT_FOUND = 80001,
+  INCORRECT_PASSWORD = 80002,
   //  *  *  801XX: /signup errors
-  ACCOUNT_ALREADY_EXISTS = 80104,
+  FORBIDDEN_ACCOUNT_TYPE = 80100,
+  ACCOUNT_ALREADY_EXISTS = 80101,
   //  *  *  802XX: /my/sessions errors
   SESSION_NOT_FOUND = 80200,
   CANNOT_DELETE_CURRENT_SESSION = 80201,
@@ -170,6 +176,12 @@ export enum ClientErrorCode {
   BUSINESS_MEDIA_NOT_FOUND = 82101,
   //  *  *  822XX: /my/business/areas errors
   BUSINESS_AREA_ALREADY_EXISTS = 82200,
+  // *  *  823XX: /my/business/approval errors
+  BUSINESS_APPROVAL_NOT_FOUND = 82300,
+  BUSINESS_APPROVAL_ALREADY_APPROVED = 82301,
+  BUSINESS_APPROVAL_ALREADY_PENDING = 82302,
+  //  *  *  824XX: /admin/approvals errors
+  INVALID_BUSINESS_ID = 82400,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -226,7 +238,9 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_BUSINESS_DESCRIPTION_LENGTH]: `Provided business description wasn't in the length range of ${BusinessRules.DESCRIPTION_MIN_LENGTH} to ${BusinessRules.DESCRIPTION_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_BUSINESS_HOUR_LENGTH]: `Provided business hour wasn't in the length of ${BusinessRules.HOUR_LENGTH}.`,
   [ClientErrorCode.INVALID_IBAN_LENGTH]: `Provided IBAN wasn't in the length range of ${BankRules.IBAN_MIN_LENGTH} to ${BankRules.IBAN_MAX_LENGTH}.`,
-  [ClientErrorCode.INVALIDD_OWNER_LENGTH]: `Provided bank owner wasn't in the length range of ${BankRules.OWNER_MIN_LENGTH} to ${BankRules.OWNER_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_OWNER_LENGTH]: `Provided bank owner wasn't in the length range of ${BankRules.OWNER_MIN_LENGTH} to ${BankRules.OWNER_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_APPROVAL_MESSAGE_LENGTH]: `Provided approval message wasn't in the length range of ${ApprovalRules.MESSAGE_MIN_LENGTH} to ${ApprovalRules.MESSAGE_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_APPROVAL_REASON_LENGTH]: `Provided approval reason wasn't in the length range of ${ApprovalRules.REASON_MIN_LENGTH} to ${ApprovalRules.REASON_MAX_LENGTH}.`,
   //  *  7XXXX: Content errors
   [ClientErrorCode.INVALID_PHONE_CONTENT]: "Provided phone contained invalid characters.",
   [ClientErrorCode.INVALID_PASSWORD_CONTENT]:
@@ -257,6 +271,10 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
     "Provided business hour contained invalid characters.",
   [ClientErrorCode.INVALID_IBAN_CONTENT]: "Provided IBAN contained invalid characters.",
   [ClientErrorCode.INVALID_OWNER_CONTENT]: "Provided bank owner contained invalid characters.",
+  [ClientErrorCode.INVALID_APPROVAL_MESSAGE_CONTENT]:
+    "Provided approval message contained invalid characters.",
+  [ClientErrorCode.INVALID_APPROVAL_REASON_CONTENT]:
+    "Provided approval reason contained invalid characters.",
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -264,6 +282,7 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.ACCOUNT_NOT_FOUND]: "No account was found with the provided phone.",
   [ClientErrorCode.INCORRECT_PASSWORD]: "Provided password was incorrect.",
   //  *  *  801XX: /signup errors
+  [ClientErrorCode.FORBIDDEN_ACCOUNT_TYPE]: "Provided account type can't be signed up.",
   [ClientErrorCode.ACCOUNT_ALREADY_EXISTS]: "An account already exists with the provided phone.",
   //  *  *  802XX: /my/sessions errors
   [ClientErrorCode.SESSION_NOT_FOUND]:
@@ -336,6 +355,12 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   //  *  *  822XX: /my/business/areas errors
   [ClientErrorCode.BUSINESS_AREA_ALREADY_EXISTS]:
     "Business already has an area with the provided id.",
+  // *  *  823XX: /my/business/approval errors
+  [ClientErrorCode.BUSINESS_APPROVAL_NOT_FOUND]: "Business doesn't have an approval.",
+  [ClientErrorCode.BUSINESS_APPROVAL_ALREADY_APPROVED]: "Business approval is already approved.",
+  [ClientErrorCode.BUSINESS_APPROVAL_ALREADY_PENDING]: "Business approval is already pending.",
+  //  *  *  824XX: /admin/approvals errors
+  [ClientErrorCode.INVALID_BUSINESS_ID]: "Provided business id was invalid.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

@@ -10,11 +10,11 @@ export class MyBusinessMediasResponse implements IResponse {
     public readonly url: string,
   ) {}
 
-  public static fromModel(model: MediaData): MyBusinessMediasResponse {
-    return new MyBusinessMediasResponse(model.mediaId, model.mediaType, model.extension, model.url);
+  public static fromModel(media: MediaData): MyBusinessMediasResponse {
+    return new MyBusinessMediasResponse(media.mediaId, media.mediaType, media.extension, media.url);
   }
 
-  public static fromModels(models: MediaData[]): MyBusinessMediasResponse[] {
-    return models.map((model: MediaData) => MyBusinessMediasResponse.fromModel(model));
+  public static fromModels(medias: MediaData[]): MyBusinessMediasResponse[] {
+    return medias.map((model: MediaData) => MyBusinessMediasResponse.fromModel(model));
   }
 }

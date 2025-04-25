@@ -5,6 +5,7 @@ import type { IManager } from "../../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
+import { ApprovalState } from "../../../../common/enums/ApprovalState";
 import { MediaHelper } from "../../../../common/helpers/MediaHelper";
 import { BusinessMediaRules } from "../../../../common/rules/BusinessMediaRules";
 import { MyBusinessProvider } from "./MyBusinessProvider";
@@ -144,6 +145,16 @@ export class MyBusinessManager implements IManager {
       request.email,
       request.description,
     );
+    if (myUpdatedBusiness.name !== myBusiness.name) {
+      const myBusinessApproval = await this.provider.getApproval(myBusiness.businessId);
+      if (myBusinessApproval !== null) {
+        await this.provider.updateApproval(
+          myBusinessApproval.businessId,
+          ApprovalState.OBSOLETE,
+          "İşletme bilgileri güncellendi.",
+        );
+      }
+    }
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
