@@ -121,19 +121,35 @@ export class MyBusinessManager implements IManager {
     }
     let mediaData: MediaData | null = null;
     if (request.mediaId !== null) {
-      const mediaResult = await MediaHelper.findMyMedia(payload.accountId, request.mediaId);
-      if (mediaResult.isLeft()) {
-        return mediaResult.get();
+      if (request.mediaId !== myBusiness.mediaId) {
+        const mediaResult = await MediaHelper.findMyMedia(payload.accountId, request.mediaId);
+        if (mediaResult.isLeft()) {
+          return mediaResult.get();
+        }
+        const media = mediaResult.get();
+        const checkMediaResult = await MediaHelper.checkMedia(
+          media,
+          BusinessMediaRules.ALLOWED_TYPES,
+        );
+        if (checkMediaResult.isLeft()) {
+          return checkMediaResult.get();
+        }
+        mediaData = await MediaHelper.mediaToMediaData(media);
+      } else {
+        const media = await this.provider.getBusinessMedia(
+          myBusiness.businessId,
+          myBusiness.mediaId,
+        );
+        if (media === null) {
+          return ResponseUtil.managerResponse(
+            new HttpStatus(HttpStatusCode.NOT_FOUND),
+            null,
+            [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
+            null,
+          );
+        }
+        mediaData = await MediaHelper.mediaToMediaData(media);
       }
-      const media = mediaResult.get();
-      const checkMediaResult = await MediaHelper.checkMedia(
-        media,
-        BusinessMediaRules.ALLOWED_TYPES,
-      );
-      if (checkMediaResult.isLeft()) {
-        return checkMediaResult.get();
-      }
-      mediaData = await MediaHelper.mediaToMediaData(media);
     }
     const myUpdatedBusiness = await this.provider.updateBusiness(
       payload.accountId,
