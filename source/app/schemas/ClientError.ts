@@ -6,6 +6,7 @@ import { BusinessRules } from "../../common/rules/BusinessRules";
 import { ChairRules } from "../../common/rules/ChairRules";
 import { ContactRules } from "../../common/rules/ContactRules";
 import { ItemRules } from "../../common/rules/ItemRules";
+import { ServiceRules } from "../../common/rules/ServiceRules";
 import { SessionRules } from "../../common/rules/SessionRules";
 import { VehicleRules } from "../../common/rules/VehicleRules";
 import { VerificationRules } from "../../common/rules/VerificationRules";
@@ -76,7 +77,9 @@ export enum ClientErrorCode {
   INVALID_OWNER_LENGTH = 60016,
   INVALID_APPROVAL_MESSAGE_LENGTH = 60017,
   INVALID_APPROVAL_REASON_LENGTH = 60018,
-  //  *  7XXXX: Content errors
+  INVALID_SERVICE_TITLE_LENGTH = 60019,
+  INVALID_SERVICE_DESCRIPTION_LENGTH = 60020,
+  //  *  7XXXX: Format errors
   INVALID_PHONE_CONTENT = 70001,
   INVALID_PASSWORD_CONTENT = 70002,
   INVALID_NAME_CONTENT = 70003,
@@ -99,6 +102,9 @@ export enum ClientErrorCode {
   INVALID_OWNER_CONTENT = 70020,
   INVALID_APPROVAL_MESSAGE_CONTENT = 70021,
   INVALID_APPROVAL_REASON_CONTENT = 70022,
+  INVALID_SERVICE_TITLE_CONTENT = 70023,
+  INVALID_SERVICE_DESCRIPTION_CONTENT = 70024,
+  INVALID_SERVICE_UNIT_PRICE = 70025,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -182,6 +188,9 @@ export enum ClientErrorCode {
   BUSINESS_APPROVAL_ALREADY_PENDING = 82302,
   //  *  *  824XX: /admin/approvals errors
   INVALID_BUSINESS_ID = 82400,
+  // *  *  825XX: /my/business/services errors
+  INVALID_SERVICE_ID = 82500,
+  SERVICE_NOT_FOUND = 82501,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -241,6 +250,8 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_OWNER_LENGTH]: `Provided bank owner wasn't in the length range of ${BankRules.OWNER_MIN_LENGTH} to ${BankRules.OWNER_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_APPROVAL_MESSAGE_LENGTH]: `Provided approval message wasn't in the length range of ${ApprovalRules.MESSAGE_MIN_LENGTH} to ${ApprovalRules.MESSAGE_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_APPROVAL_REASON_LENGTH]: `Provided approval reason wasn't in the length range of ${ApprovalRules.REASON_MIN_LENGTH} to ${ApprovalRules.REASON_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_SERVICE_TITLE_LENGTH]: `Provided service title wasn't in the length range of ${ServiceRules.TITLE_MIN_LENGTH} to ${ServiceRules.TITLE_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_SERVICE_DESCRIPTION_LENGTH]: `Provided service description wasn't in the length range of ${ServiceRules.DESCRIPTION_MIN_LENGTH} to ${ServiceRules.DESCRIPTION_MAX_LENGTH}.`,
   //  *  7XXXX: Content errors
   [ClientErrorCode.INVALID_PHONE_CONTENT]: "Provided phone contained invalid characters.",
   [ClientErrorCode.INVALID_PASSWORD_CONTENT]:
@@ -275,6 +286,11 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
     "Provided approval message contained invalid characters.",
   [ClientErrorCode.INVALID_APPROVAL_REASON_CONTENT]:
     "Provided approval reason contained invalid characters.",
+  [ClientErrorCode.INVALID_SERVICE_TITLE_CONTENT]:
+    "Provided service title contained invalid characters.",
+  [ClientErrorCode.INVALID_SERVICE_DESCRIPTION_CONTENT]:
+    "Provided service description contained invalid characters.",
+  [ClientErrorCode.INVALID_SERVICE_UNIT_PRICE]: `Provided service unit price wasn't in the range of ${ServiceRules.UNIT_PRICE_MIN} to ${ServiceRules.UNIT_PRICE_MAX}.`,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -361,6 +377,9 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.BUSINESS_APPROVAL_ALREADY_PENDING]: "Business approval is already pending.",
   //  *  *  824XX: /admin/approvals errors
   [ClientErrorCode.INVALID_BUSINESS_ID]: "Provided business id was invalid.",
+  // *  *  825XX: /my/business/services errors
+  [ClientErrorCode.INVALID_SERVICE_ID]: "Provided service id was invalid.",
+  [ClientErrorCode.SERVICE_NOT_FOUND]: "Account doesn't have a service with the provided id.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

@@ -28,6 +28,7 @@ import { MyBusinessAreasBuilder } from "./core/my/business/areas/MyBusinessAreas
 import { MyBusinessBankBuilder } from "./core/my/business/bank/MyBusinessBankBuilder";
 import { MyBusinessHoursBuilder } from "./core/my/business/hours/MyBusinessHoursBuilder";
 import { MyBusinessMediasBuilder } from "./core/my/business/medias/MyBusinessMediasBuilder";
+import { MyBusinessServicesBuilder } from "./core/my/business/services/MyBusinessServicesBuilder";
 import { MyCarpetsBuilder } from "./core/my/carpets/MyCarpetsBuilder";
 import { MyChairsBuilder } from "./core/my/chairs/MyChairsBuilder";
 import { MyCurtainsBuilder } from "./core/my/curtains/MyCurtainsBuilder";
@@ -181,6 +182,12 @@ app.use(
   MyBusinessMediasBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
   new MyBusinessMediasBuilder().router,
+);
+app.use(
+  // my/business/services
+  MyBusinessServicesBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
+  new MyBusinessServicesBuilder().router,
 );
 app.use(
   // my/carpets

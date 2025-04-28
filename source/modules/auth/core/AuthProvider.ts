@@ -17,11 +17,11 @@ export class AuthProvider implements IProvider {
     private readonly sessionProvider = new SessionProvider(),
   ) {
     this.getAccount = this.accountProvider.getAccountById.bind(this.accountProvider);
-    this.getSession = this.sessionProvider.getSessionById.bind(this.accountProvider);
+    this.getSession = this.sessionProvider.getSession.bind(this.accountProvider);
   }
 
   public readonly getAccount: typeof this.accountProvider.getAccountById;
-  public readonly getSession: typeof this.sessionProvider.getSessionById;
+  public readonly getSession: typeof this.sessionProvider.getSession;
 
   public async createOrUpdateSession(sessionData: SessionData): Promise<ProviderResponse<Tokens>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);

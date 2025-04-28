@@ -15,12 +15,12 @@ export class MyAddressesManager implements IManager {
   public async getMyAddresses(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyAddressesResponse[]>> {
-    const myAddresses = await this.provider.getMyAddresses(payload.accountId);
+    const addresses = await this.provider.getAddresses(payload.accountId);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyAddressesResponse.fromModels(myAddresses),
+      MyAddressesResponse.fromModels(addresses),
     );
   }
 
@@ -29,9 +29,9 @@ export class MyAddressesManager implements IManager {
     request: MyAddressesRequest,
   ): Promise<ManagerResponse<MyAddressesResponse>> {
     if (request.isDefault) {
-      await this.provider.clearMyDefaultAddresses(payload.accountId);
+      await this.provider.clearDefaultAddresses(payload.accountId);
     }
-    const myAddress = await this.provider.createAddress(
+    const address = await this.provider.createAddress(
       payload.accountId,
       request.name,
       request.countryId,
@@ -45,7 +45,7 @@ export class MyAddressesManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyAddressesResponse.fromModel(myAddress),
+      MyAddressesResponse.fromModel(address),
     );
   }
 
@@ -53,11 +53,8 @@ export class MyAddressesManager implements IManager {
     payload: TokenPayload,
     params: MyAddressesParams,
   ): Promise<ManagerResponse<MyAddressesResponse | null>> {
-    const myAddress = await this.provider.getMyAddress(
-      payload.accountId,
-      parseInt(params.addressId),
-    );
-    if (myAddress === null) {
+    const address = await this.provider.getAddress(payload.accountId, parseInt(params.addressId));
+    if (address === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -69,7 +66,7 @@ export class MyAddressesManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyAddressesResponse.fromModel(myAddress),
+      MyAddressesResponse.fromModel(address),
     );
   }
 
@@ -78,11 +75,8 @@ export class MyAddressesManager implements IManager {
     params: MyAddressesParams,
     request: MyAddressesRequest,
   ): Promise<ManagerResponse<MyAddressesResponse | null>> {
-    const myAddress = await this.provider.getMyAddress(
-      payload.accountId,
-      parseInt(params.addressId),
-    );
-    if (myAddress === null) {
+    const address = await this.provider.getAddress(payload.accountId, parseInt(params.addressId));
+    if (address === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -91,10 +85,10 @@ export class MyAddressesManager implements IManager {
       );
     }
     if (request.isDefault) {
-      await this.provider.clearMyDefaultAddresses(payload.accountId);
+      await this.provider.clearDefaultAddresses(payload.accountId);
     }
-    const myUpdatedAddress = await this.provider.updateAddress(
-      myAddress.addressId,
+    const updatedAddress = await this.provider.updateAddress(
+      address.addressId,
       request.name,
       request.countryId,
       request.provinceId,
@@ -103,7 +97,7 @@ export class MyAddressesManager implements IManager {
       request.explicitAddress,
       request.isDefault,
     );
-    if (myUpdatedAddress === null) {
+    if (updatedAddress === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -115,7 +109,7 @@ export class MyAddressesManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyAddressesResponse.fromModel(myUpdatedAddress),
+      MyAddressesResponse.fromModel(updatedAddress),
     );
   }
 
@@ -123,11 +117,8 @@ export class MyAddressesManager implements IManager {
     payload: TokenPayload,
     params: MyAddressesParams,
   ): Promise<ManagerResponse<null>> {
-    const myAddress = await this.provider.getMyAddress(
-      payload.accountId,
-      parseInt(params.addressId),
-    );
-    if (myAddress === null) {
+    const address = await this.provider.getAddress(payload.accountId, parseInt(params.addressId));
+    if (address === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -135,7 +126,7 @@ export class MyAddressesManager implements IManager {
         null,
       );
     }
-    if (myAddress.isDefault) {
+    if (address.isDefault) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -143,7 +134,7 @@ export class MyAddressesManager implements IManager {
         null,
       );
     }
-    await this.provider.deleteAddress(myAddress.addressId);
+    await this.provider.deleteAddress(address.addressId);
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);
   }
 }

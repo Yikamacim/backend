@@ -19,15 +19,13 @@ export class MyBusinessProvider implements IProvider {
     private readonly addressProvider = new AddressProvider(),
     private readonly approvalProvider = new ApprovalProvider(),
   ) {
-    this.getMyBusiness = this.businessProvider.getMyBusiness.bind(this.businessProvider);
+    this.getBusiness = this.businessProvider.getBusiness.bind(this.businessProvider);
     this.getBusinessMedia = this.businessMediaProvider.getBusinessMedia.bind(
       this.businessMediaProvider,
     );
     this.getApproval = this.approvalProvider.getApproval.bind(this.approvalProvider);
     this.updateApproval = this.approvalProvider.updateApproval.bind(this.approvalProvider);
-    this.partialGetMyBusiness = this.businessProvider.partialGetMyBusiness.bind(
-      this.businessProvider,
-    );
+    this.partialGetBusiness = this.businessProvider.partialGetBusiness.bind(this.businessProvider);
     this.createAddress = this.addressProvider.createAddress.bind(this.addressProvider);
     this.updateAddress = this.addressProvider.updateAddress.bind(this.addressProvider);
     this.partialCreateBusinessMedia = this.businessMediaProvider.partialCreateBusinessMedia.bind(
@@ -37,12 +35,12 @@ export class MyBusinessProvider implements IProvider {
       this.businessMediaProvider.partialDeleteBusinessMainMedia.bind(this.businessMediaProvider);
   }
 
-  public readonly getMyBusiness: typeof this.businessProvider.getMyBusiness;
+  public readonly getBusiness: typeof this.businessProvider.getBusiness;
   public readonly getBusinessMedia: typeof this.businessMediaProvider.getBusinessMedia;
   public readonly getApproval: typeof this.approvalProvider.getApproval;
   public readonly updateApproval: typeof this.approvalProvider.updateApproval;
 
-  private readonly partialGetMyBusiness: typeof this.businessProvider.partialGetMyBusiness;
+  private readonly partialGetBusiness: typeof this.businessProvider.partialGetBusiness;
   private readonly createAddress: typeof this.addressProvider.createAddress;
   private readonly updateAddress: typeof this.addressProvider.updateAddress;
   private readonly partialCreateBusinessMedia: typeof this.businessMediaProvider.partialCreateBusinessMedia;
@@ -78,7 +76,7 @@ export class MyBusinessProvider implements IProvider {
         )
       ).addressId;
       await this.partialCreateBusiness(accountId, name, addressId, phone, email, description);
-      const businessView = await this.partialGetMyBusiness(accountId);
+      const businessView = await this.partialGetBusiness(accountId);
       if (businessView === null) {
         throw new UnexpectedDatabaseStateError("Business was not created");
       }
@@ -121,7 +119,7 @@ export class MyBusinessProvider implements IProvider {
         BusinessConstants.ADDRESS_IS_DEFAULT,
       );
       await this.partialUpdateBusiness(accountId, name, addressId, phone, email, description);
-      const businessView = await this.partialGetMyBusiness(accountId);
+      const businessView = await this.partialGetBusiness(accountId);
       if (businessView === null) {
         throw new UnexpectedDatabaseStateError("Business was not created");
       }

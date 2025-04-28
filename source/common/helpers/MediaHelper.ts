@@ -38,7 +38,7 @@ export class MediaHelper implements IHelper {
     accountId: number,
     mediaIds: number[],
   ): Promise<Either<ManagerResponse<null>, MediaViewModel[]>> {
-    const myMedias = (await new MediaProvider().getMyMedias(accountId)).filter(
+    const myMedias = (await new MediaProvider().getMedias(accountId)).filter(
       (myMedia) => myMedia.isUsed === false,
     );
     const foundMedias: MediaViewModel[] = [];
@@ -58,7 +58,7 @@ export class MediaHelper implements IHelper {
     myMedias: MediaViewModel[] | null = null,
   ): Promise<Either<ManagerResponse<null>, MediaViewModel>> {
     if (myMedias === null) {
-      myMedias = (await new MediaProvider().getMyMedias(accountId)).filter(
+      myMedias = (await new MediaProvider().getMedias(accountId)).filter(
         (myMedia) => myMedia.isUsed === false,
       );
     }

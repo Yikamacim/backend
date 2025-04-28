@@ -18,8 +18,8 @@ export class MyBusinessMediasManager implements IManager {
   public async getMyBusinessMedias(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyBusinessMediasResponse[] | null>> {
-    const myBusiness = await this.provider.getMyBusiness(payload.accountId);
-    if (myBusiness === null) {
+    const business = await this.provider.getBusiness(payload.accountId);
+    if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -27,8 +27,8 @@ export class MyBusinessMediasManager implements IManager {
         null,
       );
     }
-    const myBusinessMedias = await this.provider.getMyBusinessMedias(myBusiness.businessId);
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(myBusinessMedias);
+    const businessMedias = await this.provider.getBusinessMedias(business.businessId);
+    const mediaDatas = await MediaHelper.mediasToMediaDatas(businessMedias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
@@ -41,8 +41,8 @@ export class MyBusinessMediasManager implements IManager {
     payload: TokenPayload,
     request: MyBusinessMediasRequest,
   ): Promise<ManagerResponse<MyBusinessMediasResponse | null>> {
-    const myBusiness = await this.provider.getMyBusiness(payload.accountId);
-    if (myBusiness === null) {
+    const business = await this.provider.getBusiness(payload.accountId);
+    if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -61,7 +61,7 @@ export class MyBusinessMediasManager implements IManager {
       return checkMediaResult.get();
     }
     mediaData = await MediaHelper.mediaToMediaData(media);
-    await this.provider.createBusinessMedia(myBusiness.businessId, request.mediaId);
+    await this.provider.createBusinessMedia(business.businessId, request.mediaId);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
@@ -74,8 +74,8 @@ export class MyBusinessMediasManager implements IManager {
     payload: TokenPayload,
     params: MyBusinessMediasParams,
   ): Promise<ManagerResponse<MyBusinessMediasResponse | null>> {
-    const myBusiness = await this.provider.getMyBusiness(payload.accountId);
-    if (myBusiness === null) {
+    const business = await this.provider.getBusiness(payload.accountId);
+    if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -84,7 +84,7 @@ export class MyBusinessMediasManager implements IManager {
       );
     }
     const media = await this.provider.getBusinessMedia(
-      myBusiness.businessId,
+      business.businessId,
       parseInt(params.mediaId),
     );
     if (media === null) {
@@ -108,8 +108,8 @@ export class MyBusinessMediasManager implements IManager {
     payload: TokenPayload,
     params: MyBusinessMediasParams,
   ): Promise<ManagerResponse<null>> {
-    const myBusiness = await this.provider.getMyBusiness(payload.accountId);
-    if (myBusiness === null) {
+    const business = await this.provider.getBusiness(payload.accountId);
+    if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -117,7 +117,7 @@ export class MyBusinessMediasManager implements IManager {
         null,
       );
     }
-    await this.provider.deleteBusinessMedia(myBusiness.businessId, parseInt(params.mediaId));
+    await this.provider.deleteBusinessMedia(business.businessId, parseInt(params.mediaId));
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);
   }
 }

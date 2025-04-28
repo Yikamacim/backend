@@ -13,7 +13,7 @@ export class MyBusinessMediasProvider implements IProvider {
     private readonly businessProvider = new BusinessProvider(),
     private readonly businessMediaProvider = new BusinessMediaProvider(),
   ) {
-    this.getMyBusiness = this.businessProvider.getMyBusiness.bind(this.businessProvider);
+    this.getBusiness = this.businessProvider.getBusiness.bind(this.businessProvider);
     this.getBusinessMedia = this.businessMediaProvider.getBusinessMedia.bind(
       this.businessMediaProvider,
     );
@@ -28,14 +28,14 @@ export class MyBusinessMediasProvider implements IProvider {
     );
   }
 
-  public readonly getMyBusiness: typeof this.businessProvider.getMyBusiness;
+  public readonly getBusiness: typeof this.businessProvider.getBusiness;
   public readonly getBusinessMedia: typeof this.businessMediaProvider.getBusinessMedia;
 
   private readonly partialGetBusinessMedia: typeof this.businessMediaProvider.partialGetBusinessMedia;
   private readonly partialCreateBusinessMedia: typeof this.businessMediaProvider.partialCreateBusinessMedia;
   private readonly partialDeleteBusinessMedia: typeof this.businessMediaProvider.partialDeleteBusinessMedia;
 
-  public async getMyBusinessMedias(
+  public async getBusinessMedias(
     businessId: number,
   ): Promise<ProviderResponse<BusinessMediaViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);

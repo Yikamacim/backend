@@ -9,12 +9,12 @@ import { BankQueries } from "../../../../common/queries/BankQueries";
 
 export class MyBusinessBankProvider implements IProvider {
   public constructor(private readonly businessProvider = new BusinessProvider()) {
-    this.getMyBusiness = this.businessProvider.getMyBusiness.bind(this.businessProvider);
+    this.getBusiness = this.businessProvider.getBusiness.bind(this.businessProvider);
   }
 
-  public readonly getMyBusiness: typeof this.businessProvider.getMyBusiness;
+  public readonly getBusiness: typeof this.businessProvider.getBusiness;
 
-  public async getMyBusinessBank(businessId: number): Promise<ProviderResponse<BankModel | null>> {
+  public async getBusinessBank(businessId: number): Promise<ProviderResponse<BankModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(BankQueries.GET_BANK_$BSID, [businessId]);

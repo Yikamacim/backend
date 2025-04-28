@@ -15,14 +15,14 @@ export class MyBusinessApprovalProvider implements IProvider {
     private readonly approvalProvider = new ApprovalProvider(),
     private readonly approvalMediaProvider = new ApprovalMediaProvider(),
   ) {
-    this.getMyBusiness = this.businessProvider.getMyBusiness.bind(this.businessProvider);
+    this.getBusiness = this.businessProvider.getBusiness.bind(this.businessProvider);
     this.getApproval = this.approvalProvider.getApproval.bind(this.approvalProvider);
     this.getApprovalMedias = this.approvalMediaProvider.getApprovalMedias.bind(
       this.approvalMediaProvider,
     );
   }
 
-  public readonly getMyBusiness: typeof this.businessProvider.getMyBusiness;
+  public readonly getBusiness: typeof this.businessProvider.getBusiness;
   public readonly getApproval: typeof this.approvalProvider.getApproval;
   public readonly getApprovalMedias: typeof this.approvalMediaProvider.getApprovalMedias;
 

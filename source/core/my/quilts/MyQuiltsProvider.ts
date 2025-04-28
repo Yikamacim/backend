@@ -38,7 +38,7 @@ export class MyQuiltsProvider implements IProvider {
   private readonly partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   private readonly partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
 
-  public async getMyQuilts(accountId: number): Promise<ProviderResponse<QuiltViewModel[]>> {
+  public async getQuilts(accountId: number): Promise<ProviderResponse<QuiltViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(QuiltViewQueries.GET_QUILTS_$ACID, [accountId]);
@@ -50,13 +50,13 @@ export class MyQuiltsProvider implements IProvider {
     }
   }
 
-  public async getMyQuilt(
+  public async getQuilt(
     accountId: number,
     quiltId: number,
   ): Promise<ProviderResponse<QuiltViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      return await ResponseUtil.providerResponse(await this.partialGetMyQuilt(accountId, quiltId));
+      return await ResponseUtil.providerResponse(await this.partialGetQuilt(accountId, quiltId));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -76,7 +76,7 @@ export class MyQuiltsProvider implements IProvider {
       const item = await this.partialCreateItem(accountId, name, description);
       const quilt = await this.partialCreateQuilt(item.itemId, quiltSize, quiltMaterial);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      const quiltView = await this.partialGetMyQuilt(accountId, quilt.quiltId);
+      const quiltView = await this.partialGetQuilt(accountId, quilt.quiltId);
       if (quiltView === null) {
         throw new UnexpectedDatabaseStateError("Quilt was not created");
       }
@@ -104,7 +104,7 @@ export class MyQuiltsProvider implements IProvider {
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateQuilt(quiltId, quiltSize, quiltMaterial);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      const quiltView = await this.partialGetMyQuilt(accountId, quiltId);
+      const quiltView = await this.partialGetQuilt(accountId, quiltId);
       if (quiltView === null) {
         throw new UnexpectedDatabaseStateError("Quilt was not updated");
       }
@@ -134,7 +134,7 @@ export class MyQuiltsProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialGetMyQuilt(
+  private async partialGetQuilt(
     accountId: number,
     quiltId: number,
   ): Promise<QuiltViewModel | null> {

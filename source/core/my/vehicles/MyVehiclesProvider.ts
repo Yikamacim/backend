@@ -37,7 +37,7 @@ export class MyVehiclesProvider implements IProvider {
   private readonly partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   private readonly partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
 
-  public async getMyVehicles(accountId: number): Promise<ProviderResponse<VehicleViewModel[]>> {
+  public async getVehicles(accountId: number): Promise<ProviderResponse<VehicleViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(VehicleViewQueries.GET_VEHICLES_$ACID, [
@@ -51,14 +51,14 @@ export class MyVehiclesProvider implements IProvider {
     }
   }
 
-  public async getMyVehicle(
+  public async getVehicle(
     accountId: number,
     vehicleId: number,
   ): Promise<ProviderResponse<VehicleViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       return await ResponseUtil.providerResponse(
-        await this.partialGetMyVehicle(accountId, vehicleId),
+        await this.partialGetVehicle(accountId, vehicleId),
       );
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
@@ -80,7 +80,7 @@ export class MyVehiclesProvider implements IProvider {
       const item = await this.partialCreateItem(accountId, name, description);
       const vehicle = await this.partialCreateVehicle(item.itemId, brand, model, vehicleType);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      const vehicleView = await this.partialGetMyVehicle(accountId, vehicle.vehicleId);
+      const vehicleView = await this.partialGetVehicle(accountId, vehicle.vehicleId);
       if (vehicleView === null) {
         throw new UnexpectedDatabaseStateError("Vehicle was not created");
       }
@@ -109,7 +109,7 @@ export class MyVehiclesProvider implements IProvider {
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateVehicle(vehicleId, brand, model, vehicleType);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      const vehicleView = await this.partialGetMyVehicle(accountId, vehicleId);
+      const vehicleView = await this.partialGetVehicle(accountId, vehicleId);
       if (vehicleView === null) {
         throw new UnexpectedDatabaseStateError("Vehicle was not updated");
       }
@@ -139,7 +139,7 @@ export class MyVehiclesProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialGetMyVehicle(
+  private async partialGetVehicle(
     accountId: number,
     vehicleId: number,
   ): Promise<VehicleViewModel | null> {

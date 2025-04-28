@@ -5,7 +5,6 @@ import type { ApprovalModel } from "../../../../../common/models/ApprovalModel";
 
 export class MyBusinessApprovalResponse implements IResponse {
   private constructor(
-    public readonly businessId: number,
     public readonly medias: MediaData[],
     public readonly message: string | null,
     public readonly approvalState: ApprovalState,
@@ -15,7 +14,6 @@ export class MyBusinessApprovalResponse implements IResponse {
 
   public static fromModel(model: ApprovalModel, medias: MediaData[]): MyBusinessApprovalResponse {
     return new MyBusinessApprovalResponse(
-      model.businessId,
       medias,
       model.message,
       model.approvalState,

@@ -38,7 +38,7 @@ export class MyBlanketsProvider implements IProvider {
   private readonly partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   private readonly partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
 
-  public async getMyBlankets(accountId: number): Promise<ProviderResponse<BlanketViewModel[]>> {
+  public async getBlankets(accountId: number): Promise<ProviderResponse<BlanketViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(BlanketViewQueries.GET_BLANKETS_$ACID, [
@@ -52,14 +52,14 @@ export class MyBlanketsProvider implements IProvider {
     }
   }
 
-  public async getMyBlanket(
+  public async getBlanket(
     accountId: number,
     blanketId: number,
   ): Promise<ProviderResponse<BlanketViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       return await ResponseUtil.providerResponse(
-        await this.partialGetMyBlanket(accountId, blanketId),
+        await this.partialGetBlanket(accountId, blanketId),
       );
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
@@ -80,7 +80,7 @@ export class MyBlanketsProvider implements IProvider {
       const item = await this.partialCreateItem(accountId, name, description);
       const blanket = await this.partialCreateBlanket(item.itemId, blanketSize, blanketMaterial);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      const blanketView = await this.partialGetMyBlanket(accountId, blanket.blanketId);
+      const blanketView = await this.partialGetBlanket(accountId, blanket.blanketId);
       if (blanketView === null) {
         throw new UnexpectedDatabaseStateError("Blanket was not created");
       }
@@ -108,7 +108,7 @@ export class MyBlanketsProvider implements IProvider {
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateBlanket(blanketId, blanketSize, blanketMaterial);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      const blanketView = await this.partialGetMyBlanket(accountId, blanketId);
+      const blanketView = await this.partialGetBlanket(accountId, blanketId);
       if (blanketView === null) {
         throw new UnexpectedDatabaseStateError("Blanket was not updated");
       }
@@ -138,7 +138,7 @@ export class MyBlanketsProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialGetMyBlanket(
+  private async partialGetBlanket(
     accountId: number,
     blanketId: number,
   ): Promise<BlanketViewModel | null> {

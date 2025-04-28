@@ -14,8 +14,8 @@ export class MyBusinessBankManager implements IManager {
   public async getMyBusinessBank(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyBusinessBankResponse | null>> {
-    const myBusiness = await this.provider.getMyBusiness(payload.accountId);
-    if (myBusiness === null) {
+    const business = await this.provider.getBusiness(payload.accountId);
+    if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -23,8 +23,8 @@ export class MyBusinessBankManager implements IManager {
         null,
       );
     }
-    const myBusinessBank = await this.provider.getMyBusinessBank(myBusiness.businessId);
-    if (myBusinessBank === null) {
+    const businessBank = await this.provider.getBusinessBank(business.businessId);
+    if (businessBank === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -36,7 +36,7 @@ export class MyBusinessBankManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBusinessBankResponse.fromModel(myBusinessBank),
+      MyBusinessBankResponse.fromModel(businessBank),
     );
   }
 
@@ -44,8 +44,8 @@ export class MyBusinessBankManager implements IManager {
     payload: TokenPayload,
     request: MyBusinessBankRequest,
   ): Promise<ManagerResponse<MyBusinessBankResponse | null>> {
-    const myBusiness = await this.provider.getMyBusiness(payload.accountId);
-    if (myBusiness === null) {
+    const business = await this.provider.getBusiness(payload.accountId);
+    if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -53,7 +53,7 @@ export class MyBusinessBankManager implements IManager {
         null,
       );
     }
-    if (myBusiness.isOpen) {
+    if (business.isOpen) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -61,7 +61,7 @@ export class MyBusinessBankManager implements IManager {
         null,
       );
     }
-    if ((await this.provider.getMyBusinessBank(myBusiness.businessId)) !== null) {
+    if ((await this.provider.getBusinessBank(business.businessId)) !== null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -69,8 +69,8 @@ export class MyBusinessBankManager implements IManager {
         null,
       );
     }
-    const myBusinessBank = await this.provider.createBusinessBank(
-      myBusiness.businessId,
+    const businessBank = await this.provider.createBusinessBank(
+      business.businessId,
       request.owner,
       request.iban,
     );
@@ -78,7 +78,7 @@ export class MyBusinessBankManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyBusinessBankResponse.fromModel(myBusinessBank),
+      MyBusinessBankResponse.fromModel(businessBank),
     );
   }
 
@@ -86,8 +86,8 @@ export class MyBusinessBankManager implements IManager {
     payload: TokenPayload,
     request: MyBusinessBankRequest,
   ): Promise<ManagerResponse<MyBusinessBankResponse | null>> {
-    const myBusiness = await this.provider.getMyBusiness(payload.accountId);
-    if (myBusiness === null) {
+    const business = await this.provider.getBusiness(payload.accountId);
+    if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -95,7 +95,7 @@ export class MyBusinessBankManager implements IManager {
         null,
       );
     }
-    if (myBusiness.isOpen) {
+    if (business.isOpen) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -103,8 +103,8 @@ export class MyBusinessBankManager implements IManager {
         null,
       );
     }
-    const myBusinessBank = await this.provider.getMyBusinessBank(myBusiness.businessId);
-    if (myBusinessBank === null) {
+    const businessBank = await this.provider.getBusinessBank(business.businessId);
+    if (businessBank === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -112,8 +112,8 @@ export class MyBusinessBankManager implements IManager {
         null,
       );
     }
-    const myUpdatedBusinessBank = await this.provider.updateBusinessBank(
-      myBusiness.businessId,
+    const updatedBusinessBank = await this.provider.updateBusinessBank(
+      business.businessId,
       request.owner,
       request.iban,
     );
@@ -121,7 +121,7 @@ export class MyBusinessBankManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBusinessBankResponse.fromModel(myUpdatedBusinessBank),
+      MyBusinessBankResponse.fromModel(updatedBusinessBank),
     );
   }
 }

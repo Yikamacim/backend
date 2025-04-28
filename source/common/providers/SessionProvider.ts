@@ -7,7 +7,7 @@ import { SessionModel } from "../models/SessionModel";
 import { SessionQueries } from "../queries/SessionQueries";
 
 export class SessionProvider implements IProvider {
-  public async getSessionById(sessionId: number): Promise<ProviderResponse<SessionModel | null>> {
+  public async getSession(sessionId: number): Promise<ProviderResponse<SessionModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(SessionQueries.GET_SESSION_$SSID, [sessionId]);
@@ -22,9 +22,7 @@ export class SessionProvider implements IProvider {
     }
   }
 
-  public async getSessionsByAccountId(
-    accountId: number,
-  ): Promise<ProviderResponse<SessionModel[]>> {
+  public async getSessions(accountId: number): Promise<ProviderResponse<SessionModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(SessionQueries.GET_SESSIONS_$ACID, [accountId]);

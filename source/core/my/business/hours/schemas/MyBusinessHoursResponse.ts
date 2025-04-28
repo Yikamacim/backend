@@ -3,7 +3,6 @@ import type { HoursModel } from "../../../../../common/models/HoursModel";
 
 export class MyBusinessHoursResponse implements IResponse {
   private constructor(
-    public readonly businessId: number,
     public readonly mondayFrom: string | null,
     public readonly mondayTo: string | null,
     public readonly tuesdayFrom: string | null,
@@ -22,7 +21,6 @@ export class MyBusinessHoursResponse implements IResponse {
 
   public static fromModel(model: HoursModel): MyBusinessHoursResponse {
     return new MyBusinessHoursResponse(
-      model.businessId,
       model.mondayFrom,
       model.mondayTo,
       model.tuesdayFrom,

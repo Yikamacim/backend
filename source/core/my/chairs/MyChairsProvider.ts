@@ -36,7 +36,7 @@ export class MyChairsProvider implements IProvider {
   private readonly partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   private readonly partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
 
-  public async getMyChairs(accountId: number): Promise<ProviderResponse<ChairViewModel[]>> {
+  public async getChairs(accountId: number): Promise<ProviderResponse<ChairViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(ChairViewQueries.GET_CHAIRS_$ACID, [accountId]);
@@ -48,13 +48,13 @@ export class MyChairsProvider implements IProvider {
     }
   }
 
-  public async getMyChair(
+  public async getChair(
     accountId: number,
     chairId: number,
   ): Promise<ProviderResponse<ChairViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      return await ResponseUtil.providerResponse(await this.partialGetMyChair(accountId, chairId));
+      return await ResponseUtil.providerResponse(await this.partialGetChair(accountId, chairId));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -73,7 +73,7 @@ export class MyChairsProvider implements IProvider {
       const item = await this.partialCreateItem(accountId, name, description);
       const chair = await this.partialCreateChair(item.itemId, quantity);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      const chairView = await this.partialGetMyChair(accountId, chair.chairId);
+      const chairView = await this.partialGetChair(accountId, chair.chairId);
       if (chairView === null) {
         throw new UnexpectedDatabaseStateError("Chair was not created");
       }
@@ -100,7 +100,7 @@ export class MyChairsProvider implements IProvider {
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateChair(chairId, quantity);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      const chairView = await this.partialGetMyChair(accountId, chairId);
+      const chairView = await this.partialGetChair(accountId, chairId);
       if (chairView === null) {
         throw new UnexpectedDatabaseStateError("Chair was not updated");
       }
@@ -130,7 +130,7 @@ export class MyChairsProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialGetMyChair(
+  private async partialGetChair(
     accountId: number,
     chairId: number,
   ): Promise<ChairViewModel | null> {

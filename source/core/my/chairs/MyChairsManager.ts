@@ -15,12 +15,12 @@ export class MyChairsManager implements IManager {
   public constructor(private readonly provider = new MyChairsProvider()) {}
 
   public async getMyChairs(payload: TokenPayload): Promise<ManagerResponse<MyChairsResponse[]>> {
-    const myChairs = await this.provider.getMyChairs(payload.accountId);
+    const chairs = await this.provider.getChairs(payload.accountId);
     const responses: MyChairsResponse[] = [];
-    for (const myChair of myChairs) {
-      const medias = await this.provider.getItemMedias(myChair.itemId);
+    for (const chair of chairs) {
+      const medias = await this.provider.getItemMedias(chair.itemId);
       const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
-      responses.push(MyChairsResponse.fromModel(myChair, mediaDatas));
+      responses.push(MyChairsResponse.fromModel(chair, mediaDatas));
     }
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
   }
@@ -38,7 +38,7 @@ export class MyChairsManager implements IManager {
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }
-    const myChair = await this.provider.createChair(
+    const chair = await this.provider.createChair(
       payload.accountId,
       request.name,
       request.description,
@@ -50,7 +50,7 @@ export class MyChairsManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyChairsResponse.fromModel(myChair, mediaDatas),
+      MyChairsResponse.fromModel(chair, mediaDatas),
     );
   }
 
@@ -58,8 +58,8 @@ export class MyChairsManager implements IManager {
     payload: TokenPayload,
     params: MyChairsParams,
   ): Promise<ManagerResponse<MyChairsResponse | null>> {
-    const myChair = await this.provider.getMyChair(payload.accountId, parseInt(params.chairId));
-    if (myChair === null) {
+    const chair = await this.provider.getChair(payload.accountId, parseInt(params.chairId));
+    if (chair === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -67,13 +67,13 @@ export class MyChairsManager implements IManager {
         null,
       );
     }
-    const medias = await this.provider.getItemMedias(myChair.itemId);
+    const medias = await this.provider.getItemMedias(chair.itemId);
     const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyChairsResponse.fromModel(myChair, mediaDatas),
+      MyChairsResponse.fromModel(chair, mediaDatas),
     );
   }
 
@@ -82,8 +82,8 @@ export class MyChairsManager implements IManager {
     params: MyChairsParams,
     request: MyChairsRequest,
   ): Promise<ManagerResponse<MyChairsResponse | null>> {
-    const myChair = await this.provider.getMyChair(payload.accountId, parseInt(params.chairId));
-    if (myChair === null) {
+    const chair = await this.provider.getChair(payload.accountId, parseInt(params.chairId));
+    if (chair === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -100,12 +100,12 @@ export class MyChairsManager implements IManager {
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }
-    const oldMedias = await this.provider.getItemMedias(myChair.itemId);
-    const myUpdatedChair = await this.provider.updateChair(
+    const oldMedias = await this.provider.getItemMedias(chair.itemId);
+    const updatedChair = await this.provider.updateChair(
       payload.accountId,
       oldMedias.map((oldMedia) => oldMedia.mediaId),
-      myChair.chairId,
-      myChair.itemId,
+      chair.chairId,
+      chair.itemId,
       request.name,
       request.description,
       request.mediaIds,
@@ -116,7 +116,7 @@ export class MyChairsManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyChairsResponse.fromModel(myUpdatedChair, mediaDatas),
+      MyChairsResponse.fromModel(updatedChair, mediaDatas),
     );
   }
 
@@ -124,8 +124,8 @@ export class MyChairsManager implements IManager {
     payload: TokenPayload,
     params: MyChairsParams,
   ): Promise<ManagerResponse<null>> {
-    const myChair = await this.provider.getMyChair(payload.accountId, parseInt(params.chairId));
-    if (myChair === null) {
+    const chair = await this.provider.getChair(payload.accountId, parseInt(params.chairId));
+    if (chair === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -133,10 +133,10 @@ export class MyChairsManager implements IManager {
         null,
       );
     }
-    const medias = await this.provider.getItemMedias(myChair.itemId);
+    const medias = await this.provider.getItemMedias(chair.itemId);
     await this.provider.deleteChair(
-      myChair.itemId,
-      myChair.chairId,
+      chair.itemId,
+      chair.chairId,
       medias.map((media) => media.mediaId),
     );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);

@@ -38,7 +38,7 @@ export class MySofasProvider implements IProvider {
   private readonly partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   private readonly partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
 
-  public async getMySofas(accountId: number): Promise<ProviderResponse<SofaViewModel[]>> {
+  public async getSofas(accountId: number): Promise<ProviderResponse<SofaViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(SofaViewQueries.GET_SOFAS_$ACID, [accountId]);
@@ -50,13 +50,13 @@ export class MySofasProvider implements IProvider {
     }
   }
 
-  public async getMySofa(
+  public async getSofa(
     accountId: number,
     sofaId: number,
   ): Promise<ProviderResponse<SofaViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      return await ResponseUtil.providerResponse(await this.partialGetMySofa(accountId, sofaId));
+      return await ResponseUtil.providerResponse(await this.partialGetSofa(accountId, sofaId));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -77,7 +77,7 @@ export class MySofasProvider implements IProvider {
       const item = await this.partialCreateItem(accountId, name, description);
       const sofa = await this.partialCreateSofa(item.itemId, isCushioned, sofaType, sofaMaterial);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      const sofaView = await this.partialGetMySofa(accountId, sofa.sofaId);
+      const sofaView = await this.partialGetSofa(accountId, sofa.sofaId);
       if (sofaView === null) {
         throw new UnexpectedDatabaseStateError("Sofa was not created");
       }
@@ -106,7 +106,7 @@ export class MySofasProvider implements IProvider {
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateSofa(sofaId, isCushioned, sofaType, sofaMaterial);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      const sofaView = await this.partialGetMySofa(accountId, sofaId);
+      const sofaView = await this.partialGetSofa(accountId, sofaId);
       if (sofaView === null) {
         throw new UnexpectedDatabaseStateError("Sofa was not updated");
       }
@@ -136,7 +136,7 @@ export class MySofasProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialGetMySofa(accountId: number, sofaId: number): Promise<SofaViewModel | null> {
+  private async partialGetSofa(accountId: number, sofaId: number): Promise<SofaViewModel | null> {
     const results = await DbConstants.POOL.query(SofaViewQueries.GET_SOFA_$ACID_$SFID, [
       accountId,
       sofaId,

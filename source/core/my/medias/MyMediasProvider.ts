@@ -11,7 +11,7 @@ import { MediaQueries } from "../../../common/queries/MediaQueries";
 import { MediaViewQueries } from "../../../common/queries/MediaViewQueries";
 
 export class MyMediasProvider implements IProvider {
-  public async createMyMedia(
+  public async createMedia(
     accountId: number,
     mediaType: MediaType,
     extension: string,
@@ -19,7 +19,7 @@ export class MyMediasProvider implements IProvider {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const media = await this.partialCreateMedia(accountId, mediaType, extension);
-      const mediaView = await this.partialGetMyMedia(media.mediaId);
+      const mediaView = await this.partialGetMedia(media.mediaId);
       if (mediaView === null) {
         throw new UnexpectedDatabaseStateError(
           `Media with ID ${media.mediaId} not found after creation.`,
@@ -33,9 +33,7 @@ export class MyMediasProvider implements IProvider {
   }
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialGetMyMedia(
-    mediaId: number,
-  ): Promise<ProviderResponse<MediaViewModel | null>> {
+  private async partialGetMedia(mediaId: number): Promise<ProviderResponse<MediaViewModel | null>> {
     const results = await DbConstants.POOL.query(MediaViewQueries.GET_MEDIA_$MDID, [mediaId]);
     const record: unknown = results.rows[0];
     if (!ProtoUtil.isProtovalid(record)) {

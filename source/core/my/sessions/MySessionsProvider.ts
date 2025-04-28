@@ -9,12 +9,12 @@ import { SessionQueries } from "../../../common/queries/SessionQueries";
 
 export class MySessionsProvider implements IProvider {
   public constructor(private readonly sessionProvider = new SessionProvider()) {
-    this.getMySessions = this.sessionProvider.getSessionsByAccountId.bind(this.sessionProvider);
+    this.getSessions = this.sessionProvider.getSessions.bind(this.sessionProvider);
   }
 
-  public readonly getMySessions: typeof this.sessionProvider.getSessionsByAccountId;
+  public readonly getSessions: typeof this.sessionProvider.getSessions;
 
-  public async getMySession(
+  public async getSession(
     accountId: number,
     sessionId: number,
   ): Promise<ProviderResponse<SessionModel | null>> {

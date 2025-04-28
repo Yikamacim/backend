@@ -11,12 +11,12 @@ import { BusinessAreaViewQueries } from "../../../../common/queries/BusinessArea
 
 export class MyBusinessAreasProvider implements IProvider {
   public constructor(private readonly businessProvider = new BusinessProvider()) {
-    this.getMyBusiness = this.businessProvider.getMyBusiness.bind(this.businessProvider);
+    this.getBusiness = this.businessProvider.getBusiness.bind(this.businessProvider);
   }
 
-  public readonly getMyBusiness: typeof this.businessProvider.getMyBusiness;
+  public readonly getBusiness: typeof this.businessProvider.getBusiness;
 
-  public async getMyBusinessAreas(
+  public async getBusinessAreas(
     businessId: number,
   ): Promise<ProviderResponse<BusinessAreaViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);

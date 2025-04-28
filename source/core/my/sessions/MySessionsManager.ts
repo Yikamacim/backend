@@ -14,12 +14,12 @@ export class MySessionsManager implements IManager {
   public async getMySessions(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MySessionsResponse[]>> {
-    const mySessions = await this.provider.getMySessions(payload.accountId);
+    const sessions = await this.provider.getSessions(payload.accountId);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MySessionsResponse.fromModels(mySessions, payload.sessionId),
+      MySessionsResponse.fromModels(sessions, payload.sessionId),
     );
   }
 
@@ -35,11 +35,8 @@ export class MySessionsManager implements IManager {
         null,
       );
     }
-    const mySession = await this.provider.getMySession(
-      payload.accountId,
-      parseInt(params.sessionId),
-    );
-    if (mySession === null) {
+    const session = await this.provider.getSession(payload.accountId, parseInt(params.sessionId));
+    if (session === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -47,7 +44,7 @@ export class MySessionsManager implements IManager {
         null,
       );
     }
-    await this.provider.deleteSession(mySession.sessionId);
+    await this.provider.deleteSession(session.sessionId);
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);
   }
 }

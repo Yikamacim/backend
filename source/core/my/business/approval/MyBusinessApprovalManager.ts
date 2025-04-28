@@ -17,7 +17,7 @@ export class MyBusinessApprovalManager implements IManager {
   public async getMyBusinessApproval(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyBusinessApprovalResponse | null>> {
-    const business = await this.provider.getMyBusiness(payload.accountId);
+    const business = await this.provider.getBusiness(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -49,8 +49,8 @@ export class MyBusinessApprovalManager implements IManager {
     payload: TokenPayload,
     request: MyBusinessApprovalRequest,
   ): Promise<ManagerResponse<MyBusinessApprovalResponse | null>> {
-    const myBusiness = await this.provider.getMyBusiness(payload.accountId);
-    if (myBusiness === null) {
+    const business = await this.provider.getBusiness(payload.accountId);
+    if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -58,7 +58,7 @@ export class MyBusinessApprovalManager implements IManager {
         null,
       );
     }
-    if (myBusiness.isOpen) {
+    if (business.isOpen) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.BAD_REQUEST),
         null,
@@ -66,9 +66,9 @@ export class MyBusinessApprovalManager implements IManager {
         null,
       );
     }
-    const myBusinessApproval = await this.provider.getApproval(myBusiness.businessId);
-    if (myBusinessApproval !== null) {
-      if (myBusinessApproval.approvalState === ApprovalState.APPROVED) {
+    const businessApproval = await this.provider.getApproval(business.businessId);
+    if (businessApproval !== null) {
+      if (businessApproval.approvalState === ApprovalState.APPROVED) {
         return ResponseUtil.managerResponse(
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
@@ -76,7 +76,7 @@ export class MyBusinessApprovalManager implements IManager {
           null,
         );
       }
-      if (myBusinessApproval.approvalState === ApprovalState.PENDING) {
+      if (businessApproval.approvalState === ApprovalState.PENDING) {
         return ResponseUtil.managerResponse(
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
@@ -97,8 +97,8 @@ export class MyBusinessApprovalManager implements IManager {
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }
-    const myApproval = await this.provider.createApproval(
-      myBusiness.businessId,
+    const approval = await this.provider.createApproval(
+      business.businessId,
       request.message,
       medias.map((media) => media.mediaId),
     );
@@ -107,13 +107,13 @@ export class MyBusinessApprovalManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyBusinessApprovalResponse.fromModel(myApproval, mediaDatas),
+      MyBusinessApprovalResponse.fromModel(approval, mediaDatas),
     );
   }
 
   public async deleteMyBusinessApproval(payload: TokenPayload): Promise<ManagerResponse<null>> {
-    const myBusiness = await this.provider.getMyBusiness(payload.accountId);
-    if (myBusiness === null) {
+    const business = await this.provider.getBusiness(payload.accountId);
+    if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -121,7 +121,7 @@ export class MyBusinessApprovalManager implements IManager {
         null,
       );
     }
-    if (myBusiness.isOpen) {
+    if (business.isOpen) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.BAD_REQUEST),
         null,
@@ -129,8 +129,8 @@ export class MyBusinessApprovalManager implements IManager {
         null,
       );
     }
-    const myBusinessApproval = await this.provider.getApproval(myBusiness.businessId);
-    if (myBusinessApproval === null) {
+    const businessApproval = await this.provider.getApproval(business.businessId);
+    if (businessApproval === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -138,7 +138,7 @@ export class MyBusinessApprovalManager implements IManager {
         null,
       );
     }
-    await this.provider.deleteApproval(myBusiness.businessId);
+    await this.provider.deleteApproval(business.businessId);
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);
   }
 }

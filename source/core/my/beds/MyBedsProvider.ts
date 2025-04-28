@@ -49,13 +49,13 @@ export class MyBedsProvider implements IProvider {
     }
   }
 
-  public async getMyBed(
+  public async getBed(
     accountId: number,
     bedId: number,
   ): Promise<ProviderResponse<BedViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      return await ResponseUtil.providerResponse(await this.partialGetMyBed(accountId, bedId));
+      return await ResponseUtil.providerResponse(await this.partialGetBed(accountId, bedId));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -74,7 +74,7 @@ export class MyBedsProvider implements IProvider {
       const item = await this.partialCreateItem(accountId, name, description);
       const bed = await this.partialCreateBed(item.itemId, bedSize);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      const bedView = await this.partialGetMyBed(accountId, bed.bedId);
+      const bedView = await this.partialGetBed(accountId, bed.bedId);
       if (bedView === null) {
         throw new UnexpectedDatabaseStateError("Bed was not created");
       }
@@ -101,7 +101,7 @@ export class MyBedsProvider implements IProvider {
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateBed(bedId, bedSize);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      const bedView = await this.partialGetMyBed(accountId, bedId);
+      const bedView = await this.partialGetBed(accountId, bedId);
       if (bedView === null) {
         throw new UnexpectedDatabaseStateError("Bed was not updated");
       }
@@ -131,7 +131,7 @@ export class MyBedsProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialGetMyBed(accountId: number, bedId: number): Promise<BedViewModel | null> {
+  private async partialGetBed(accountId: number, bedId: number): Promise<BedViewModel | null> {
     const results = await DbConstants.POOL.query(BedViewQueries.GET_BED_$ACID_$BDID, [
       accountId,
       bedId,

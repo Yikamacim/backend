@@ -37,7 +37,7 @@ export class MyCarpetsProvider implements IProvider {
   private readonly partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   private readonly partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
 
-  public async getMyCarpets(accountId: number): Promise<ProviderResponse<CarpetViewModel[]>> {
+  public async getCarpets(accountId: number): Promise<ProviderResponse<CarpetViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(CarpetViewQueries.GET_CARPETS_$ACID, [
@@ -51,15 +51,13 @@ export class MyCarpetsProvider implements IProvider {
     }
   }
 
-  public async getMyCarpet(
+  public async getCarpet(
     accountId: number,
     carpetId: number,
   ): Promise<ProviderResponse<CarpetViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      return await ResponseUtil.providerResponse(
-        await this.partialGetMyCarpet(accountId, carpetId),
-      );
+      return await ResponseUtil.providerResponse(await this.partialGetCarpet(accountId, carpetId));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -80,7 +78,7 @@ export class MyCarpetsProvider implements IProvider {
       const item = await this.partialCreateItem(accountId, name, description);
       const carpet = await this.partialCreateCarpet(item.itemId, width, length, carpetMaterial);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      const carpetView = await this.partialGetMyCarpet(accountId, carpet.carpetId);
+      const carpetView = await this.partialGetCarpet(accountId, carpet.carpetId);
       if (carpetView === null) {
         throw new UnexpectedDatabaseStateError("Carpet was not created");
       }
@@ -109,7 +107,7 @@ export class MyCarpetsProvider implements IProvider {
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateCarpet(carpetId, width, length, carpetMaterial);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      const carpetView = await this.partialGetMyCarpet(accountId, carpetId);
+      const carpetView = await this.partialGetCarpet(accountId, carpetId);
       if (carpetView === null) {
         throw new UnexpectedDatabaseStateError("Carpet was not updated");
       }
@@ -139,7 +137,7 @@ export class MyCarpetsProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialGetMyCarpet(
+  private async partialGetCarpet(
     accountId: number,
     carpetId: number,
   ): Promise<CarpetViewModel | null> {

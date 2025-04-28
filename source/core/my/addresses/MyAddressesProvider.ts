@@ -19,7 +19,7 @@ export class MyAddressesProvider implements IProvider {
   public readonly updateAddress: typeof this.addressProvider.updateAddress;
   public readonly deleteAddress: typeof this.addressProvider.deleteAddress;
 
-  public async getMyAddresses(accountId: number): Promise<ProviderResponse<AddressViewModel[]>> {
+  public async getAddresses(accountId: number): Promise<ProviderResponse<AddressViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(AddressViewQueries.GET_ADDRESSES_$ACID, [
@@ -33,7 +33,7 @@ export class MyAddressesProvider implements IProvider {
     }
   }
 
-  public async getMyAddress(
+  public async getAddress(
     accountId: number,
     addressId: number,
   ): Promise<ProviderResponse<AddressViewModel | null>> {
@@ -54,7 +54,7 @@ export class MyAddressesProvider implements IProvider {
     }
   }
 
-  public async clearMyDefaultAddresses(accountId: number): Promise<ProviderResponse<null>> {
+  public async clearDefaultAddresses(accountId: number): Promise<ProviderResponse<null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await DbConstants.POOL.query(AddressQueries.UPDATE_ADDRESSES_$ACID_$ISDF, [accountId, false]);

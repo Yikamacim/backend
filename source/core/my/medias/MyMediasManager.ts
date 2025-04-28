@@ -19,7 +19,7 @@ export class MyMediasManager implements IManager {
     params: MyMediasUploadParams,
     queries: MyMediasUploadQueries,
   ): Promise<ManagerResponse<MyMediasUploadResponse>> {
-    const myMedia = await this.provider.createMyMedia(
+    const media = await this.provider.createMedia(
       payload.accountId,
       params.mediaType.toUpperCase() as MediaType,
       queries.extension,
@@ -29,10 +29,10 @@ export class MyMediasManager implements IManager {
       null,
       [],
       MyMediasUploadResponse.fromModel(
-        myMedia.mediaId,
+        media.mediaId,
         await BucketModule.instance.getUploadUrl(
-          FileUtil.getName(myMedia.mediaId.toString(), myMedia.extension),
-          myMedia.mediaType,
+          FileUtil.getName(media.mediaId.toString(), media.extension),
+          media.mediaType,
         ),
       ),
     );

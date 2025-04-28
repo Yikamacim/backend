@@ -9,14 +9,12 @@ import { HoursQueries } from "../../../../common/queries/HoursQueries";
 
 export class MyBusinessHoursProvider implements IProvider {
   public constructor(private readonly businessProvider = new BusinessProvider()) {
-    this.getMyBusiness = this.businessProvider.getMyBusiness.bind(this.businessProvider);
+    this.getBusiness = this.businessProvider.getBusiness.bind(this.businessProvider);
   }
 
-  public readonly getMyBusiness: typeof this.businessProvider.getMyBusiness;
+  public readonly getBusiness: typeof this.businessProvider.getBusiness;
 
-  public async getMyBusinessHours(
-    businessId: number,
-  ): Promise<ProviderResponse<HoursModel | null>> {
+  public async getBusinessHours(businessId: number): Promise<ProviderResponse<HoursModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(HoursQueries.GET_HOURS_$BSID, [businessId]);

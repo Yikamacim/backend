@@ -15,8 +15,8 @@ export class MyBusinessAreasManager implements IManager {
   public async getMyBusinessAreas(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyBusinessAreasResponse[] | null>> {
-    const myBusiness = await this.provider.getMyBusiness(payload.accountId);
-    if (myBusiness === null) {
+    const business = await this.provider.getBusiness(payload.accountId);
+    if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -24,12 +24,12 @@ export class MyBusinessAreasManager implements IManager {
         null,
       );
     }
-    const myBusinessAreas = await this.provider.getMyBusinessAreas(myBusiness.businessId);
+    const businessAreas = await this.provider.getBusinessAreas(business.businessId);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBusinessAreasResponse.fromModels(myBusinessAreas),
+      MyBusinessAreasResponse.fromModels(businessAreas),
     );
   }
 
@@ -37,8 +37,8 @@ export class MyBusinessAreasManager implements IManager {
     payload: TokenPayload,
     request: MyBusinessAreasRequest,
   ): Promise<ManagerResponse<MyBusinessAreasResponse | null>> {
-    const myBusiness = await this.provider.getMyBusiness(payload.accountId);
-    if (myBusiness === null) {
+    const business = await this.provider.getBusiness(payload.accountId);
+    if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -46,7 +46,7 @@ export class MyBusinessAreasManager implements IManager {
         null,
       );
     }
-    if (myBusiness.isOpen) {
+    if (business.isOpen) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -54,8 +54,8 @@ export class MyBusinessAreasManager implements IManager {
         null,
       );
     }
-    const myBusinessAreas = await this.provider.getMyBusinessAreas(myBusiness.businessId);
-    if (myBusinessAreas.some((area) => area.neighborhoodId === request.neighborhoodId)) {
+    const businessAreas = await this.provider.getBusinessAreas(business.businessId);
+    if (businessAreas.some((area) => area.neighborhoodId === request.neighborhoodId)) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -64,7 +64,7 @@ export class MyBusinessAreasManager implements IManager {
       );
     }
     const area = await this.provider.createBusinessArea(
-      myBusiness.businessId,
+      business.businessId,
       request.neighborhoodId,
     );
     return ResponseUtil.managerResponse(
@@ -79,8 +79,8 @@ export class MyBusinessAreasManager implements IManager {
     payload: TokenPayload,
     params: MyBusinessAreasParams,
   ): Promise<ManagerResponse<null>> {
-    const myBusiness = await this.provider.getMyBusiness(payload.accountId);
-    if (myBusiness === null) {
+    const business = await this.provider.getBusiness(payload.accountId);
+    if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -88,7 +88,7 @@ export class MyBusinessAreasManager implements IManager {
         null,
       );
     }
-    if (myBusiness.isOpen) {
+    if (business.isOpen) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -96,7 +96,7 @@ export class MyBusinessAreasManager implements IManager {
         null,
       );
     }
-    await this.provider.deleteBusinessArea(myBusiness.businessId, parseInt(params.neighborhoodId));
+    await this.provider.deleteBusinessArea(business.businessId, parseInt(params.neighborhoodId));
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);
   }
 }

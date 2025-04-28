@@ -7,12 +7,10 @@ import { BusinessViewModel } from "../models/BusinessViewModel";
 import { BusinessViewQueries } from "../queries/BusinessViewQueries";
 
 export class BusinessProvider implements IProvider {
-  public async getMyBusiness(
-    accountId: number,
-  ): Promise<ProviderResponse<BusinessViewModel | null>> {
+  public async getBusiness(accountId: number): Promise<ProviderResponse<BusinessViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      return await ResponseUtil.providerResponse(await this.partialGetMyBusiness(accountId));
+      return await ResponseUtil.providerResponse(await this.partialGetBusiness(accountId));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -21,7 +19,7 @@ export class BusinessProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  public async partialGetMyBusiness(accountId: number): Promise<BusinessViewModel | null> {
+  public async partialGetBusiness(accountId: number): Promise<BusinessViewModel | null> {
     const results = await DbConstants.POOL.query(BusinessViewQueries.GET_BUSINESS_$ACID, [
       accountId,
     ]);
