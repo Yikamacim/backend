@@ -5,7 +5,7 @@
 -- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
 -- Dumped by pg_dump version 16.8 (Debian 16.8-1.pgdg120+1)
 
--- Started on 2025-04-28 17:30:36 UTC
+-- Started on 2025-04-28 20:03:29 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -34,7 +34,7 @@ CREATE TYPE public."AccountType" AS ENUM (
 ALTER TYPE public."AccountType" OWNER TO "UYikamacim";
 
 --
--- TOC entry 1065 (class 1247 OID 25791)
+-- TOC entry 1062 (class 1247 OID 25791)
 -- Name: ApprovalState; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
@@ -545,10 +545,10 @@ ALTER VIEW public."AreaView" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 275 (class 1259 OID 25662)
--- Name: Bank; Type: TABLE; Schema: public; Owner: UYikamacim
+-- Name: BankAccount; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
-CREATE TABLE public."Bank" (
+CREATE TABLE public."BankAccount" (
     "businessId" integer NOT NULL,
     owner character varying(256) NOT NULL,
     iban character varying(34) NOT NULL,
@@ -556,7 +556,7 @@ CREATE TABLE public."Bank" (
 );
 
 
-ALTER TABLE public."Bank" OWNER TO "UYikamacim";
+ALTER TABLE public."BankAccount" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 252 (class 1259 OID 25206)
@@ -1961,10 +1961,10 @@ COPY public."ApprovalMedia" ("businessId", "mediaId") FROM stdin;
 --
 -- TOC entry 3794 (class 0 OID 25662)
 -- Dependencies: 275
--- Data for Name: Bank; Type: TABLE DATA; Schema: public; Owner: UYikamacim
+-- Data for Name: BankAccount; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
-COPY public."Bank" ("businessId", owner, iban, balance) FROM stdin;
+COPY public."BankAccount" ("businessId", owner, iban, balance) FROM stdin;
 \.
 
 
@@ -76816,10 +76816,10 @@ ALTER TABLE ONLY public."Approval"
 
 --
 -- TOC entry 3541 (class 2606 OID 25667)
--- Name: Bank Bank_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
+-- Name: BankAccount Bank_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
-ALTER TABLE ONLY public."Bank"
+ALTER TABLE ONLY public."BankAccount"
     ADD CONSTRAINT "Bank_pk" PRIMARY KEY ("businessId");
 
 
@@ -77140,10 +77140,10 @@ ALTER TABLE ONLY public."Approval"
 
 --
 -- TOC entry 3580 (class 2606 OID 25668)
--- Name: Bank Bank_Business_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
+-- Name: BankAccount Bank_Business_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
-ALTER TABLE ONLY public."Bank"
+ALTER TABLE ONLY public."BankAccount"
     ADD CONSTRAINT "Bank_Business_fk" FOREIGN KEY ("businessId") REFERENCES public."Business"("businessId");
 
 
@@ -77408,7 +77408,7 @@ ALTER TABLE ONLY public."Vehicle"
     ADD CONSTRAINT "Vehicle_Item_fk" FOREIGN KEY ("itemId") REFERENCES public."Item"("itemId");
 
 
--- Completed on 2025-04-28 17:30:36 UTC
+-- Completed on 2025-04-28 20:03:29 UTC
 
 --
 -- PostgreSQL database dump complete
