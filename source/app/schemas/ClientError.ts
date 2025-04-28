@@ -1,7 +1,7 @@
 import { AccountRules } from "../../common/rules/AccountRules";
 import { AddressRules } from "../../common/rules/AddressRules";
 import { ApprovalRules } from "../../common/rules/ApprovalRules";
-import { BankRules } from "../../common/rules/BankRules";
+import { BankAccountRules } from "../../common/rules/BankAccountRules";
 import { BusinessRules } from "../../common/rules/BusinessRules";
 import { ChairRules } from "../../common/rules/ChairRules";
 import { ContactRules } from "../../common/rules/ContactRules";
@@ -175,8 +175,8 @@ export enum ClientErrorCode {
   BUSINESS_HOURS_NOT_FOUND = 81900,
   BUSINESS_HOURS_ALREADY_EXISTS = 81901,
   //  *  *  820XX: /my/business/bank errors
-  BANK_NOT_FOUND = 82000,
-  BANK_ALREADY_EXISTS = 82001,
+  BANK_ACCOUNT_NOT_FOUND = 82000,
+  BANK_ACCOUNT_ALREADY_EXISTS = 82001,
   //  *  *  821XX: /my/business/medias errors
   INVALID_MEDIA_ID = 82100,
   BUSINESS_MEDIA_NOT_FOUND = 82101,
@@ -191,6 +191,16 @@ export enum ClientErrorCode {
   // *  *  825XX: /my/business/services errors
   INVALID_SERVICE_ID = 82500,
   SERVICE_NOT_FOUND = 82501,
+  //  *  *  826XX: /my/business/open errors
+  BUSINESS_ALREADY_OPEN = 82600,
+  BUSINESS_DOESNT_HAVE_APPROVAL = 82601,
+  BUSINESS_NOT_APPROVED = 82602,
+  BUSINESS_DOESNT_HAVE_BANK_ACCOUNT = 82603,
+  BUSINESS_DOESNT_HAVE_AREA = 82604,
+  BUSINESS_DOESNT_HAVE_HOURS = 82605,
+  BUSINESS_DOESNT_HAVE_SERVICES = 82606,
+  //  *  *  827XX: /my/business/close errors
+  BUSINESS_ALREADY_CLOSED = 82700,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -246,8 +256,8 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_BUSINESS_NAME_LENGTH]: `Provided business name wasn't in the length range of ${BusinessRules.NAME_MIN_LENGTH} to ${BusinessRules.NAME_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_BUSINESS_DESCRIPTION_LENGTH]: `Provided business description wasn't in the length range of ${BusinessRules.DESCRIPTION_MIN_LENGTH} to ${BusinessRules.DESCRIPTION_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_BUSINESS_HOUR_LENGTH]: `Provided business hour wasn't in the length of ${BusinessRules.HOUR_LENGTH}.`,
-  [ClientErrorCode.INVALID_IBAN_LENGTH]: `Provided IBAN wasn't in the length range of ${BankRules.IBAN_MIN_LENGTH} to ${BankRules.IBAN_MAX_LENGTH}.`,
-  [ClientErrorCode.INVALID_OWNER_LENGTH]: `Provided bank owner wasn't in the length range of ${BankRules.OWNER_MIN_LENGTH} to ${BankRules.OWNER_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_IBAN_LENGTH]: `Provided IBAN wasn't in the length range of ${BankAccountRules.IBAN_MIN_LENGTH} to ${BankAccountRules.IBAN_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_OWNER_LENGTH]: `Provided bank account owner wasn't in the length range of ${BankAccountRules.OWNER_MIN_LENGTH} to ${BankAccountRules.OWNER_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_APPROVAL_MESSAGE_LENGTH]: `Provided approval message wasn't in the length range of ${ApprovalRules.MESSAGE_MIN_LENGTH} to ${ApprovalRules.MESSAGE_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_APPROVAL_REASON_LENGTH]: `Provided approval reason wasn't in the length range of ${ApprovalRules.REASON_MIN_LENGTH} to ${ApprovalRules.REASON_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_SERVICE_TITLE_LENGTH]: `Provided service title wasn't in the length range of ${ServiceRules.TITLE_MIN_LENGTH} to ${ServiceRules.TITLE_MAX_LENGTH}.`,
@@ -281,7 +291,8 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_BUSINESS_HOUR_CONTENT]:
     "Provided business hour contained invalid characters.",
   [ClientErrorCode.INVALID_IBAN_CONTENT]: "Provided IBAN contained invalid characters.",
-  [ClientErrorCode.INVALID_OWNER_CONTENT]: "Provided bank owner contained invalid characters.",
+  [ClientErrorCode.INVALID_OWNER_CONTENT]:
+    "Provided bank account owner contained invalid characters.",
   [ClientErrorCode.INVALID_APPROVAL_MESSAGE_CONTENT]:
     "Provided approval message contained invalid characters.",
   [ClientErrorCode.INVALID_APPROVAL_REASON_CONTENT]:
@@ -363,8 +374,8 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.BUSINESS_HOURS_NOT_FOUND]: "Business doesn't have hours.",
   [ClientErrorCode.BUSINESS_HOURS_ALREADY_EXISTS]: "Business already has hours.",
   //  *  *  820XX: /my/business/bank errors
-  [ClientErrorCode.BANK_NOT_FOUND]: "Business doesn't have a bank.",
-  [ClientErrorCode.BANK_ALREADY_EXISTS]: "Business already has a bank.",
+  [ClientErrorCode.BANK_ACCOUNT_NOT_FOUND]: "Business doesn't have a bank account.",
+  [ClientErrorCode.BANK_ACCOUNT_ALREADY_EXISTS]: "Business already has a bank account.",
   //  *  *  821XX: /my/business/medias errors
   [ClientErrorCode.INVALID_MEDIA_ID]: "Provided media id was invalid.",
   [ClientErrorCode.BUSINESS_MEDIA_NOT_FOUND]: "Business doesn't have a media with the provided id.",
@@ -380,6 +391,16 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   // *  *  825XX: /my/business/services errors
   [ClientErrorCode.INVALID_SERVICE_ID]: "Provided service id was invalid.",
   [ClientErrorCode.SERVICE_NOT_FOUND]: "Account doesn't have a service with the provided id.",
+  //  *  *  826XX: /my/business/open errors
+  [ClientErrorCode.BUSINESS_ALREADY_OPEN]: "Business is already open.",
+  [ClientErrorCode.BUSINESS_DOESNT_HAVE_APPROVAL]: "Business doesn't have an approval.",
+  [ClientErrorCode.BUSINESS_NOT_APPROVED]: "Business is not approved.",
+  [ClientErrorCode.BUSINESS_DOESNT_HAVE_BANK_ACCOUNT]: "Business doesn't have a bank account.",
+  [ClientErrorCode.BUSINESS_DOESNT_HAVE_AREA]: "Business doesn't have an area.",
+  [ClientErrorCode.BUSINESS_DOESNT_HAVE_HOURS]: "Business doesn't have work hours.",
+  [ClientErrorCode.BUSINESS_DOESNT_HAVE_SERVICES]: "Business doesn't have services.",
+  //  *  *  827XX: /my/business/close errors
+  [ClientErrorCode.BUSINESS_ALREADY_CLOSED]: "Business is already closed.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

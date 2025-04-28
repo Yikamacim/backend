@@ -1,67 +1,56 @@
 import type { ProviderResponse } from "../../../../@types/responses";
 import { DbConstants } from "../../../../app/constants/DbConstants";
 import type { IProvider } from "../../../../app/interfaces/IProvider";
-import { ProtoUtil } from "../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
-import { BankModel } from "../../../../common/models/BankModel";
+import { BankAccountModel } from "../../../../common/models/BankAccountModel";
+import { BankAccountProvider } from "../../../../common/providers/BankAccountProvider";
 import { BusinessProvider } from "../../../../common/providers/BusinessProvider";
-import { BankQueries } from "../../../../common/queries/BankQueries";
+import { BankAccountQueries } from "../../../../common/queries/BankAccountQueries";
 
 export class MyBusinessBankProvider implements IProvider {
-  public constructor(private readonly businessProvider = new BusinessProvider()) {
+  public constructor(
+    private readonly businessProvider = new BusinessProvider(),
+    public readonly bankAccountProvider = new BankAccountProvider(),
+  ) {
     this.getBusiness = this.businessProvider.getBusiness.bind(this.businessProvider);
+    this.getBankAccount = this.bankAccountProvider.getBankAccount.bind(this.bankAccountProvider);
   }
 
   public readonly getBusiness: typeof this.businessProvider.getBusiness;
+  public readonly getBankAccount: typeof this.bankAccountProvider.getBankAccount;
 
-  public async getBusinessBank(businessId: number): Promise<ProviderResponse<BankModel | null>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      const results = await DbConstants.POOL.query(BankQueries.GET_BANK_$BSID, [businessId]);
-      const record: unknown = results.rows[0];
-      if (!ProtoUtil.isProtovalid(record)) {
-        return await ResponseUtil.providerResponse(null);
-      }
-      return await ResponseUtil.providerResponse(BankModel.fromRecord(record));
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
-    }
-  }
-
-  public async createBusinessBank(
+  public async createBankAccount(
     businessId: number,
     owner: string,
     iban: string,
-  ): Promise<ProviderResponse<BankModel>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      const results = await DbConstants.POOL.query(BankQueries.INSERT_BANK_$BSID_$OWNER_$IBAN, [
-        businessId,
-        owner,
-        iban,
-      ]);
-      const record: unknown = results.rows[0];
-      return await ResponseUtil.providerResponse(BankModel.fromRecord(record));
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
-    }
-  }
-
-  public async updateBusinessBank(
-    businessId: number,
-    owner: string,
-    iban: string,
-  ): Promise<ProviderResponse<BankModel>> {
+  ): Promise<ProviderResponse<BankAccountModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(
-        BankQueries.UPDATE_BANK_$BSID_$OWNER_$IBAN_$BLCH,
+        BankAccountQueries.INSERT_BANK_ACCOUNT_$BSID_$OWNER_$IBAN,
+        [businessId, owner, iban],
+      );
+      const record: unknown = results.rows[0];
+      return await ResponseUtil.providerResponse(BankAccountModel.fromRecord(record));
+    } catch (error) {
+      await DbConstants.POOL.query(DbConstants.ROLLBACK);
+      throw error;
+    }
+  }
+
+  public async updateBankAccount(
+    businessId: number,
+    owner: string,
+    iban: string,
+  ): Promise<ProviderResponse<BankAccountModel>> {
+    await DbConstants.POOL.query(DbConstants.BEGIN);
+    try {
+      const results = await DbConstants.POOL.query(
+        BankAccountQueries.UPDATE_BANK_ACCOUNT_$BSID_$OWNER_$IBAN_$BLCH,
         [businessId, owner, iban, 0],
       );
       const record: unknown = results.rows[0];
-      return await ResponseUtil.providerResponse(BankModel.fromRecord(record));
+      return await ResponseUtil.providerResponse(BankAccountModel.fromRecord(record));
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;

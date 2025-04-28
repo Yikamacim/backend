@@ -18,7 +18,7 @@ export class MyBusinessServicesParams implements IParams {
         null,
       );
     }
-    const protovalidData: unknown = { mediaId: preliminaryData };
+    const protovalidData: unknown = { serviceId: preliminaryData };
     // >----------< SCHEMATIC VALIDATION >----------<
     if (!MyBusinessServicesParams.isBlueprint(protovalidData)) {
       return ResponseUtil.parserResponse(

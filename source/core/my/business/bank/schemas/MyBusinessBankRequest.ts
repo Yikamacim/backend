@@ -4,7 +4,7 @@ import type { IRequest } from "../../../../../app/interfaces/IRequest";
 import { ClientError, ClientErrorCode } from "../../../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../../app/utils/ResponseUtil";
-import { BankOwnerValidator } from "../../../../../common/validators/BankOwnerValidator";
+import { BankAccountOwnerValidator } from "../../../../../common/validators/BankAccountOwnerValidator";
 import { IbanValidator } from "../../../../../common/validators/IbanValidator";
 
 export class MyBusinessBankRequest implements IRequest {
@@ -27,7 +27,7 @@ export class MyBusinessBankRequest implements IRequest {
     const blueprintData: MyBusinessBankRequest = protovalidData;
     // >----------< PHYSICAL VALIDATION >----------<
     const clientErrors: ClientError[] = [];
-    BankOwnerValidator.validate(blueprintData.owner, clientErrors);
+    BankAccountOwnerValidator.validate(blueprintData.owner, clientErrors);
     IbanValidator.validate(blueprintData.iban, clientErrors);
     const validatedData = blueprintData;
     // >----------< RETURN >----------<

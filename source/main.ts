@@ -26,8 +26,10 @@ import { MyBusinessBuilder } from "./core/my/business/_/MyBusinessBuilder";
 import { MyBusinessApprovalBuilder } from "./core/my/business/approval/MyBusinessApprovalBuilder";
 import { MyBusinessAreasBuilder } from "./core/my/business/areas/MyBusinessAreasBuilder";
 import { MyBusinessBankBuilder } from "./core/my/business/bank/MyBusinessBankBuilder";
+import { MyBusinessCloseBuilder } from "./core/my/business/close/MyBusinessCloseBuilder";
 import { MyBusinessHoursBuilder } from "./core/my/business/hours/MyBusinessHoursBuilder";
 import { MyBusinessMediasBuilder } from "./core/my/business/medias/MyBusinessMediasBuilder";
+import { MyBusinessOpenBuilder } from "./core/my/business/open/MyBusinessOpenBuilder";
 import { MyBusinessServicesBuilder } from "./core/my/business/services/MyBusinessServicesBuilder";
 import { MyCarpetsBuilder } from "./core/my/carpets/MyCarpetsBuilder";
 import { MyChairsBuilder } from "./core/my/chairs/MyChairsBuilder";
@@ -172,6 +174,12 @@ app.use(
   new MyBusinessBankBuilder().router,
 );
 app.use(
+  // my/business/close
+  MyBusinessCloseBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
+  new MyBusinessCloseBuilder().router,
+);
+app.use(
   // my/business/hours
   MyBusinessHoursBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
@@ -182,6 +190,12 @@ app.use(
   MyBusinessMediasBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
   new MyBusinessMediasBuilder().router,
+);
+app.use(
+  // my/business/open
+  MyBusinessOpenBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
+  new MyBusinessOpenBuilder().router,
 );
 app.use(
   // my/business/services

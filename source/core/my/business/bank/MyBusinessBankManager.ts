@@ -23,12 +23,12 @@ export class MyBusinessBankManager implements IManager {
         null,
       );
     }
-    const businessBank = await this.provider.getBusinessBank(business.businessId);
-    if (businessBank === null) {
+    const bankAccount = await this.provider.getBankAccount(business.businessId);
+    if (bankAccount === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BANK_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.BANK_ACCOUNT_NOT_FOUND)],
         null,
       );
     }
@@ -36,7 +36,7 @@ export class MyBusinessBankManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBusinessBankResponse.fromModel(businessBank),
+      MyBusinessBankResponse.fromModel(bankAccount),
     );
   }
 
@@ -61,15 +61,15 @@ export class MyBusinessBankManager implements IManager {
         null,
       );
     }
-    if ((await this.provider.getBusinessBank(business.businessId)) !== null) {
+    if ((await this.provider.getBankAccount(business.businessId)) !== null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
-        [new ClientError(ClientErrorCode.BANK_ALREADY_EXISTS)],
+        [new ClientError(ClientErrorCode.BANK_ACCOUNT_ALREADY_EXISTS)],
         null,
       );
     }
-    const businessBank = await this.provider.createBusinessBank(
+    const bankAccount = await this.provider.createBankAccount(
       business.businessId,
       request.owner,
       request.iban,
@@ -78,7 +78,7 @@ export class MyBusinessBankManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyBusinessBankResponse.fromModel(businessBank),
+      MyBusinessBankResponse.fromModel(bankAccount),
     );
   }
 
@@ -103,16 +103,16 @@ export class MyBusinessBankManager implements IManager {
         null,
       );
     }
-    const businessBank = await this.provider.getBusinessBank(business.businessId);
-    if (businessBank === null) {
+    const bankAccount = await this.provider.getBankAccount(business.businessId);
+    if (bankAccount === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BANK_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.BANK_ACCOUNT_NOT_FOUND)],
         null,
       );
     }
-    const updatedBusinessBank = await this.provider.updateBusinessBank(
+    const updatedBankAccount = await this.provider.updateBankAccount(
       business.businessId,
       request.owner,
       request.iban,
@@ -121,7 +121,7 @@ export class MyBusinessBankManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBusinessBankResponse.fromModel(updatedBusinessBank),
+      MyBusinessBankResponse.fromModel(updatedBankAccount),
     );
   }
 }

@@ -5,33 +5,24 @@ import { UnexpectedDatabaseStateError } from "../../../../app/schemas/ServerErro
 import { ProtoUtil } from "../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
 import { BusinessAreaViewModel } from "../../../../common/models/BusinessAreaViewModel";
+import { BusinessAreaProvider } from "../../../../common/providers/BusinessAreaProvider";
 import { BusinessProvider } from "../../../../common/providers/BusinessProvider";
 import { BusinessAreaQueries } from "../../../../common/queries/BusinessAreaQueries";
 import { BusinessAreaViewQueries } from "../../../../common/queries/BusinessAreaViewQueries";
 
 export class MyBusinessAreasProvider implements IProvider {
-  public constructor(private readonly businessProvider = new BusinessProvider()) {
+  public constructor(
+    private readonly businessProvider = new BusinessProvider(),
+    public readonly businessAreaProvider = new BusinessAreaProvider(),
+  ) {
     this.getBusiness = this.businessProvider.getBusiness.bind(this.businessProvider);
+    this.getBusinessAreas = this.businessAreaProvider.getBusinessAreas.bind(
+      this.businessAreaProvider,
+    );
   }
 
   public readonly getBusiness: typeof this.businessProvider.getBusiness;
-
-  public async getBusinessAreas(
-    businessId: number,
-  ): Promise<ProviderResponse<BusinessAreaViewModel[]>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      const results = await DbConstants.POOL.query(
-        BusinessAreaViewQueries.GET_BUSINESS_AREAS_$BSID,
-        [businessId],
-      );
-      const record: unknown[] = results.rows;
-      return await ResponseUtil.providerResponse(BusinessAreaViewModel.fromRecords(record));
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
-    }
-  }
+  public readonly getBusinessAreas: typeof this.businessAreaProvider.getBusinessAreas;
 
   public async createBusinessArea(
     businessId: number,

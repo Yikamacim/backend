@@ -1,5 +1,5 @@
 import type { IResponse } from "../../../../../app/interfaces/IResponse";
-import type { BankModel } from "../../../../../common/models/BankModel";
+import type { BankAccountModel } from "../../../../../common/models/BankAccountModel";
 
 export class MyBusinessBankResponse implements IResponse {
   private constructor(
@@ -8,7 +8,7 @@ export class MyBusinessBankResponse implements IResponse {
     public readonly balance: number,
   ) {}
 
-  public static fromModel(model: BankModel): MyBusinessBankResponse {
+  public static fromModel(model: BankAccountModel): MyBusinessBankResponse {
     return new MyBusinessBankResponse(model.owner, model.iban, model.balance);
   }
 }

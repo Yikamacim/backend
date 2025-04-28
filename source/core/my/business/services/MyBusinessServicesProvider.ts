@@ -6,31 +6,23 @@ import type { ServiceCategory } from "../../../../common/enums/ServiceCategory";
 import { ServiceModel } from "../../../../common/models/ServiceModel";
 import { BusinessProvider } from "../../../../common/providers/BusinessProvider";
 import { MediaProvider } from "../../../../common/providers/MediaProvider";
+import { ServiceProvider } from "../../../../common/providers/ServiceProvider";
 import { ServiceQueries } from "../../../../common/queries/ServiceQueries";
 
 export class MyBusinessServicesProvider implements IProvider {
   public constructor(
     private readonly businessProvider = new BusinessProvider(),
     public readonly mediaProvider = new MediaProvider(),
+    public readonly serviceProvider = new ServiceProvider(),
   ) {
     this.getBusiness = this.businessProvider.getBusiness.bind(this.businessProvider);
     this.getMedia = this.mediaProvider.getMedia.bind(this.mediaProvider);
+    this.getServices = this.serviceProvider.getServices.bind(this.serviceProvider);
   }
 
   public readonly getBusiness: typeof this.businessProvider.getBusiness;
   public readonly getMedia: typeof this.mediaProvider.getMedia;
-
-  public async getServices(businessId: number): Promise<ProviderResponse<ServiceModel[]>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      const results = await DbConstants.POOL.query(ServiceQueries.GET_SERVICES_$BSID, [businessId]);
-      const record: unknown[] = results.rows;
-      return await ResponseUtil.providerResponse(ServiceModel.fromRecords(record));
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
-    }
-  }
+  public readonly getServices: typeof this.serviceProvider.getServices;
 
   public async getService(
     businessId: number,

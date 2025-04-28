@@ -23,7 +23,7 @@ export class MyBusinessHoursManager implements IManager {
         null,
       );
     }
-    const businessHours = await this.provider.getBusinessHours(business.businessId);
+    const businessHours = await this.provider.getHours(business.businessId);
     if (businessHours === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -61,7 +61,7 @@ export class MyBusinessHoursManager implements IManager {
         null,
       );
     }
-    if ((await this.provider.getBusinessHours(business.businessId)) !== null) {
+    if ((await this.provider.getHours(business.businessId)) !== null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -69,7 +69,7 @@ export class MyBusinessHoursManager implements IManager {
         null,
       );
     }
-    const businessHours = await this.provider.createBusinessHours(
+    const businessHours = await this.provider.createHours(
       business.businessId,
       request.mondayFrom,
       request.mondayTo,
@@ -115,7 +115,7 @@ export class MyBusinessHoursManager implements IManager {
         null,
       );
     }
-    const businessHours = await this.provider.getBusinessHours(business.businessId);
+    const businessHours = await this.provider.getHours(business.businessId);
     if (businessHours === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -124,7 +124,7 @@ export class MyBusinessHoursManager implements IManager {
         null,
       );
     }
-    const updatedBusinessHours = await this.provider.updateBusinessHours(
+    const updatedBusinessHours = await this.provider.updateHours(
       business.businessId,
       request.mondayFrom,
       request.mondayTo,

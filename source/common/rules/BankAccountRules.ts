@@ -1,6 +1,6 @@
 import type { IRules } from "../../app/interfaces/IRules";
 
-export class BankRules implements IRules {
+export class BankAccountRules implements IRules {
   public static readonly OWNER_MIN_LENGTH = 1;
   public static readonly OWNER_MAX_LENGTH = 256;
   public static readonly OWNER_REGEX = /^[\p{L}\s\p{N}]+$/u;
