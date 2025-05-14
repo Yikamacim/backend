@@ -19,7 +19,7 @@ export class SearchQueries implements IQueries {
   public static parse(req: ExpressRequest): ParserResponse<SearchQueries | null> {
     const query = req.query["query"];
     const neighborhoodId = req.query["neighborhoodId"];
-    const serviceCategory = req.query["serviceCategory"];
+    const serviceCategory = req.query["serviceCategory"] ?? [];
     // >----------< EXISTENCE VALIDATION >----------<
     if (
       !ProtoUtil.isProtovalid(query) ||
