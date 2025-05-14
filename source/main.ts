@@ -42,6 +42,7 @@ import { MyVehiclesBuilder } from "./core/my/vehicles/MyVehiclesBuilder";
 import { NeighborhoodsBuilder } from "./core/neighborhoods/NeighborhoodsBuilder";
 import { ProvincesBuilder } from "./core/provinces/ProvincesBuilder";
 import { RefreshBuilder } from "./core/refresh/RefreshBuilder";
+import { SearchBuilder } from "./core/search/SearchBuilder";
 import { SignupBuilder } from "./core/signup/SignupBuilder";
 import { VerifyBuilder } from "./core/verify/VerifyBuilder";
 import { PurgeTask } from "./tasks/purge/task";
@@ -122,6 +123,11 @@ app.use(
   // provinces
   ProvincesBuilder.BASE_ROUTE,
   new ProvincesBuilder().router,
+);
+app.use(
+  // search
+  SearchBuilder.BASE_ROUTE,
+  new SearchBuilder().router,
 );
 
 // PRIVATE ROUTES

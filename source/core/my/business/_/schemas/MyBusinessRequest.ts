@@ -55,7 +55,7 @@ export class MyBusinessRequest implements IRequest {
     const blueprint = obj as MyBusinessRequest;
     return (
       typeof blueprint.name === "string" &&
-      (typeof blueprint.mediaId === "number" || blueprint.mediaId === null) &&
+      (blueprint.mediaId === null || typeof blueprint.mediaId === "number") &&
       typeof blueprint.address === "object" &&
       blueprint.address !== null &&
       typeof blueprint.address.countryId === "number" &&

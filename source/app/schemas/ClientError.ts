@@ -6,6 +6,7 @@ import { BusinessRules } from "../../common/rules/BusinessRules";
 import { ChairRules } from "../../common/rules/ChairRules";
 import { ContactRules } from "../../common/rules/ContactRules";
 import { ItemRules } from "../../common/rules/ItemRules";
+import { SearchRules } from "../../common/rules/SearchRules";
 import { ServiceRules } from "../../common/rules/ServiceRules";
 import { SessionRules } from "../../common/rules/SessionRules";
 import { VehicleRules } from "../../common/rules/VehicleRules";
@@ -79,6 +80,7 @@ export enum ClientErrorCode {
   INVALID_APPROVAL_REASON_LENGTH = 60018,
   INVALID_SERVICE_TITLE_LENGTH = 60019,
   INVALID_SERVICE_DESCRIPTION_LENGTH = 60020,
+  INVALID_SEARCH_QUERY_LENGTH = 60021,
   //  *  7XXXX: Format errors
   INVALID_PHONE_CONTENT = 70001,
   INVALID_PASSWORD_CONTENT = 70002,
@@ -105,6 +107,8 @@ export enum ClientErrorCode {
   INVALID_SERVICE_TITLE_CONTENT = 70023,
   INVALID_SERVICE_DESCRIPTION_CONTENT = 70024,
   INVALID_SERVICE_UNIT_PRICE = 70025,
+  INVALID_SEARCH_QUERY_CONTENT = 70026,
+  DUPLICATE_SERVICE_CATEGORIES = 70027,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -262,6 +266,7 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_APPROVAL_REASON_LENGTH]: `Provided approval reason wasn't in the length range of ${ApprovalRules.REASON_MIN_LENGTH} to ${ApprovalRules.REASON_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_SERVICE_TITLE_LENGTH]: `Provided service title wasn't in the length range of ${ServiceRules.TITLE_MIN_LENGTH} to ${ServiceRules.TITLE_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_SERVICE_DESCRIPTION_LENGTH]: `Provided service description wasn't in the length range of ${ServiceRules.DESCRIPTION_MIN_LENGTH} to ${ServiceRules.DESCRIPTION_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_SEARCH_QUERY_LENGTH]: `Provided search query wasn't in the length range of ${SearchRules.QUERY_MIN_LENGTH} to ${SearchRules.QUERY_MAX_LENGTH}.`,
   //  *  7XXXX: Content errors
   [ClientErrorCode.INVALID_PHONE_CONTENT]: "Provided phone contained invalid characters.",
   [ClientErrorCode.INVALID_PASSWORD_CONTENT]:
@@ -302,6 +307,10 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_SERVICE_DESCRIPTION_CONTENT]:
     "Provided service description contained invalid characters.",
   [ClientErrorCode.INVALID_SERVICE_UNIT_PRICE]: `Provided service unit price wasn't in the range of ${ServiceRules.UNIT_PRICE_MIN} to ${ServiceRules.UNIT_PRICE_MAX}.`,
+  [ClientErrorCode.INVALID_SEARCH_QUERY_CONTENT]:
+    "Provided search query contained invalid characters.",
+  [ClientErrorCode.DUPLICATE_SERVICE_CATEGORIES]:
+    "Provided service categories contained duplicates.",
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors

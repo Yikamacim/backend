@@ -23,7 +23,7 @@ export class LoginManager implements IManager {
     }
     if (!(await EncryptionHelper.isMatching(request.password, account.password))) {
       return ResponseUtil.managerResponse(
-        new HttpStatus(HttpStatusCode.UNAUTHORIZED),
+        new HttpStatus(HttpStatusCode.CONFLICT),
         null,
         [new ClientError(ClientErrorCode.INCORRECT_PASSWORD)],
         null,

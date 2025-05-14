@@ -28,7 +28,10 @@ export class MyBusinessOpenResponse implements IResponse {
     public readonly approvalState: ApprovalState | null,
   ) {}
 
-  public static fromModel(model: BusinessViewModel, media: MediaData | null): MyBusinessOpenResponse {
+  public static fromModel(
+    model: BusinessViewModel,
+    media: MediaData | null,
+  ): MyBusinessOpenResponse {
     return new MyBusinessOpenResponse(
       model.businessId,
       model.name,
