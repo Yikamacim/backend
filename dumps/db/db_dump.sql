@@ -2,14 +2,15 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
--- Dumped by pg_dump version 16.8 (Debian 16.8-1.pgdg120+1)
+-- Dumped from database version 17.2
+-- Dumped by pg_dump version 17.4
 
--- Started on 2025-05-14 07:19:25 UTC
+-- Started on 2025-05-14 23:37:35 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -19,7 +20,7 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 910 (class 1247 OID 16387)
+-- TOC entry 916 (class 1247 OID 29958)
 -- Name: AccountType; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
@@ -34,7 +35,7 @@ CREATE TYPE public."AccountType" AS ENUM (
 ALTER TYPE public."AccountType" OWNER TO "UYikamacim";
 
 --
--- TOC entry 1063 (class 1247 OID 25791)
+-- TOC entry 919 (class 1247 OID 29968)
 -- Name: ApprovalState; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
@@ -49,7 +50,7 @@ CREATE TYPE public."ApprovalState" AS ENUM (
 ALTER TYPE public."ApprovalState" OWNER TO "UYikamacim";
 
 --
--- TOC entry 991 (class 1247 OID 25200)
+-- TOC entry 922 (class 1247 OID 29978)
 -- Name: BedSize; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
@@ -62,7 +63,7 @@ CREATE TYPE public."BedSize" AS ENUM (
 ALTER TYPE public."BedSize" OWNER TO "UYikamacim";
 
 --
--- TOC entry 1012 (class 1247 OID 25254)
+-- TOC entry 925 (class 1247 OID 29984)
 -- Name: BlanketMaterial; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
@@ -80,7 +81,7 @@ CREATE TYPE public."BlanketMaterial" AS ENUM (
 ALTER TYPE public."BlanketMaterial" OWNER TO "UYikamacim";
 
 --
--- TOC entry 1015 (class 1247 OID 25270)
+-- TOC entry 928 (class 1247 OID 30000)
 -- Name: BlanketSize; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
@@ -93,7 +94,7 @@ CREATE TYPE public."BlanketSize" AS ENUM (
 ALTER TYPE public."BlanketSize" OWNER TO "UYikamacim";
 
 --
--- TOC entry 955 (class 1247 OID 24798)
+-- TOC entry 931 (class 1247 OID 30006)
 -- Name: CarpetMaterial; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
@@ -119,7 +120,7 @@ CREATE TYPE public."CarpetMaterial" AS ENUM (
 ALTER TYPE public."CarpetMaterial" OWNER TO "UYikamacim";
 
 --
--- TOC entry 973 (class 1247 OID 24946)
+-- TOC entry 934 (class 1247 OID 30038)
 -- Name: CurtainType; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
@@ -140,7 +141,7 @@ CREATE TYPE public."CurtainType" AS ENUM (
 ALTER TYPE public."CurtainType" OWNER TO "UYikamacim";
 
 --
--- TOC entry 940 (class 1247 OID 24578)
+-- TOC entry 937 (class 1247 OID 30060)
 -- Name: MediaType; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
@@ -155,7 +156,7 @@ CREATE TYPE public."MediaType" AS ENUM (
 ALTER TYPE public."MediaType" OWNER TO "UYikamacim";
 
 --
--- TOC entry 988 (class 1247 OID 25184)
+-- TOC entry 940 (class 1247 OID 30070)
 -- Name: QuiltMaterial; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
@@ -173,7 +174,7 @@ CREATE TYPE public."QuiltMaterial" AS ENUM (
 ALTER TYPE public."QuiltMaterial" OWNER TO "UYikamacim";
 
 --
--- TOC entry 1003 (class 1247 OID 25232)
+-- TOC entry 943 (class 1247 OID 30086)
 -- Name: QuiltSize; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
@@ -186,7 +187,7 @@ CREATE TYPE public."QuiltSize" AS ENUM (
 ALTER TYPE public."QuiltSize" OWNER TO "UYikamacim";
 
 --
--- TOC entry 1039 (class 1247 OID 25433)
+-- TOC entry 946 (class 1247 OID 30092)
 -- Name: ServiceCategory; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
@@ -205,7 +206,7 @@ CREATE TYPE public."ServiceCategory" AS ENUM (
 ALTER TYPE public."ServiceCategory" OWNER TO "UYikamacim";
 
 --
--- TOC entry 1024 (class 1247 OID 25292)
+-- TOC entry 949 (class 1247 OID 30110)
 -- Name: SofaMaterial; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
@@ -238,7 +239,7 @@ CREATE TYPE public."SofaMaterial" AS ENUM (
 ALTER TYPE public."SofaMaterial" OWNER TO "UYikamacim";
 
 --
--- TOC entry 1000 (class 1247 OID 25222)
+-- TOC entry 952 (class 1247 OID 30156)
 -- Name: SofaType; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
@@ -253,7 +254,7 @@ CREATE TYPE public."SofaType" AS ENUM (
 ALTER TYPE public."SofaType" OWNER TO "UYikamacim";
 
 --
--- TOC entry 964 (class 1247 OID 24888)
+-- TOC entry 955 (class 1247 OID 30166)
 -- Name: VehicleType; Type: TYPE; Schema: public; Owner: UYikamacim
 --
 
@@ -288,7 +289,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 215 (class 1259 OID 16393)
+-- TOC entry 217 (class 1259 OID 30207)
 -- Name: Account; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -306,7 +307,7 @@ CREATE TABLE public."Account" (
 ALTER TABLE public."Account" OWNER TO "UYikamacim";
 
 --
--- TOC entry 216 (class 1259 OID 16396)
+-- TOC entry 218 (class 1259 OID 30211)
 -- Name: Account_accountId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -322,8 +323,8 @@ CREATE SEQUENCE public."Account_accountId_seq"
 ALTER SEQUENCE public."Account_accountId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3809 (class 0 OID 0)
--- Dependencies: 216
+-- TOC entry 4755 (class 0 OID 0)
+-- Dependencies: 218
 -- Name: Account_accountId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -331,7 +332,7 @@ ALTER SEQUENCE public."Account_accountId_seq" OWNED BY public."Account"."account
 
 
 --
--- TOC entry 231 (class 1259 OID 16507)
+-- TOC entry 219 (class 1259 OID 30212)
 -- Name: Address; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -351,7 +352,7 @@ CREATE TABLE public."Address" (
 ALTER TABLE public."Address" OWNER TO "UYikamacim";
 
 --
--- TOC entry 225 (class 1259 OID 16448)
+-- TOC entry 220 (class 1259 OID 30215)
 -- Name: Country; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -364,7 +365,7 @@ CREATE TABLE public."Country" (
 ALTER TABLE public."Country" OWNER TO "UYikamacim";
 
 --
--- TOC entry 227 (class 1259 OID 16472)
+-- TOC entry 221 (class 1259 OID 30218)
 -- Name: District; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -378,7 +379,7 @@ CREATE TABLE public."District" (
 ALTER TABLE public."District" OWNER TO "UYikamacim";
 
 --
--- TOC entry 229 (class 1259 OID 16484)
+-- TOC entry 222 (class 1259 OID 30221)
 -- Name: Neighborhood; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -393,7 +394,7 @@ CREATE TABLE public."Neighborhood" (
 ALTER TABLE public."Neighborhood" OWNER TO "UYikamacim";
 
 --
--- TOC entry 223 (class 1259 OID 16441)
+-- TOC entry 223 (class 1259 OID 30224)
 -- Name: Province; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -407,7 +408,7 @@ CREATE TABLE public."Province" (
 ALTER TABLE public."Province" OWNER TO "UYikamacim";
 
 --
--- TOC entry 232 (class 1259 OID 16556)
+-- TOC entry 224 (class 1259 OID 30227)
 -- Name: AddressView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -435,7 +436,7 @@ CREATE VIEW public."AddressView" AS
 ALTER VIEW public."AddressView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 230 (class 1259 OID 16506)
+-- TOC entry 225 (class 1259 OID 30232)
 -- Name: Address_addressId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -451,8 +452,8 @@ CREATE SEQUENCE public."Address_addressId_seq"
 ALTER SEQUENCE public."Address_addressId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3810 (class 0 OID 0)
--- Dependencies: 230
+-- TOC entry 4756 (class 0 OID 0)
+-- Dependencies: 225
 -- Name: Address_addressId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -460,7 +461,7 @@ ALTER SEQUENCE public."Address_addressId_seq" OWNED BY public."Address"."address
 
 
 --
--- TOC entry 280 (class 1259 OID 25805)
+-- TOC entry 226 (class 1259 OID 30233)
 -- Name: Approval; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -476,7 +477,7 @@ CREATE TABLE public."Approval" (
 ALTER TABLE public."Approval" OWNER TO "UYikamacim";
 
 --
--- TOC entry 274 (class 1259 OID 25630)
+-- TOC entry 227 (class 1259 OID 30240)
 -- Name: ApprovalMedia; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -489,7 +490,7 @@ CREATE TABLE public."ApprovalMedia" (
 ALTER TABLE public."ApprovalMedia" OWNER TO "UYikamacim";
 
 --
--- TOC entry 236 (class 1259 OID 24702)
+-- TOC entry 228 (class 1259 OID 30243)
 -- Name: Media; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -505,7 +506,7 @@ CREATE TABLE public."Media" (
 ALTER TABLE public."Media" OWNER TO "UYikamacim";
 
 --
--- TOC entry 282 (class 1259 OID 25846)
+-- TOC entry 229 (class 1259 OID 30247)
 -- Name: ApprovalMediaView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -521,7 +522,7 @@ CREATE VIEW public."ApprovalMediaView" AS
 ALTER VIEW public."ApprovalMediaView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 277 (class 1259 OID 25682)
+-- TOC entry 230 (class 1259 OID 30251)
 -- Name: AreaView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -544,7 +545,7 @@ CREATE VIEW public."AreaView" AS
 ALTER VIEW public."AreaView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 275 (class 1259 OID 25662)
+-- TOC entry 231 (class 1259 OID 30256)
 -- Name: BankAccount; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -559,7 +560,7 @@ CREATE TABLE public."BankAccount" (
 ALTER TABLE public."BankAccount" OWNER TO "UYikamacim";
 
 --
--- TOC entry 252 (class 1259 OID 25206)
+-- TOC entry 232 (class 1259 OID 30260)
 -- Name: Bed; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -573,7 +574,7 @@ CREATE TABLE public."Bed" (
 ALTER TABLE public."Bed" OWNER TO "UYikamacim";
 
 --
--- TOC entry 234 (class 1259 OID 24593)
+-- TOC entry 233 (class 1259 OID 30263)
 -- Name: Item; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -588,7 +589,7 @@ CREATE TABLE public."Item" (
 ALTER TABLE public."Item" OWNER TO "UYikamacim";
 
 --
--- TOC entry 253 (class 1259 OID 25217)
+-- TOC entry 234 (class 1259 OID 30266)
 -- Name: BedView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -606,7 +607,7 @@ CREATE VIEW public."BedView" AS
 ALTER VIEW public."BedView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 251 (class 1259 OID 25205)
+-- TOC entry 235 (class 1259 OID 30270)
 -- Name: Bed_bedId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -622,8 +623,8 @@ CREATE SEQUENCE public."Bed_bedId_seq"
 ALTER SEQUENCE public."Bed_bedId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3811 (class 0 OID 0)
--- Dependencies: 251
+-- TOC entry 4757 (class 0 OID 0)
+-- Dependencies: 235
 -- Name: Bed_bedId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -631,7 +632,7 @@ ALTER SEQUENCE public."Bed_bedId_seq" OWNED BY public."Bed"."bedId";
 
 
 --
--- TOC entry 258 (class 1259 OID 25276)
+-- TOC entry 236 (class 1259 OID 30271)
 -- Name: Blanket; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -646,7 +647,7 @@ CREATE TABLE public."Blanket" (
 ALTER TABLE public."Blanket" OWNER TO "UYikamacim";
 
 --
--- TOC entry 259 (class 1259 OID 25287)
+-- TOC entry 237 (class 1259 OID 30274)
 -- Name: BlanketView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -665,7 +666,7 @@ CREATE VIEW public."BlanketView" AS
 ALTER VIEW public."BlanketView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 257 (class 1259 OID 25275)
+-- TOC entry 238 (class 1259 OID 30278)
 -- Name: Blanket_blanketId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -681,8 +682,8 @@ CREATE SEQUENCE public."Blanket_blanketId_seq"
 ALTER SEQUENCE public."Blanket_blanketId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3812 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 4758 (class 0 OID 0)
+-- Dependencies: 238
 -- Name: Blanket_blanketId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -690,7 +691,7 @@ ALTER SEQUENCE public."Blanket_blanketId_seq" OWNED BY public."Blanket"."blanket
 
 
 --
--- TOC entry 273 (class 1259 OID 25545)
+-- TOC entry 239 (class 1259 OID 30279)
 -- Name: Business; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -709,7 +710,7 @@ CREATE TABLE public."Business" (
 ALTER TABLE public."Business" OWNER TO "UYikamacim";
 
 --
--- TOC entry 278 (class 1259 OID 25768)
+-- TOC entry 240 (class 1259 OID 30285)
 -- Name: BusinessArea; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -722,7 +723,7 @@ CREATE TABLE public."BusinessArea" (
 ALTER TABLE public."BusinessArea" OWNER TO "UYikamacim";
 
 --
--- TOC entry 279 (class 1259 OID 25783)
+-- TOC entry 241 (class 1259 OID 30288)
 -- Name: BusinessAreaView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -747,7 +748,7 @@ CREATE VIEW public."BusinessAreaView" AS
 ALTER VIEW public."BusinessAreaView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 263 (class 1259 OID 25411)
+-- TOC entry 242 (class 1259 OID 30293)
 -- Name: BusinessMedia; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -761,7 +762,7 @@ CREATE TABLE public."BusinessMedia" (
 ALTER TABLE public."BusinessMedia" OWNER TO "UYikamacim";
 
 --
--- TOC entry 276 (class 1259 OID 25673)
+-- TOC entry 243 (class 1259 OID 30297)
 -- Name: BusinessMediaView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -778,7 +779,7 @@ CREATE VIEW public."BusinessMediaView" AS
 ALTER VIEW public."BusinessMediaView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 269 (class 1259 OID 25493)
+-- TOC entry 244 (class 1259 OID 30301)
 -- Name: Review; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -794,7 +795,7 @@ CREATE TABLE public."Review" (
 ALTER TABLE public."Review" OWNER TO "UYikamacim";
 
 --
--- TOC entry 284 (class 1259 OID 25852)
+-- TOC entry 245 (class 1259 OID 30306)
 -- Name: Service; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -812,7 +813,7 @@ CREATE TABLE public."Service" (
 ALTER TABLE public."Service" OWNER TO "UYikamacim";
 
 --
--- TOC entry 285 (class 1259 OID 32769)
+-- TOC entry 246 (class 1259 OID 30311)
 -- Name: BusinessServiceView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -855,7 +856,7 @@ CREATE VIEW public."BusinessServiceView" AS
 ALTER VIEW public."BusinessServiceView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 281 (class 1259 OID 25831)
+-- TOC entry 247 (class 1259 OID 30316)
 -- Name: BusinessView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -907,7 +908,7 @@ CREATE VIEW public."BusinessView" AS
 ALTER VIEW public."BusinessView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 272 (class 1259 OID 25544)
+-- TOC entry 248 (class 1259 OID 30321)
 -- Name: Business_businessId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -923,8 +924,8 @@ CREATE SEQUENCE public."Business_businessId_seq"
 ALTER SEQUENCE public."Business_businessId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3813 (class 0 OID 0)
--- Dependencies: 272
+-- TOC entry 4759 (class 0 OID 0)
+-- Dependencies: 248
 -- Name: Business_businessId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -932,7 +933,7 @@ ALTER SEQUENCE public."Business_businessId_seq" OWNED BY public."Business"."busi
 
 
 --
--- TOC entry 267 (class 1259 OID 25479)
+-- TOC entry 249 (class 1259 OID 30322)
 -- Name: Card; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -953,7 +954,7 @@ CREATE TABLE public."Card" (
 ALTER TABLE public."Card" OWNER TO "UYikamacim";
 
 --
--- TOC entry 266 (class 1259 OID 25478)
+-- TOC entry 250 (class 1259 OID 30326)
 -- Name: Card_cardId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -969,8 +970,8 @@ CREATE SEQUENCE public."Card_cardId_seq"
 ALTER SEQUENCE public."Card_cardId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3814 (class 0 OID 0)
--- Dependencies: 266
+-- TOC entry 4760 (class 0 OID 0)
+-- Dependencies: 250
 -- Name: Card_cardId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -978,7 +979,7 @@ ALTER SEQUENCE public."Card_cardId_seq" OWNED BY public."Card"."cardId";
 
 
 --
--- TOC entry 240 (class 1259 OID 24830)
+-- TOC entry 251 (class 1259 OID 30327)
 -- Name: Carpet; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -994,7 +995,7 @@ CREATE TABLE public."Carpet" (
 ALTER TABLE public."Carpet" OWNER TO "UYikamacim";
 
 --
--- TOC entry 241 (class 1259 OID 24841)
+-- TOC entry 252 (class 1259 OID 30330)
 -- Name: CarpetView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -1014,7 +1015,7 @@ CREATE VIEW public."CarpetView" AS
 ALTER VIEW public."CarpetView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 239 (class 1259 OID 24829)
+-- TOC entry 253 (class 1259 OID 30334)
 -- Name: Carpet_carpetId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1030,8 +1031,8 @@ CREATE SEQUENCE public."Carpet_carpetId_seq"
 ALTER SEQUENCE public."Carpet_carpetId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3815 (class 0 OID 0)
--- Dependencies: 239
+-- TOC entry 4761 (class 0 OID 0)
+-- Dependencies: 253
 -- Name: Carpet_carpetId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1039,7 +1040,7 @@ ALTER SEQUENCE public."Carpet_carpetId_seq" OWNED BY public."Carpet"."carpetId";
 
 
 --
--- TOC entry 249 (class 1259 OID 25098)
+-- TOC entry 254 (class 1259 OID 30335)
 -- Name: Chair; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1053,7 +1054,7 @@ CREATE TABLE public."Chair" (
 ALTER TABLE public."Chair" OWNER TO "UYikamacim";
 
 --
--- TOC entry 250 (class 1259 OID 25109)
+-- TOC entry 255 (class 1259 OID 30338)
 -- Name: ChairView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -1071,7 +1072,7 @@ CREATE VIEW public."ChairView" AS
 ALTER VIEW public."ChairView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 248 (class 1259 OID 25097)
+-- TOC entry 256 (class 1259 OID 30342)
 -- Name: Chair_chairId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1087,8 +1088,8 @@ CREATE SEQUENCE public."Chair_chairId_seq"
 ALTER SEQUENCE public."Chair_chairId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3816 (class 0 OID 0)
--- Dependencies: 248
+-- TOC entry 4762 (class 0 OID 0)
+-- Dependencies: 256
 -- Name: Chair_chairId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1096,7 +1097,7 @@ ALTER SEQUENCE public."Chair_chairId_seq" OWNED BY public."Chair"."chairId";
 
 
 --
--- TOC entry 271 (class 1259 OID 25512)
+-- TOC entry 257 (class 1259 OID 30343)
 -- Name: Comment; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1110,7 +1111,7 @@ CREATE TABLE public."Comment" (
 ALTER TABLE public."Comment" OWNER TO "UYikamacim";
 
 --
--- TOC entry 270 (class 1259 OID 25511)
+-- TOC entry 258 (class 1259 OID 30348)
 -- Name: Comment_commentId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1126,8 +1127,8 @@ CREATE SEQUENCE public."Comment_commentId_seq"
 ALTER SEQUENCE public."Comment_commentId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3817 (class 0 OID 0)
--- Dependencies: 270
+-- TOC entry 4763 (class 0 OID 0)
+-- Dependencies: 258
 -- Name: Comment_commentId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1135,7 +1136,7 @@ ALTER SEQUENCE public."Comment_commentId_seq" OWNED BY public."Comment"."comment
 
 
 --
--- TOC entry 224 (class 1259 OID 16447)
+-- TOC entry 259 (class 1259 OID 30349)
 -- Name: Country_countryId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1151,8 +1152,8 @@ CREATE SEQUENCE public."Country_countryId_seq"
 ALTER SEQUENCE public."Country_countryId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3818 (class 0 OID 0)
--- Dependencies: 224
+-- TOC entry 4764 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: Country_countryId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1160,7 +1161,7 @@ ALTER SEQUENCE public."Country_countryId_seq" OWNED BY public."Country"."country
 
 
 --
--- TOC entry 246 (class 1259 OID 25056)
+-- TOC entry 260 (class 1259 OID 30350)
 -- Name: Curtain; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1176,7 +1177,7 @@ CREATE TABLE public."Curtain" (
 ALTER TABLE public."Curtain" OWNER TO "UYikamacim";
 
 --
--- TOC entry 247 (class 1259 OID 25067)
+-- TOC entry 261 (class 1259 OID 30353)
 -- Name: CurtainView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -1196,7 +1197,7 @@ CREATE VIEW public."CurtainView" AS
 ALTER VIEW public."CurtainView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 245 (class 1259 OID 25055)
+-- TOC entry 262 (class 1259 OID 30357)
 -- Name: Curtain_curtainId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1212,8 +1213,8 @@ CREATE SEQUENCE public."Curtain_curtainId_seq"
 ALTER SEQUENCE public."Curtain_curtainId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3819 (class 0 OID 0)
--- Dependencies: 245
+-- TOC entry 4765 (class 0 OID 0)
+-- Dependencies: 262
 -- Name: Curtain_curtainId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1221,7 +1222,7 @@ ALTER SEQUENCE public."Curtain_curtainId_seq" OWNED BY public."Curtain"."curtain
 
 
 --
--- TOC entry 226 (class 1259 OID 16471)
+-- TOC entry 263 (class 1259 OID 30358)
 -- Name: District_districtId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1237,8 +1238,8 @@ CREATE SEQUENCE public."District_districtId_seq"
 ALTER SEQUENCE public."District_districtId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3820 (class 0 OID 0)
--- Dependencies: 226
+-- TOC entry 4766 (class 0 OID 0)
+-- Dependencies: 263
 -- Name: District_districtId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1246,7 +1247,7 @@ ALTER SEQUENCE public."District_districtId_seq" OWNED BY public."District"."dist
 
 
 --
--- TOC entry 265 (class 1259 OID 25449)
+-- TOC entry 264 (class 1259 OID 30359)
 -- Name: Hours; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1272,7 +1273,7 @@ CREATE TABLE public."Hours" (
 ALTER TABLE public."Hours" OWNER TO "UYikamacim";
 
 --
--- TOC entry 237 (class 1259 OID 24715)
+-- TOC entry 265 (class 1259 OID 30362)
 -- Name: ItemMedia; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1285,7 +1286,7 @@ CREATE TABLE public."ItemMedia" (
 ALTER TABLE public."ItemMedia" OWNER TO "UYikamacim";
 
 --
--- TOC entry 238 (class 1259 OID 24730)
+-- TOC entry 266 (class 1259 OID 30365)
 -- Name: ItemMediaView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -1301,7 +1302,7 @@ CREATE VIEW public."ItemMediaView" AS
 ALTER VIEW public."ItemMediaView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 233 (class 1259 OID 24592)
+-- TOC entry 267 (class 1259 OID 30369)
 -- Name: Item_itemId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1317,8 +1318,8 @@ CREATE SEQUENCE public."Item_itemId_seq"
 ALTER SEQUENCE public."Item_itemId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3821 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 4767 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: Item_itemId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1326,7 +1327,7 @@ ALTER SEQUENCE public."Item_itemId_seq" OWNED BY public."Item"."itemId";
 
 
 --
--- TOC entry 264 (class 1259 OID 25427)
+-- TOC entry 268 (class 1259 OID 30370)
 -- Name: MediaView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -1351,7 +1352,7 @@ CREATE VIEW public."MediaView" AS
 ALTER VIEW public."MediaView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 235 (class 1259 OID 24701)
+-- TOC entry 269 (class 1259 OID 30374)
 -- Name: Media_mediaId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1367,8 +1368,8 @@ CREATE SEQUENCE public."Media_mediaId_seq"
 ALTER SEQUENCE public."Media_mediaId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3822 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 4768 (class 0 OID 0)
+-- Dependencies: 269
 -- Name: Media_mediaId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1376,7 +1377,7 @@ ALTER SEQUENCE public."Media_mediaId_seq" OWNED BY public."Media"."mediaId";
 
 
 --
--- TOC entry 228 (class 1259 OID 16483)
+-- TOC entry 270 (class 1259 OID 30375)
 -- Name: Neighborhood_neighborhoodId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1392,8 +1393,8 @@ CREATE SEQUENCE public."Neighborhood_neighborhoodId_seq"
 ALTER SEQUENCE public."Neighborhood_neighborhoodId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3823 (class 0 OID 0)
--- Dependencies: 228
+-- TOC entry 4769 (class 0 OID 0)
+-- Dependencies: 270
 -- Name: Neighborhood_neighborhoodId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1401,7 +1402,7 @@ ALTER SEQUENCE public."Neighborhood_neighborhoodId_seq" OWNED BY public."Neighbo
 
 
 --
--- TOC entry 222 (class 1259 OID 16440)
+-- TOC entry 271 (class 1259 OID 30376)
 -- Name: Province_provinceId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1417,8 +1418,8 @@ CREATE SEQUENCE public."Province_provinceId_seq"
 ALTER SEQUENCE public."Province_provinceId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3824 (class 0 OID 0)
--- Dependencies: 222
+-- TOC entry 4770 (class 0 OID 0)
+-- Dependencies: 271
 -- Name: Province_provinceId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1426,7 +1427,7 @@ ALTER SEQUENCE public."Province_provinceId_seq" OWNED BY public."Province"."prov
 
 
 --
--- TOC entry 255 (class 1259 OID 25238)
+-- TOC entry 272 (class 1259 OID 30377)
 -- Name: Quilt; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1441,7 +1442,7 @@ CREATE TABLE public."Quilt" (
 ALTER TABLE public."Quilt" OWNER TO "UYikamacim";
 
 --
--- TOC entry 256 (class 1259 OID 25249)
+-- TOC entry 273 (class 1259 OID 30380)
 -- Name: QuiltView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -1460,7 +1461,7 @@ CREATE VIEW public."QuiltView" AS
 ALTER VIEW public."QuiltView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 254 (class 1259 OID 25237)
+-- TOC entry 274 (class 1259 OID 30384)
 -- Name: Quilt_quiltId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1476,8 +1477,8 @@ CREATE SEQUENCE public."Quilt_quiltId_seq"
 ALTER SEQUENCE public."Quilt_quiltId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3825 (class 0 OID 0)
--- Dependencies: 254
+-- TOC entry 4771 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: Quilt_quiltId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1485,7 +1486,7 @@ ALTER SEQUENCE public."Quilt_quiltId_seq" OWNED BY public."Quilt"."quiltId";
 
 
 --
--- TOC entry 268 (class 1259 OID 25492)
+-- TOC entry 275 (class 1259 OID 30385)
 -- Name: Review_reviewId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1501,8 +1502,8 @@ CREATE SEQUENCE public."Review_reviewId_seq"
 ALTER SEQUENCE public."Review_reviewId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3826 (class 0 OID 0)
--- Dependencies: 268
+-- TOC entry 4772 (class 0 OID 0)
+-- Dependencies: 275
 -- Name: Review_reviewId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1510,7 +1511,7 @@ ALTER SEQUENCE public."Review_reviewId_seq" OWNED BY public."Review"."reviewId";
 
 
 --
--- TOC entry 283 (class 1259 OID 25851)
+-- TOC entry 276 (class 1259 OID 30386)
 -- Name: Service_serviceId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1526,8 +1527,8 @@ CREATE SEQUENCE public."Service_serviceId_seq"
 ALTER SEQUENCE public."Service_serviceId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3827 (class 0 OID 0)
--- Dependencies: 283
+-- TOC entry 4773 (class 0 OID 0)
+-- Dependencies: 276
 -- Name: Service_serviceId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1535,7 +1536,7 @@ ALTER SEQUENCE public."Service_serviceId_seq" OWNED BY public."Service"."service
 
 
 --
--- TOC entry 217 (class 1259 OID 16397)
+-- TOC entry 277 (class 1259 OID 30387)
 -- Name: Session; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1552,7 +1553,7 @@ CREATE TABLE public."Session" (
 ALTER TABLE public."Session" OWNER TO "UYikamacim";
 
 --
--- TOC entry 218 (class 1259 OID 16402)
+-- TOC entry 278 (class 1259 OID 30392)
 -- Name: Session_accountId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1568,8 +1569,8 @@ CREATE SEQUENCE public."Session_accountId_seq"
 ALTER SEQUENCE public."Session_accountId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3828 (class 0 OID 0)
--- Dependencies: 218
+-- TOC entry 4774 (class 0 OID 0)
+-- Dependencies: 278
 -- Name: Session_accountId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1577,7 +1578,7 @@ ALTER SEQUENCE public."Session_accountId_seq" OWNED BY public."Session"."account
 
 
 --
--- TOC entry 219 (class 1259 OID 16403)
+-- TOC entry 279 (class 1259 OID 30393)
 -- Name: Session_sessionId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1593,8 +1594,8 @@ CREATE SEQUENCE public."Session_sessionId_seq"
 ALTER SEQUENCE public."Session_sessionId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3829 (class 0 OID 0)
--- Dependencies: 219
+-- TOC entry 4775 (class 0 OID 0)
+-- Dependencies: 279
 -- Name: Session_sessionId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1602,7 +1603,7 @@ ALTER SEQUENCE public."Session_sessionId_seq" OWNED BY public."Session"."session
 
 
 --
--- TOC entry 261 (class 1259 OID 25338)
+-- TOC entry 280 (class 1259 OID 30394)
 -- Name: Sofa; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1618,7 +1619,7 @@ CREATE TABLE public."Sofa" (
 ALTER TABLE public."Sofa" OWNER TO "UYikamacim";
 
 --
--- TOC entry 262 (class 1259 OID 25349)
+-- TOC entry 281 (class 1259 OID 30397)
 -- Name: SofaView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -1638,7 +1639,7 @@ CREATE VIEW public."SofaView" AS
 ALTER VIEW public."SofaView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 260 (class 1259 OID 25337)
+-- TOC entry 282 (class 1259 OID 30401)
 -- Name: Sofa_sofaId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1654,8 +1655,8 @@ CREATE SEQUENCE public."Sofa_sofaId_seq"
 ALTER SEQUENCE public."Sofa_sofaId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3830 (class 0 OID 0)
--- Dependencies: 260
+-- TOC entry 4776 (class 0 OID 0)
+-- Dependencies: 282
 -- Name: Sofa_sofaId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1663,7 +1664,7 @@ ALTER SEQUENCE public."Sofa_sofaId_seq" OWNED BY public."Sofa"."sofaId";
 
 
 --
--- TOC entry 243 (class 1259 OID 24930)
+-- TOC entry 283 (class 1259 OID 30402)
 -- Name: Vehicle; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1679,7 +1680,7 @@ CREATE TABLE public."Vehicle" (
 ALTER TABLE public."Vehicle" OWNER TO "UYikamacim";
 
 --
--- TOC entry 244 (class 1259 OID 24941)
+-- TOC entry 284 (class 1259 OID 30405)
 -- Name: VehicleView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -1699,7 +1700,7 @@ CREATE VIEW public."VehicleView" AS
 ALTER VIEW public."VehicleView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 242 (class 1259 OID 24929)
+-- TOC entry 285 (class 1259 OID 30409)
 -- Name: Vehicle_vehicleId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1715,8 +1716,8 @@ CREATE SEQUENCE public."Vehicle_vehicleId_seq"
 ALTER SEQUENCE public."Vehicle_vehicleId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3831 (class 0 OID 0)
--- Dependencies: 242
+-- TOC entry 4777 (class 0 OID 0)
+-- Dependencies: 285
 -- Name: Vehicle_vehicleId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1724,7 +1725,7 @@ ALTER SEQUENCE public."Vehicle_vehicleId_seq" OWNED BY public."Vehicle"."vehicle
 
 
 --
--- TOC entry 221 (class 1259 OID 16430)
+-- TOC entry 286 (class 1259 OID 30410)
 -- Name: Verification; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1739,7 +1740,7 @@ CREATE TABLE public."Verification" (
 ALTER TABLE public."Verification" OWNER TO "UYikamacim";
 
 --
--- TOC entry 220 (class 1259 OID 16429)
+-- TOC entry 287 (class 1259 OID 30413)
 -- Name: Verification_verificationId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1755,8 +1756,8 @@ CREATE SEQUENCE public."Verification_verificationId_seq"
 ALTER SEQUENCE public."Verification_verificationId_seq" OWNER TO "UYikamacim";
 
 --
--- TOC entry 3832 (class 0 OID 0)
--- Dependencies: 220
+-- TOC entry 4778 (class 0 OID 0)
+-- Dependencies: 287
 -- Name: Verification_verificationId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1764,7 +1765,7 @@ ALTER SEQUENCE public."Verification_verificationId_seq" OWNED BY public."Verific
 
 
 --
--- TOC entry 3452 (class 2604 OID 16404)
+-- TOC entry 4396 (class 2604 OID 30414)
 -- Name: Account accountId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1772,7 +1773,7 @@ ALTER TABLE ONLY public."Account" ALTER COLUMN "accountId" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3463 (class 2604 OID 16510)
+-- TOC entry 4398 (class 2604 OID 30415)
 -- Name: Address addressId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1780,7 +1781,7 @@ ALTER TABLE ONLY public."Address" ALTER COLUMN "addressId" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3471 (class 2604 OID 25209)
+-- TOC entry 4408 (class 2604 OID 30416)
 -- Name: Bed bedId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1788,7 +1789,7 @@ ALTER TABLE ONLY public."Bed" ALTER COLUMN "bedId" SET DEFAULT nextval('public."
 
 
 --
--- TOC entry 3473 (class 2604 OID 25279)
+-- TOC entry 4410 (class 2604 OID 30417)
 -- Name: Blanket blanketId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1796,7 +1797,7 @@ ALTER TABLE ONLY public."Blanket" ALTER COLUMN "blanketId" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3480 (class 2604 OID 25548)
+-- TOC entry 4411 (class 2604 OID 30418)
 -- Name: Business businessId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1804,7 +1805,7 @@ ALTER TABLE ONLY public."Business" ALTER COLUMN "businessId" SET DEFAULT nextval
 
 
 --
--- TOC entry 3476 (class 2604 OID 25482)
+-- TOC entry 4416 (class 2604 OID 30419)
 -- Name: Card cardId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1812,7 +1813,7 @@ ALTER TABLE ONLY public."Card" ALTER COLUMN "cardId" SET DEFAULT nextval('public
 
 
 --
--- TOC entry 3467 (class 2604 OID 24833)
+-- TOC entry 4418 (class 2604 OID 30420)
 -- Name: Carpet carpetId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1820,7 +1821,7 @@ ALTER TABLE ONLY public."Carpet" ALTER COLUMN "carpetId" SET DEFAULT nextval('pu
 
 
 --
--- TOC entry 3470 (class 2604 OID 25101)
+-- TOC entry 4419 (class 2604 OID 30421)
 -- Name: Chair chairId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1828,7 +1829,7 @@ ALTER TABLE ONLY public."Chair" ALTER COLUMN "chairId" SET DEFAULT nextval('publ
 
 
 --
--- TOC entry 3479 (class 2604 OID 25515)
+-- TOC entry 4420 (class 2604 OID 30422)
 -- Name: Comment commentId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1836,7 +1837,7 @@ ALTER TABLE ONLY public."Comment" ALTER COLUMN "commentId" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3460 (class 2604 OID 16451)
+-- TOC entry 4399 (class 2604 OID 30423)
 -- Name: Country countryId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1844,7 +1845,7 @@ ALTER TABLE ONLY public."Country" ALTER COLUMN "countryId" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3469 (class 2604 OID 25059)
+-- TOC entry 4421 (class 2604 OID 30424)
 -- Name: Curtain curtainId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1852,7 +1853,7 @@ ALTER TABLE ONLY public."Curtain" ALTER COLUMN "curtainId" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3461 (class 2604 OID 16475)
+-- TOC entry 4400 (class 2604 OID 30425)
 -- Name: District districtId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1860,7 +1861,7 @@ ALTER TABLE ONLY public."District" ALTER COLUMN "districtId" SET DEFAULT nextval
 
 
 --
--- TOC entry 3464 (class 2604 OID 24596)
+-- TOC entry 4409 (class 2604 OID 30426)
 -- Name: Item itemId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1868,7 +1869,7 @@ ALTER TABLE ONLY public."Item" ALTER COLUMN "itemId" SET DEFAULT nextval('public
 
 
 --
--- TOC entry 3465 (class 2604 OID 24705)
+-- TOC entry 4405 (class 2604 OID 30427)
 -- Name: Media mediaId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1876,7 +1877,7 @@ ALTER TABLE ONLY public."Media" ALTER COLUMN "mediaId" SET DEFAULT nextval('publ
 
 
 --
--- TOC entry 3462 (class 2604 OID 16487)
+-- TOC entry 4401 (class 2604 OID 30428)
 -- Name: Neighborhood neighborhoodId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1884,7 +1885,7 @@ ALTER TABLE ONLY public."Neighborhood" ALTER COLUMN "neighborhoodId" SET DEFAULT
 
 
 --
--- TOC entry 3459 (class 2604 OID 16444)
+-- TOC entry 4402 (class 2604 OID 30429)
 -- Name: Province provinceId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1892,7 +1893,7 @@ ALTER TABLE ONLY public."Province" ALTER COLUMN "provinceId" SET DEFAULT nextval
 
 
 --
--- TOC entry 3472 (class 2604 OID 25241)
+-- TOC entry 4422 (class 2604 OID 30430)
 -- Name: Quilt quiltId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1900,7 +1901,7 @@ ALTER TABLE ONLY public."Quilt" ALTER COLUMN "quiltId" SET DEFAULT nextval('publ
 
 
 --
--- TOC entry 3478 (class 2604 OID 25496)
+-- TOC entry 4414 (class 2604 OID 30431)
 -- Name: Review reviewId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1908,7 +1909,7 @@ ALTER TABLE ONLY public."Review" ALTER COLUMN "reviewId" SET DEFAULT nextval('pu
 
 
 --
--- TOC entry 3485 (class 2604 OID 25855)
+-- TOC entry 4415 (class 2604 OID 30432)
 -- Name: Service serviceId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1916,7 +1917,7 @@ ALTER TABLE ONLY public."Service" ALTER COLUMN "serviceId" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3454 (class 2604 OID 16405)
+-- TOC entry 4423 (class 2604 OID 30433)
 -- Name: Session sessionId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1924,7 +1925,7 @@ ALTER TABLE ONLY public."Session" ALTER COLUMN "sessionId" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3455 (class 2604 OID 16406)
+-- TOC entry 4424 (class 2604 OID 30434)
 -- Name: Session accountId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1932,7 +1933,7 @@ ALTER TABLE ONLY public."Session" ALTER COLUMN "accountId" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3474 (class 2604 OID 25341)
+-- TOC entry 4427 (class 2604 OID 30435)
 -- Name: Sofa sofaId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1940,7 +1941,7 @@ ALTER TABLE ONLY public."Sofa" ALTER COLUMN "sofaId" SET DEFAULT nextval('public
 
 
 --
--- TOC entry 3468 (class 2604 OID 24933)
+-- TOC entry 4428 (class 2604 OID 30436)
 -- Name: Vehicle vehicleId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1948,7 +1949,7 @@ ALTER TABLE ONLY public."Vehicle" ALTER COLUMN "vehicleId" SET DEFAULT nextval('
 
 
 --
--- TOC entry 3458 (class 2604 OID 16433)
+-- TOC entry 4429 (class 2604 OID 30437)
 -- Name: Verification verificationId; Type: DEFAULT; Schema: public; Owner: UYikamacim
 --
 
@@ -1956,8 +1957,8 @@ ALTER TABLE ONLY public."Verification" ALTER COLUMN "verificationId" SET DEFAULT
 
 
 --
--- TOC entry 3750 (class 0 OID 16393)
--- Dependencies: 215
+-- TOC entry 4696 (class 0 OID 30207)
+-- Dependencies: 217
 -- Data for Name: Account; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -1966,54 +1967,100 @@ COPY public."Account" ("accountId", phone, password, name, surname, "accountType
 15	+905417332300	$2b$10$Uk/d7S/Upnp69HCfw0E8.OMJHqlezhQ79dc0c/Y6Pl2/cBBg3tTvG	Ömer Faruk	Saydam	BUSINESS	t
 16	+905345814471	$2b$10$61GImH8EeyhtcylD6Lq7TOLjmF24V/z1wWmmNcyy5FGA6Wj5gnBIu	Veysel Karani	Saydam	USER	t
 19	+900000000001	$2b$10$DfS6aUWcRjGAbD7VymTjRewFV97jYhZpxCY7XlwOG6gEPWZ5PhXWe	Admin	User	ADMIN	t
+20	+905321234567	$2b$10$/aI.oxp/Sj1dF3yuCQd5k.xaoHgtVRmseiRKAd8jgYgjjadpukTE.	Ahmed	Yılmaz	BUSINESS	t
+21	+905426789543	$2b$10$ZFrril.6vxWytj5D20IPzuX1ELy.wCFov96LKLfl.hxM5HAddTMOG	Mehmed	Gümüş	BUSINESS	t
+22	+905526984286	$2b$10$lCffLzZwl5gcPv/yluhfWOFGtyteMVUtHBGUOvkS7OYax8PrOtSma	Abdülhamid	Altıntaş	BUSINESS	t
+23	+902620000001	$2b$10$UGeSBqdcU3Hpi0JQS6lkYu0H.iuqJOpFTeuIlyJaN3OuImiTvaK9y	Ahmet	Erpınar	BUSINESS	t
+24	+905368794584	$2b$10$pHA92F0yV9X7daQJwM3BcuHkDCXpwnZ8ZJlDaOGLqcPYJ6j1qlMHe	Ali	Taşçı	BUSINESS	t
+25	+905331991562	$2b$10$K8V/eNpD/GnviQJxDILjMOXWiXjaj/fxR9vwHrQTUpznWHZKWSGPS	Emrecan	Karaçayır	USER	t
+26	+902620000002	$2b$10$PO1H.SBCr1iCTNC.popV.OKjU/zD5JiFChVclEHe2X7IHT5FCTZ3m	Şenol	Babacan	BUSINESS	t
+27	+902620000003	$2b$10$R4RxEGCv9JliDv2lsDOhM.H98vqXYJYRaHL7xtCqhfKbfOPVsnCF.	Tarık	Toptepe	BUSINESS	t
+28	+902620000004	$2b$10$emu5tRuO.Amk5eXNVTI.r.xIR.L2QY2AX0gH.f1sRh9Dqj1yi.avS	Sezgin	Gezgin	BUSINESS	t
+29	+902620000005	$2b$10$yQAWwh2WDA7GvLNeK2BFvegSy.mR06FkMt856ECYV4Ui8fp6x5HuK	Hakan	Hankaya	BUSINESS	t
 \.
 
 
 --
--- TOC entry 3766 (class 0 OID 16507)
--- Dependencies: 231
+-- TOC entry 4698 (class 0 OID 30212)
+-- Dependencies: 219
 -- Data for Name: Address; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
 COPY public."Address" ("addressId", "accountId", name, "countryId", "provinceId", "districtId", "neighborhoodId", "explicitAddress", "isDefault") FROM stdin;
 2	12	Ev	1	52	617	46774	Osman Yilmaz Mah. 635/1 Sok. No:5A/8, Kocaeli/GEBZE	f
 3	12	İş	1	52	617	46774	Osman Yilmaz Mah. 635/1 Sok. No:5A/8, Gebze/Kocaeli	t
+4	20	Business Address	1	40	463	35537	Köknar Caddesi No: 45	t
+5	21	Business Address	1	40	463	35537	Gündoğdu Caddesi No: 27	t
+6	22	Business Address	1	40	463	35537	Said Nursi Caddesi No: 39	t
+8	23	Business Address	1	52	617	46774	635/1 Sok. No:5A Daire:5	t
+7	24	Business Address	1	40	463	35537	Köroğlu Caddesi Numara 46	t
+9	26	Business Address	1	52	614	46697	Şantiye Sok. No:10 Daire:2	t
+10	27	Business Address	1	52	623	47097	19/1 Sok. No:8, Görkemli İş hanı, Ofis:7	t
+11	28	Business Address	1	40	483	36085	Halk sok. No:4 Daire:8	t
+12	29	Business Address	1	52	616	46723	Atatürk sok. Gazi İş Hanı, Ofis:8	t
 \.
 
 
 --
--- TOC entry 3801 (class 0 OID 25805)
--- Dependencies: 280
+-- TOC entry 4704 (class 0 OID 30233)
+-- Dependencies: 226
 -- Data for Name: Approval; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
 COPY public."Approval" ("businessId", message, "approvalState", reason, "createdAt") FROM stdin;
+5	yeni	APPROVED	Basarili	2025-05-14 10:22:51.592915
+6	yeni	APPROVED	Basarili	2025-05-14 10:34:09.01405
+7	yeni	APPROVED	Basarili	2025-05-14 10:44:39.673068
+8	yeni	APPROVED	Basarili	2025-05-14 11:23:35.897287
+9	Vergi levhamız ektedir.	APPROVED	Basarili	2025-05-14 11:21:24.365074
+10	Domain ve şirket sahibi benim, tc numaram vergi levhasıdır.	APPROVED	İşletmeniz, vergi levhanız ve şirket adresiniz onaylanarak doğrulanmıştır.	2025-05-14 13:16:37.306382
+11	Ses	APPROVED	İşletmeniz, vergi levhanız ve şirket adresiniz onaylanarak doğrulanmıştır.	2025-05-14 22:34:10.213286
+12	Adres ve levha bana aittir.	APPROVED	İşletmeniz, vergi levhanız ve şirket adresiniz onaylanarak doğrulanmıştır.	2025-05-14 23:00:32.312146
+13	Hadi lütfen	APPROVED	İşletmeniz, vergi levhanız ve şirket adresiniz onaylanarak doğrulanmıştır.	2025-05-14 23:17:56.936045
 \.
 
 
 --
--- TOC entry 3798 (class 0 OID 25630)
--- Dependencies: 274
+-- TOC entry 4705 (class 0 OID 30240)
+-- Dependencies: 227
 -- Data for Name: ApprovalMedia; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
 COPY public."ApprovalMedia" ("businessId", "mediaId") FROM stdin;
+5	9
+6	16
+7	23
+9	27
+8	31
+10	62
+11	73
+12	84
+13	95
 \.
 
 
 --
--- TOC entry 3799 (class 0 OID 25662)
--- Dependencies: 275
+-- TOC entry 4707 (class 0 OID 30256)
+-- Dependencies: 231
 -- Data for Name: BankAccount; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
 COPY public."BankAccount" ("businessId", owner, iban, balance) FROM stdin;
+5	Ahmed Yılmaz	TR894846484876484640494084	0
+6	Mehmed Gümüş	TR594876484876484640797364	0
+7	Abdülhamid Altıntaş	TR978467046484848849738869	0
+8	Ali Taşçı	TR493079768768460760760760	0
+9	AHMET ERPINAR	TR123456789012345678901234	0
+10	ŞENOL BABACAN	TR123456789012345678901234	0
+11	KÖRFEZ KURU TEMİZLEME	TR123456789123456789123456	0
+12	TUZLA KOLTUK YIKAMA	TR987654321098765432109876	0
+13	HAKAN HANKAYA	TR147258369147258369147258	0
 \.
 
 
 --
--- TOC entry 3781 (class 0 OID 25206)
--- Dependencies: 252
+-- TOC entry 4708 (class 0 OID 30260)
+-- Dependencies: 232
 -- Data for Name: Bed; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -2022,8 +2069,8 @@ COPY public."Bed" ("bedId", "itemId", "bedSize") FROM stdin;
 
 
 --
--- TOC entry 3785 (class 0 OID 25276)
--- Dependencies: 258
+-- TOC entry 4711 (class 0 OID 30271)
+-- Dependencies: 236
 -- Data for Name: Blanket; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -2032,38 +2079,545 @@ COPY public."Blanket" ("blanketId", "itemId", "blanketSize", "blanketMaterial") 
 
 
 --
--- TOC entry 3797 (class 0 OID 25545)
--- Dependencies: 273
+-- TOC entry 4713 (class 0 OID 30279)
+-- Dependencies: 239
 -- Data for Name: Business; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
 COPY public."Business" ("businessId", "accountId", name, "addressId", phone, email, description, "isOpen") FROM stdin;
+5	20	Yılmaz Halı Yıkama	4	+905321234567	yilmazhaliyikama@gmail.com	Halı yıkama alanında oldukça deneyimli ekipler ile sizlere hizmet vermekteyiz.	f
+6	21	Gümüş Oto Yıkama	5	+905429786454	gumusotoyikama@gmail.com	Oto yıkama bizim işimiz.	f
+7	22	Altıntaş Halı Yıkama	6	+905526978654	altintashaliyikama@gmail.com	Halı yıkama hizmeti.	f
+8	24	Taşçı Halı Yıkama	7	+905364849404	tascihaliyikama@gmail.com	Halı yıkama hizmeti.	f
+9	23	Gebze Halı Yıkama	8	+902620000001	iletisim@gbzhaliyikama.com	25 yıllık halı yıkama tecrübesiyle Gebze halkına hijyen sağlıyoruz.	t
+10	26	Darıca Oto Yıkama	9	+902620000002	iletisim@drcotoyikama.com	Tecrübeli ekip ve modern ekipmanlarla aracınıza hijyen katıyoruz.	t
+11	27	Körfez Kuru Temizleme	10	+902620000003	info@kktemizleme.com	Birden fazla temizlik dalında, hijyen için müşterimiz olun.	t
+12	28	Tuzla Koltuk Yıkama	11	+902620000004	iletisim@tzlkoltukyikama.com	Tuzla’da 15 senedir müşteri memnuniyeti ile hizmetinizde	t
+13	29	Dilovası Temizlik	12	+902620000005	siparis@diltemizlik.com	Şirketimiz bir çok temizlik alanında hizmet veren, hijyenin adresidir.	f
 \.
 
 
 --
--- TOC entry 3800 (class 0 OID 25768)
--- Dependencies: 278
+-- TOC entry 4714 (class 0 OID 30285)
+-- Dependencies: 240
 -- Data for Name: BusinessArea; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
 COPY public."BusinessArea" ("businessId", "neighborhoodId") FROM stdin;
+5	35533
+5	35534
+5	35535
+5	35536
+5	35537
+5	35538
+5	35539
+5	35540
+5	35541
+5	35553
+6	35533
+6	35534
+6	35535
+6	35536
+6	35537
+6	35538
+6	35539
+6	35540
+6	35541
+6	35553
+7	35533
+7	35534
+7	35535
+7	35536
+7	35537
+7	35538
+7	35539
+7	35540
+7	35541
+7	35553
+8	35533
+8	35534
+8	35535
+8	35536
+8	35537
+8	35538
+8	35539
+8	35540
+8	35541
+8	35553
+9	46774
+9	46784
+9	46744
+9	46745
+9	46746
+9	46747
+9	46748
+9	46749
+9	46750
+9	46751
+9	46752
+9	46753
+9	46754
+9	46755
+9	46756
+9	46757
+9	46758
+9	46759
+9	46760
+9	46761
+9	46762
+9	46763
+9	46764
+9	46765
+9	46766
+9	46767
+9	46768
+9	46769
+9	46770
+9	46771
+9	46772
+9	46773
+9	46775
+9	46776
+9	46777
+9	46778
+9	46779
+9	46780
+9	46781
+9	46782
+9	46783
+9	46743
+9	46742
+9	46741
+9	46740
+9	46681
+9	46682
+9	46683
+9	46684
+9	46685
+9	46686
+9	46687
+9	46688
+9	46689
+9	46690
+9	46691
+9	46692
+9	46697
+10	46692
+10	46693
+10	46694
+10	46695
+10	46696
+10	46697
+10	46699
+10	46698
+10	46700
+10	46701
+10	46702
+10	46703
+10	46704
+10	46705
+10	46740
+10	46741
+10	46742
+10	46743
+10	46744
+10	46745
+10	46774
+10	46752
+10	46762
+10	46748
+10	46749
+10	46750
+10	46751
+10	46757
+10	46746
+10	46747
+10	46753
+10	46754
+10	46755
+10	46756
+10	46758
+10	46759
+10	46760
+10	46761
+10	46763
+10	46764
+10	46765
+10	46766
+10	46767
+10	46768
+10	46769
+10	46770
+10	46771
+10	46772
+10	46773
+10	46775
+10	46776
+10	46777
+10	46778
+10	46779
+10	46780
+10	46781
+10	46782
+10	46783
+10	46784
+10	46681
+10	46682
+10	46683
+10	46684
+10	46685
+10	46686
+10	46687
+10	46688
+10	46689
+10	46690
+10	46691
+10	36071
+10	36072
+10	36073
+10	36074
+10	36075
+10	36076
+10	36077
+10	36078
+10	36079
+10	36080
+10	36081
+10	36082
+10	36083
+10	36084
+10	36085
+10	36086
+10	36087
+10	36088
+10	36089
+10	36090
+10	36091
+10	36092
+10	36093
+10	47104
+10	47108
+10	47103
+10	47107
+10	47117
+10	47127
+11	46752
+11	46778
+11	46774
+11	46777
+11	46744
+11	46740
+11	46742
+11	46741
+11	46743
+11	46748
+11	46754
+11	46771
+11	46770
+11	46769
+11	46773
+11	46763
+11	47095
+11	47096
+11	47097
+11	47098
+11	47099
+11	47100
+11	47101
+11	47102
+11	47103
+11	47104
+11	47105
+11	47106
+11	47107
+11	47108
+11	47109
+11	47110
+11	47111
+11	47112
+11	47113
+11	47114
+11	47115
+11	47116
+11	47117
+11	47118
+11	47119
+11	47120
+11	47121
+11	47122
+11	47123
+11	47124
+11	47125
+11	47126
+11	47127
+11	47128
+11	47129
+11	47130
+11	46706
+11	46707
+11	46708
+11	46709
+11	46710
+11	46711
+11	46712
+11	46713
+11	46714
+11	46715
+11	46716
+11	46717
+11	46718
+11	46722
+11	46719
+11	46721
+11	46720
+11	46836
+11	46912
+11	46852
+11	46853
+11	46849
+11	46854
+11	46856
+11	46855
+12	36071
+12	36072
+12	36073
+12	36074
+12	36075
+12	36076
+12	36077
+12	36078
+12	36079
+12	36080
+12	36081
+12	36082
+12	36083
+12	36084
+12	36085
+12	36086
+12	36087
+12	36088
+12	36089
+12	36090
+12	36091
+12	36092
+12	36093
+12	35826
+12	35827
+12	35828
+12	35829
+12	35830
+12	35831
+12	35832
+12	35833
+12	35834
+12	35835
+12	35836
+12	35837
+12	35838
+12	35839
+12	35840
+12	35841
+12	35842
+12	35843
+12	35844
+12	35845
+12	35846
+12	35847
+12	35848
+12	35849
+12	35850
+12	35851
+12	35852
+12	35853
+12	35854
+12	35855
+12	35856
+12	35857
+12	35858
+12	35859
+12	35860
+12	35861
+12	46740
+12	46741
+12	46742
+12	46743
+12	46744
+12	46745
+12	46746
+12	46747
+12	46748
+12	46749
+12	46750
+12	46751
+12	46752
+12	46753
+12	46754
+12	46755
+12	46756
+12	46757
+12	46758
+12	46759
+12	46760
+12	46761
+12	46762
+12	46763
+12	46764
+12	46765
+12	46766
+12	46767
+12	46768
+12	46769
+12	46770
+12	46771
+12	46772
+12	46773
+12	46774
+12	46775
+12	46776
+12	46777
+12	46778
+12	46779
+12	46780
+12	46781
+12	46782
+12	46783
+12	46784
+13	46723
+13	46724
+13	46725
+13	46726
+13	46727
+13	46728
+13	46729
+13	46730
+13	46731
+13	46732
+13	46733
+13	46734
+13	46735
+13	46736
+13	46737
+13	46738
+13	46739
+13	46740
+13	46741
+13	46742
+13	46743
+13	46744
+13	46745
+13	46746
+13	46747
+13	46748
+13	46749
+13	46751
+13	46750
+13	46754
+13	46752
+13	46755
+13	46756
+13	46753
+13	46757
+13	46760
+13	46761
+13	46759
+13	46763
+13	46762
+13	46758
+13	46766
+13	46767
+13	46768
+13	46764
+13	46769
+13	46765
+13	46771
+13	46770
+13	46774
+13	46773
+13	46772
+13	46776
+13	46777
+13	46775
+13	46778
+13	46779
+13	46780
+13	46781
+13	46782
+13	46783
+13	46784
+13	46692
+13	46693
+13	46694
+13	46695
+13	46696
+13	46697
+13	46698
+13	46699
+13	46700
+13	46701
+13	46702
+13	46703
+13	46704
+13	46705
 \.
 
 
 --
--- TOC entry 3788 (class 0 OID 25411)
--- Dependencies: 263
+-- TOC entry 4715 (class 0 OID 30293)
+-- Dependencies: 242
 -- Data for Name: BusinessMedia; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
 COPY public."BusinessMedia" ("businessId", "mediaId", "isMain") FROM stdin;
+5	1	t
+5	7	f
+5	8	f
+6	10	t
+6	14	f
+6	15	f
+7	18	t
+7	21	f
+7	22	f
+9	24	t
+8	28	f
+8	29	f
+8	30	t
+9	32	f
+9	33	f
+9	34	f
+9	35	f
+9	36	f
+10	49	t
+10	50	f
+10	51	f
+10	52	f
+10	53	f
+10	54	f
+10	55	f
+10	56	f
+11	63	t
+11	64	f
+11	65	f
+11	66	f
+11	67	f
+11	68	f
+12	74	t
+12	75	f
+12	76	f
+12	77	f
+12	78	f
+12	79	f
+13	85	t
+13	86	f
+13	87	f
+13	88	f
+13	89	f
+13	90	f
 \.
 
 
 --
--- TOC entry 3791 (class 0 OID 25479)
--- Dependencies: 267
+-- TOC entry 4719 (class 0 OID 30322)
+-- Dependencies: 249
 -- Data for Name: Card; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -2072,8 +2626,8 @@ COPY public."Card" ("cardId", "accountId", name, "holderName", number, "expirati
 
 
 --
--- TOC entry 3773 (class 0 OID 24830)
--- Dependencies: 240
+-- TOC entry 4721 (class 0 OID 30327)
+-- Dependencies: 251
 -- Data for Name: Carpet; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -2082,8 +2636,8 @@ COPY public."Carpet" ("carpetId", "itemId", width, length, "carpetMaterial") FRO
 
 
 --
--- TOC entry 3779 (class 0 OID 25098)
--- Dependencies: 249
+-- TOC entry 4723 (class 0 OID 30335)
+-- Dependencies: 254
 -- Data for Name: Chair; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -2092,8 +2646,8 @@ COPY public."Chair" ("chairId", "itemId", quantity) FROM stdin;
 
 
 --
--- TOC entry 3795 (class 0 OID 25512)
--- Dependencies: 271
+-- TOC entry 4725 (class 0 OID 30343)
+-- Dependencies: 257
 -- Data for Name: Comment; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -2102,8 +2656,8 @@ COPY public."Comment" ("commentId", "reviewId", message) FROM stdin;
 
 
 --
--- TOC entry 3760 (class 0 OID 16448)
--- Dependencies: 225
+-- TOC entry 4699 (class 0 OID 30215)
+-- Dependencies: 220
 -- Data for Name: Country; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -2113,8 +2667,8 @@ COPY public."Country" ("countryId", name) FROM stdin;
 
 
 --
--- TOC entry 3777 (class 0 OID 25056)
--- Dependencies: 246
+-- TOC entry 4728 (class 0 OID 30350)
+-- Dependencies: 260
 -- Data for Name: Curtain; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -2123,8 +2677,8 @@ COPY public."Curtain" ("curtainId", "itemId", width, length, "curtainType") FROM
 
 
 --
--- TOC entry 3762 (class 0 OID 16472)
--- Dependencies: 227
+-- TOC entry 4700 (class 0 OID 30218)
+-- Dependencies: 221
 -- Data for Name: District; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -3106,48 +3660,154 @@ COPY public."District" ("districtId", "provinceId", name) FROM stdin;
 
 
 --
--- TOC entry 3789 (class 0 OID 25449)
--- Dependencies: 265
+-- TOC entry 4731 (class 0 OID 30359)
+-- Dependencies: 264
 -- Data for Name: Hours; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
 COPY public."Hours" ("businessId", "mondayFrom", "mondayTo", "tuesdayFrom", "tuesdayTo", "wednesdayFrom", "wednesdayTo", "thursdayFrom", "thursdayTo", "fridayFrom", "fridayTo", "saturdayFrom", "saturdayTo", "sundayFrom", "sundayTo") FROM stdin;
+5	09:00:00	18:30:00	09:00:00	18:30:00	09:00:00	18:30:00	09:00:00	18:30:00	09:00:00	18:30:00	09:00:00	17:00:00	\N	\N
+6	09:00:00	19:00:00	09:00:00	19:00:00	09:00:00	19:00:00	09:00:00	19:00:00	09:00:00	19:00:00	09:00:00	17:30:00	09:00:00	17:30:00
+7	09:00:00	18:00:00	09:00:00	18:00:00	09:00:00	18:00:00	09:00:00	18:00:00	09:00:00	18:00:00	\N	\N	\N	\N
+8	09:00:00	21:00:00	09:00:00	21:00:00	09:00:00	21:00:00	09:00:00	21:00:00	09:00:00	21:00:00	10:00:00	21:00:00	11:00:00	20:00:00
+9	09:00:00	18:00:00	09:00:00	18:00:00	09:00:00	18:00:00	09:00:00	18:00:00	09:00:00	18:00:00	09:00:00	12:00:00	\N	\N
+10	08:00:00	19:00:00	08:00:00	19:00:00	08:00:00	19:00:00	08:00:00	19:00:00	08:00:00	19:00:00	10:00:00	16:00:00	10:00:00	16:00:00
+11	09:00:00	18:00:00	09:00:00	18:00:00	09:00:00	18:00:00	09:00:00	18:00:00	09:00:00	18:00:00	\N	\N	\N	\N
+12	11:00:00	18:00:00	11:00:00	18:00:00	11:00:00	18:00:00	11:00:00	18:00:00	11:00:00	18:00:00	11:00:00	04:00:00	\N	\N
+13	09:00:00	20:00:00	09:00:00	20:00:00	09:00:00	20:00:00	09:00:00	20:00:00	09:00:00	20:00:00	\N	\N	\N	\N
 \.
 
 
 --
--- TOC entry 3768 (class 0 OID 24593)
--- Dependencies: 234
+-- TOC entry 4709 (class 0 OID 30263)
+-- Dependencies: 233
 -- Data for Name: Item; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
 COPY public."Item" ("itemId", "accountId", name, description) FROM stdin;
+1	25	Salon ikili koltuk	Bellona marka, 4 senelik.
 \.
 
 
 --
--- TOC entry 3771 (class 0 OID 24715)
--- Dependencies: 237
+-- TOC entry 4732 (class 0 OID 30362)
+-- Dependencies: 265
 -- Data for Name: ItemMedia; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
 COPY public."ItemMedia" ("itemId", "mediaId") FROM stdin;
+1	40
 \.
 
 
 --
--- TOC entry 3770 (class 0 OID 24702)
--- Dependencies: 236
+-- TOC entry 4706 (class 0 OID 30243)
+-- Dependencies: 228
 -- Data for Name: Media; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
 COPY public."Media" ("mediaId", "accountId", "mediaType", extension, "createdAt") FROM stdin;
+1	20	IMAGE	png	2025-05-14 10:12:23.532688
+2	20	IMAGE	jpg	2025-05-14 10:14:43.552162
+3	20	IMAGE	jpg	2025-05-14 10:16:18.358604
+4	20	IMAGE	jpg	2025-05-14 10:17:55.271015
+5	20	IMAGE	jpg	2025-05-14 10:19:02.966619
+6	20	IMAGE	jpg	2025-05-14 10:20:05.898145
+7	20	IMAGE	jpg	2025-05-14 10:22:11.448356
+8	20	IMAGE	jpg	2025-05-14 10:22:18.437728
+9	20	IMAGE	png	2025-05-14 10:22:47.450421
+10	21	IMAGE	png	2025-05-14 10:29:13.620203
+11	21	IMAGE	jpg	2025-05-14 10:31:09.240926
+12	21	IMAGE	jpg	2025-05-14 10:31:41.504709
+13	21	IMAGE	jpg	2025-05-14 10:32:23.490543
+14	21	IMAGE	jpg	2025-05-14 10:33:46.299134
+15	21	IMAGE	jpg	2025-05-14 10:33:51.803018
+16	21	IMAGE	png	2025-05-14 10:34:06.39444
+17	22	IMAGE	jpg	2025-05-14 10:39:03.014612
+18	22	IMAGE	png	2025-05-14 10:40:01.010423
+19	22	IMAGE	jpg	2025-05-14 10:41:26.382036
+20	22	IMAGE	jpg	2025-05-14 10:42:38.536927
+21	22	IMAGE	jpg	2025-05-14 10:44:10.853327
+22	22	IMAGE	jpg	2025-05-14 10:44:21.932244
+23	22	IMAGE	png	2025-05-14 10:44:36.648159
+24	23	IMAGE	jpg	2025-05-14 11:17:35.899351
+25	24	IMAGE	webp	2025-05-14 11:19:47.465768
+26	24	IMAGE	jpg	2025-05-14 11:21:03.953801
+27	23	IMAGE	jpg	2025-05-14 11:21:14.933383
+28	24	IMAGE	jpg	2025-05-14 11:22:26.401128
+29	24	IMAGE	webp	2025-05-14 11:22:33.431408
+30	24	IMAGE	jpg	2025-05-14 11:23:19.773705
+31	24	IMAGE	jpg	2025-05-14 11:23:32.682108
+32	23	IMAGE	jpg	2025-05-14 11:24:26.819146
+33	23	IMAGE	jpg	2025-05-14 11:25:13.315928
+34	23	IMAGE	jpg	2025-05-14 11:25:18.295924
+35	23	IMAGE	jpg	2025-05-14 11:25:23.483816
+36	23	IMAGE	jpg	2025-05-14 11:26:24.699272
+37	23	IMAGE	jpg	2025-05-14 11:35:21.539866
+38	23	IMAGE	jpg	2025-05-14 11:37:11.921522
+39	23	IMAGE	jpg	2025-05-14 11:41:41.09888
+40	25	IMAGE	jpg	2025-05-14 12:09:57.735812
+41	23	IMAGE	jpg	2025-05-14 12:16:13.35054
+42	23	IMAGE	jpg	2025-05-14 12:21:50.745569
+43	23	IMAGE	jpg	2025-05-14 12:23:47.851501
+44	23	IMAGE	jpg	2025-05-14 12:24:34.121296
+45	23	IMAGE	jpg	2025-05-14 12:26:15.109475
+46	23	IMAGE	jpg	2025-05-14 12:26:36.407356
+47	23	IMAGE	jpg	2025-05-14 12:26:57.986348
+48	23	IMAGE	jpg	2025-05-14 12:29:14.436761
+49	26	IMAGE	jpg	2025-05-14 12:38:06.051468
+50	26	IMAGE	jpg	2025-05-14 12:49:56.703906
+51	26	IMAGE	jpg	2025-05-14 12:50:04.284525
+52	26	IMAGE	jpg	2025-05-14 12:50:08.656116
+53	26	IMAGE	jpg	2025-05-14 12:50:14.062315
+54	26	IMAGE	jpg	2025-05-14 12:50:17.839794
+55	26	IMAGE	jpg	2025-05-14 12:50:22.659497
+56	26	IMAGE	jpg	2025-05-14 12:50:26.111071
+57	26	IMAGE	jpg	2025-05-14 12:53:19.961902
+58	26	IMAGE	jpg	2025-05-14 12:55:06.169597
+59	26	IMAGE	jpg	2025-05-14 12:57:32.388041
+60	26	IMAGE	jpg	2025-05-14 13:00:21.185203
+61	26	IMAGE	jpg	2025-05-14 13:03:14.88963
+62	26	IMAGE	jpg	2025-05-14 13:16:11.317492
+63	27	IMAGE	jpg	2025-05-14 13:26:29.646105
+64	27	IMAGE	jpg	2025-05-14 13:40:37.168353
+65	27	IMAGE	jpg	2025-05-14 13:40:48.020108
+66	27	IMAGE	jpg	2025-05-14 13:40:57.33427
+67	27	IMAGE	jpg	2025-05-14 13:41:01.573761
+68	27	IMAGE	jpg	2025-05-14 13:41:49.273142
+69	27	IMAGE	jpg	2025-05-14 22:26:41.811615
+70	27	IMAGE	jpg	2025-05-14 22:28:06.385148
+71	27	IMAGE	jpg	2025-05-14 22:29:34.153884
+72	27	IMAGE	jpg	2025-05-14 22:32:37.049967
+73	27	IMAGE	png	2025-05-14 22:33:57.104658
+74	28	IMAGE	jpg	2025-05-14 22:37:21.532334
+75	28	IMAGE	jpg	2025-05-14 22:44:09.953792
+76	28	IMAGE	jpg	2025-05-14 22:46:29.097324
+77	28	IMAGE	jpg	2025-05-14 22:46:41.921458
+78	28	IMAGE	jpg	2025-05-14 22:46:55.445104
+79	28	IMAGE	jpg	2025-05-14 22:47:00.685893
+80	28	IMAGE	jpg	2025-05-14 22:48:25.056433
+81	28	IMAGE	jpg	2025-05-14 22:56:10.900156
+82	28	IMAGE	jpg	2025-05-14 22:57:02.839182
+83	28	IMAGE	jpg	2025-05-14 22:59:13.248077
+84	28	IMAGE	png	2025-05-14 23:00:29.539652
+85	29	IMAGE	jpg	2025-05-14 23:03:03.978208
+86	29	IMAGE	jpg	2025-05-14 23:09:08.620549
+87	29	IMAGE	jpg	2025-05-14 23:09:12.566194
+88	29	IMAGE	jpg	2025-05-14 23:09:15.308663
+89	29	IMAGE	jpg	2025-05-14 23:09:20.416947
+90	29	IMAGE	jpg	2025-05-14 23:09:24.135329
+91	29	IMAGE	jpg	2025-05-14 23:10:42.984597
+92	29	IMAGE	jpg	2025-05-14 23:13:22.191909
+93	29	IMAGE	jpg	2025-05-14 23:15:23.353009
+94	29	IMAGE	jpg	2025-05-14 23:17:16.325927
+95	29	IMAGE	jpg	2025-05-14 23:17:54.50885
 \.
 
 
 --
--- TOC entry 3764 (class 0 OID 16484)
--- Dependencies: 229
+-- TOC entry 4701 (class 0 OID 30221)
+-- Dependencies: 222
 -- Data for Name: Neighborhood; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -4328,6 +4988,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 1174	18	Tırşik Mahallesi (Seyitmahmut Köyü)	02702
 1175	18	Tillak Mahallesi (Beşgöze Köyü)	02702
 1176	18	Üçkaya Köyü	02702
+15252	194	Sürücüler Köyü	13602
 1177	18	Vankök Mahallesi (Gölyurt Köyü)	02702
 1178	18	Yağmurlu Köyü	02702
 1179	18	Yayladalı Köyü	02702
@@ -7614,6 +8275,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 4459	59	Çamurlu Köyü	05902
 4460	59	Çayan Köyü	05902
 4461	59	Çaykışla Köyü	05902
+15253	194	Süttaşı Köyü	13602
 4462	59	Çeşmebaşı Mahallesi (Gediksaray Köyü)	05902
 4463	59	Çulpara Köyü	05902
 4464	59	Davutevi Köyü	05902
@@ -8189,6 +8851,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 5035	65	Dereköy Köyü	05802
 5036	65	Dereli Mahallesi (Dereli Köyü)	05802
 5037	65	Devre Köyü	05802
+22287	286	Karayayla Mahallesi	20570
 5038	65	Doğa Yeri Mahallesi (Kavaloluğu Köyü)	05802
 5039	65	Doğan Çukuru Mahallesi (Karlık Köyü)	05802
 5040	65	Doğanşah Mahallesi (Alpaslan Köyü)	05802
@@ -10984,6 +11647,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 7830	115	Yayla Mahallesi (İncedere Köyü)	75802
 7831	115	Yayla Mahallesi (Kumlukoz Köyü)	75802
 7832	115	Yayla Mahallesi (Yaylaaltı Köyü)	75802
+22288	286	Kayabaşı Mahallesi	20570
 7833	115	Yayla Mahallesi (Yolağzı Köyü)	75802
 7834	115	Yaylaaltı Köyü	75802
 7835	115	Yeniköy Köyü	75802
@@ -11084,6 +11748,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 7929	116	İmedegil Mahallesi (Gümüşhane Köyü)	08390
 7930	116	İsot Mahallesi (Bağlıca Köyü)	08390
 7931	116	Kadıgil Mahallesi (Aydınköy Köyü)	08390
+22289	286	Kırköy Mahallesi	20570
 7932	116	Kadıgil Mahallesi (İncilli Köyü)	08390
 7933	116	Kadirağagil Mahallesi (Ovacık Köyü)	08390
 7934	116	Kaltdese Mahallesi (Aydınköy Köyü)	08390
@@ -11499,6 +12164,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 8343	121	Çayırlı Mahallesi (Hozabir Mahallesi) (Yukarımaden Köyü)	08100
 8344	121	Çelikler Mahallesi (Aşağımaden Köyü)	08100
 8345	121	Çermik Mahallesi (Derinköy Köyü)	08100
+22290	286	Koçarboğazı Mahallesi	20570
 8346	121	Çeşmeli Mahallesi (Yanıklı Köyü)	08100
 8347	121	Çısğılıev Mahallesi (Sarıbudak Köyü)	08100
 8348	121	Çiğiyet Mahallesi (Taşlıca Köyü)	08100
@@ -11790,6 +12456,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 8632	123	Bağceci Mahallesi (Kayadibi Köyü)	08790
 8633	123	Bağcılar Mahallesi (Üzümlü Köyü)	08790
 8634	123	Bağçukur Mahallesi (Köprülü Köyü)	08790
+22291	286	Köprübaşı Mahallesi	20570
 8635	123	Bağlıca Mahallesi (Dereiçi Köyü)	08790
 8636	123	Bahçecik Mahallesi (Çağlıyan Köyü)	08790
 8637	123	Bahçecik Mahallesi (Küplüce Köyü)	08790
@@ -12086,6 +12753,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 8927	123	Sırt Mahallesi (Yavuzköy Köyü)	08790
 8928	123	Soçlindor Mahallesi (Yamaçlı Köyü)	08790
 8929	123	Subaşgil Mahallesi (Atalar Köyü)	08790
+22292	286	Künar Mahallesi	20570
 8930	123	Susuz Kışla Mahallesi (Pınarlı Köyü)	08790
 8931	123	Susuz Köyü	08790
 8932	123	Susuz Mahallesi (Şenocak Köyü)	08790
@@ -12471,6 +13139,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 9309	124	Kağlık Mahallesi (Gümüşözü Köyü)	08890
 9310	124	Kahramangil Mahallesi (Erenköy Köyü)	08890
 9311	124	Kahramanlar Mahallesi (Balcılı Köyü)	08890
+22293	286	Muslugüme Mahallesi	20570
 9312	124	Kaledibi  Mahallesi (Karşı Mahallesi) (Çıralı Köyü)	08890
 9313	124	Kaledibi Mahallesi (Bıçakçılar Köyü)	08890
 9314	124	Kaledibi Mahallesi (Çıralı Köyü)	08890
@@ -12564,6 +13233,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 9402	124	Kuprat Mahallesi (Altıparmak Köyü)	08890
 9403	124	Kupriyet Mahallesi (Bıçakçılar Köyü)	08890
 9404	124	Kurtgil Mahallesi (İşhan Köyü)	08890
+22294	286	Narlı Mahallesi	20570
 9405	124	Kuzey   Mahallesi (Babutoğlu Mahallesi) (Esenyaka Köyü)	08890
 9406	124	Kuzey Mahallesi (Esenyaka Köyü)	08890
 9407	124	Kuzey Mahallesi (Morkaya Köyü)	08890
@@ -15082,6 +15752,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 11925	164	Hacıkadı Mahallesi (Büyükkıran Köyü)	74110
 11926	164	Hacıkıramoğlu Mahallesi (Kızılelma Köyü)	74110
 11927	164	Hacıoğlu Mahallesi (Büyükkıran Köyü)	74110
+22295	286	Ortaköy Mahallesi	20570
 11928	164	Hacıoğlu Mahallesi (Çakırkadı Köyü)	74110
 11929	164	Hacıosmanoğlu Mahallesi (Serdar Köyü)	74110
 11930	164	Haliller Mahallesi (Terkehaliller Köyü)	74110
@@ -15274,6 +15945,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 12116	164	Ovazlar Mahallesi (Karaköyşeyhler Köyü)	74110
 12117	164	Ömerköy Mahallesi (Akçalı Köyü)	74110
 12118	164	Ömerler Mahallesi (Karamazak Köyü)	74110
+22296	286	Ortatepe Mahallesi	20570
 12119	164	Örencik Mahallesi (Kayadibikavlak Köyü)	74110
 12120	164	Öteyüz Mahallesi (Büyükkızılkum Köyü)	74110
 12121	164	Pirnallar Mahallesi (Bayıryüzü Köyü)	74110
@@ -15662,6 +16334,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 12502	165	Yukarıdoruca Mahallesi (Dorucaşahinci Köyü)	74602
 12503	165	Zopunoğlu Mahallesi (Abdurrahman Köyü)	74602
 12504	165	Kaldırım Mahallesi	74600
+22297	286	Özlüce Mahallesi	20570
 12505	165	Karadiken Mahallesi (Abdipaşa Köyü)	74600
 12506	165	Kasımlar Mahallesi	74600
 12507	165	Mezgeller Mahallesi	74600
@@ -16229,6 +16902,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 13070	171	Arkök Mahallesi (Yakabağ Köyü)	72502
 13071	171	Arpacık Mezra Mahallesi (Çakırpınar Köyü)	72502
 13072	171	Aşağı Çayırlı Mahallesi (Çayırlı Köyü)	72502
+22298	286	Toki Mahallesi	20570
 13073	171	Aydınlık Mahallesi (Yücebağ Köyü)	72502
 13074	171	Aykonak Mahallesi (Bayramlar Köyü)	72502
 13075	171	Bakihisar Mahallesi (Yakabağ Köyü)	72502
@@ -18403,8 +19077,6 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 15249	194	Sarıtaş Köyü	13602
 15250	194	Sarpkaya Köyü	13602
 15251	194	Soğuksu Köyü	13602
-15252	194	Sürücüler Köyü	13602
-15253	194	Süttaşı Köyü	13602
 15254	194	Taş Mahallesi (Karbastı Köyü)	13602
 15255	194	Taşevler Mahallesi (Akşar Köyü)	13602
 15256	194	Topağacı Mahallesi (Bölüklü Köyü)	13602
@@ -19335,6 +20007,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 16180	200	Mustanlar Merkez Mahallesi (Mustanlar Köyü)	14782
 16181	200	Narzanlar Köyü	14782
 16182	200	Nasuhlar Mahallesi (Gökçesaray Köyü)	14782
+22299	286	Uluçam Mahallesi	20570
 16183	200	Niğit Mahallesi (Boyacılar Köyü)	14782
 16184	200	Okçular Mahallesi (Alanköy Köyü)	14782
 16185	200	Orta Mahallesi (Bulanık Köyü)	14782
@@ -19436,6 +20109,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 16281	201	Yukarı Bedesten Mahallesi (Belen Köyü)	14612
 16282	202	Adasal Mahallesi (Gökçesu Köyü)	14850
 16283	202	Akmehmetoğlu Mahallesi (Kayabaşı Köyü)	14850
+22300	286	Yenidere Mahallesi	20570
 16284	202	Alioğlu Mahallesi (Çorakkadirler Köyü)	14850
 16285	202	Aşağı  Emirler Mahallesi (Emirler Köyü)	14850
 16286	202	Atatürk Mahallesi (Gökçesu Köyü)	14850
@@ -19628,6 +20302,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 16472	202	Karaeyüpler Mahallesi (Rüknettin Köyü)	14842
 16473	202	Karahacılar Mahallesi (Alibeyler Köyü)	14842
 16474	202	Karakaşlar Mahallesi (Teberikler Köyü)	14842
+22301	286	Yeniköy Mahallesi	20570
 16475	202	Karakuz Mahallesi (Ağalar Köyü)	14842
 16476	202	Karaman Mahallesi (Karaşeyhler Köyü)	14842
 16477	202	Karandu Mahallesi (Akçakoca Köyü)	14842
@@ -19725,6 +20400,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 16568	202	Yörükler Mahallesi (Akören Köyü)	14842
 16569	202	Yörükler Mahallesi (Kuzgöl Köyü)	14842
 16570	202	Yukarı Mahallesi (Akçakoca Köyü)	14842
+22302	287	Adalet Mahallesi	20040
 16571	202	Yukarı Mahallesi (Akören Köyü)	14842
 16572	202	Yukarı Mahallesi (Bürnük Köyü)	14842
 16573	202	Yukarı Mahallesi (Hacıahmetler Köyü)	14842
@@ -20018,6 +20694,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 16861	203	Orta Mahallesi (Ulumescit Köyü)	14030
 16862	203	Ömerler Merkez Mahallesi (Ömerler Köyü)	14030
 16863	203	Örencik Mahallesi (Karca Köyü)	14030
+22303	287	Bahçelievler Mahallesi	20040
 16864	203	Pelitçik Yaylası Mahallesi (Pelitcik Köyü)	14030
 16865	203	Poyrazlar Mahallesi (Ulumescit Köyü)	14030
 16866	203	Rıfatlar Mahallesi (Çaygökpınar Köyü)	14030
@@ -20111,6 +20788,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 16953	204	Beğendik Mahallesi (Dağyolu Köyü)	14802
 16954	204	Beşli Mahallesi (Kovucak Köyü)	14802
 16955	204	Beyderesi Mahallesi (Beyderesi Köyü)	14802
+22304	287	Barutçular Mahallesi	20040
 16956	204	Bürücek Mahallesi (Kovucak Köyü)	14802
 16957	204	Büyük Mahallesi (Göncek Köyü)	14802
 16958	204	Caferler Mahallesi (Yazılar Köyü)	14802
@@ -20304,6 +20982,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 17146	205	Aşağı Mahallesi (Değirmenkaya Köyü)	14752
 17147	205	Aşağı Mahallesi (Kızık Köyü)	14752
 17148	205	Aşağı Mahallesi (Korucuk Köyü)	14752
+22305	287	Bereketler Mahallesi	20040
 17149	205	Aşağı Mahallesi (Kuzgölcük Köyü)	14752
 17150	205	Aşağı Yayla Mahallesi (Kuzgölcük Köyü)	14752
 17151	205	Avdan Mahallesi (Dedeler Köyü)	14752
@@ -20615,6 +21294,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 17457	210	Kocapınar Mahallesi	15900
 17458	210	Menevşelik Mahallesi	15900
 17459	210	Anbarcık Köyü	15902
+22306	287	Gerzele Mahallesi	20040
 17460	210	Belen Mahallesi (Kozağacı Köyü)	15902
 17461	210	Bölmepınar Köyü	15902
 17462	210	Büyükalan Köyü	15902
@@ -22627,6 +23307,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 19473	242	Atıfbey Çiftliği Mahallesi (Güneyli Köyü)	17502
 19474	242	Bayırköy Köyü	17502
 19475	242	Burhanlı Köyü	17502
+22307	287	Hisar Mahallesi	20040
 19476	242	Burhanlı Mahallesi (Burhanlı Köyü)	17502
 19477	242	Büyük Mithatlar Mahallesi (Koruköy Köyü)	17502
 19478	242	Camiikebir Mahallesi (Bolayır Köyü)	17502
@@ -24084,6 +24765,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 20930	264	Çay Mahallesi (Bayat Köyü)	19902
 20931	264	Çaykışla Mahallesi (Bağözü Köyü)	19902
 20932	264	Çeştepe Mahallesi (Çal Köyü)	19902
+22308	287	Kadılar Mahallesi	20040
 20933	264	Çiçek Yaylası Mahallesi (Uzunyurt Köyü)	19902
 20934	264	Çorak Mahallesi (Uzunyurt Köyü)	19902
 20935	264	Çörçör Mahallesi (Dereköy Köyü)	19902
@@ -25438,28 +26120,6 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 22284	286	Hürriyet Mahallesi	20570
 22285	286	İnceğiz Mahallesi	20570
 22286	286	Karaköy Mahallesi	20570
-22287	286	Karayayla Mahallesi	20570
-22288	286	Kayabaşı Mahallesi	20570
-22289	286	Kırköy Mahallesi	20570
-22290	286	Koçarboğazı Mahallesi	20570
-22291	286	Köprübaşı Mahallesi	20570
-22292	286	Künar Mahallesi	20570
-22293	286	Muslugüme Mahallesi	20570
-22294	286	Narlı Mahallesi	20570
-22295	286	Ortaköy Mahallesi	20570
-22296	286	Ortatepe Mahallesi	20570
-22297	286	Özlüce Mahallesi	20570
-22298	286	Toki Mahallesi	20570
-22299	286	Uluçam Mahallesi	20570
-22300	286	Yenidere Mahallesi	20570
-22301	286	Yeniköy Mahallesi	20570
-22302	287	Adalet Mahallesi	20040
-22303	287	Bahçelievler Mahallesi	20040
-22304	287	Barutçular Mahallesi	20040
-22305	287	Bereketler Mahallesi	20040
-22306	287	Gerzele Mahallesi	20040
-22307	287	Hisar Mahallesi	20040
-22308	287	Kadılar Mahallesi	20040
 22309	287	Servergazi Mahallesi	20040
 22310	287	Şirinköy Mahallesi	20040
 22311	287	Yenişehir Mahallesi	20040
@@ -28124,6 +28784,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 24969	329	Yanık Bağ Mahallesi (Hacıhüseyinler Köyü)	23802
 24970	329	Yapraklı Mahallesi (Eskiköy Köyü)	23802
 24971	329	Yapraklı Mahallesi (Hacıhüseyinler Köyü)	23802
+36592	496	Kaklıç Mahallesi	35620
 24972	329	Yaşar Mahallesi (Hacımustafaköy Köyü)	23802
 24973	329	Yaylanlı Köyü	23802
 24974	329	Yazıevleri Mahallesi (Yeniocak Köyü)	23802
@@ -29859,6 +30520,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 26705	343	Güzle Köyü	24302
 26706	343	Hacıköy Köyü	24302
 26707	343	Halitler Köyü	24302
+50805	694	Söğütçük Mahallesi	45500
 26708	343	Hinisler-Başaklı Mahallesi (Babaaslan Köyü)	24302
 26709	343	Işıklı Mahallesi (Gazipınarı Köyü)	24302
 26710	343	İmecik Mahallesi (Gülensu Köyü)	24302
@@ -35246,6 +35908,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 32086	404	Göktepe Obası Mahallesi (Akpınar Köyü)	28612
 32087	404	Göldüzü Mahallesi (Kanlıca Köyü)	28612
 32088	404	Gölyanı Mahallesi (Yeşilpınar Köyü)	28612
+50806	694	Sultaniye Mahallesi	45500
 32089	404	Gufça Mahallesi (Hisarcık Köyü)	28612
 32090	404	Guzyatak Mahallesi (Yazlık Köyü)	28612
 32091	404	Gültepe Mahallesi (Üçtepe Köyü)	28612
@@ -35342,6 +36005,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 32182	404	Soğuksu Mahallesi (Sınırköy Köyü)	28612
 32183	404	Sulak Obası Mahallesi (Akpınar Köyü)	28612
 32184	404	Süğlük Mahallesi (Yeşilpınar Köyü)	28612
+50807	694	Tabanlar Mahallesi	45500
 32185	404	Şahlı Mahallesi (Hisarcık Köyü)	28612
 32186	404	Tahmazlı Mahallesi (Yeniyazlık Köyü)	28612
 32187	404	Tahtalıyatak Mahallesi (Derindere Köyü)	28612
@@ -36353,6 +37017,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 33197	410	Gugule Mahallesi (Yurt Köyü)	29802
 33198	410	Güllü Mahallesi (Herek Köyü)	29802
 33199	410	Güllü Mh. (Kocadal Köyü)	29802
+58160	811	Yukarıaksu Mahallesi	55200
 33200	410	Güllü Mh. Yaylası (Kocadal Köyü)	29802
 33201	410	Güneşli Mahallesi (Altınpınar Köyü)	29802
 33202	410	Gürpınar Mahallesi (Altınpınar Köyü)	29802
@@ -38067,6 +38732,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 34913	441	Şekerler Mahallesi (Kadılar Köyü)	32005
 34914	441	Tilkilik Mahallesi (Darıören Köyü)	32005
 34915	441	Yağcıoğlu Mahallesi (Darıderesi Köyü)	32005
+58161	811	Büyükoyumca Mahallesi	55270
 34916	441	Yayla Mahallesi (Direkli Köyü)	32005
 34917	441	Yazısöğüt Köyü	32005
 34918	441	Yenicami Mahallesi (Kuleönü Köyü)	32005
@@ -39743,7 +40409,6 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 36589	496	Aosb Mahallesi	35620
 36590	496	Ataşehir Mahallesi	35620
 36591	496	Balatçık Mahallesi	35620
-36592	496	Kaklıç Mahallesi	35620
 36593	496	Küçük Çiğli Mahallesi	35620
 36594	496	Sasalı Merkez Mahallesi	35620
 36595	496	Yeni Mahallesialle Mahallesi	35620
@@ -42430,6 +43095,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 39271	533	Tabaklar Mahallesi (Satuk Köyü)	78702
 39272	533	Taciller Mahallesi (Güney Köyü)	78702
 39273	533	Taşlıoğlu Mahallesi (Tir Köyü)	78702
+58162	811	Çakırlar Mahallesi	55270
 39274	533	Tefenlioğlu Mahallesi (Tir Köyü)	78702
 39275	533	Tırpolu Mahallesi (Şenköy Köyü)	78702
 39276	533	Torhun Mahallesi (Esenköy Köyü)	78702
@@ -43565,6 +44231,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 40410	550	Çalca Mahallesi (Alınören Köyü)	37802
 40411	550	Çalık Mahallesi (Karcılar Köyü)	37802
 40412	550	Çamlı Tepe Mahallesi (Köklüdere Köyü)	37802
+58163	811	Güzelyalı Mahallesi	55270
 40413	550	Çavuş Yaylası Mahallesi (Çavuş Köyü)	37802
 40414	550	Çıkrıkçı Mahallesi (Yukarıılıpınar Köyü)	37802
 40415	550	Çiftçi Mahallesi (Alınören Köyü)	37802
@@ -43759,6 +44426,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 40604	550	Merkez Mahallesi (Pelitören Köyü)	37802
 40605	550	Merkez Mahallesi (Pınarören Köyü)	37802
 40606	550	Merkez Mahallesi (Recepbey Köyü)	37802
+58164	811	Güzelyurt Mahallesi	55270
 40607	550	Merkez Mahallesi (Saltuklu Köyü)	37802
 40608	550	Merkez Mahallesi (Sarıhacı Köyü)	37802
 40609	550	Merkez Mahallesi (Sıragömü Köyü)	37802
@@ -44152,6 +44820,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 40997	551	Pelitveren Mahallesi (Dereyücek Köyü)	37752
 40998	551	Pürtaş Mahallesi (Kırmacı Köyü)	37752
 40999	551	Recep Mahallesi (Mehmetçelebi Köyü)	37752
+58165	811	İncesu Mahallesi	55270
 41000	551	Rıdvan Mahallesi (Samancı Köyü)	37752
 41001	551	Sağıroğlu Mahallesi (Samancı Köyü)	37752
 41002	551	Sakarözü Mahallesi (Yumacık Köyü)	37752
@@ -44346,6 +45015,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 41191	552	Merkez Mahallesi (Darsu Köyü)	37682
 41192	552	Merkez Mahallesi (Dursun Köyü)	37682
 41193	552	Merkez Mahallesi (Güngören Köyü)	37682
+58166	811	İncesu Yalı Mahallesi	55270
 41194	552	Merkez Mahallesi (Günvaktı Köyü)	37682
 41195	552	Merkez Mahallesi (Işığan Köyü)	37682
 41196	552	Merkez Mahallesi (İnceyazı Köyü)	37682
@@ -45615,6 +46285,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 42456	558	Üyücek Mahallesi (Kavak Köyü)	37452
 42457	558	Yalak Deresi Mahallesi (Yılanlı Köyü)	37452
 42458	558	Yamalı Mahallesi (Kayabaşı Köyü)	37452
+58167	811	Körfez Mahallesi	55270
 42459	558	Yarkaya Mahallesi (Kayabaşı Köyü)	37452
 42460	558	Yayla Evleri Mahallesi (Yılanlı Köyü)	37452
 42461	558	Yazlık Mahallesi (Kavak Köyü)	37452
@@ -46112,6 +46783,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 42952	561	Sarköy Mahallesi (İkizçiler Köyü)	37902
 42953	561	Satı Mahallesi (Köstekçiler Köyü)	37902
 42954	561	Satıoğlu Mahallesi (Uzunöz Köyü)	37902
+58168	811	Yalı Mahallesi	55270
 42955	561	Sazak Mahallesi (Beyalan Köyü)	37902
 42956	561	Sırma Mahallesi (Çat Köyü)	37902
 42957	561	Softaoğlu Mahallesi (Camili Köyü)	37902
@@ -46213,6 +46885,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 43053	562	Aşağı Mahallesi (Kurtkayı Köyü)	37210
 43054	562	Aşağı Mahallesi (Merkez Bucağı Kıyık Köyü)	37210
 43055	562	Aşağı Mahallesi (Sapaca Köyü)	37210
+58169	811	Yenimahalle Mahallesi	55270
 43056	562	Aşağı Mahallesi (Tarlatepe Köyü)	37210
 43057	562	Aşağı Mahallesi (Taşlık Köyü)	37210
 43058	562	Aşağı Mahallesi (Tepeharman Köyü)	37210
@@ -47293,6 +47966,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 44130	566	Kerimler Mahallesi (Çetmi Köyü)	37402
 44131	566	Kerpüc Mahallesi (Doymuş Köyü)	37402
 44132	566	Kesercioğlu Mahallesi (Kuyluş Köyü)	37402
+58170	811	Yeşilyurt Mahallesi	55270
 44133	566	Ketenler Mahallesi (Kirazcık Köyü)	37402
 44134	566	Keyiş Mahallesi (Obrucak Köyü)	37402
 44135	566	Kılavuz Mahallesi (Dere Köyü)	37402
@@ -48770,6 +49444,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 45610	592	Şehit Türker Mahallesi (Kılıçlar Köyü)	71452
 45611	592	Üzümlü Mevkii Mahallesi (Bedesten Köyü)	71452
 45612	592	Vakağın Tepesi Mahallesi (Keçili Köyü)	71452
+58172	812	Başalan Mahallesi	55550
 45613	592	Yazı Mevkii Mahallesi (Hacıbalı Köyü)	71452
 45614	592	Yeşilöz Mahallesi (Irmak Köyü)	71452
 45615	592	Alaaddin Mahallesi	71450
@@ -51772,6 +52447,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 48618	661	Yaylaköy Köyü	43602
 48619	661	Yeğinler Köyü	43602
 48620	661	Yelki Köyü	43602
+58173	812	Çamalan Mahallesi	55550
 48621	661	Yeni Mahallesi (Çeltikçi Köyü)	43602
 48622	661	Yeni Mahallesi (Üzümlü Köyü)	43602
 48623	661	Yeni Mahallesi (Yenikent Köyü)	43602
@@ -52241,6 +52917,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 49085	667	Ayvalı Köyü	43302
 49086	667	Balıköy-Çıvgalar Mahallesi (Balıköy Köyü)	43302
 49087	667	Balıköy-Kadı Mahallesi (Balıköy Köyü)	43302
+58174	812	Çamlıkale Mahallesi	55550
 49088	667	Balıköy-Karaşehir Mahallesi (Balıköy Köyü)	43302
 49089	667	Balıköy-Kışla Mahallesi (Balıköy Köyü)	43302
 49090	667	Balıköy-Merkez Mahallesi (Balıköy Köyü)	43302
@@ -53956,9 +54633,6 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 50802	694	Samsacı Mahallesi	45500
 50803	694	Sarıkaya Mahallesi	45500
 50804	694	Sevişler Mahallesi	45500
-50805	694	Söğütçük Mahallesi	45500
-50806	694	Sultaniye Mahallesi	45500
-50807	694	Tabanlar Mahallesi	45500
 50808	694	Tekeli Işıklar Mahallesi	45500
 50809	694	Türkali Mahallesi	45500
 50810	694	Türkpiyala Mahallesi	45500
@@ -59016,6 +59690,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 55861	777	Yarpuz Köyü	80080
 55862	777	Yeniköy Köyü	80080
 55863	777	Yeşiltepe Mahallesi (Cevdetiye Köyü)	80080
+58175	812	Çarşıköy Mahallesi	55550
 55864	777	Yukarıçona Mahallesi (Çona Köyü)	80080
 55865	778	Agedik Mahallesi (Yeşilyayla Köyü)	80902
 55866	778	Akçalıuşağı Mahallesi (Akçataş Köyü)	80902
@@ -61313,21 +61988,6 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 58157	811	Taflan Merkez Mahallesi	55200
 58158	811	Yeşildere Mahallesi	55200
 58159	811	Yeşiltepe Mahallesi	55200
-58160	811	Yukarıaksu Mahallesi	55200
-58161	811	Büyükoyumca Mahallesi	55270
-58162	811	Çakırlar Mahallesi	55270
-58163	811	Güzelyalı Mahallesi	55270
-58164	811	Güzelyurt Mahallesi	55270
-58165	811	İncesu Mahallesi	55270
-58166	811	İncesu Yalı Mahallesi	55270
-58167	811	Körfez Mahallesi	55270
-58168	811	Yalı Mahallesi	55270
-58169	811	Yenimahalle Mahallesi	55270
-58170	811	Yeşilyurt Mahallesi	55270
-58172	812	Başalan Mahallesi	55550
-58173	812	Çamalan Mahallesi	55550
-58174	812	Çamlıkale Mahallesi	55550
-58175	812	Çarşıköy Mahallesi	55550
 58176	812	Çökekli Mahallesi	55550
 58177	812	Döngel Mahallesi	55550
 58178	812	Döngelyatak Mahallesi	55550
@@ -63287,6 +63947,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 60133	833	Çayır Mahallesi (Kozkule Köyü)	57202
 60134	833	Çekiç Köy Mahallesi (Kurusaray Köyü)	57202
 60135	833	Çekiç Mahallesi (Akyürük Köyü)	57202
+65320	869	Kırmıt Mahallesi	63800
 60136	833	Çene Mahallesi (Köprücek Köyü)	57202
 60137	833	Çerkezler Mahallesi (Marufalınca Köyü)	57202
 60138	833	Çorak Köyü	57202
@@ -63582,6 +64243,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 60427	834	Çukurcaalan Yaylası Mahallesi (Çukurcaalan Köyü)	57662
 60428	834	Darısu Mahallesi (Yaykın Köyü)	57662
 60429	834	Delihasan Mahallesi (Küplüce Köyü)	57662
+65321	869	Kızılhüyük Mahallesi	63800
 60430	834	Demirci Mahallesi (Büyükkızık Köyü)	57662
 60431	834	Demirci Mahallesi (Şeyhhüseyin Köyü)	57662
 60432	834	Dere Mahallesi (Çanakçı Köyü)	57662
@@ -63679,6 +64341,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 60524	834	Omurlu Mahallesi (Şeyhhüseyin Köyü)	57662
 60525	834	Orta Köy Mahallesi (Göllü Köyü)	57662
 60526	834	Ören Mahallesi (Şeyhhüseyin Köyü)	57662
+65322	869	Köseler Mahallesi	63800
 60527	834	Ören Mahallesi (Üçpınar Köyü)	57662
 60528	834	Örencik Mahallesi (Kadıköy Köyü)	57662
 60529	834	Örenyanı Mahallesi (Büyükdağ Köyü)	57662
@@ -64365,6 +65028,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 61209	837	Sindeli Mahallesi (Kızılcalı Köyü)	57602
 61210	837	Sofuoğlu Mahallesi (Abdaloğlu Köyü)	57602
 61211	837	Soğuksu Mahallesi (Belören Köyü)	57602
+65323	869	Köseveli Mahallesi	63800
 61212	837	Soğuksu Mahallesi (Şeyhli Köyü)	57602
 61213	837	Söğmeli Mahallesi (Çakallı Köyü)	57602
 61214	837	Sucafus Mahallesi (Tatlıcak Köyü)	57602
@@ -64558,6 +65222,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 61402	838	Mecit Yanı Mahallesi (Göller Köyü)	57002
 61403	838	Mehmetbeyoğlu Mahallesi (Lala Köyü)	57002
 61404	838	Melezin Mahallesi (Taypaklı Köyü)	57002
+65324	869	Kurutepe Mahallesi	63800
 61405	838	Melikoğlu Mahallesi (Avdan Köyü)	57002
 61406	838	Merkez Mahallesi (Abalı Köyü)	57002
 61407	838	Merkez Mahallesi (Ahmetyeri Köyü)	57002
@@ -64760,6 +65425,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 61604	840	Çolaklar Mahallesi (Işıklı Köyü)	57902
 61605	840	Çolakoğlu Mahallesi (Sarmaşık Köyü)	57902
 61606	840	Çömez Mahallesi (Kuşçular Köyü)	57902
+65325	869	Küçükköprü Mahallesi	63800
 61607	840	Dayı Mahallesi (Yazıcı Köyü)	57902
 61608	840	De Mahallesi (Direkli Köyü)	57902
 61609	840	Değirmenönü Mahallesi (Işıklı Köyü)	57902
@@ -66095,6 +66761,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 62941	851	Yenice Köyü	58662
 62942	851	Yenice Yaylası Mahallesi (Yenice Köyü)	58662
 62943	851	Yeşilyurt Köyü	58662
+65326	869	Küçükova Mahallesi	63800
 62944	851	Yetimler Mahallesi (Ortaköy Köyü)	58662
 62945	851	Yokuşdibi Mahallesi (Dilekli Köyü)	58662
 62946	851	Yolüstü Köyü	58662
@@ -66333,6 +67000,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 63179	852	Şahbey Köyü	58060
 63180	852	Şehitler Mahallesi (Gümüşdere Köyü)	58060
 63181	852	Şehitömeryıldırım Mahallesi (Yıldız Köyü)	58060
+65327	869	Küçüksergen Mahallesi	63800
 63182	852	Tahdit Mahallesi (Doğanca Köyü)	58060
 63183	852	Tahtıkement Köyü	58060
 63184	852	Taşlıdere Mahallesi (Mescitli Köyü)	58060
@@ -66450,6 +67118,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 63296	853	Kurugöl Köyü	58602
 63297	853	Kuzdere Köyü	58602
 63298	853	Küçükgüzel Köyü	58602
+65328	869	Küçükziyaret Mahallesi	63800
 63299	853	Mafadar Mahallesi (Yelkesen Köyü)	58602
 63300	853	Menekşeli Mahallesi (Kale Köyü)	58602
 63301	853	Merkez Mahallesi (Çataloluk Köyü)	58602
@@ -68473,15 +69142,6 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 65317	869	Karataş Mahallesi	63800
 65318	869	Keberli Mahallesi	63800
 65319	869	Kesmecik Mahallesi	63800
-65320	869	Kırmıt Mahallesi	63800
-65321	869	Kızılhüyük Mahallesi	63800
-65322	869	Köseler Mahallesi	63800
-65323	869	Köseveli Mahallesi	63800
-65324	869	Kurutepe Mahallesi	63800
-65325	869	Küçükköprü Mahallesi	63800
-65326	869	Küçükova Mahallesi	63800
-65327	869	Küçüksergen Mahallesi	63800
-65328	869	Küçükziyaret Mahallesi	63800
 65329	869	Mertismail Mahallesi	63800
 65330	869	Mollahamza Mahallesi	63800
 65331	869	Mürşitpınar Mahallesi	63800
@@ -76433,7 +77093,7 @@ COPY public."Neighborhood" ("neighborhoodId", "districtId", name, "postalCode") 
 
 
 --
--- TOC entry 3758 (class 0 OID 16441)
+-- TOC entry 4702 (class 0 OID 30224)
 -- Dependencies: 223
 -- Data for Name: Province; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
@@ -76524,8 +77184,8 @@ COPY public."Province" ("provinceId", "countryId", name) FROM stdin;
 
 
 --
--- TOC entry 3783 (class 0 OID 25238)
--- Dependencies: 255
+-- TOC entry 4737 (class 0 OID 30377)
+-- Dependencies: 272
 -- Data for Name: Quilt; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -76534,8 +77194,8 @@ COPY public."Quilt" ("quiltId", "itemId", "quiltSize", "quiltMaterial") FROM std
 
 
 --
--- TOC entry 3793 (class 0 OID 25493)
--- Dependencies: 269
+-- TOC entry 4716 (class 0 OID 30301)
+-- Dependencies: 244
 -- Data for Name: Review; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -76544,41 +77204,81 @@ COPY public."Review" ("reviewId", "accountId", "businessId", stars, comment) FRO
 
 
 --
--- TOC entry 3803 (class 0 OID 25852)
--- Dependencies: 284
+-- TOC entry 4717 (class 0 OID 30306)
+-- Dependencies: 245
 -- Data for Name: Service; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
 COPY public."Service" ("serviceId", "businessId", title, "mediaId", "serviceCategory", description, "unitPrice") FROM stdin;
+1	5	Bambu Halı Yıkama	2	CARPET_CLEANING	Bambu halılarınızı derinlemesine temizliyoruz.	150
+2	5	El Dokuma Halı Yıkama	3	CARPET_CLEANING	El dokuma halılarınızı derinlemesine temizliyoruz.	200
+3	5	Tek Kişilik Polar Battaniye Yıkama	4	BLANKET_CLEANING	Polar battaniye temizliği.	200
+4	5	Çift Kişilik Yün Yorgan Temizliği	5	QUILT_CLEANING	Yün yorgan temizliği.	500
+5	5	Tül Perde Temizliği	6	CURTAIN_CLEANING	Metrekare fiyatıdır.	80
+6	6	Otobüs İç-Dış Yıkama	11	VEHICLE_CLEANING	Otobüsü iç dış yıkama.	1500
+7	6	Tır İç-Dış Yıkama	12	VEHICLE_CLEANING	Tır İç-Dış Yıkama.	1000
+8	6	Binek Araç İç-Dış Yıkama	13	VEHICLE_CLEANING	Binek araç iç-dış yıkama.	400
+9	7	Yün Halı Yıkama	17	CARPET_CLEANING	Yün Halı Yıkama.	170
+10	7	Tay Tüyü Koltuk Yıkama	19	SOFA_CLEANING	Tay Tüyü Koltuk Yıkama.	850
+11	7	Kumaş Sandalye Yıkama	20	CHAIR_CLEANING	Adet fiyatıdır.	120
+12	8	Tek Kişilik Yatak Yıkama	25	BED_CLEANING	Tek kişilik yatak yıkama.	380
+13	8	Makine Halı Yıkama	26	CARPET_CLEANING	Makine Halı Yıkama Hizmeti.	65
+14	9	Akrilik halı temizleme	37	CARPET_CLEANING	Akrilik halı temizliği hassas makinalarımızda derinlemesine olacak şekilde yapılır.	100
+15	9	Dokuma halı temizliği	38	CARPET_CLEANING	Dokuma halı temizliği üstün titizlik ve dikkat gerektirir, deneyimli personelimiz tarafından halınız elde yıkanır ve zarar görmez.	500
+16	9	Kilim temizleme	39	CARPET_CLEANING	Çeşitli malzeme ve şekilden kilimler detaylı temizlikten geçer.	75
+17	9	Stor perde temizleme	41	CURTAIN_CLEANING	Stor perdeler üzerinde hiç leke kalmayacak iekilde özel makinelerde yıkanır.	50
+21	9	Tekli koltuk temizleme	44	SOFA_CLEANING	Tekli koltuk veya berjerleriniz derinlemesine yıkandıktan sonra buhar temizliği ile ilk günkü hijyenine kavuşur.	400
+23	9	İkili koltuk temizleme	46	SOFA_CLEANING	İkili koltuk veya çekyatlarınız derinlemesine yıkandıktan sonra buhar temizliği ile ilk günkü hijyenine kavuşur.	750
+24	9	Üçlü koltuk temizleme	47	SOFA_CLEANING	Üçlü koltuk veya çekyatlarınız derinlemesine yıkandıktan sonra buhar temizliği ile ilk günkü hijyenine kavuşur.	1250
+25	9	L koltuk temizleme	48	SOFA_CLEANING	Modüler koltuklarınız derinlemesine yıkandıktan sonra buhar temizliği ile ilk günkü hijyenine kavuşur.	1000
+26	10	Sedan (iç-dış) temizleme	57	VEHICLE_CLEANING	Sedan tipi aracınızın hem iç hem dış temizliği yıkama, vakum ve buhar ile yapılır.	500
+28	10	SUV (iç-dış) temizleme	58	VEHICLE_CLEANING	SUV tipi aracınızın hem iç hem dış temizliği, önce yıkama sonra vakum ve buhar ile yapılır.	750
+29	10	Minibüs (iç-dış) temizleme	59	VEHICLE_CLEANING	Minibüs tipi aracınızın iç-dış temizliği; yıkama, vakumlama ve buharlama şeklinde yapılır.	1000
+30	10	Tır/Kamyon (iç-dış) temizleme	60	VEHICLE_CLEANING	Tır ve kamyon tipi araçlarınız derinlemesine iç ve dış temizlikten geçer ve instçı lekelerden arınır.	1500
+31	10	Motorsiklet temizleme	61	VEHICLE_CLEANING	Buharlı sele temizliği ve yıkama ile hijyene kavuşun.	150
+32	11	Yorgan temizleme	69	QUILT_CLEANING	İnatçı lekeleri yorganınızdan sökün atın.	50
+33	11	Battaniye temizleme	70	BLANKET_CLEANING	Battaniyeniz titizlikle yıkanır ve kurutulur.	49
+34	11	Tül perde temizleme	71	CURTAIN_CLEANING	Tül perdeleriniz hasar vermeden dikkatlice temizlenir.	79
+35	11	Perde temizleme	72	CURTAIN_CLEANING	Süs perde vb. perdeleriniz için detaylı temizlik.	99
+36	12	Yatak temizleme	80	BED_CLEANING	Yüksek hassasiyetle yataklarınız buharlı temizlenir ve pestlerden temizlenir.	150
+37	12	Tekli koltuk temizleme	81	SOFA_CLEANING	Koltuklarınız detaylı temizlik ile ilk günkü hijyenine kavuşuyor.	450
+38	12	İkili-Üçlü koltuk temizleme	82	SOFA_CLEANING	Koltuklarınız detaylıca temizlenerek ilk günkü gijyenine kavuşuyor.	750
+39	12	Sandalye temizleme	83	CHAIR_CLEANING	Sandalye ve ofis koltukları için derinlemesine temizlik.	300
+40	13	Yorgan temizleme	91	QUILT_CLEANING	Uygun fiyatlı derinlemesine yorgan temizliği	49
+41	13	Bambu halı temizleme	92	CARPET_CLEANING	Bambu halılarınız jet hızıyla derinlemesine temizlenir	550
+42	13	Yolluk temizleme	93	CARPET_CLEANING	Yolluklarınız, boyuta bağlı olarak uygun fiyata ve derinlemesine temizlenir.	400
+43	13	Güneşlik temizleme	94	CURTAIN_CLEANING	Güneşlikleriniz, ebatları gereğince fiyatlandırılıp leke kalmaksızın temizlenir.	150
 \.
 
 
 --
--- TOC entry 3752 (class 0 OID 16397)
--- Dependencies: 217
+-- TOC entry 4741 (class 0 OID 30387)
+-- Dependencies: 277
 -- Data for Name: Session; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
 COPY public."Session" ("sessionId", "accountId", "deviceName", "sessionKey", "refreshToken", "lastActivityDate") FROM stdin;
 10	12	Postman Client	01876e626dae1931ede393903b8af7de327b828c52b37113ac3a24f373c1f0c5	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjEyLCJhY2NvdW50VHlwZSI6IlVTRVIiLCJzZXNzaW9uSWQiOjEwLCJpYXQiOjE3NDMwMzE2NzYsImV4cCI6MTc0NTYyMzY3Nn0.SYb-Y9eVmJ2zc7T1GatjUpiFyzmBDnotN23s3SXiGmY	2025-03-26
 13	16	Redmi Redmi Note 9 Pro	8cc385a18de2ee9c71b6cef41eaf27b37b23da625a1d2bbe447edeaa3fcf5139	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjE2LCJhY2NvdW50VHlwZSI6IlVTRVIiLCJzZXNzaW9uSWQiOjEzLCJpYXQiOjE3NDUyMzc5NjgsImV4cCI6MTc0NzgyOTk2OH0.6ji_zazUzvC6HLP9ipBctXUWlrdyy1xrLQap20C9T54	2025-04-21
-14	19	Postman Client	01876e626dae1931ede393903b8af7de327b828c52b37113ac3a24f373c1f0c5	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjE5LCJhY2NvdW50VHlwZSI6IkFETUlOIiwic2Vzc2lvbklkIjoxNCwiaWF0IjoxNzQ1NTg4OTkwLCJleHAiOjE3NDgxODA5OTB9.v-v5QfxxyPRfWw-EO2HhJGwEYGHhCSPwb9pBWV4svfs	2025-04-25
+14	19	Postman Client	01876e626dae1931ede393903b8af7de327b828c52b37113ac3a24f373c1f0c5	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjE5LCJhY2NvdW50VHlwZSI6IkFETUlOIiwic2Vzc2lvbklkIjoxNCwiaWF0IjoxNzQ3MjYyMDY4LCJleHAiOjE3NDk4NTQwNjh9.SuspK4fjEMTo5gebCX2kUV__KSAhrTGjIcMIxx37sfU	2025-05-14
+28	29	iPhone iPhone	585d928f4edbcf0c13332fad2a992348342a949d0d528f42220e63e327fc603c	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjI5LCJhY2NvdW50VHlwZSI6IkJVU0lORVNTIiwic2Vzc2lvbklkIjoyOCwiaWF0IjoxNzQ3MjY0Njc5LCJleHAiOjE3NDk4NTY2Nzl9.5ApG6SZ6f9WoKUUVdw4NzrlIcKiFqQa96aqiNU-EGNI	2025-05-14
 \.
 
 
 --
--- TOC entry 3787 (class 0 OID 25338)
--- Dependencies: 261
+-- TOC entry 4744 (class 0 OID 30394)
+-- Dependencies: 280
 -- Data for Name: Sofa; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
 COPY public."Sofa" ("sofaId", "itemId", "isCushioned", "sofaType", "sofaMaterial") FROM stdin;
+1	1	t	DOUBLE	WOVEN
 \.
 
 
 --
--- TOC entry 3775 (class 0 OID 24930)
--- Dependencies: 243
+-- TOC entry 4746 (class 0 OID 30402)
+-- Dependencies: 283
 -- Data for Name: Vehicle; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -76587,36 +77287,37 @@ COPY public."Vehicle" ("vehicleId", "itemId", brand, model, "vehicleType") FROM 
 
 
 --
--- TOC entry 3756 (class 0 OID 16430)
--- Dependencies: 221
+-- TOC entry 4748 (class 0 OID 30410)
+-- Dependencies: 286
 -- Data for Name: Verification; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
 COPY public."Verification" ("verificationId", phone, code, "sentAt") FROM stdin;
+2	+905331991562	636785	2025-05-14 11:48:47.826
 \.
 
 
 --
--- TOC entry 3833 (class 0 OID 0)
--- Dependencies: 216
+-- TOC entry 4779 (class 0 OID 0)
+-- Dependencies: 218
 -- Name: Account_accountId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
-SELECT pg_catalog.setval('public."Account_accountId_seq"', 19, true);
+SELECT pg_catalog.setval('public."Account_accountId_seq"', 29, true);
 
 
 --
--- TOC entry 3834 (class 0 OID 0)
--- Dependencies: 230
+-- TOC entry 4780 (class 0 OID 0)
+-- Dependencies: 225
 -- Name: Address_addressId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
-SELECT pg_catalog.setval('public."Address_addressId_seq"', 3, true);
+SELECT pg_catalog.setval('public."Address_addressId_seq"', 12, true);
 
 
 --
--- TOC entry 3835 (class 0 OID 0)
--- Dependencies: 251
+-- TOC entry 4781 (class 0 OID 0)
+-- Dependencies: 235
 -- Name: Bed_bedId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76624,8 +77325,8 @@ SELECT pg_catalog.setval('public."Bed_bedId_seq"', 1, false);
 
 
 --
--- TOC entry 3836 (class 0 OID 0)
--- Dependencies: 257
+-- TOC entry 4782 (class 0 OID 0)
+-- Dependencies: 238
 -- Name: Blanket_blanketId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76633,17 +77334,17 @@ SELECT pg_catalog.setval('public."Blanket_blanketId_seq"', 1, false);
 
 
 --
--- TOC entry 3837 (class 0 OID 0)
--- Dependencies: 272
+-- TOC entry 4783 (class 0 OID 0)
+-- Dependencies: 248
 -- Name: Business_businessId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
-SELECT pg_catalog.setval('public."Business_businessId_seq"', 4, true);
+SELECT pg_catalog.setval('public."Business_businessId_seq"', 13, true);
 
 
 --
--- TOC entry 3838 (class 0 OID 0)
--- Dependencies: 266
+-- TOC entry 4784 (class 0 OID 0)
+-- Dependencies: 250
 -- Name: Card_cardId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76651,8 +77352,8 @@ SELECT pg_catalog.setval('public."Card_cardId_seq"', 1, false);
 
 
 --
--- TOC entry 3839 (class 0 OID 0)
--- Dependencies: 239
+-- TOC entry 4785 (class 0 OID 0)
+-- Dependencies: 253
 -- Name: Carpet_carpetId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76660,8 +77361,8 @@ SELECT pg_catalog.setval('public."Carpet_carpetId_seq"', 1, false);
 
 
 --
--- TOC entry 3840 (class 0 OID 0)
--- Dependencies: 248
+-- TOC entry 4786 (class 0 OID 0)
+-- Dependencies: 256
 -- Name: Chair_chairId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76669,8 +77370,8 @@ SELECT pg_catalog.setval('public."Chair_chairId_seq"', 1, false);
 
 
 --
--- TOC entry 3841 (class 0 OID 0)
--- Dependencies: 270
+-- TOC entry 4787 (class 0 OID 0)
+-- Dependencies: 258
 -- Name: Comment_commentId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76678,8 +77379,8 @@ SELECT pg_catalog.setval('public."Comment_commentId_seq"', 1, false);
 
 
 --
--- TOC entry 3842 (class 0 OID 0)
--- Dependencies: 224
+-- TOC entry 4788 (class 0 OID 0)
+-- Dependencies: 259
 -- Name: Country_countryId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76687,8 +77388,8 @@ SELECT pg_catalog.setval('public."Country_countryId_seq"', 1, true);
 
 
 --
--- TOC entry 3843 (class 0 OID 0)
--- Dependencies: 245
+-- TOC entry 4789 (class 0 OID 0)
+-- Dependencies: 262
 -- Name: Curtain_curtainId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76696,8 +77397,8 @@ SELECT pg_catalog.setval('public."Curtain_curtainId_seq"', 1, false);
 
 
 --
--- TOC entry 3844 (class 0 OID 0)
--- Dependencies: 226
+-- TOC entry 4790 (class 0 OID 0)
+-- Dependencies: 263
 -- Name: District_districtId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76705,26 +77406,26 @@ SELECT pg_catalog.setval('public."District_districtId_seq"', 1, false);
 
 
 --
--- TOC entry 3845 (class 0 OID 0)
--- Dependencies: 233
+-- TOC entry 4791 (class 0 OID 0)
+-- Dependencies: 267
 -- Name: Item_itemId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
-SELECT pg_catalog.setval('public."Item_itemId_seq"', 1, false);
+SELECT pg_catalog.setval('public."Item_itemId_seq"', 1, true);
 
 
 --
--- TOC entry 3846 (class 0 OID 0)
--- Dependencies: 235
+-- TOC entry 4792 (class 0 OID 0)
+-- Dependencies: 269
 -- Name: Media_mediaId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
-SELECT pg_catalog.setval('public."Media_mediaId_seq"', 1, false);
+SELECT pg_catalog.setval('public."Media_mediaId_seq"', 95, true);
 
 
 --
--- TOC entry 3847 (class 0 OID 0)
--- Dependencies: 228
+-- TOC entry 4793 (class 0 OID 0)
+-- Dependencies: 270
 -- Name: Neighborhood_neighborhoodId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76732,8 +77433,8 @@ SELECT pg_catalog.setval('public."Neighborhood_neighborhoodId_seq"', 1, false);
 
 
 --
--- TOC entry 3848 (class 0 OID 0)
--- Dependencies: 222
+-- TOC entry 4794 (class 0 OID 0)
+-- Dependencies: 271
 -- Name: Province_provinceId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76741,8 +77442,8 @@ SELECT pg_catalog.setval('public."Province_provinceId_seq"', 1, true);
 
 
 --
--- TOC entry 3849 (class 0 OID 0)
--- Dependencies: 254
+-- TOC entry 4795 (class 0 OID 0)
+-- Dependencies: 274
 -- Name: Quilt_quiltId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76750,8 +77451,8 @@ SELECT pg_catalog.setval('public."Quilt_quiltId_seq"', 1, false);
 
 
 --
--- TOC entry 3850 (class 0 OID 0)
--- Dependencies: 268
+-- TOC entry 4796 (class 0 OID 0)
+-- Dependencies: 275
 -- Name: Review_reviewId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76759,17 +77460,17 @@ SELECT pg_catalog.setval('public."Review_reviewId_seq"', 1, false);
 
 
 --
--- TOC entry 3851 (class 0 OID 0)
--- Dependencies: 283
+-- TOC entry 4797 (class 0 OID 0)
+-- Dependencies: 276
 -- Name: Service_serviceId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
-SELECT pg_catalog.setval('public."Service_serviceId_seq"', 1, false);
+SELECT pg_catalog.setval('public."Service_serviceId_seq"', 43, true);
 
 
 --
--- TOC entry 3852 (class 0 OID 0)
--- Dependencies: 218
+-- TOC entry 4798 (class 0 OID 0)
+-- Dependencies: 278
 -- Name: Session_accountId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76777,26 +77478,26 @@ SELECT pg_catalog.setval('public."Session_accountId_seq"', 1, false);
 
 
 --
--- TOC entry 3853 (class 0 OID 0)
--- Dependencies: 219
+-- TOC entry 4799 (class 0 OID 0)
+-- Dependencies: 279
 -- Name: Session_sessionId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
-SELECT pg_catalog.setval('public."Session_sessionId_seq"', 14, true);
+SELECT pg_catalog.setval('public."Session_sessionId_seq"', 28, true);
 
 
 --
--- TOC entry 3854 (class 0 OID 0)
--- Dependencies: 260
+-- TOC entry 4800 (class 0 OID 0)
+-- Dependencies: 282
 -- Name: Sofa_sofaId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
-SELECT pg_catalog.setval('public."Sofa_sofaId_seq"', 1, false);
+SELECT pg_catalog.setval('public."Sofa_sofaId_seq"', 1, true);
 
 
 --
--- TOC entry 3855 (class 0 OID 0)
--- Dependencies: 242
+-- TOC entry 4801 (class 0 OID 0)
+-- Dependencies: 285
 -- Name: Vehicle_vehicleId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -76804,16 +77505,16 @@ SELECT pg_catalog.setval('public."Vehicle_vehicleId_seq"', 1, false);
 
 
 --
--- TOC entry 3856 (class 0 OID 0)
--- Dependencies: 220
+-- TOC entry 4802 (class 0 OID 0)
+-- Dependencies: 287
 -- Name: Verification_verificationId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
-SELECT pg_catalog.setval('public."Verification_verificationId_seq"', 1, true);
+SELECT pg_catalog.setval('public."Verification_verificationId_seq"', 2, true);
 
 
 --
--- TOC entry 3487 (class 2606 OID 16423)
+-- TOC entry 4431 (class 2606 OID 30439)
 -- Name: Account Account_phone_uk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76822,7 +77523,7 @@ ALTER TABLE ONLY public."Account"
 
 
 --
--- TOC entry 3489 (class 2606 OID 16408)
+-- TOC entry 4433 (class 2606 OID 30441)
 -- Name: Account Account_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76831,7 +77532,7 @@ ALTER TABLE ONLY public."Account"
 
 
 --
--- TOC entry 3505 (class 2606 OID 16512)
+-- TOC entry 4435 (class 2606 OID 30443)
 -- Name: Address Address_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76840,7 +77541,7 @@ ALTER TABLE ONLY public."Address"
 
 
 --
--- TOC entry 3543 (class 2606 OID 25634)
+-- TOC entry 4447 (class 2606 OID 30445)
 -- Name: ApprovalMedia ApprovalMedia_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76849,7 +77550,7 @@ ALTER TABLE ONLY public."ApprovalMedia"
 
 
 --
--- TOC entry 3549 (class 2606 OID 25837)
+-- TOC entry 4445 (class 2606 OID 30447)
 -- Name: Approval Approval_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76858,7 +77559,7 @@ ALTER TABLE ONLY public."Approval"
 
 
 --
--- TOC entry 3545 (class 2606 OID 25667)
+-- TOC entry 4451 (class 2606 OID 30449)
 -- Name: BankAccount Bank_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76867,7 +77568,7 @@ ALTER TABLE ONLY public."BankAccount"
 
 
 --
--- TOC entry 3521 (class 2606 OID 25211)
+-- TOC entry 4453 (class 2606 OID 30451)
 -- Name: Bed Bed_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76876,7 +77577,7 @@ ALTER TABLE ONLY public."Bed"
 
 
 --
--- TOC entry 3525 (class 2606 OID 25281)
+-- TOC entry 4457 (class 2606 OID 30453)
 -- Name: Blanket Blanket_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76885,7 +77586,7 @@ ALTER TABLE ONLY public."Blanket"
 
 
 --
--- TOC entry 3547 (class 2606 OID 25772)
+-- TOC entry 4463 (class 2606 OID 30455)
 -- Name: BusinessArea BusinessArea_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76894,7 +77595,7 @@ ALTER TABLE ONLY public."BusinessArea"
 
 
 --
--- TOC entry 3539 (class 2606 OID 25646)
+-- TOC entry 4459 (class 2606 OID 30457)
 -- Name: Business Business_accountId_uk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76903,7 +77604,7 @@ ALTER TABLE ONLY public."Business"
 
 
 --
--- TOC entry 3541 (class 2606 OID 25553)
+-- TOC entry 4461 (class 2606 OID 30459)
 -- Name: Business Business_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76912,7 +77613,7 @@ ALTER TABLE ONLY public."Business"
 
 
 --
--- TOC entry 3533 (class 2606 OID 25486)
+-- TOC entry 4471 (class 2606 OID 30461)
 -- Name: Card Card_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76921,7 +77622,7 @@ ALTER TABLE ONLY public."Card"
 
 
 --
--- TOC entry 3513 (class 2606 OID 24835)
+-- TOC entry 4473 (class 2606 OID 30463)
 -- Name: Carpet Carpet_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76930,7 +77631,7 @@ ALTER TABLE ONLY public."Carpet"
 
 
 --
--- TOC entry 3519 (class 2606 OID 25103)
+-- TOC entry 4475 (class 2606 OID 30465)
 -- Name: Chair Chair_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76939,7 +77640,7 @@ ALTER TABLE ONLY public."Chair"
 
 
 --
--- TOC entry 3537 (class 2606 OID 25519)
+-- TOC entry 4477 (class 2606 OID 30467)
 -- Name: Comment Comment_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76948,7 +77649,7 @@ ALTER TABLE ONLY public."Comment"
 
 
 --
--- TOC entry 3499 (class 2606 OID 16453)
+-- TOC entry 4437 (class 2606 OID 30469)
 -- Name: Country Country_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76957,7 +77658,7 @@ ALTER TABLE ONLY public."Country"
 
 
 --
--- TOC entry 3517 (class 2606 OID 25061)
+-- TOC entry 4479 (class 2606 OID 30471)
 -- Name: Curtain Curtain_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76966,7 +77667,7 @@ ALTER TABLE ONLY public."Curtain"
 
 
 --
--- TOC entry 3501 (class 2606 OID 16477)
+-- TOC entry 4439 (class 2606 OID 30473)
 -- Name: District District_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76975,7 +77676,7 @@ ALTER TABLE ONLY public."District"
 
 
 --
--- TOC entry 3531 (class 2606 OID 25577)
+-- TOC entry 4481 (class 2606 OID 30475)
 -- Name: Hours Hours_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76984,7 +77685,7 @@ ALTER TABLE ONLY public."Hours"
 
 
 --
--- TOC entry 3511 (class 2606 OID 24719)
+-- TOC entry 4483 (class 2606 OID 30477)
 -- Name: ItemMedia ItemMedia_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -76993,7 +77694,7 @@ ALTER TABLE ONLY public."ItemMedia"
 
 
 --
--- TOC entry 3507 (class 2606 OID 24598)
+-- TOC entry 4455 (class 2606 OID 30479)
 -- Name: Item Item_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77002,7 +77703,7 @@ ALTER TABLE ONLY public."Item"
 
 
 --
--- TOC entry 3509 (class 2606 OID 24709)
+-- TOC entry 4449 (class 2606 OID 30481)
 -- Name: Media Media_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77011,7 +77712,7 @@ ALTER TABLE ONLY public."Media"
 
 
 --
--- TOC entry 3503 (class 2606 OID 16489)
+-- TOC entry 4441 (class 2606 OID 30483)
 -- Name: Neighborhood Neighborhood_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77020,7 +77721,7 @@ ALTER TABLE ONLY public."Neighborhood"
 
 
 --
--- TOC entry 3497 (class 2606 OID 16446)
+-- TOC entry 4443 (class 2606 OID 30485)
 -- Name: Province Province_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77029,7 +77730,7 @@ ALTER TABLE ONLY public."Province"
 
 
 --
--- TOC entry 3523 (class 2606 OID 25243)
+-- TOC entry 4485 (class 2606 OID 30487)
 -- Name: Quilt Quilt_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77038,7 +77739,7 @@ ALTER TABLE ONLY public."Quilt"
 
 
 --
--- TOC entry 3535 (class 2606 OID 25500)
+-- TOC entry 4467 (class 2606 OID 30489)
 -- Name: Review Review_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77047,7 +77748,7 @@ ALTER TABLE ONLY public."Review"
 
 
 --
--- TOC entry 3551 (class 2606 OID 25859)
+-- TOC entry 4469 (class 2606 OID 30491)
 -- Name: Service Service_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77056,7 +77757,7 @@ ALTER TABLE ONLY public."Service"
 
 
 --
--- TOC entry 3491 (class 2606 OID 16412)
+-- TOC entry 4487 (class 2606 OID 30493)
 -- Name: Session Session_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77065,7 +77766,7 @@ ALTER TABLE ONLY public."Session"
 
 
 --
--- TOC entry 3527 (class 2606 OID 25343)
+-- TOC entry 4489 (class 2606 OID 30495)
 -- Name: Sofa Sofa_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77074,7 +77775,7 @@ ALTER TABLE ONLY public."Sofa"
 
 
 --
--- TOC entry 3515 (class 2606 OID 24935)
+-- TOC entry 4491 (class 2606 OID 30497)
 -- Name: Vehicle Vehicle_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77083,7 +77784,7 @@ ALTER TABLE ONLY public."Vehicle"
 
 
 --
--- TOC entry 3493 (class 2606 OID 16437)
+-- TOC entry 4493 (class 2606 OID 30499)
 -- Name: Verification Verification_phone_uk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77092,7 +77793,7 @@ ALTER TABLE ONLY public."Verification"
 
 
 --
--- TOC entry 3495 (class 2606 OID 16435)
+-- TOC entry 4495 (class 2606 OID 30501)
 -- Name: Verification Verification_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77101,7 +77802,7 @@ ALTER TABLE ONLY public."Verification"
 
 
 --
--- TOC entry 3529 (class 2606 OID 25416)
+-- TOC entry 4465 (class 2606 OID 30503)
 -- Name: BusinessMedia businessmedia_pk; Type: CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77110,7 +77811,7 @@ ALTER TABLE ONLY public."BusinessMedia"
 
 
 --
--- TOC entry 3556 (class 2606 OID 16548)
+-- TOC entry 4496 (class 2606 OID 30504)
 -- Name: Address Address_Account_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77119,7 +77820,7 @@ ALTER TABLE ONLY public."Address"
 
 
 --
--- TOC entry 3557 (class 2606 OID 16518)
+-- TOC entry 4497 (class 2606 OID 30509)
 -- Name: Address Address_Country_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77128,7 +77829,7 @@ ALTER TABLE ONLY public."Address"
 
 
 --
--- TOC entry 3558 (class 2606 OID 16528)
+-- TOC entry 4498 (class 2606 OID 30514)
 -- Name: Address Address_District_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77137,7 +77838,7 @@ ALTER TABLE ONLY public."Address"
 
 
 --
--- TOC entry 3559 (class 2606 OID 16533)
+-- TOC entry 4499 (class 2606 OID 30519)
 -- Name: Address Address_Neighborhood_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77146,7 +77847,7 @@ ALTER TABLE ONLY public."Address"
 
 
 --
--- TOC entry 3560 (class 2606 OID 16523)
+-- TOC entry 4500 (class 2606 OID 30524)
 -- Name: Address Address_Province_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77155,7 +77856,7 @@ ALTER TABLE ONLY public."Address"
 
 
 --
--- TOC entry 3582 (class 2606 OID 25838)
+-- TOC entry 4505 (class 2606 OID 30529)
 -- Name: ApprovalMedia ApprovalMedia_Approval_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77164,7 +77865,7 @@ ALTER TABLE ONLY public."ApprovalMedia"
 
 
 --
--- TOC entry 3583 (class 2606 OID 25824)
+-- TOC entry 4506 (class 2606 OID 30534)
 -- Name: ApprovalMedia ApprovalMedia_Media_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77173,7 +77874,7 @@ ALTER TABLE ONLY public."ApprovalMedia"
 
 
 --
--- TOC entry 3587 (class 2606 OID 25814)
+-- TOC entry 4504 (class 2606 OID 30539)
 -- Name: Approval Approval_Business_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77182,7 +77883,7 @@ ALTER TABLE ONLY public."Approval"
 
 
 --
--- TOC entry 3584 (class 2606 OID 25668)
+-- TOC entry 4508 (class 2606 OID 30544)
 -- Name: BankAccount Bank_Business_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77191,7 +77892,7 @@ ALTER TABLE ONLY public."BankAccount"
 
 
 --
--- TOC entry 3569 (class 2606 OID 25212)
+-- TOC entry 4509 (class 2606 OID 30549)
 -- Name: Bed Bed_Item_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77200,7 +77901,7 @@ ALTER TABLE ONLY public."Bed"
 
 
 --
--- TOC entry 3571 (class 2606 OID 25282)
+-- TOC entry 4511 (class 2606 OID 30554)
 -- Name: Blanket Blanket_Item_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77209,7 +77910,7 @@ ALTER TABLE ONLY public."Blanket"
 
 
 --
--- TOC entry 3585 (class 2606 OID 25773)
+-- TOC entry 4514 (class 2606 OID 30559)
 -- Name: BusinessArea BusinessArea_Business_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77218,7 +77919,7 @@ ALTER TABLE ONLY public."BusinessArea"
 
 
 --
--- TOC entry 3586 (class 2606 OID 25778)
+-- TOC entry 4515 (class 2606 OID 30564)
 -- Name: BusinessArea BusinessArea_Neighborhood_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77227,7 +77928,7 @@ ALTER TABLE ONLY public."BusinessArea"
 
 
 --
--- TOC entry 3573 (class 2606 OID 25583)
+-- TOC entry 4516 (class 2606 OID 30569)
 -- Name: BusinessMedia BusinessMedia_Business_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77236,7 +77937,7 @@ ALTER TABLE ONLY public."BusinessMedia"
 
 
 --
--- TOC entry 3574 (class 2606 OID 25422)
+-- TOC entry 4517 (class 2606 OID 30574)
 -- Name: BusinessMedia BusinessMedia_Media_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77245,7 +77946,7 @@ ALTER TABLE ONLY public."BusinessMedia"
 
 
 --
--- TOC entry 3580 (class 2606 OID 25554)
+-- TOC entry 4512 (class 2606 OID 30579)
 -- Name: Business Business_Account_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77254,7 +77955,7 @@ ALTER TABLE ONLY public."Business"
 
 
 --
--- TOC entry 3581 (class 2606 OID 25559)
+-- TOC entry 4513 (class 2606 OID 30584)
 -- Name: Business Business_Address_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77263,7 +77964,7 @@ ALTER TABLE ONLY public."Business"
 
 
 --
--- TOC entry 3576 (class 2606 OID 25487)
+-- TOC entry 4522 (class 2606 OID 30589)
 -- Name: Card Card_Account_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77272,7 +77973,7 @@ ALTER TABLE ONLY public."Card"
 
 
 --
--- TOC entry 3565 (class 2606 OID 24836)
+-- TOC entry 4523 (class 2606 OID 30594)
 -- Name: Carpet Carpet_Item_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77281,7 +77982,7 @@ ALTER TABLE ONLY public."Carpet"
 
 
 --
--- TOC entry 3568 (class 2606 OID 25104)
+-- TOC entry 4524 (class 2606 OID 30599)
 -- Name: Chair Chair_Item_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77290,7 +77991,7 @@ ALTER TABLE ONLY public."Chair"
 
 
 --
--- TOC entry 3579 (class 2606 OID 25520)
+-- TOC entry 4525 (class 2606 OID 30604)
 -- Name: Comment Comment_Review_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77299,7 +78000,7 @@ ALTER TABLE ONLY public."Comment"
 
 
 --
--- TOC entry 3567 (class 2606 OID 25062)
+-- TOC entry 4526 (class 2606 OID 30609)
 -- Name: Curtain Curtain_Item_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77308,7 +78009,7 @@ ALTER TABLE ONLY public."Curtain"
 
 
 --
--- TOC entry 3554 (class 2606 OID 16478)
+-- TOC entry 4501 (class 2606 OID 30614)
 -- Name: District District_Province_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77317,7 +78018,7 @@ ALTER TABLE ONLY public."District"
 
 
 --
--- TOC entry 3575 (class 2606 OID 25578)
+-- TOC entry 4527 (class 2606 OID 30619)
 -- Name: Hours Hours_Business_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77326,7 +78027,7 @@ ALTER TABLE ONLY public."Hours"
 
 
 --
--- TOC entry 3563 (class 2606 OID 24720)
+-- TOC entry 4528 (class 2606 OID 30624)
 -- Name: ItemMedia ItemMedia_Item_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77335,7 +78036,7 @@ ALTER TABLE ONLY public."ItemMedia"
 
 
 --
--- TOC entry 3564 (class 2606 OID 24725)
+-- TOC entry 4529 (class 2606 OID 30629)
 -- Name: ItemMedia ItemMedia_Media_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77344,7 +78045,7 @@ ALTER TABLE ONLY public."ItemMedia"
 
 
 --
--- TOC entry 3561 (class 2606 OID 24599)
+-- TOC entry 4510 (class 2606 OID 30634)
 -- Name: Item Item_Account_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77353,7 +78054,7 @@ ALTER TABLE ONLY public."Item"
 
 
 --
--- TOC entry 3562 (class 2606 OID 24710)
+-- TOC entry 4507 (class 2606 OID 30639)
 -- Name: Media Media_Account_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77362,7 +78063,7 @@ ALTER TABLE ONLY public."Media"
 
 
 --
--- TOC entry 3555 (class 2606 OID 16500)
+-- TOC entry 4502 (class 2606 OID 30644)
 -- Name: Neighborhood Neighborhood_District_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77371,7 +78072,7 @@ ALTER TABLE ONLY public."Neighborhood"
 
 
 --
--- TOC entry 3553 (class 2606 OID 16459)
+-- TOC entry 4503 (class 2606 OID 30649)
 -- Name: Province Province_Country_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77380,7 +78081,7 @@ ALTER TABLE ONLY public."Province"
 
 
 --
--- TOC entry 3570 (class 2606 OID 25244)
+-- TOC entry 4530 (class 2606 OID 30654)
 -- Name: Quilt Quilt_Item_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77389,7 +78090,7 @@ ALTER TABLE ONLY public."Quilt"
 
 
 --
--- TOC entry 3577 (class 2606 OID 25501)
+-- TOC entry 4518 (class 2606 OID 30659)
 -- Name: Review Review_Account_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77398,7 +78099,7 @@ ALTER TABLE ONLY public."Review"
 
 
 --
--- TOC entry 3578 (class 2606 OID 25588)
+-- TOC entry 4519 (class 2606 OID 30664)
 -- Name: Review Review_Business_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77407,7 +78108,7 @@ ALTER TABLE ONLY public."Review"
 
 
 --
--- TOC entry 3588 (class 2606 OID 25860)
+-- TOC entry 4520 (class 2606 OID 30669)
 -- Name: Service Service_Business_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77416,7 +78117,7 @@ ALTER TABLE ONLY public."Service"
 
 
 --
--- TOC entry 3589 (class 2606 OID 25865)
+-- TOC entry 4521 (class 2606 OID 30674)
 -- Name: Service Service_Media_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77425,7 +78126,7 @@ ALTER TABLE ONLY public."Service"
 
 
 --
--- TOC entry 3552 (class 2606 OID 16413)
+-- TOC entry 4531 (class 2606 OID 30679)
 -- Name: Session Session_Account_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77434,7 +78135,7 @@ ALTER TABLE ONLY public."Session"
 
 
 --
--- TOC entry 3572 (class 2606 OID 25344)
+-- TOC entry 4532 (class 2606 OID 30684)
 -- Name: Sofa Sofa_Item_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77443,7 +78144,7 @@ ALTER TABLE ONLY public."Sofa"
 
 
 --
--- TOC entry 3566 (class 2606 OID 24936)
+-- TOC entry 4533 (class 2606 OID 30689)
 -- Name: Vehicle Vehicle_Item_fk; Type: FK CONSTRAINT; Schema: public; Owner: UYikamacim
 --
 
@@ -77451,7 +78152,7 @@ ALTER TABLE ONLY public."Vehicle"
     ADD CONSTRAINT "Vehicle_Item_fk" FOREIGN KEY ("itemId") REFERENCES public."Item"("itemId");
 
 
--- Completed on 2025-05-14 07:19:26 UTC
+-- Completed on 2025-05-14 23:37:35 UTC
 
 --
 -- PostgreSQL database dump complete
