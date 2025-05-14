@@ -29,7 +29,7 @@ export class SearchProvider implements IProvider {
             await DbConstants.POOL.query(BusinessAreaQueries.GET_BUSINESS_IDS_BY_NEIGHBORHOOD_ID, [
               neighborhoodId,
             ])
-          ).rows,
+          ).rows.map((row: { business_id: number }) => row.business_id),
           query,
         ],
       );
