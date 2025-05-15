@@ -13,17 +13,21 @@ export class MyBusinessCloseProvider implements IProvider {
     private readonly businessProvider = new BusinessProvider(),
     private readonly businessMediaProvider = new BusinessMediaProvider(),
   ) {
-    this.getBusiness = this.businessProvider.getBusiness.bind(this.businessProvider);
+    this.getBusinessByAccountId = this.businessProvider.getBusinessByAccountId.bind(
+      this.businessProvider,
+    );
     this.getBusinessMedia = this.businessMediaProvider.getBusinessMedia.bind(
       this.businessMediaProvider,
     );
-    this.partialGetBusiness = this.businessProvider.partialGetBusiness.bind(this.businessProvider);
+    this.partialGetBusinessByAccountId = this.businessProvider.partialGetBusinessByAccountId.bind(
+      this.businessProvider,
+    );
   }
 
-  public readonly getBusiness: typeof this.businessProvider.getBusiness;
+  public readonly getBusinessByAccountId: typeof this.businessProvider.getBusinessByAccountId;
   public readonly getBusinessMedia: typeof this.businessMediaProvider.getBusinessMedia;
 
-  private readonly partialGetBusiness: typeof this.businessProvider.partialGetBusiness;
+  private readonly partialGetBusinessByAccountId: typeof this.businessProvider.partialGetBusinessByAccountId;
 
   public async closeBusiness(
     accountId: number,
@@ -32,7 +36,7 @@ export class MyBusinessCloseProvider implements IProvider {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await this.partialCloseBusiness(businessId);
-      const businessView = await this.partialGetBusiness(accountId);
+      const businessView = await this.partialGetBusinessByAccountId(accountId);
       if (businessView === null) {
         throw new UnexpectedDatabaseStateError("Business was not updated");
       }

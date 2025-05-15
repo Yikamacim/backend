@@ -6,4 +6,10 @@ export class DateUtil implements IUtil {
     const diff = now.getTime() - time.getTime();
     return diff > secondsToExpire * 1000;
   }
+
+  public static getWeekday(date: Date): string {
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+    });
+  }
 }

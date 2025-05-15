@@ -15,7 +15,7 @@ export class MyBusinessAreasManager implements IManager {
   public async getMyBusinessAreas(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyBusinessAreasResponse[] | null>> {
-    const business = await this.provider.getBusiness(payload.accountId);
+    const business = await this.provider.getBusinessByAccountId(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -37,7 +37,7 @@ export class MyBusinessAreasManager implements IManager {
     payload: TokenPayload,
     request: MyBusinessAreasRequest,
   ): Promise<ManagerResponse<MyBusinessAreasResponse | null>> {
-    const business = await this.provider.getBusiness(payload.accountId);
+    const business = await this.provider.getBusinessByAccountId(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -79,7 +79,7 @@ export class MyBusinessAreasManager implements IManager {
     payload: TokenPayload,
     params: MyBusinessAreasParams,
   ): Promise<ManagerResponse<null>> {
-    const business = await this.provider.getBusiness(payload.accountId);
+    const business = await this.provider.getBusinessByAccountId(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),

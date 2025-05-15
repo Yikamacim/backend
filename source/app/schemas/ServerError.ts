@@ -67,3 +67,10 @@ export class UnexpectedMediaTypeError extends Error {
     this.name = "UnexpectedMediaTypeError";
   }
 }
+
+export class UnexpectedWeekdayError extends Error {
+  public constructor(public readonly weekday: string) {
+    super(`Weekday "${weekday}" is not expected. Contact with the developers.`);
+    this.name = "UnexpectedWeekdayError";
+  }
+}

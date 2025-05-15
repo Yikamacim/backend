@@ -17,7 +17,7 @@ export class MyBusinessApprovalManager implements IManager {
   public async getMyBusinessApproval(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyBusinessApprovalResponse | null>> {
-    const business = await this.provider.getBusiness(payload.accountId);
+    const business = await this.provider.getBusinessByAccountId(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -49,7 +49,7 @@ export class MyBusinessApprovalManager implements IManager {
     payload: TokenPayload,
     request: MyBusinessApprovalRequest,
   ): Promise<ManagerResponse<MyBusinessApprovalResponse | null>> {
-    const business = await this.provider.getBusiness(payload.accountId);
+    const business = await this.provider.getBusinessByAccountId(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -112,7 +112,7 @@ export class MyBusinessApprovalManager implements IManager {
   }
 
   public async deleteMyBusinessApproval(payload: TokenPayload): Promise<ManagerResponse<null>> {
-    const business = await this.provider.getBusiness(payload.accountId);
+    const business = await this.provider.getBusinessByAccountId(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),

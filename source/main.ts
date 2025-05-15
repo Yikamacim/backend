@@ -15,6 +15,9 @@ import { RecordsBuilder } from "./core/_internal/records/RecordsBuilder";
 import { AccountsBuilder } from "./core/accounts/AccountsBuilder";
 import { AdminApprovalsBuilder } from "./core/admin/approvals/AdminApprovalsBuilder";
 import { AreasBuilder } from "./core/areas/AreasBuilder";
+import { BusinessesBuilder } from "./core/businesses/_/BusinessesBuilder";
+import { BusinessesMediasBuilder } from "./core/businesses/medias/BusinessesMediasBuilder";
+import { BusinessesServicesBuilder } from "./core/businesses/services/BusinessesServicesBuilder";
 import { CountriesBuilder } from "./core/countries/CountriesBuilder";
 import { DistrictsBuilder } from "./core/districts/DistrictsBuilder";
 import { LoginBuilder } from "./core/login/LoginBuilder";
@@ -103,6 +106,21 @@ app.use(
   // areas
   AreasBuilder.BASE_ROUTE,
   new AreasBuilder().router,
+);
+app.use(
+  // businesses/:businessId
+  BusinessesBuilder.BASE_ROUTE,
+  new BusinessesBuilder().router,
+);
+app.use(
+  // businesses/:businessId/medias
+  BusinessesMediasBuilder.BASE_ROUTE,
+  new BusinessesMediasBuilder().router,
+);
+app.use(
+  // businesses/:businessId/services
+  BusinessesServicesBuilder.BASE_ROUTE,
+  new BusinessesServicesBuilder().router,
 );
 app.use(
   // countries

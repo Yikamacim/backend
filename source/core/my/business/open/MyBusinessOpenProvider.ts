@@ -23,7 +23,9 @@ export class MyBusinessOpenProvider implements IProvider {
     private readonly serviceProvider = new ServiceProvider(),
     private readonly businessMediaProvider = new BusinessMediaProvider(),
   ) {
-    this.getBusiness = this.businessProvider.getBusiness.bind(this.businessProvider);
+    this.getBusinessByAccountId = this.businessProvider.getBusinessByAccountId.bind(
+      this.businessProvider,
+    );
     this.getApproval = this.approvalProvider.getApproval.bind(this.approvalProvider);
     this.getBankAccount = this.bankAccountProvider.getBankAccount.bind(this.bankAccountProvider);
     this.getBusinessAreas = this.businessAreaProvider.getBusinessAreas.bind(
@@ -34,10 +36,12 @@ export class MyBusinessOpenProvider implements IProvider {
     this.getBusinessMedia = this.businessMediaProvider.getBusinessMedia.bind(
       this.businessMediaProvider,
     );
-    this.partialGetBusiness = this.businessProvider.partialGetBusiness.bind(this.businessProvider);
+    this.partialGetBusinessByAccountId = this.businessProvider.partialGetBusinessByAccountId.bind(
+      this.businessProvider,
+    );
   }
 
-  public readonly getBusiness: typeof this.businessProvider.getBusiness;
+  public readonly getBusinessByAccountId: typeof this.businessProvider.getBusinessByAccountId;
   public readonly getApproval: typeof this.approvalProvider.getApproval;
   public readonly getBankAccount: typeof this.bankAccountProvider.getBankAccount;
   public readonly getBusinessAreas: typeof this.businessAreaProvider.getBusinessAreas;
@@ -45,7 +49,7 @@ export class MyBusinessOpenProvider implements IProvider {
   public readonly getServices: typeof this.serviceProvider.getServices;
   public readonly getBusinessMedia: typeof this.businessMediaProvider.getBusinessMedia;
 
-  private readonly partialGetBusiness: typeof this.businessProvider.partialGetBusiness;
+  private readonly partialGetBusinessByAccountId: typeof this.businessProvider.partialGetBusinessByAccountId;
 
   public async openBusiness(
     accountId: number,
@@ -54,7 +58,7 @@ export class MyBusinessOpenProvider implements IProvider {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await this.partialOpenBusiness(businessId);
-      const businessView = await this.partialGetBusiness(accountId);
+      const businessView = await this.partialGetBusinessByAccountId(accountId);
       if (businessView === null) {
         throw new UnexpectedDatabaseStateError("Business was not updated");
       }

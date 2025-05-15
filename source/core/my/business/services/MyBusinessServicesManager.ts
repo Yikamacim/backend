@@ -18,7 +18,7 @@ export class MyBusinessServicesManager implements IManager {
   public async getMyBusinessServices(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyBusinessServicesResponse[] | null>> {
-    const business = await this.provider.getBusiness(payload.accountId);
+    const business = await this.provider.getBusinessByAccountId(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -52,7 +52,7 @@ export class MyBusinessServicesManager implements IManager {
     payload: TokenPayload,
     request: MyBusinessServicesRequest,
   ): Promise<ManagerResponse<MyBusinessServicesResponse | null>> {
-    const business = await this.provider.getBusiness(payload.accountId);
+    const business = await this.provider.getBusinessByAccountId(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -102,7 +102,7 @@ export class MyBusinessServicesManager implements IManager {
     payload: TokenPayload,
     params: MyBusinessServicesParams,
   ): Promise<ManagerResponse<MyBusinessServicesResponse | null>> {
-    const business = await this.provider.getBusiness(payload.accountId);
+    const business = await this.provider.getBusinessByAccountId(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -146,7 +146,7 @@ export class MyBusinessServicesManager implements IManager {
     params: MyBusinessServicesParams,
     request: MyBusinessServicesRequest,
   ): Promise<ManagerResponse<MyBusinessServicesResponse | null>> {
-    const business = await this.provider.getBusiness(payload.accountId);
+    const business = await this.provider.getBusinessByAccountId(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -221,7 +221,7 @@ export class MyBusinessServicesManager implements IManager {
     payload: TokenPayload,
     params: MyBusinessServicesParams,
   ): Promise<ManagerResponse<null>> {
-    const business = await this.provider.getBusiness(payload.accountId);
+    const business = await this.provider.getBusinessByAccountId(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),

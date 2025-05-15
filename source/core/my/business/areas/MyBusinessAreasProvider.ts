@@ -15,13 +15,15 @@ export class MyBusinessAreasProvider implements IProvider {
     private readonly businessProvider = new BusinessProvider(),
     public readonly businessAreaProvider = new BusinessAreaProvider(),
   ) {
-    this.getBusiness = this.businessProvider.getBusiness.bind(this.businessProvider);
+    this.getBusinessByAccountId = this.businessProvider.getBusinessByAccountId.bind(
+      this.businessProvider,
+    );
     this.getBusinessAreas = this.businessAreaProvider.getBusinessAreas.bind(
       this.businessAreaProvider,
     );
   }
 
-  public readonly getBusiness: typeof this.businessProvider.getBusiness;
+  public readonly getBusinessByAccountId: typeof this.businessProvider.getBusinessByAccountId;
   public readonly getBusinessAreas: typeof this.businessAreaProvider.getBusinessAreas;
 
   public async createBusinessArea(

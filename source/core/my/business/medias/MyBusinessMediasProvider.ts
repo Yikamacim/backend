@@ -6,15 +6,19 @@ import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
 import { BusinessMediaViewModel } from "../../../../common/models/BusinessMediaViewModel";
 import { BusinessMediaProvider } from "../../../../common/providers/BusinessMediaProvider";
 import { BusinessProvider } from "../../../../common/providers/BusinessProvider";
-import { BusinessMediaViewQueries } from "../../../../common/queries/BusinessMediaViewQueries";
 
 export class MyBusinessMediasProvider implements IProvider {
   public constructor(
     private readonly businessProvider = new BusinessProvider(),
     private readonly businessMediaProvider = new BusinessMediaProvider(),
   ) {
-    this.getBusiness = this.businessProvider.getBusiness.bind(this.businessProvider);
+    this.getBusinessByAccountId = this.businessProvider.getBusinessByAccountId.bind(
+      this.businessProvider,
+    );
     this.getBusinessMedia = this.businessMediaProvider.getBusinessMedia.bind(
+      this.businessMediaProvider,
+    );
+    this.getBusinessMedias = this.businessMediaProvider.getBusinessMedias.bind(
       this.businessMediaProvider,
     );
     this.partialGetBusinessMedia = this.businessMediaProvider.partialGetBusinessMedia.bind(
@@ -28,29 +32,13 @@ export class MyBusinessMediasProvider implements IProvider {
     );
   }
 
-  public readonly getBusiness: typeof this.businessProvider.getBusiness;
+  public readonly getBusinessByAccountId: typeof this.businessProvider.getBusinessByAccountId;
   public readonly getBusinessMedia: typeof this.businessMediaProvider.getBusinessMedia;
+  public readonly getBusinessMedias: typeof this.businessMediaProvider.getBusinessMedias;
 
   private readonly partialGetBusinessMedia: typeof this.businessMediaProvider.partialGetBusinessMedia;
   private readonly partialCreateBusinessMedia: typeof this.businessMediaProvider.partialCreateBusinessMedia;
   private readonly partialDeleteBusinessMedia: typeof this.businessMediaProvider.partialDeleteBusinessMedia;
-
-  public async getBusinessMedias(
-    businessId: number,
-  ): Promise<ProviderResponse<BusinessMediaViewModel[]>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      const results = await DbConstants.POOL.query(
-        BusinessMediaViewQueries.GET_BUSINESS_MEDIAS_$BSID_$ISMN,
-        [businessId, false],
-      );
-      const record: unknown[] = results.rows;
-      return await ResponseUtil.providerResponse(BusinessMediaViewModel.fromRecords(record));
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
-    }
-  }
 
   public async createBusinessMedia(
     businessId: number,

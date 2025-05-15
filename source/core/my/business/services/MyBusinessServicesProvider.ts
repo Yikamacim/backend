@@ -15,12 +15,14 @@ export class MyBusinessServicesProvider implements IProvider {
     public readonly mediaProvider = new MediaProvider(),
     public readonly serviceProvider = new ServiceProvider(),
   ) {
-    this.getBusiness = this.businessProvider.getBusiness.bind(this.businessProvider);
+    this.getBusinessByAccountId = this.businessProvider.getBusinessByAccountId.bind(
+      this.businessProvider,
+    );
     this.getMedia = this.mediaProvider.getMedia.bind(this.mediaProvider);
     this.getServices = this.serviceProvider.getServices.bind(this.serviceProvider);
   }
 
-  public readonly getBusiness: typeof this.businessProvider.getBusiness;
+  public readonly getBusinessByAccountId: typeof this.businessProvider.getBusinessByAccountId;
   public readonly getMedia: typeof this.mediaProvider.getMedia;
   public readonly getServices: typeof this.serviceProvider.getServices;
 

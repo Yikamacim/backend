@@ -12,11 +12,13 @@ export class MyBusinessBankProvider implements IProvider {
     private readonly businessProvider = new BusinessProvider(),
     public readonly bankAccountProvider = new BankAccountProvider(),
   ) {
-    this.getBusiness = this.businessProvider.getBusiness.bind(this.businessProvider);
+    this.getBusinessByAccountId = this.businessProvider.getBusinessByAccountId.bind(
+      this.businessProvider,
+    );
     this.getBankAccount = this.bankAccountProvider.getBankAccount.bind(this.bankAccountProvider);
   }
 
-  public readonly getBusiness: typeof this.businessProvider.getBusiness;
+  public readonly getBusinessByAccountId: typeof this.businessProvider.getBusinessByAccountId;
   public readonly getBankAccount: typeof this.bankAccountProvider.getBankAccount;
 
   public async createBankAccount(

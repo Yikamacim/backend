@@ -23,6 +23,23 @@ export class BusinessMediaProvider implements IProvider {
     }
   }
 
+  public async getBusinessMedias(
+    businessId: number,
+  ): Promise<ProviderResponse<BusinessMediaViewModel[]>> {
+    await DbConstants.POOL.query(DbConstants.BEGIN);
+    try {
+      const results = await DbConstants.POOL.query(
+        BusinessMediaViewQueries.GET_BUSINESS_MEDIAS_$BSID_$ISMN,
+        [businessId, false],
+      );
+      const record: unknown[] = results.rows;
+      return await ResponseUtil.providerResponse(BusinessMediaViewModel.fromRecords(record));
+    } catch (error) {
+      await DbConstants.POOL.query(DbConstants.ROLLBACK);
+      throw error;
+    }
+  }
+
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
   public async partialGetBusinessMedia(

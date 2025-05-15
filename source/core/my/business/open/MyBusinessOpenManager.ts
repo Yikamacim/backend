@@ -16,7 +16,7 @@ export class MyBusinessOpenManager implements IManager {
   public async putMyBusinessOpen(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyBusinessOpenResponse | null>> {
-    const business = await this.provider.getBusiness(payload.accountId);
+    const business = await this.provider.getBusinessByAccountId(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),

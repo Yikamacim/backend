@@ -7,10 +7,33 @@ import { BusinessViewModel } from "../models/BusinessViewModel";
 import { BusinessViewQueries } from "../queries/BusinessViewQueries";
 
 export class BusinessProvider implements IProvider {
-  public async getBusiness(accountId: number): Promise<ProviderResponse<BusinessViewModel | null>> {
+  public async getBusiness(
+    businessId: number,
+  ): Promise<ProviderResponse<BusinessViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      return await ResponseUtil.providerResponse(await this.partialGetBusiness(accountId));
+      const results = await DbConstants.POOL.query(BusinessViewQueries.GET_BUSINESS_$BSID, [
+        businessId,
+      ]);
+      const record: unknown = results.rows[0];
+      if (!ProtoUtil.isProtovalid(record)) {
+        return await ResponseUtil.providerResponse(null);
+      }
+      return await ResponseUtil.providerResponse(BusinessViewModel.fromRecord(record));
+    } catch (error) {
+      await DbConstants.POOL.query(DbConstants.ROLLBACK);
+      throw error;
+    }
+  }
+
+  public async getBusinessByAccountId(
+    accountId: number,
+  ): Promise<ProviderResponse<BusinessViewModel | null>> {
+    await DbConstants.POOL.query(DbConstants.BEGIN);
+    try {
+      return await ResponseUtil.providerResponse(
+        await this.partialGetBusinessByAccountId(accountId),
+      );
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -19,7 +42,7 @@ export class BusinessProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  public async partialGetBusiness(accountId: number): Promise<BusinessViewModel | null> {
+  public async partialGetBusinessByAccountId(accountId: number): Promise<BusinessViewModel | null> {
     const results = await DbConstants.POOL.query(BusinessViewQueries.GET_BUSINESS_$ACID, [
       accountId,
     ]);
