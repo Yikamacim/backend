@@ -205,6 +205,8 @@ export enum ClientErrorCode {
   BUSINESS_DOESNT_HAVE_SERVICES = 82606,
   //  *  *  827XX: /my/business/close errors
   BUSINESS_ALREADY_CLOSED = 82700,
+  //  *  *  828XX: /businesses/:businessId errors
+  NO_BUSINESS_FOUND = 82800,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -410,6 +412,8 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.BUSINESS_DOESNT_HAVE_SERVICES]: "Business doesn't have services.",
   //  *  *  827XX: /my/business/close errors
   [ClientErrorCode.BUSINESS_ALREADY_CLOSED]: "Business is already closed.",
+  //  *  *  828XX: /businesses/:businessId errors
+  [ClientErrorCode.NO_BUSINESS_FOUND]: "No business was found with the provided id.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

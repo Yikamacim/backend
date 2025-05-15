@@ -7,7 +7,7 @@ export class BusinessesMediasProvider implements IProvider {
     private readonly businessProvider = new BusinessProvider(),
     private readonly businessMediaProvider = new BusinessMediaProvider(),
   ) {
-    this.getBusiness = this.businessProvider.getBusinessByAccountId.bind(this.businessProvider);
+    this.getBusiness = this.businessProvider.getBusiness.bind(this.businessProvider);
     this.getBusinessMedias = this.businessMediaProvider.getBusinessMedias.bind(
       this.businessMediaProvider,
     );

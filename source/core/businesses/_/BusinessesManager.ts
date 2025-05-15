@@ -24,7 +24,7 @@ export class BusinessesManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.NO_BUSINESS_FOUND)],
         null,
       );
     }
@@ -41,9 +41,10 @@ export class BusinessesManager implements IManager {
       }
       mediaData = await MediaHelper.mediaToMediaData(media);
     }
-    const serviceCategories = (await this.provider.getServices(business.businessId)).map(
+    const allServiceCategories = (await this.provider.getServices(business.businessId)).map(
       (service) => service.serviceCategory,
     );
+    const serviceCategories = [...new Set(allServiceCategories)];
     let todayHours: TodayHours | null = null;
     const hours = await this.provider.getHours(business.businessId);
     if (hours !== null) {
