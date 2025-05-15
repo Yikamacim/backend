@@ -9,7 +9,7 @@ export class RecordsBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/_internal/records";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new RecordsController(),
   ) {
     this.buildRoutes();

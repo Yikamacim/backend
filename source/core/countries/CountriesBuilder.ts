@@ -9,7 +9,7 @@ export class CountriesBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/countries";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new CountriesController(),
   ) {
     this.buildRoutes();

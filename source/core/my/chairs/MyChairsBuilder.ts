@@ -9,7 +9,7 @@ export class MyChairsBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/my/chairs";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new MyChairsController(),
   ) {
     this.buildRoutes();

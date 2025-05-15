@@ -9,7 +9,7 @@ export class PurgeBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/_internal/purge";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new PurgeController(),
   ) {
     this.buildRoutes();

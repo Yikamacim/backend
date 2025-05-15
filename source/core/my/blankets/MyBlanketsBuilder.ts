@@ -9,7 +9,7 @@ export class MyBlanketsBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/my/blankets";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new MyBlanketsController(),
   ) {
     this.buildRoutes();

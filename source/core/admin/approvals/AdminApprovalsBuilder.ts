@@ -9,7 +9,7 @@ export class AdminApprovalsBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/admin/approvals";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new AdminApprovalsController(),
   ) {
     this.buildRoutes();

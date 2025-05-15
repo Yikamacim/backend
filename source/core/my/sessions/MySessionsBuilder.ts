@@ -9,7 +9,7 @@ export class MySessionsBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/my/sessions";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new MySessionsController(),
   ) {
     this.buildRoutes();

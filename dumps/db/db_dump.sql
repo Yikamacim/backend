@@ -5,7 +5,7 @@
 -- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
 -- Dumped by pg_dump version 16.8 (Debian 16.8-1.pgdg120+1)
 
--- Started on 2025-05-15 15:41:55 UTC
+-- Started on 2025-05-15 17:28:41 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -812,14 +812,14 @@ CREATE TABLE public."Service" (
 ALTER TABLE public."Service" OWNER TO "UYikamacim";
 
 --
--- TOC entry 244 (class 1259 OID 41315)
+-- TOC entry 285 (class 1259 OID 41705)
 -- Name: BusinessServiceView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
 CREATE VIEW public."BusinessServiceView" AS
  WITH "ReviewStats" AS (
          SELECT "Review"."businessId",
-            avg("Review".stars) AS stars,
+            (avg("Review".stars))::double precision AS stars,
             count("Review"."reviewId") AS "reviewsCount"
            FROM public."Review"
           GROUP BY "Review"."businessId"
@@ -855,14 +855,14 @@ CREATE VIEW public."BusinessServiceView" AS
 ALTER VIEW public."BusinessServiceView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 245 (class 1259 OID 41320)
+-- TOC entry 286 (class 1259 OID 41710)
 -- Name: BusinessView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
 CREATE VIEW public."BusinessView" AS
  WITH "ReviewStats" AS (
          SELECT "Review"."businessId",
-            avg("Review".stars) AS stars,
+            (avg("Review".stars))::double precision AS stars,
             count("Review"."reviewId") AS "reviewsCount"
            FROM public."Review"
           GROUP BY "Review"."businessId"
@@ -907,7 +907,7 @@ CREATE VIEW public."BusinessView" AS
 ALTER VIEW public."BusinessView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 246 (class 1259 OID 41325)
+-- TOC entry 244 (class 1259 OID 41325)
 -- Name: Business_businessId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -924,7 +924,7 @@ ALTER SEQUENCE public."Business_businessId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3818 (class 0 OID 0)
--- Dependencies: 246
+-- Dependencies: 244
 -- Name: Business_businessId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -932,7 +932,7 @@ ALTER SEQUENCE public."Business_businessId_seq" OWNED BY public."Business"."busi
 
 
 --
--- TOC entry 247 (class 1259 OID 41326)
+-- TOC entry 245 (class 1259 OID 41326)
 -- Name: Card; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -953,7 +953,7 @@ CREATE TABLE public."Card" (
 ALTER TABLE public."Card" OWNER TO "UYikamacim";
 
 --
--- TOC entry 248 (class 1259 OID 41330)
+-- TOC entry 246 (class 1259 OID 41330)
 -- Name: Card_cardId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -970,7 +970,7 @@ ALTER SEQUENCE public."Card_cardId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3819 (class 0 OID 0)
--- Dependencies: 248
+-- Dependencies: 246
 -- Name: Card_cardId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -978,7 +978,7 @@ ALTER SEQUENCE public."Card_cardId_seq" OWNED BY public."Card"."cardId";
 
 
 --
--- TOC entry 249 (class 1259 OID 41331)
+-- TOC entry 247 (class 1259 OID 41331)
 -- Name: Carpet; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -994,7 +994,7 @@ CREATE TABLE public."Carpet" (
 ALTER TABLE public."Carpet" OWNER TO "UYikamacim";
 
 --
--- TOC entry 250 (class 1259 OID 41334)
+-- TOC entry 248 (class 1259 OID 41334)
 -- Name: CarpetView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -1014,7 +1014,7 @@ CREATE VIEW public."CarpetView" AS
 ALTER VIEW public."CarpetView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 251 (class 1259 OID 41338)
+-- TOC entry 249 (class 1259 OID 41338)
 -- Name: Carpet_carpetId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1031,7 +1031,7 @@ ALTER SEQUENCE public."Carpet_carpetId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3820 (class 0 OID 0)
--- Dependencies: 251
+-- Dependencies: 249
 -- Name: Carpet_carpetId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1039,7 +1039,7 @@ ALTER SEQUENCE public."Carpet_carpetId_seq" OWNED BY public."Carpet"."carpetId";
 
 
 --
--- TOC entry 252 (class 1259 OID 41339)
+-- TOC entry 250 (class 1259 OID 41339)
 -- Name: Chair; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1053,7 +1053,7 @@ CREATE TABLE public."Chair" (
 ALTER TABLE public."Chair" OWNER TO "UYikamacim";
 
 --
--- TOC entry 253 (class 1259 OID 41342)
+-- TOC entry 251 (class 1259 OID 41342)
 -- Name: ChairView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -1071,7 +1071,7 @@ CREATE VIEW public."ChairView" AS
 ALTER VIEW public."ChairView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 254 (class 1259 OID 41346)
+-- TOC entry 252 (class 1259 OID 41346)
 -- Name: Chair_chairId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1088,7 +1088,7 @@ ALTER SEQUENCE public."Chair_chairId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3821 (class 0 OID 0)
--- Dependencies: 254
+-- Dependencies: 252
 -- Name: Chair_chairId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1096,7 +1096,7 @@ ALTER SEQUENCE public."Chair_chairId_seq" OWNED BY public."Chair"."chairId";
 
 
 --
--- TOC entry 255 (class 1259 OID 41347)
+-- TOC entry 253 (class 1259 OID 41347)
 -- Name: Reply; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1110,7 +1110,7 @@ CREATE TABLE public."Reply" (
 ALTER TABLE public."Reply" OWNER TO "UYikamacim";
 
 --
--- TOC entry 256 (class 1259 OID 41352)
+-- TOC entry 254 (class 1259 OID 41352)
 -- Name: Comment_commentId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1127,7 +1127,7 @@ ALTER SEQUENCE public."Comment_commentId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3822 (class 0 OID 0)
--- Dependencies: 256
+-- Dependencies: 254
 -- Name: Comment_commentId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1135,7 +1135,7 @@ ALTER SEQUENCE public."Comment_commentId_seq" OWNED BY public."Reply"."replyId";
 
 
 --
--- TOC entry 257 (class 1259 OID 41353)
+-- TOC entry 255 (class 1259 OID 41353)
 -- Name: Country_countryId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1152,7 +1152,7 @@ ALTER SEQUENCE public."Country_countryId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3823 (class 0 OID 0)
--- Dependencies: 257
+-- Dependencies: 255
 -- Name: Country_countryId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1160,7 +1160,7 @@ ALTER SEQUENCE public."Country_countryId_seq" OWNED BY public."Country"."country
 
 
 --
--- TOC entry 258 (class 1259 OID 41354)
+-- TOC entry 256 (class 1259 OID 41354)
 -- Name: Curtain; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1176,7 +1176,7 @@ CREATE TABLE public."Curtain" (
 ALTER TABLE public."Curtain" OWNER TO "UYikamacim";
 
 --
--- TOC entry 259 (class 1259 OID 41357)
+-- TOC entry 257 (class 1259 OID 41357)
 -- Name: CurtainView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -1196,7 +1196,7 @@ CREATE VIEW public."CurtainView" AS
 ALTER VIEW public."CurtainView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 260 (class 1259 OID 41361)
+-- TOC entry 258 (class 1259 OID 41361)
 -- Name: Curtain_curtainId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1213,7 +1213,7 @@ ALTER SEQUENCE public."Curtain_curtainId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3824 (class 0 OID 0)
--- Dependencies: 260
+-- Dependencies: 258
 -- Name: Curtain_curtainId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1221,7 +1221,7 @@ ALTER SEQUENCE public."Curtain_curtainId_seq" OWNED BY public."Curtain"."curtain
 
 
 --
--- TOC entry 261 (class 1259 OID 41362)
+-- TOC entry 259 (class 1259 OID 41362)
 -- Name: District_districtId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1238,7 +1238,7 @@ ALTER SEQUENCE public."District_districtId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3825 (class 0 OID 0)
--- Dependencies: 261
+-- Dependencies: 259
 -- Name: District_districtId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1246,7 +1246,7 @@ ALTER SEQUENCE public."District_districtId_seq" OWNED BY public."District"."dist
 
 
 --
--- TOC entry 262 (class 1259 OID 41363)
+-- TOC entry 260 (class 1259 OID 41363)
 -- Name: Hours; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1272,7 +1272,7 @@ CREATE TABLE public."Hours" (
 ALTER TABLE public."Hours" OWNER TO "UYikamacim";
 
 --
--- TOC entry 263 (class 1259 OID 41366)
+-- TOC entry 261 (class 1259 OID 41366)
 -- Name: ItemMedia; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1285,7 +1285,7 @@ CREATE TABLE public."ItemMedia" (
 ALTER TABLE public."ItemMedia" OWNER TO "UYikamacim";
 
 --
--- TOC entry 264 (class 1259 OID 41369)
+-- TOC entry 262 (class 1259 OID 41369)
 -- Name: ItemMediaView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -1301,7 +1301,7 @@ CREATE VIEW public."ItemMediaView" AS
 ALTER VIEW public."ItemMediaView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 265 (class 1259 OID 41373)
+-- TOC entry 263 (class 1259 OID 41373)
 -- Name: Item_itemId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1318,7 +1318,7 @@ ALTER SEQUENCE public."Item_itemId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3826 (class 0 OID 0)
--- Dependencies: 265
+-- Dependencies: 263
 -- Name: Item_itemId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1326,7 +1326,7 @@ ALTER SEQUENCE public."Item_itemId_seq" OWNED BY public."Item"."itemId";
 
 
 --
--- TOC entry 266 (class 1259 OID 41374)
+-- TOC entry 264 (class 1259 OID 41374)
 -- Name: MediaView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -1351,7 +1351,7 @@ CREATE VIEW public."MediaView" AS
 ALTER VIEW public."MediaView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 267 (class 1259 OID 41378)
+-- TOC entry 265 (class 1259 OID 41378)
 -- Name: Media_mediaId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1368,7 +1368,7 @@ ALTER SEQUENCE public."Media_mediaId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3827 (class 0 OID 0)
--- Dependencies: 267
+-- Dependencies: 265
 -- Name: Media_mediaId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1376,7 +1376,7 @@ ALTER SEQUENCE public."Media_mediaId_seq" OWNED BY public."Media"."mediaId";
 
 
 --
--- TOC entry 268 (class 1259 OID 41379)
+-- TOC entry 266 (class 1259 OID 41379)
 -- Name: Neighborhood_neighborhoodId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1393,7 +1393,7 @@ ALTER SEQUENCE public."Neighborhood_neighborhoodId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3828 (class 0 OID 0)
--- Dependencies: 268
+-- Dependencies: 266
 -- Name: Neighborhood_neighborhoodId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1401,7 +1401,7 @@ ALTER SEQUENCE public."Neighborhood_neighborhoodId_seq" OWNED BY public."Neighbo
 
 
 --
--- TOC entry 269 (class 1259 OID 41380)
+-- TOC entry 267 (class 1259 OID 41380)
 -- Name: Province_provinceId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1418,7 +1418,7 @@ ALTER SEQUENCE public."Province_provinceId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3829 (class 0 OID 0)
--- Dependencies: 269
+-- Dependencies: 267
 -- Name: Province_provinceId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1426,7 +1426,7 @@ ALTER SEQUENCE public."Province_provinceId_seq" OWNED BY public."Province"."prov
 
 
 --
--- TOC entry 270 (class 1259 OID 41381)
+-- TOC entry 268 (class 1259 OID 41381)
 -- Name: Quilt; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1441,7 +1441,7 @@ CREATE TABLE public."Quilt" (
 ALTER TABLE public."Quilt" OWNER TO "UYikamacim";
 
 --
--- TOC entry 271 (class 1259 OID 41384)
+-- TOC entry 269 (class 1259 OID 41384)
 -- Name: QuiltView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -1460,7 +1460,7 @@ CREATE VIEW public."QuiltView" AS
 ALTER VIEW public."QuiltView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 272 (class 1259 OID 41388)
+-- TOC entry 270 (class 1259 OID 41388)
 -- Name: Quilt_quiltId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1477,7 +1477,7 @@ ALTER SEQUENCE public."Quilt_quiltId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3830 (class 0 OID 0)
--- Dependencies: 272
+-- Dependencies: 270
 -- Name: Quilt_quiltId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1485,7 +1485,7 @@ ALTER SEQUENCE public."Quilt_quiltId_seq" OWNED BY public."Quilt"."quiltId";
 
 
 --
--- TOC entry 286 (class 1259 OID 41700)
+-- TOC entry 284 (class 1259 OID 41700)
 -- Name: ReviewView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -1508,7 +1508,7 @@ CREATE VIEW public."ReviewView" AS
 ALTER VIEW public."ReviewView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 273 (class 1259 OID 41389)
+-- TOC entry 271 (class 1259 OID 41389)
 -- Name: Review_reviewId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1525,7 +1525,7 @@ ALTER SEQUENCE public."Review_reviewId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3831 (class 0 OID 0)
--- Dependencies: 273
+-- Dependencies: 271
 -- Name: Review_reviewId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1533,7 +1533,7 @@ ALTER SEQUENCE public."Review_reviewId_seq" OWNED BY public."Review"."reviewId";
 
 
 --
--- TOC entry 274 (class 1259 OID 41390)
+-- TOC entry 272 (class 1259 OID 41390)
 -- Name: Service_serviceId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1550,7 +1550,7 @@ ALTER SEQUENCE public."Service_serviceId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3832 (class 0 OID 0)
--- Dependencies: 274
+-- Dependencies: 272
 -- Name: Service_serviceId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1558,7 +1558,7 @@ ALTER SEQUENCE public."Service_serviceId_seq" OWNED BY public."Service"."service
 
 
 --
--- TOC entry 275 (class 1259 OID 41391)
+-- TOC entry 273 (class 1259 OID 41391)
 -- Name: Session; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1575,7 +1575,7 @@ CREATE TABLE public."Session" (
 ALTER TABLE public."Session" OWNER TO "UYikamacim";
 
 --
--- TOC entry 276 (class 1259 OID 41396)
+-- TOC entry 274 (class 1259 OID 41396)
 -- Name: Session_accountId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1592,7 +1592,7 @@ ALTER SEQUENCE public."Session_accountId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3833 (class 0 OID 0)
--- Dependencies: 276
+-- Dependencies: 274
 -- Name: Session_accountId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1600,7 +1600,7 @@ ALTER SEQUENCE public."Session_accountId_seq" OWNED BY public."Session"."account
 
 
 --
--- TOC entry 277 (class 1259 OID 41397)
+-- TOC entry 275 (class 1259 OID 41397)
 -- Name: Session_sessionId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1617,7 +1617,7 @@ ALTER SEQUENCE public."Session_sessionId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3834 (class 0 OID 0)
--- Dependencies: 277
+-- Dependencies: 275
 -- Name: Session_sessionId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1625,7 +1625,7 @@ ALTER SEQUENCE public."Session_sessionId_seq" OWNED BY public."Session"."session
 
 
 --
--- TOC entry 278 (class 1259 OID 41398)
+-- TOC entry 276 (class 1259 OID 41398)
 -- Name: Sofa; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1641,7 +1641,7 @@ CREATE TABLE public."Sofa" (
 ALTER TABLE public."Sofa" OWNER TO "UYikamacim";
 
 --
--- TOC entry 279 (class 1259 OID 41401)
+-- TOC entry 277 (class 1259 OID 41401)
 -- Name: SofaView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -1661,7 +1661,7 @@ CREATE VIEW public."SofaView" AS
 ALTER VIEW public."SofaView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 280 (class 1259 OID 41405)
+-- TOC entry 278 (class 1259 OID 41405)
 -- Name: Sofa_sofaId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1678,7 +1678,7 @@ ALTER SEQUENCE public."Sofa_sofaId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3835 (class 0 OID 0)
--- Dependencies: 280
+-- Dependencies: 278
 -- Name: Sofa_sofaId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1686,7 +1686,7 @@ ALTER SEQUENCE public."Sofa_sofaId_seq" OWNED BY public."Sofa"."sofaId";
 
 
 --
--- TOC entry 281 (class 1259 OID 41406)
+-- TOC entry 279 (class 1259 OID 41406)
 -- Name: Vehicle; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1702,7 +1702,7 @@ CREATE TABLE public."Vehicle" (
 ALTER TABLE public."Vehicle" OWNER TO "UYikamacim";
 
 --
--- TOC entry 282 (class 1259 OID 41409)
+-- TOC entry 280 (class 1259 OID 41409)
 -- Name: VehicleView; Type: VIEW; Schema: public; Owner: UYikamacim
 --
 
@@ -1722,7 +1722,7 @@ CREATE VIEW public."VehicleView" AS
 ALTER VIEW public."VehicleView" OWNER TO "UYikamacim";
 
 --
--- TOC entry 283 (class 1259 OID 41413)
+-- TOC entry 281 (class 1259 OID 41413)
 -- Name: Vehicle_vehicleId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1739,7 +1739,7 @@ ALTER SEQUENCE public."Vehicle_vehicleId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3836 (class 0 OID 0)
--- Dependencies: 283
+-- Dependencies: 281
 -- Name: Vehicle_vehicleId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -1747,7 +1747,7 @@ ALTER SEQUENCE public."Vehicle_vehicleId_seq" OWNED BY public."Vehicle"."vehicle
 
 
 --
--- TOC entry 284 (class 1259 OID 41414)
+-- TOC entry 282 (class 1259 OID 41414)
 -- Name: Verification; Type: TABLE; Schema: public; Owner: UYikamacim
 --
 
@@ -1762,7 +1762,7 @@ CREATE TABLE public."Verification" (
 ALTER TABLE public."Verification" OWNER TO "UYikamacim";
 
 --
--- TOC entry 285 (class 1259 OID 41417)
+-- TOC entry 283 (class 1259 OID 41417)
 -- Name: Verification_verificationId_seq; Type: SEQUENCE; Schema: public; Owner: UYikamacim
 --
 
@@ -1779,7 +1779,7 @@ ALTER SEQUENCE public."Verification_verificationId_seq" OWNER TO "UYikamacim";
 
 --
 -- TOC entry 3837 (class 0 OID 0)
--- Dependencies: 285
+-- Dependencies: 283
 -- Name: Verification_verificationId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: UYikamacim
 --
 
@@ -2639,7 +2639,7 @@ COPY public."BusinessMedia" ("businessId", "mediaId", "isMain") FROM stdin;
 
 --
 -- TOC entry 3778 (class 0 OID 41326)
--- Dependencies: 247
+-- Dependencies: 245
 -- Data for Name: Card; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -2649,7 +2649,7 @@ COPY public."Card" ("cardId", "accountId", name, "holderName", number, "expirati
 
 --
 -- TOC entry 3780 (class 0 OID 41331)
--- Dependencies: 249
+-- Dependencies: 247
 -- Data for Name: Carpet; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -2659,7 +2659,7 @@ COPY public."Carpet" ("carpetId", "itemId", width, length, "carpetMaterial") FRO
 
 --
 -- TOC entry 3782 (class 0 OID 41339)
--- Dependencies: 252
+-- Dependencies: 250
 -- Data for Name: Chair; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -2680,7 +2680,7 @@ COPY public."Country" ("countryId", name) FROM stdin;
 
 --
 -- TOC entry 3787 (class 0 OID 41354)
--- Dependencies: 258
+-- Dependencies: 256
 -- Data for Name: Curtain; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -3673,7 +3673,7 @@ COPY public."District" ("districtId", "provinceId", name) FROM stdin;
 
 --
 -- TOC entry 3790 (class 0 OID 41363)
--- Dependencies: 262
+-- Dependencies: 260
 -- Data for Name: Hours; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -3703,7 +3703,7 @@ COPY public."Item" ("itemId", "accountId", name, description) FROM stdin;
 
 --
 -- TOC entry 3791 (class 0 OID 41366)
--- Dependencies: 263
+-- Dependencies: 261
 -- Data for Name: ItemMedia; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -77197,7 +77197,7 @@ COPY public."Province" ("provinceId", "countryId", name) FROM stdin;
 
 --
 -- TOC entry 3796 (class 0 OID 41381)
--- Dependencies: 270
+-- Dependencies: 268
 -- Data for Name: Quilt; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -77207,7 +77207,7 @@ COPY public."Quilt" ("quiltId", "itemId", "quiltSize", "quiltMaterial") FROM std
 
 --
 -- TOC entry 3784 (class 0 OID 41347)
--- Dependencies: 255
+-- Dependencies: 253
 -- Data for Name: Reply; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -77277,7 +77277,7 @@ COPY public."Service" ("serviceId", "businessId", title, "mediaId", "serviceCate
 
 --
 -- TOC entry 3800 (class 0 OID 41391)
--- Dependencies: 275
+-- Dependencies: 273
 -- Data for Name: Session; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -77291,7 +77291,7 @@ COPY public."Session" ("sessionId", "accountId", "deviceName", "sessionKey", "re
 
 --
 -- TOC entry 3803 (class 0 OID 41398)
--- Dependencies: 278
+-- Dependencies: 276
 -- Data for Name: Sofa; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -77302,7 +77302,7 @@ COPY public."Sofa" ("sofaId", "itemId", "isCushioned", "sofaType", "sofaMaterial
 
 --
 -- TOC entry 3805 (class 0 OID 41406)
--- Dependencies: 281
+-- Dependencies: 279
 -- Data for Name: Vehicle; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -77312,7 +77312,7 @@ COPY public."Vehicle" ("vehicleId", "itemId", brand, model, "vehicleType") FROM 
 
 --
 -- TOC entry 3807 (class 0 OID 41414)
--- Dependencies: 284
+-- Dependencies: 282
 -- Data for Name: Verification; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
@@ -77359,7 +77359,7 @@ SELECT pg_catalog.setval('public."Blanket_blanketId_seq"', 1, false);
 
 --
 -- TOC entry 3842 (class 0 OID 0)
--- Dependencies: 246
+-- Dependencies: 244
 -- Name: Business_businessId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77368,7 +77368,7 @@ SELECT pg_catalog.setval('public."Business_businessId_seq"', 13, true);
 
 --
 -- TOC entry 3843 (class 0 OID 0)
--- Dependencies: 248
+-- Dependencies: 246
 -- Name: Card_cardId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77377,7 +77377,7 @@ SELECT pg_catalog.setval('public."Card_cardId_seq"', 1, false);
 
 --
 -- TOC entry 3844 (class 0 OID 0)
--- Dependencies: 251
+-- Dependencies: 249
 -- Name: Carpet_carpetId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77386,7 +77386,7 @@ SELECT pg_catalog.setval('public."Carpet_carpetId_seq"', 1, false);
 
 --
 -- TOC entry 3845 (class 0 OID 0)
--- Dependencies: 254
+-- Dependencies: 252
 -- Name: Chair_chairId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77395,7 +77395,7 @@ SELECT pg_catalog.setval('public."Chair_chairId_seq"', 1, false);
 
 --
 -- TOC entry 3846 (class 0 OID 0)
--- Dependencies: 256
+-- Dependencies: 254
 -- Name: Comment_commentId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77404,7 +77404,7 @@ SELECT pg_catalog.setval('public."Comment_commentId_seq"', 1, true);
 
 --
 -- TOC entry 3847 (class 0 OID 0)
--- Dependencies: 257
+-- Dependencies: 255
 -- Name: Country_countryId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77413,7 +77413,7 @@ SELECT pg_catalog.setval('public."Country_countryId_seq"', 1, true);
 
 --
 -- TOC entry 3848 (class 0 OID 0)
--- Dependencies: 260
+-- Dependencies: 258
 -- Name: Curtain_curtainId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77422,7 +77422,7 @@ SELECT pg_catalog.setval('public."Curtain_curtainId_seq"', 1, false);
 
 --
 -- TOC entry 3849 (class 0 OID 0)
--- Dependencies: 261
+-- Dependencies: 259
 -- Name: District_districtId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77431,7 +77431,7 @@ SELECT pg_catalog.setval('public."District_districtId_seq"', 1, false);
 
 --
 -- TOC entry 3850 (class 0 OID 0)
--- Dependencies: 265
+-- Dependencies: 263
 -- Name: Item_itemId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77440,7 +77440,7 @@ SELECT pg_catalog.setval('public."Item_itemId_seq"', 1, true);
 
 --
 -- TOC entry 3851 (class 0 OID 0)
--- Dependencies: 267
+-- Dependencies: 265
 -- Name: Media_mediaId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77449,7 +77449,7 @@ SELECT pg_catalog.setval('public."Media_mediaId_seq"', 95, true);
 
 --
 -- TOC entry 3852 (class 0 OID 0)
--- Dependencies: 268
+-- Dependencies: 266
 -- Name: Neighborhood_neighborhoodId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77458,7 +77458,7 @@ SELECT pg_catalog.setval('public."Neighborhood_neighborhoodId_seq"', 1, false);
 
 --
 -- TOC entry 3853 (class 0 OID 0)
--- Dependencies: 269
+-- Dependencies: 267
 -- Name: Province_provinceId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77467,7 +77467,7 @@ SELECT pg_catalog.setval('public."Province_provinceId_seq"', 1, true);
 
 --
 -- TOC entry 3854 (class 0 OID 0)
--- Dependencies: 272
+-- Dependencies: 270
 -- Name: Quilt_quiltId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77476,7 +77476,7 @@ SELECT pg_catalog.setval('public."Quilt_quiltId_seq"', 1, false);
 
 --
 -- TOC entry 3855 (class 0 OID 0)
--- Dependencies: 273
+-- Dependencies: 271
 -- Name: Review_reviewId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77485,7 +77485,7 @@ SELECT pg_catalog.setval('public."Review_reviewId_seq"', 1, true);
 
 --
 -- TOC entry 3856 (class 0 OID 0)
--- Dependencies: 274
+-- Dependencies: 272
 -- Name: Service_serviceId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77494,7 +77494,7 @@ SELECT pg_catalog.setval('public."Service_serviceId_seq"', 43, true);
 
 --
 -- TOC entry 3857 (class 0 OID 0)
--- Dependencies: 276
+-- Dependencies: 274
 -- Name: Session_accountId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77503,7 +77503,7 @@ SELECT pg_catalog.setval('public."Session_accountId_seq"', 1, false);
 
 --
 -- TOC entry 3858 (class 0 OID 0)
--- Dependencies: 277
+-- Dependencies: 275
 -- Name: Session_sessionId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77512,7 +77512,7 @@ SELECT pg_catalog.setval('public."Session_sessionId_seq"', 28, true);
 
 --
 -- TOC entry 3859 (class 0 OID 0)
--- Dependencies: 280
+-- Dependencies: 278
 -- Name: Sofa_sofaId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77521,7 +77521,7 @@ SELECT pg_catalog.setval('public."Sofa_sofaId_seq"', 1, true);
 
 --
 -- TOC entry 3860 (class 0 OID 0)
--- Dependencies: 283
+-- Dependencies: 281
 -- Name: Vehicle_vehicleId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -77530,7 +77530,7 @@ SELECT pg_catalog.setval('public."Vehicle_vehicleId_seq"', 1, false);
 
 --
 -- TOC entry 3861 (class 0 OID 0)
--- Dependencies: 285
+-- Dependencies: 283
 -- Name: Verification_verificationId_seq; Type: SEQUENCE SET; Schema: public; Owner: UYikamacim
 --
 
@@ -78176,7 +78176,7 @@ ALTER TABLE ONLY public."Vehicle"
     ADD CONSTRAINT "Vehicle_Item_fk" FOREIGN KEY ("itemId") REFERENCES public."Item"("itemId");
 
 
--- Completed on 2025-05-15 15:41:55 UTC
+-- Completed on 2025-05-15 17:28:41 UTC
 
 --
 -- PostgreSQL database dump complete

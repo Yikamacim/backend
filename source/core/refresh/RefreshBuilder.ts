@@ -9,7 +9,7 @@ export class RefreshBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/refresh";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new RefreshController(),
   ) {
     this.buildRoutes();

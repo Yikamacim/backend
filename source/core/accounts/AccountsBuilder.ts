@@ -9,7 +9,7 @@ export class AccountsBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/accounts";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new AccountsController(),
   ) {
     this.buildRoutes();

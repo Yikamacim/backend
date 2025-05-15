@@ -9,7 +9,7 @@ export class MyAddressesBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/my/addresses";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new MyAddressesController(),
   ) {
     this.buildRoutes();

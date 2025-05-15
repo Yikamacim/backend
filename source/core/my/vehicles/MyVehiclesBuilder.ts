@@ -9,7 +9,7 @@ export class MyVehiclesBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/my/vehicles";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new MyVehiclesController(),
   ) {
     this.buildRoutes();

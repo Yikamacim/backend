@@ -9,7 +9,7 @@ export class MyBedsBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/my/beds";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new MyBedsController(),
   ) {
     this.buildRoutes();

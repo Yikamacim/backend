@@ -9,7 +9,7 @@ export class MyMediasBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/my/medias";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new MyMediasController(),
   ) {
     this.buildRoutes();

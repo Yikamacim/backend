@@ -9,7 +9,7 @@ export class EndpointsBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/_internal/endpoints";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new EndpointsController(),
   ) {
     this.buildRoutes();

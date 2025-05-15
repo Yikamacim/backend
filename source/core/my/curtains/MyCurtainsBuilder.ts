@@ -9,7 +9,7 @@ export class MyCurtainsBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/my/curtains";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new MyCurtainsController(),
   ) {
     this.buildRoutes();

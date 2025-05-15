@@ -9,7 +9,7 @@ export class VerifyBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/verify";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new VerifyController(),
   ) {
     this.buildRoutes();

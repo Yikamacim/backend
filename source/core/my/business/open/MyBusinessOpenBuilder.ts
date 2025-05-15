@@ -9,7 +9,7 @@ export class MyBusinessOpenBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/my/business/open";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new MyBusinessOpenController(),
   ) {
     this.buildRoutes();

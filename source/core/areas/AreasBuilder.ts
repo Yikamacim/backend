@@ -9,7 +9,7 @@ export class AreasBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/areas";
 
   public constructor(
-    public readonly router = Router(),
+    public readonly router = Router({ mergeParams: true }),
     private readonly controller = new AreasController(),
   ) {
     this.buildRoutes();
