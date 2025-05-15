@@ -16,7 +16,9 @@ import { AccountsBuilder } from "./core/accounts/AccountsBuilder";
 import { AdminApprovalsBuilder } from "./core/admin/approvals/AdminApprovalsBuilder";
 import { AreasBuilder } from "./core/areas/AreasBuilder";
 import { BusinessesBuilder } from "./core/businesses/_/BusinessesBuilder";
+import { BusinessesAboutBuilder } from "./core/businesses/about/BusinessesAboutBuilder";
 import { BusinessesMediasBuilder } from "./core/businesses/medias/BusinessesMediasBuilder";
+import { BusinessesReviewsBuilder } from "./core/businesses/reviews/BusinessesReviewsBuilder";
 import { BusinessesServicesBuilder } from "./core/businesses/services/BusinessesServicesBuilder";
 import { CountriesBuilder } from "./core/countries/CountriesBuilder";
 import { DistrictsBuilder } from "./core/districts/DistrictsBuilder";
@@ -113,9 +115,19 @@ app.use(
   new BusinessesBuilder().router,
 );
 app.use(
+  // businesses/:businessId/about
+  BusinessesAboutBuilder.BASE_ROUTE,
+  new BusinessesAboutBuilder().router,
+);
+app.use(
   // businesses/:businessId/medias
   BusinessesMediasBuilder.BASE_ROUTE,
   new BusinessesMediasBuilder().router,
+);
+app.use(
+  // businesses/:businessId/reviews
+  BusinessesReviewsBuilder.BASE_ROUTE,
+  new BusinessesReviewsBuilder().router,
 );
 app.use(
   // businesses/:businessId/services
