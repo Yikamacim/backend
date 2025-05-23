@@ -15,7 +15,7 @@ export class MyAddressesRequest implements IRequest {
     public readonly districtId: number,
     public readonly neighborhoodId: number,
     public readonly explicitAddress: string,
-    public readonly isDefault: boolean,
+    public isDefault: boolean,
   ) {}
 
   public static parse(req: ExpressRequest): ParserResponse<MyAddressesRequest | null> {

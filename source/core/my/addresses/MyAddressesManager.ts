@@ -31,6 +31,9 @@ export class MyAddressesManager implements IManager {
     if (request.isDefault) {
       await this.provider.clearMyDefaultAddresses(payload.accountId);
     }
+    if ((await this.provider.getMyActiveAddresses(payload.accountId)).length === 0) {
+      request.isDefault = true;
+    }
     const address = await this.provider.createMyAddress(
       payload.accountId,
       request.name,
@@ -90,8 +93,12 @@ export class MyAddressesManager implements IManager {
         null,
       );
     }
-    if (request.isDefault) {
-      await this.provider.clearMyDefaultAddresses(payload.accountId);
+    if ((await this.provider.getMyActiveAddresses(payload.accountId)).length === 1) {
+      request.isDefault = true;
+    } else {
+      if (request.isDefault) {
+        await this.provider.clearMyDefaultAddresses(payload.accountId);
+      }
     }
     const updatedAddress = await this.provider.updateAddress(
       address.addressId,
