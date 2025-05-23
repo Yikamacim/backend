@@ -103,14 +103,6 @@ export class MyAddressesManager implements IManager {
       request.explicitAddress,
       request.isDefault,
     );
-    if (updatedAddress === null) {
-      return ResponseUtil.managerResponse(
-        new HttpStatus(HttpStatusCode.NOT_FOUND),
-        null,
-        [new ClientError(ClientErrorCode.ADDRESS_NOT_FOUND)],
-        null,
-      );
-    }
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,

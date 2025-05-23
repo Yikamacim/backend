@@ -3,6 +3,7 @@ import { AddressRules } from "../../common/rules/AddressRules";
 import { ApprovalRules } from "../../common/rules/ApprovalRules";
 import { BankAccountRules } from "../../common/rules/BankAccountRules";
 import { BusinessRules } from "../../common/rules/BusinessRules";
+import { CardRules } from "../../common/rules/CardRules";
 import { ChairRules } from "../../common/rules/ChairRules";
 import { ContactRules } from "../../common/rules/ContactRules";
 import { ItemRules } from "../../common/rules/ItemRules";
@@ -82,7 +83,11 @@ export enum ClientErrorCode {
   INVALID_SERVICE_TITLE_LENGTH = 60019,
   INVALID_SERVICE_DESCRIPTION_LENGTH = 60020,
   INVALID_SEARCH_QUERY_LENGTH = 60021,
-  INVALID_ORDER_NOTE_LENGTH = 60022,
+  INVALID_CARD_NAME_LENGTH = 60022,
+  INVALID_CARD_OWNER_LENGTH = 60023,
+  INVALID_CARD_NUMBER_LENGTH = 60024,
+  INVALID_CARD_CVV_LENGTH = 60025,
+  INVALID_ORDER_NOTE_LENGTH = 60026,
   //  *  7XXXX: Format errors
   INVALID_PHONE_CONTENT = 70001,
   INVALID_PASSWORD_CONTENT = 70002,
@@ -111,8 +116,14 @@ export enum ClientErrorCode {
   INVALID_SERVICE_UNIT_PRICE = 70025,
   INVALID_SEARCH_QUERY_CONTENT = 70026,
   DUPLICATE_SERVICE_CATEGORIES = 70027,
-  INVALID_ORDER_NOTE_CONTENT = 70028,
-  DUPLICATE_ITEM_IDS = 70029,
+  INVALID_CARD_NAME_CONTENT = 70028,
+  INVALID_CARD_OWNER_CONTENT = 70029,
+  INVALID_CARD_NUMBER_CONTENT = 70030,
+  INVALID_CARD_EXPIRATION_MONTH_CONTENT = 70031,
+  INVALID_CARD_EXPIRATION_YEAR_CONTENT = 70032,
+  INVALID_CARD_CVV_CONTENT = 70033,
+  INVALID_ORDER_NOTE_CONTENT = 70034,
+  DUPLICATE_ITEM_IDS = 70035,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -211,8 +222,12 @@ export enum ClientErrorCode {
   BUSINESS_ALREADY_CLOSED = 82700,
   //  *  *  828XX: /businesses/:businessId errors
   NO_BUSINESS_FOUND = 82800,
-  //  *  *  829XX: /my/orders errors
-  INVALID_ORDER_ID = 82900,
+  //  *  *  829XX: /my/cards errors
+  INVALID_CARD_ID = 82900,
+  CARD_NOT_FOUND = 82901,
+  CANNOT_DELETE_DEFAULT_CARD = 82902,
+  //  *  *  830XX: /my/orders errors
+  INVALID_ORDER_ID = 83000,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -275,6 +290,10 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_SERVICE_TITLE_LENGTH]: `Provided service title wasn't in the length range of ${ServiceRules.TITLE_MIN_LENGTH} to ${ServiceRules.TITLE_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_SERVICE_DESCRIPTION_LENGTH]: `Provided service description wasn't in the length range of ${ServiceRules.DESCRIPTION_MIN_LENGTH} to ${ServiceRules.DESCRIPTION_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_SEARCH_QUERY_LENGTH]: `Provided search query wasn't in the length range of ${SearchRules.QUERY_MIN_LENGTH} to ${SearchRules.QUERY_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_CARD_NAME_LENGTH]: `Provided card name wasn't in the length range of ${CardRules.NAME_MIN_LENGTH} to ${CardRules.NAME_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_CARD_OWNER_LENGTH]: `Provided card owner wasn't in the length range of ${CardRules.OWNER_MIN_LENGTH} to ${CardRules.OWNER_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_CARD_NUMBER_LENGTH]: `Provided card number wasn't in the length of ${CardRules.NUMBER_LENGTH}.`,
+  [ClientErrorCode.INVALID_CARD_CVV_LENGTH]: `Provided card cvv wasn't in the length of ${CardRules.CVV_LENGTH}.`,
   [ClientErrorCode.INVALID_ORDER_NOTE_LENGTH]: `Provided order note wasn't in the length range of ${OrderRules.NOTE_MIN_LENGTH} to ${OrderRules.NOTE_MAX_LENGTH}.`,
   //  *  7XXXX: Content errors
   [ClientErrorCode.INVALID_PHONE_CONTENT]: "Provided phone contained invalid characters.",
@@ -320,6 +339,13 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
     "Provided search query contained invalid characters.",
   [ClientErrorCode.DUPLICATE_SERVICE_CATEGORIES]:
     "Provided service categories contained duplicates.",
+  [ClientErrorCode.INVALID_CARD_NAME_CONTENT]: "Provided card name contained invalid characters.",
+  [ClientErrorCode.INVALID_CARD_OWNER_CONTENT]: "Provided card owner contained invalid characters.",
+  [ClientErrorCode.INVALID_CARD_NUMBER_CONTENT]:
+    "Provided card number contained invalid characters.",
+  [ClientErrorCode.INVALID_CARD_EXPIRATION_MONTH_CONTENT]: `Provided card expiration month is not in between ${CardRules.EXPIRATION_MONTH_MIN} and ${CardRules.EXPIRATION_MONTH_MAX}.`,
+  [ClientErrorCode.INVALID_CARD_EXPIRATION_YEAR_CONTENT]: `Provided card expiration year is not in between ${CardRules.EXPIRATION_YEAR_MIN} and ${CardRules.EXPIRATION_YEAR_MAX}.`,
+  [ClientErrorCode.INVALID_CARD_CVV_CONTENT]: "Provided card cvv contained invalid characters.",
   [ClientErrorCode.INVALID_ORDER_NOTE_CONTENT]: "Provided order note contained invalid characters.",
   [ClientErrorCode.DUPLICATE_ITEM_IDS]: "Provided item ids contained duplicates.",
 
@@ -423,7 +449,11 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.BUSINESS_ALREADY_CLOSED]: "Business is already closed.",
   //  *  *  828XX: /businesses/:businessId errors
   [ClientErrorCode.NO_BUSINESS_FOUND]: "No business was found with the provided id.",
-  //  *  *  829XX: /my/orders errors
+  //  *  *  829XX: /my/cards errors
+  [ClientErrorCode.INVALID_CARD_ID]: "Provided card id was invalid.",
+  [ClientErrorCode.CARD_NOT_FOUND]: "Account doesn't have a card with the provided id.",
+  [ClientErrorCode.CANNOT_DELETE_DEFAULT_CARD]: "Default card can't be deleted.",
+  //  *  *  830XX: /my/orders errors
   [ClientErrorCode.INVALID_ORDER_ID]: "Provided order id was invalid.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
