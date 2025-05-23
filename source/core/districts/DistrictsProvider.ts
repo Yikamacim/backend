@@ -23,9 +23,7 @@ export class DistrictsProvider implements IProvider {
     }
   }
 
-  public async getDistrictById(
-    districtId: number,
-  ): Promise<ProviderResponse<DistrictModel | null>> {
+  public async getDistrict(districtId: number): Promise<ProviderResponse<DistrictModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(DistrictQueries.GET_DISTRICT_$DSID, [

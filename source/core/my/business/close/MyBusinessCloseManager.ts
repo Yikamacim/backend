@@ -15,7 +15,7 @@ export class MyBusinessCloseManager implements IManager {
   public async putMyBusinessClose(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyBusinessCloseResponse | null>> {
-    const business = await this.provider.getBusinessByAccountId(payload.accountId);
+    const business = await this.provider.getMyBusiness(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -32,15 +32,12 @@ export class MyBusinessCloseManager implements IManager {
         null,
       );
     }
-    const updatedBusiness = await this.provider.closeBusiness(
-      payload.accountId,
-      business.businessId,
-    );
+    const closedBusiness = await this.provider.closeBusiness(business.businessId);
     let mediaData: MediaData | null = null;
-    if (updatedBusiness.mediaId !== null) {
+    if (closedBusiness.mediaId !== null) {
       const media = await this.provider.getBusinessMedia(
-        updatedBusiness.businessId,
-        updatedBusiness.mediaId,
+        closedBusiness.businessId,
+        closedBusiness.mediaId,
       );
       if (media === null) {
         return ResponseUtil.managerResponse(
@@ -56,7 +53,7 @@ export class MyBusinessCloseManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBusinessCloseResponse.fromModel(updatedBusiness, mediaData),
+      MyBusinessCloseResponse.fromModel(closedBusiness, mediaData),
     );
   }
 }

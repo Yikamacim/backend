@@ -26,7 +26,7 @@ export class DistrictsManager implements IManager {
   public async getDistricts$(
     params: DistrictsParams,
   ): Promise<ManagerResponse<DistrictsResponse | null>> {
-    const district = await this.provider.getDistrictById(parseInt(params.districtId));
+    const district = await this.provider.getDistrict(parseInt(params.districtId));
     if (district === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),

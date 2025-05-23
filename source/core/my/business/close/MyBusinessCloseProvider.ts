@@ -13,30 +13,23 @@ export class MyBusinessCloseProvider implements IProvider {
     private readonly businessProvider = new BusinessProvider(),
     private readonly businessMediaProvider = new BusinessMediaProvider(),
   ) {
-    this.getBusinessByAccountId = this.businessProvider.getBusinessByAccountId.bind(
-      this.businessProvider,
-    );
+    this.getMyBusiness = this.businessProvider.getMyBusiness.bind(this.businessProvider);
     this.getBusinessMedia = this.businessMediaProvider.getBusinessMedia.bind(
       this.businessMediaProvider,
     );
-    this.partialGetBusinessByAccountId = this.businessProvider.partialGetBusinessByAccountId.bind(
-      this.businessProvider,
-    );
+    this.partialGetBusiness = this.businessProvider.partialGetBusiness.bind(this.businessProvider);
   }
 
-  public readonly getBusinessByAccountId: typeof this.businessProvider.getBusinessByAccountId;
+  public readonly getMyBusiness: typeof this.businessProvider.getMyBusiness;
   public readonly getBusinessMedia: typeof this.businessMediaProvider.getBusinessMedia;
 
-  private readonly partialGetBusinessByAccountId: typeof this.businessProvider.partialGetBusinessByAccountId;
+  private readonly partialGetBusiness: typeof this.businessProvider.partialGetBusiness;
 
-  public async closeBusiness(
-    accountId: number,
-    businessId: number,
-  ): Promise<ProviderResponse<BusinessViewModel>> {
+  public async closeBusiness(businessId: number): Promise<ProviderResponse<BusinessViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await this.partialCloseBusiness(businessId);
-      const businessView = await this.partialGetBusinessByAccountId(accountId);
+      const businessView = await this.partialGetBusiness(businessId);
       if (businessView === null) {
         throw new UnexpectedDatabaseStateError("Business was not updated");
       }

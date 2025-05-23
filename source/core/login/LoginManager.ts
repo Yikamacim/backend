@@ -12,7 +12,7 @@ export class LoginManager implements IManager {
   public constructor(private readonly provider = new LoginProvider()) {}
 
   public async postLogin(request: LoginRequest): Promise<ManagerResponse<LoginResponse | null>> {
-    const account = await this.provider.getAccount(request.phone);
+    const account = await this.provider.getAccountByPhone(request.phone);
     if (account === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),

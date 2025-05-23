@@ -14,7 +14,7 @@ export class MyBusinessHoursManager implements IManager {
   public async getMyBusinessHours(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyBusinessHoursResponse | null>> {
-    const business = await this.provider.getBusinessByAccountId(payload.accountId);
+    const business = await this.provider.getMyBusiness(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -44,7 +44,7 @@ export class MyBusinessHoursManager implements IManager {
     payload: TokenPayload,
     request: MyBusinessHoursRequest,
   ): Promise<ManagerResponse<MyBusinessHoursResponse | null>> {
-    const business = await this.provider.getBusinessByAccountId(payload.accountId);
+    const business = await this.provider.getMyBusiness(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -98,7 +98,7 @@ export class MyBusinessHoursManager implements IManager {
     payload: TokenPayload,
     request: MyBusinessHoursRequest,
   ): Promise<ManagerResponse<MyBusinessHoursResponse | null>> {
-    const business = await this.provider.getBusinessByAccountId(payload.accountId);
+    const business = await this.provider.getMyBusiness(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),

@@ -10,20 +10,21 @@ import { AddressViewQueries } from "../../../common/queries/AddressViewQueries";
 
 export class MyAddressesProvider implements IProvider {
   public constructor(private readonly addressProvider = new AddressProvider()) {
-    this.createAddress = this.addressProvider.createAddress.bind(this.addressProvider);
+    this.createMyAddress = this.addressProvider.createMyAddress.bind(this.addressProvider);
     this.updateAddress = this.addressProvider.updateAddress.bind(this.addressProvider);
-    this.deleteAddress = this.addressProvider.deleteAddress.bind(this.addressProvider);
   }
 
-  public readonly createAddress: typeof this.addressProvider.createAddress;
+  public readonly createMyAddress: typeof this.addressProvider.createMyAddress;
   public readonly updateAddress: typeof this.addressProvider.updateAddress;
-  public readonly deleteAddress: typeof this.addressProvider.deleteAddress;
 
-  public async getAddresses(accountId: number): Promise<ProviderResponse<AddressViewModel[]>> {
+  public async getMyActiveAddresses(
+    accountId: number,
+  ): Promise<ProviderResponse<AddressViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(AddressViewQueries.GET_ADDRESSES_$ACID, [
+      const results = await DbConstants.POOL.query(AddressViewQueries.GET_ADDRESSES_$ACID_$ISDEL, [
         accountId,
+        false,
       ]);
       const records: unknown[] = results.rows;
       return await ResponseUtil.providerResponse(AddressViewModel.fromRecords(records));
@@ -33,16 +34,16 @@ export class MyAddressesProvider implements IProvider {
     }
   }
 
-  public async getAddress(
+  public async getMyActiveAddress(
     accountId: number,
     addressId: number,
   ): Promise<ProviderResponse<AddressViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(AddressViewQueries.GET_ADDRESS_$ACID_$ADID, [
-        accountId,
-        addressId,
-      ]);
+      const results = await DbConstants.POOL.query(
+        AddressViewQueries.GET_ADDRESS_$ACID_$ADID_$ISDEL,
+        [accountId, addressId, false],
+      );
       const record: unknown = results.rows[0];
       if (!ProtoUtil.isProtovalid(record)) {
         return await ResponseUtil.providerResponse(null);
@@ -54,10 +55,21 @@ export class MyAddressesProvider implements IProvider {
     }
   }
 
-  public async clearDefaultAddresses(accountId: number): Promise<ProviderResponse<null>> {
+  public async clearMyDefaultAddresses(accountId: number): Promise<ProviderResponse<null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await DbConstants.POOL.query(AddressQueries.UPDATE_ADDRESSES_$ACID_$ISDF, [accountId, false]);
+      return await ResponseUtil.providerResponse(null);
+    } catch (error) {
+      await DbConstants.POOL.query(DbConstants.ROLLBACK);
+      throw error;
+    }
+  }
+
+  public async archiveAddress(addressId: number): Promise<ProviderResponse<null>> {
+    await DbConstants.POOL.query(DbConstants.BEGIN);
+    try {
+      await DbConstants.POOL.query(AddressQueries.UPDATE_ADDRESS_$ADID_$ISDEL, [addressId, true]);
       return await ResponseUtil.providerResponse(null);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);

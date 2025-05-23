@@ -19,7 +19,7 @@ export class CountriesProvider implements IProvider {
     }
   }
 
-  public async getCountryById(countryId: number): Promise<ProviderResponse<CountryModel | null>> {
+  public async getCountry(countryId: number): Promise<ProviderResponse<CountryModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(CountryQueries.GET_COUNTRY_$CNID, [countryId]);

@@ -17,6 +17,7 @@ export class BusinessServiceViewModel implements IModel {
     public readonly reviewsCount: number,
     public readonly serviceTitle: string,
     public readonly serviceCategory: ServiceCategory,
+    public readonly isDeleted: boolean,
   ) {}
 
   public static fromRecord(record: unknown): BusinessServiceViewModel {
@@ -36,6 +37,7 @@ export class BusinessServiceViewModel implements IModel {
       record.reviewsCount,
       record.serviceTitle,
       record.serviceCategory,
+      record.isDeleted,
     );
   }
 
@@ -63,7 +65,8 @@ export class BusinessServiceViewModel implements IModel {
       (model.stars === null || typeof model.stars === "number") &&
       typeof model.reviewsCount === "number" &&
       typeof model.serviceTitle === "string" &&
-      Object.values(ServiceCategory).includes(model.serviceCategory)
+      Object.values(ServiceCategory).includes(model.serviceCategory) &&
+      typeof model.isDeleted === "boolean"
     );
   }
 
@@ -71,6 +74,6 @@ export class BusinessServiceViewModel implements IModel {
     if (!Array.isArray(data)) {
       return false;
     }
-    return data.every((item: unknown): boolean => this.isValidModel(item));
+    return data.every((item: unknown) => this.isValidModel(item));
   }
 }

@@ -7,7 +7,7 @@ import { MediaViewModel } from "../models/MediaViewModel";
 import { MediaViewQueries } from "../queries/MediaViewQueries";
 
 export class MediaProvider implements IProvider {
-  public async getMedias(accountId: number): Promise<ProviderResponse<MediaViewModel[]>> {
+  public async getMyMedias(accountId: number): Promise<ProviderResponse<MediaViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(MediaViewQueries.GET_MEDIAS_$ACID, [accountId]);

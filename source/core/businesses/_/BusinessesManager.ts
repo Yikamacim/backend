@@ -41,7 +41,7 @@ export class BusinessesManager implements IManager {
       }
       mediaData = await MediaHelper.mediaToMediaData(media);
     }
-    const allServiceCategories = (await this.provider.getServices(business.businessId)).map(
+    const allServiceCategories = (await this.provider.getActiveServices(business.businessId)).map(
       (service) => service.serviceCategory,
     );
     const serviceCategories = [...new Set(allServiceCategories)];

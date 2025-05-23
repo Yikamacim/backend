@@ -17,9 +17,9 @@ export class MyBedsProvider implements IProvider {
     private readonly itemProvider = new ItemProvider(),
     private readonly itemMediaProvider = new ItemMediaProvider(),
   ) {
-    this.partialCreateItem = this.itemProvider.partialCreateItem.bind(this.itemProvider);
+    this.partialCreateMyItem = this.itemProvider.partialCreateMyItem.bind(this.itemProvider);
     this.partialUpdateItem = this.itemProvider.partialUpdateItem.bind(this.itemProvider);
-    this.partialDeleteItem = this.itemProvider.partialDeleteItem.bind(this.itemProvider);
+    this.archiveItem = this.itemProvider.archiveItem.bind(this.itemProvider);
     this.getItemMedias = this.itemMediaProvider.getItemMedias.bind(this.itemMediaProvider);
     this.partialCreateItemMedias = this.itemMediaProvider.partialCreateItemMedias.bind(
       this.itemMediaProvider,
@@ -30,17 +30,20 @@ export class MyBedsProvider implements IProvider {
   }
 
   public readonly getItemMedias: typeof this.itemMediaProvider.getItemMedias;
+  public readonly archiveItem: typeof this.itemProvider.archiveItem;
 
-  private readonly partialCreateItem: typeof this.itemProvider.partialCreateItem;
+  private readonly partialCreateMyItem: typeof this.itemProvider.partialCreateMyItem;
   private readonly partialUpdateItem: typeof this.itemProvider.partialUpdateItem;
-  private readonly partialDeleteItem: typeof this.itemProvider.partialDeleteItem;
   private readonly partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   private readonly partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
 
-  public async getMyBeds(accountId: number): Promise<ProviderResponse<BedViewModel[]>> {
+  public async getMyActiveBeds(accountId: number): Promise<ProviderResponse<BedViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(BedViewQueries.GET_BEDS_$ACID, [accountId]);
+      const results = await DbConstants.POOL.query(BedViewQueries.GET_BEDS_$ACID_$ISDEL, [
+        accountId,
+        false,
+      ]);
       const records: unknown[] = results.rows;
       return await ResponseUtil.providerResponse(BedViewModel.fromRecords(records));
     } catch (error) {
@@ -49,20 +52,29 @@ export class MyBedsProvider implements IProvider {
     }
   }
 
-  public async getBed(
+  public async getMyActiveBed(
     accountId: number,
     bedId: number,
   ): Promise<ProviderResponse<BedViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      return await ResponseUtil.providerResponse(await this.partialGetBed(accountId, bedId));
+      const results = await DbConstants.POOL.query(BedViewQueries.GET_BED_$ACID_$BDID_$ISDEL, [
+        accountId,
+        bedId,
+        false,
+      ]);
+      const record: unknown = results.rows[0];
+      if (!ProtoUtil.isProtovalid(record)) {
+        return null;
+      }
+      return BedViewModel.fromRecord(record);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async createBed(
+  public async createMyBed(
     accountId: number,
     name: string,
     description: string,
@@ -71,10 +83,10 @@ export class MyBedsProvider implements IProvider {
   ): Promise<ProviderResponse<BedViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const item = await this.partialCreateItem(accountId, name, description);
+      const item = await this.partialCreateMyItem(accountId, name, description);
       const bed = await this.partialCreateBed(item.itemId, bedSize);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      const bedView = await this.partialGetBed(accountId, bed.bedId);
+      const bedView = await this.partialGetActiveBed(bed.bedId);
       if (bedView === null) {
         throw new UnexpectedDatabaseStateError("Bed was not created");
       }
@@ -86,7 +98,6 @@ export class MyBedsProvider implements IProvider {
   }
 
   public async updateBed(
-    accountId: number,
     oldMediaIds: number[],
     bedId: number,
     itemId: number,
@@ -101,7 +112,7 @@ export class MyBedsProvider implements IProvider {
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateBed(bedId, bedSize);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      const bedView = await this.partialGetBed(accountId, bedId);
+      const bedView = await this.partialGetActiveBed(bedId);
       if (bedView === null) {
         throw new UnexpectedDatabaseStateError("Bed was not updated");
       }
@@ -112,29 +123,12 @@ export class MyBedsProvider implements IProvider {
     }
   }
 
-  public async deleteBed(
-    itemId: number,
-    bedId: number,
-    mediaIds: number[],
-  ): Promise<ProviderResponse<null>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      await this.partialDeleteBed(bedId);
-      await this.partialDeleteItemMedias(itemId, mediaIds);
-      await this.partialDeleteItem(itemId);
-      return await ResponseUtil.providerResponse(null);
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
-    }
-  }
-
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialGetBed(accountId: number, bedId: number): Promise<BedViewModel | null> {
-    const results = await DbConstants.POOL.query(BedViewQueries.GET_BED_$ACID_$BDID, [
-      accountId,
+  private async partialGetActiveBed(bedId: number): Promise<BedViewModel | null> {
+    const results = await DbConstants.POOL.query(BedViewQueries.GET_BED_$BDID_$ISDEL, [
       bedId,
+      false,
     ]);
     const record: unknown = results.rows[0];
     if (!ProtoUtil.isProtovalid(record)) {
@@ -159,9 +153,5 @@ export class MyBedsProvider implements IProvider {
     ]);
     const record: unknown = results.rows[0];
     return BedModel.fromRecord(record);
-  }
-
-  private async partialDeleteBed(bedId: number): Promise<void> {
-    await DbConstants.POOL.query(BedQueries.DELETE_BED_$BDID, [bedId]);
   }
 }

@@ -48,7 +48,7 @@ export class MyBedsRequest implements IRequest {
       typeof blueprint.name === "string" &&
       typeof blueprint.description === "string" &&
       Array.isArray(blueprint.mediaIds) &&
-      blueprint.mediaIds.every((mediaId: unknown): boolean => typeof mediaId === "number") &&
+      blueprint.mediaIds.every((mediaId) => typeof mediaId === "number") &&
       (blueprint.bedSize === null || Object.values(BedSize).includes(blueprint.bedSize))
     );
   }

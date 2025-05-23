@@ -17,7 +17,7 @@ export class MyVehiclesManager implements IManager {
   public async getMyVehicles(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyVehiclesResponse[]>> {
-    const vehicles = await this.provider.getVehicles(payload.accountId);
+    const vehicles = await this.provider.getMyActiveVehicles(payload.accountId);
     const responses: MyVehiclesResponse[] = [];
     for (const myVehicle of vehicles) {
       const medias = await this.provider.getItemMedias(myVehicle.itemId);
@@ -40,7 +40,7 @@ export class MyVehiclesManager implements IManager {
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }
-    const vehicle = await this.provider.createVehicle(
+    const vehicle = await this.provider.createMyVehicle(
       payload.accountId,
       request.name,
       request.description,
@@ -62,7 +62,10 @@ export class MyVehiclesManager implements IManager {
     payload: TokenPayload,
     params: MyVehiclesParams,
   ): Promise<ManagerResponse<MyVehiclesResponse | null>> {
-    const vehicle = await this.provider.getVehicle(payload.accountId, parseInt(params.vehicleId));
+    const vehicle = await this.provider.getMyActiveVehicle(
+      payload.accountId,
+      parseInt(params.vehicleId),
+    );
     if (vehicle === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -86,7 +89,10 @@ export class MyVehiclesManager implements IManager {
     params: MyVehiclesParams,
     request: MyVehiclesRequest,
   ): Promise<ManagerResponse<MyVehiclesResponse | null>> {
-    const vehicle = await this.provider.getVehicle(payload.accountId, parseInt(params.vehicleId));
+    const vehicle = await this.provider.getMyActiveVehicle(
+      payload.accountId,
+      parseInt(params.vehicleId),
+    );
     if (vehicle === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -106,7 +112,6 @@ export class MyVehiclesManager implements IManager {
     }
     const oldMedias = await this.provider.getItemMedias(vehicle.itemId);
     const updatedVehicle = await this.provider.updateVehicle(
-      payload.accountId,
       oldMedias.map((oldMedia) => oldMedia.mediaId),
       vehicle.vehicleId,
       vehicle.itemId,
@@ -130,7 +135,10 @@ export class MyVehiclesManager implements IManager {
     payload: TokenPayload,
     params: MyVehiclesParams,
   ): Promise<ManagerResponse<null>> {
-    const vehicle = await this.provider.getVehicle(payload.accountId, parseInt(params.vehicleId));
+    const vehicle = await this.provider.getMyActiveVehicle(
+      payload.accountId,
+      parseInt(params.vehicleId),
+    );
     if (vehicle === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -140,9 +148,8 @@ export class MyVehiclesManager implements IManager {
       );
     }
     const medias = await this.provider.getItemMedias(vehicle.itemId);
-    await this.provider.deleteVehicle(
+    await this.provider.archiveItem(
       vehicle.itemId,
-      vehicle.vehicleId,
       medias.map((media) => media.mediaId),
     );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);

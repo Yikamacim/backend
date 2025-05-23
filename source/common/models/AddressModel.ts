@@ -13,6 +13,7 @@ export class AddressModel implements IModel {
     public readonly neighborhoodId: number,
     public readonly explicitAddress: string,
     public readonly isDefault: boolean,
+    public readonly isDeleted: boolean,
   ) {}
 
   public static fromRecord(record: unknown): AddressModel {
@@ -29,6 +30,7 @@ export class AddressModel implements IModel {
       record.neighborhoodId,
       record.explicitAddress,
       record.isDefault,
+      record.isDeleted,
     );
   }
 
@@ -53,7 +55,8 @@ export class AddressModel implements IModel {
       typeof model.districtId === "number" &&
       typeof model.neighborhoodId === "number" &&
       typeof model.explicitAddress === "string" &&
-      typeof model.isDefault === "boolean"
+      typeof model.isDefault === "boolean" &&
+      typeof model.isDeleted === "boolean"
     );
   }
 
@@ -61,6 +64,6 @@ export class AddressModel implements IModel {
     if (!Array.isArray(data)) {
       return false;
     }
-    return data.every((item: unknown): boolean => this.isValidModel(item));
+    return data.every((item: unknown) => this.isValidModel(item));
   }
 }

@@ -13,6 +13,7 @@ export class CarpetViewModel implements IModel {
     public readonly width: number | null,
     public readonly length: number | null,
     public readonly carpetMaterial: CarpetMaterial | null,
+    public readonly isDeleted: boolean,
   ) {}
 
   public static fromRecord(record: unknown): CarpetViewModel {
@@ -28,6 +29,7 @@ export class CarpetViewModel implements IModel {
       record.width,
       record.length,
       record.carpetMaterial,
+      record.isDeleted,
     );
   }
 
@@ -52,7 +54,8 @@ export class CarpetViewModel implements IModel {
       (model.width === null || typeof model.width === "number") &&
       (model.length === null || typeof model.length === "number") &&
       (model.carpetMaterial === null ||
-        Object.values(CarpetMaterial).includes(model.carpetMaterial))
+        Object.values(CarpetMaterial).includes(model.carpetMaterial)) &&
+      typeof model.isDeleted === "boolean"
     );
   }
 
@@ -60,6 +63,6 @@ export class CarpetViewModel implements IModel {
     if (!Array.isArray(data)) {
       return false;
     }
-    return data.every((item: unknown): boolean => this.isValidModel(item));
+    return data.every((item: unknown) => this.isValidModel(item));
   }
 }

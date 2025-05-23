@@ -12,6 +12,7 @@ export class ServiceModel implements IModel {
     public readonly serviceCategory: ServiceCategory,
     public readonly description: string,
     public readonly unitPrice: number,
+    public readonly isDeleted: boolean,
   ) {}
 
   public static fromRecord(record: unknown): ServiceModel {
@@ -26,6 +27,7 @@ export class ServiceModel implements IModel {
       record.serviceCategory,
       record.description,
       record.unitPrice,
+      record.isDeleted,
     );
   }
 
@@ -48,7 +50,8 @@ export class ServiceModel implements IModel {
       (model.mediaId === null || typeof model.mediaId === "number") &&
       Object.values(ServiceCategory).includes(model.serviceCategory) &&
       typeof model.description === "string" &&
-      typeof model.unitPrice === "number"
+      typeof model.unitPrice === "number" &&
+      typeof model.isDeleted === "boolean"
     );
   }
 
@@ -56,6 +59,6 @@ export class ServiceModel implements IModel {
     if (!Array.isArray(data)) {
       return false;
     }
-    return data.every((item: unknown): boolean => this.isValidModel(item));
+    return data.every((item: unknown) => this.isValidModel(item));
   }
 }

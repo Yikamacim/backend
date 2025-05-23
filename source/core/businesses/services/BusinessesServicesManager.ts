@@ -24,7 +24,7 @@ export class BusinessesServicesManager implements IManager {
         null,
       );
     }
-    const services = await this.provider.getServices(business.businessId);
+    const services = await this.provider.getActiveServices(business.businessId);
     const responses: BusinessesServicesResponse[] = [];
     for (const service of services) {
       let mediaData: MediaData | null = null;

@@ -11,6 +11,7 @@ export class BedViewModel implements IModel {
     public readonly name: string,
     public readonly description: string,
     public readonly bedSize: BedSize | null,
+    public readonly isDeleted: boolean,
   ) {}
 
   public static fromRecord(record: unknown): BedViewModel {
@@ -24,6 +25,7 @@ export class BedViewModel implements IModel {
       record.name,
       record.description,
       record.bedSize,
+      record.isDeleted,
     );
   }
 
@@ -45,7 +47,8 @@ export class BedViewModel implements IModel {
       typeof model.itemId === "number" &&
       typeof model.name === "string" &&
       typeof model.description === "string" &&
-      (model.bedSize === null || Object.values(BedSize).includes(model.bedSize))
+      (model.bedSize === null || Object.values(BedSize).includes(model.bedSize)) &&
+      typeof model.isDeleted === "boolean"
     );
   }
 
@@ -53,6 +56,6 @@ export class BedViewModel implements IModel {
     if (!Array.isArray(data)) {
       return false;
     }
-    return data.every((item: unknown): boolean => this.isValidModel(item));
+    return data.every((item: unknown) => this.isValidModel(item));
   }
 }

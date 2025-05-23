@@ -12,9 +12,7 @@ export class MyBusinessMediasProvider implements IProvider {
     private readonly businessProvider = new BusinessProvider(),
     private readonly businessMediaProvider = new BusinessMediaProvider(),
   ) {
-    this.getBusinessByAccountId = this.businessProvider.getBusinessByAccountId.bind(
-      this.businessProvider,
-    );
+    this.getMyBusiness = this.businessProvider.getMyBusiness.bind(this.businessProvider);
     this.getBusinessMedia = this.businessMediaProvider.getBusinessMedia.bind(
       this.businessMediaProvider,
     );
@@ -32,7 +30,7 @@ export class MyBusinessMediasProvider implements IProvider {
     );
   }
 
-  public readonly getBusinessByAccountId: typeof this.businessProvider.getBusinessByAccountId;
+  public readonly getMyBusiness: typeof this.businessProvider.getMyBusiness;
   public readonly getBusinessMedia: typeof this.businessMediaProvider.getBusinessMedia;
   public readonly getBusinessMedias: typeof this.businessMediaProvider.getBusinessMedias;
 

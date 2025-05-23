@@ -15,7 +15,7 @@ export class MyCarpetsManager implements IManager {
   public constructor(private readonly provider = new MyCarpetsProvider()) {}
 
   public async getMyCarpets(payload: TokenPayload): Promise<ManagerResponse<MyCarpetsResponse[]>> {
-    const carpets = await this.provider.getCarpets(payload.accountId);
+    const carpets = await this.provider.getMyActiveCarpets(payload.accountId);
     const responses: MyCarpetsResponse[] = [];
     for (const carpet of carpets) {
       const medias = await this.provider.getItemMedias(carpet.itemId);
@@ -38,7 +38,7 @@ export class MyCarpetsManager implements IManager {
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }
-    const carpet = await this.provider.createCarpet(
+    const carpet = await this.provider.createMyCarpet(
       payload.accountId,
       request.name,
       request.description,
@@ -60,7 +60,10 @@ export class MyCarpetsManager implements IManager {
     payload: TokenPayload,
     params: MyCarpetsParams,
   ): Promise<ManagerResponse<MyCarpetsResponse | null>> {
-    const carpet = await this.provider.getCarpet(payload.accountId, parseInt(params.carpetId));
+    const carpet = await this.provider.getMyActiveCarpet(
+      payload.accountId,
+      parseInt(params.carpetId),
+    );
     if (carpet === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -84,7 +87,10 @@ export class MyCarpetsManager implements IManager {
     params: MyCarpetsParams,
     request: MyCarpetsRequest,
   ): Promise<ManagerResponse<MyCarpetsResponse | null>> {
-    const carpet = await this.provider.getCarpet(payload.accountId, parseInt(params.carpetId));
+    const carpet = await this.provider.getMyActiveCarpet(
+      payload.accountId,
+      parseInt(params.carpetId),
+    );
     if (carpet === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -104,7 +110,6 @@ export class MyCarpetsManager implements IManager {
     }
     const oldMedias = await this.provider.getItemMedias(carpet.itemId);
     const updatedCarpet = await this.provider.updateCarpet(
-      payload.accountId,
       oldMedias.map((oldMedia) => oldMedia.mediaId),
       carpet.carpetId,
       carpet.itemId,
@@ -128,7 +133,10 @@ export class MyCarpetsManager implements IManager {
     payload: TokenPayload,
     params: MyCarpetsParams,
   ): Promise<ManagerResponse<null>> {
-    const carpet = await this.provider.getCarpet(payload.accountId, parseInt(params.carpetId));
+    const carpet = await this.provider.getMyActiveCarpet(
+      payload.accountId,
+      parseInt(params.carpetId),
+    );
     if (carpet === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -138,9 +146,8 @@ export class MyCarpetsManager implements IManager {
       );
     }
     const medias = await this.provider.getItemMedias(carpet.itemId);
-    await this.provider.deleteCarpet(
+    await this.provider.archiveItem(
       carpet.itemId,
-      carpet.carpetId,
       medias.map((media) => media.mediaId),
     );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);

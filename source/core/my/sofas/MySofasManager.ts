@@ -15,7 +15,7 @@ export class MySofasManager implements IManager {
   public constructor(private readonly provider = new MySofasProvider()) {}
 
   public async getMySofas(payload: TokenPayload): Promise<ManagerResponse<MySofasResponse[]>> {
-    const sofas = await this.provider.getSofas(payload.accountId);
+    const sofas = await this.provider.getMyActiveSofas(payload.accountId);
     const responses: MySofasResponse[] = [];
     for (const mySofa of sofas) {
       const medias = await this.provider.getItemMedias(mySofa.itemId);
@@ -38,7 +38,7 @@ export class MySofasManager implements IManager {
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }
-    const sofa = await this.provider.createSofa(
+    const sofa = await this.provider.createMySofa(
       payload.accountId,
       request.name,
       request.description,
@@ -60,7 +60,7 @@ export class MySofasManager implements IManager {
     payload: TokenPayload,
     params: MySofasParams,
   ): Promise<ManagerResponse<MySofasResponse | null>> {
-    const sofa = await this.provider.getSofa(payload.accountId, parseInt(params.sofaId));
+    const sofa = await this.provider.getMyActiveSofa(payload.accountId, parseInt(params.sofaId));
     if (sofa === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -84,7 +84,7 @@ export class MySofasManager implements IManager {
     params: MySofasParams,
     request: MySofasRequest,
   ): Promise<ManagerResponse<MySofasResponse | null>> {
-    const sofa = await this.provider.getSofa(payload.accountId, parseInt(params.sofaId));
+    const sofa = await this.provider.getMyActiveSofa(payload.accountId, parseInt(params.sofaId));
     if (sofa === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -104,7 +104,6 @@ export class MySofasManager implements IManager {
     }
     const oldMedias = await this.provider.getItemMedias(sofa.itemId);
     const updatedSofa = await this.provider.updateSofa(
-      payload.accountId,
       oldMedias.map((oldMedia) => oldMedia.mediaId),
       sofa.sofaId,
       sofa.itemId,
@@ -128,7 +127,7 @@ export class MySofasManager implements IManager {
     payload: TokenPayload,
     params: MySofasParams,
   ): Promise<ManagerResponse<null>> {
-    const sofa = await this.provider.getSofa(payload.accountId, parseInt(params.sofaId));
+    const sofa = await this.provider.getMyActiveSofa(payload.accountId, parseInt(params.sofaId));
     if (sofa === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -138,9 +137,8 @@ export class MySofasManager implements IManager {
       );
     }
     const medias = await this.provider.getItemMedias(sofa.itemId);
-    await this.provider.deleteSofa(
+    await this.provider.archiveItem(
       sofa.itemId,
-      sofa.sofaId,
       medias.map((media) => media.mediaId),
     );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);

@@ -14,6 +14,7 @@ export class SofaViewModel implements IModel {
     public readonly isCushioned: boolean | null,
     public readonly sofaType: SofaType | null,
     public readonly sofaMaterial: SofaMaterial | null,
+    public readonly isDeleted: boolean,
   ) {}
 
   public static fromRecord(record: unknown): SofaViewModel {
@@ -29,6 +30,7 @@ export class SofaViewModel implements IModel {
       record.isCushioned,
       record.sofaType,
       record.sofaMaterial,
+      record.isDeleted,
     );
   }
 
@@ -52,7 +54,8 @@ export class SofaViewModel implements IModel {
       typeof model.description === "string" &&
       (model.isCushioned === null || typeof model.isCushioned === "boolean") &&
       (model.sofaType === null || Object.values(SofaType).includes(model.sofaType)) &&
-      (model.sofaMaterial === null || Object.values(SofaMaterial).includes(model.sofaMaterial))
+      (model.sofaMaterial === null || Object.values(SofaMaterial).includes(model.sofaMaterial)) &&
+      typeof model.isDeleted === "boolean"
     );
   }
 
@@ -60,6 +63,6 @@ export class SofaViewModel implements IModel {
     if (!Array.isArray(data)) {
       return false;
     }
-    return data.every((item: unknown): boolean => this.isValidModel(item));
+    return data.every((item: unknown) => this.isValidModel(item));
   }
 }

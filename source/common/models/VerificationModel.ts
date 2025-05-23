@@ -41,6 +41,6 @@ export class VerificationModel implements IModel {
     if (!Array.isArray(data)) {
       return false;
     }
-    return data.every((obj: unknown): boolean => VerificationModel.isValidModel(obj));
+    return data.every((obj: unknown) => VerificationModel.isValidModel(obj));
   }
 }

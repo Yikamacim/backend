@@ -58,7 +58,7 @@ export class MyVehiclesRequest implements IRequest {
       typeof blueprint.name === "string" &&
       typeof blueprint.description === "string" &&
       Array.isArray(blueprint.mediaIds) &&
-      blueprint.mediaIds.every((mediaId: unknown): boolean => typeof mediaId === "number") &&
+      blueprint.mediaIds.every((mediaId) => typeof mediaId === "number") &&
       (blueprint.brand === null || typeof blueprint.brand === "string") &&
       (blueprint.model === null || typeof blueprint.model === "string") &&
       (blueprint.vehicleType === null || Object.values(VehicleType).includes(blueprint.vehicleType))

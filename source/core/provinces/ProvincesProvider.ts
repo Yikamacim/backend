@@ -23,9 +23,7 @@ export class ProvincesProvider implements IProvider {
     }
   }
 
-  public async getProvinceById(
-    provinceId: number,
-  ): Promise<ProviderResponse<ProvinceModel | null>> {
+  public async getProvince(provinceId: number): Promise<ProviderResponse<ProvinceModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(ProvinceQueries.GET_PROVINCE_$PVID, [

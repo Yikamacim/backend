@@ -15,16 +15,14 @@ export class MyBusinessServicesProvider implements IProvider {
     public readonly mediaProvider = new MediaProvider(),
     public readonly serviceProvider = new ServiceProvider(),
   ) {
-    this.getBusinessByAccountId = this.businessProvider.getBusinessByAccountId.bind(
-      this.businessProvider,
-    );
+    this.getMyBusiness = this.businessProvider.getMyBusiness.bind(this.businessProvider);
     this.getMedia = this.mediaProvider.getMedia.bind(this.mediaProvider);
-    this.getServices = this.serviceProvider.getServices.bind(this.serviceProvider);
+    this.getActiveServices = this.serviceProvider.getActiveServices.bind(this.serviceProvider);
   }
 
-  public readonly getBusinessByAccountId: typeof this.businessProvider.getBusinessByAccountId;
+  public readonly getMyBusiness: typeof this.businessProvider.getMyBusiness;
   public readonly getMedia: typeof this.mediaProvider.getMedia;
-  public readonly getServices: typeof this.serviceProvider.getServices;
+  public readonly getActiveServices: typeof this.serviceProvider.getActiveServices;
 
   public async getService(
     businessId: number,
@@ -70,7 +68,6 @@ export class MyBusinessServicesProvider implements IProvider {
   }
 
   public async updateService(
-    businessId: number,
     serviceId: number,
     title: string,
     mediaId: number | null,
@@ -81,8 +78,8 @@ export class MyBusinessServicesProvider implements IProvider {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(
-        ServiceQueries.UPDATE_SERVICE_$BSID_$SVID_$TITLE_$MDID_$SCAT_$DESC_$UPRICE,
-        [businessId, serviceId, title, mediaId, serviceCategory, description, unitPrice],
+        ServiceQueries.UPDATE_SERVICE_$SVID_$TITLE_$MDID_$SCAT_$DESC_$UPRICE,
+        [serviceId, title, mediaId, serviceCategory, description, unitPrice],
       );
       const record: unknown = results.rows[0];
       return await ResponseUtil.providerResponse(ServiceModel.fromRecord(record));
@@ -92,16 +89,10 @@ export class MyBusinessServicesProvider implements IProvider {
     }
   }
 
-  public async deleteService(
-    businessId: number,
-    serviceId: number,
-  ): Promise<ProviderResponse<null>> {
+  public async archiveService(serviceId: number): Promise<ProviderResponse<null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      await DbConstants.POOL.query(ServiceQueries.DELETE_SERVICE_$BSID_$SVID, [
-        businessId,
-        serviceId,
-      ]);
+      await DbConstants.POOL.query(ServiceQueries.UPDATE_SERVICE_$SVID_$ISDEL, [serviceId, true]);
       return await ResponseUtil.providerResponse(null);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);

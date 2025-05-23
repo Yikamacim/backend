@@ -23,42 +23,35 @@ export class MyBusinessOpenProvider implements IProvider {
     private readonly serviceProvider = new ServiceProvider(),
     private readonly businessMediaProvider = new BusinessMediaProvider(),
   ) {
-    this.getBusinessByAccountId = this.businessProvider.getBusinessByAccountId.bind(
-      this.businessProvider,
-    );
+    this.getMyBusiness = this.businessProvider.getMyBusiness.bind(this.businessProvider);
     this.getApproval = this.approvalProvider.getApproval.bind(this.approvalProvider);
     this.getBankAccount = this.bankAccountProvider.getBankAccount.bind(this.bankAccountProvider);
     this.getBusinessAreas = this.businessAreaProvider.getBusinessAreas.bind(
       this.businessAreaProvider,
     );
     this.getHours = this.hoursProvider.getHours.bind(this.hoursProvider);
-    this.getServices = this.serviceProvider.getServices.bind(this.serviceProvider);
+    this.getActiveServices = this.serviceProvider.getActiveServices.bind(this.serviceProvider);
     this.getBusinessMedia = this.businessMediaProvider.getBusinessMedia.bind(
       this.businessMediaProvider,
     );
-    this.partialGetBusinessByAccountId = this.businessProvider.partialGetBusinessByAccountId.bind(
-      this.businessProvider,
-    );
+    this.partialGetBusiness = this.businessProvider.partialGetBusiness.bind(this.businessProvider);
   }
 
-  public readonly getBusinessByAccountId: typeof this.businessProvider.getBusinessByAccountId;
+  public readonly getMyBusiness: typeof this.businessProvider.getMyBusiness;
   public readonly getApproval: typeof this.approvalProvider.getApproval;
   public readonly getBankAccount: typeof this.bankAccountProvider.getBankAccount;
   public readonly getBusinessAreas: typeof this.businessAreaProvider.getBusinessAreas;
   public readonly getHours: typeof this.hoursProvider.getHours;
-  public readonly getServices: typeof this.serviceProvider.getServices;
+  public readonly getActiveServices: typeof this.serviceProvider.getActiveServices;
   public readonly getBusinessMedia: typeof this.businessMediaProvider.getBusinessMedia;
 
-  private readonly partialGetBusinessByAccountId: typeof this.businessProvider.partialGetBusinessByAccountId;
+  private readonly partialGetBusiness: typeof this.businessProvider.partialGetBusiness;
 
-  public async openBusiness(
-    accountId: number,
-    businessId: number,
-  ): Promise<ProviderResponse<BusinessViewModel>> {
+  public async openBusiness(businessId: number): Promise<ProviderResponse<BusinessViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       await this.partialOpenBusiness(businessId);
-      const businessView = await this.partialGetBusinessByAccountId(accountId);
+      const businessView = await this.partialGetBusiness(businessId);
       if (businessView === null) {
         throw new UnexpectedDatabaseStateError("Business was not updated");
       }

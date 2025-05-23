@@ -11,10 +11,10 @@ export class BusinessesServicesProvider implements IProvider {
   ) {
     this.getBusiness = this.businessProvider.getBusiness.bind(this.businessProvider);
     this.getMedia = this.mediaProvider.getMedia.bind(this.mediaProvider);
-    this.getServices = this.serviceProvider.getServices.bind(this.serviceProvider);
+    this.getActiveServices = this.serviceProvider.getActiveServices.bind(this.serviceProvider);
   }
 
   public readonly getBusiness: typeof this.businessProvider.getBusiness;
   public readonly getMedia: typeof this.mediaProvider.getMedia;
-  public readonly getServices: typeof this.serviceProvider.getServices;
+  public readonly getActiveServices: typeof this.serviceProvider.getActiveServices;
 }

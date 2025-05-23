@@ -12,8 +12,20 @@ export class BusinessProvider implements IProvider {
   ): Promise<ProviderResponse<BusinessViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(BusinessViewQueries.GET_BUSINESS_$BSID, [
-        businessId,
+      return await ResponseUtil.providerResponse(await this.partialGetBusiness(businessId));
+    } catch (error) {
+      await DbConstants.POOL.query(DbConstants.ROLLBACK);
+      throw error;
+    }
+  }
+
+  public async getMyBusiness(
+    accountId: number,
+  ): Promise<ProviderResponse<BusinessViewModel | null>> {
+    await DbConstants.POOL.query(DbConstants.BEGIN);
+    try {
+      const results = await DbConstants.POOL.query(BusinessViewQueries.GET_BUSINESS_$ACID, [
+        accountId,
       ]);
       const record: unknown = results.rows[0];
       if (!ProtoUtil.isProtovalid(record)) {
@@ -26,25 +38,11 @@ export class BusinessProvider implements IProvider {
     }
   }
 
-  public async getBusinessByAccountId(
-    accountId: number,
-  ): Promise<ProviderResponse<BusinessViewModel | null>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      return await ResponseUtil.providerResponse(
-        await this.partialGetBusinessByAccountId(accountId),
-      );
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
-    }
-  }
-
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  public async partialGetBusinessByAccountId(accountId: number): Promise<BusinessViewModel | null> {
-    const results = await DbConstants.POOL.query(BusinessViewQueries.GET_BUSINESS_$ACID, [
-      accountId,
+  public async partialGetBusiness(businessId: number): Promise<BusinessViewModel | null> {
+    const results = await DbConstants.POOL.query(BusinessViewQueries.GET_BUSINESS_$BSID, [
+      businessId,
     ]);
     const record: unknown = results.rows[0];
     if (!ProtoUtil.isProtovalid(record)) {

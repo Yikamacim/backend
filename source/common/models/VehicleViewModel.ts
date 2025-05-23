@@ -13,6 +13,7 @@ export class VehicleViewModel implements IModel {
     public readonly brand: string | null,
     public readonly model: string | null,
     public readonly vehicleType: VehicleType | null,
+    public readonly isDeleted: boolean,
   ) {}
 
   public static fromRecord(record: unknown): VehicleViewModel {
@@ -28,6 +29,7 @@ export class VehicleViewModel implements IModel {
       record.brand,
       record.model,
       record.vehicleType,
+      record.isDeleted,
     );
   }
 
@@ -51,7 +53,8 @@ export class VehicleViewModel implements IModel {
       typeof model.description === "string" &&
       (model.brand === null || typeof model.brand === "string") &&
       (model.model === null || typeof model.model === "string") &&
-      (model.vehicleType === null || Object.values(VehicleType).includes(model.vehicleType))
+      (model.vehicleType === null || Object.values(VehicleType).includes(model.vehicleType)) &&
+      typeof model.isDeleted === "boolean"
     );
   }
 
@@ -59,6 +62,6 @@ export class VehicleViewModel implements IModel {
     if (!Array.isArray(data)) {
       return false;
     }
-    return data.every((item: unknown): boolean => this.isValidModel(item));
+    return data.every((item: unknown) => this.isValidModel(item));
   }
 }

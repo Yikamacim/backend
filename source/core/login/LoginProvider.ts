@@ -3,8 +3,8 @@ import { AccountProvider } from "../../common/providers/AccountProvider";
 
 export class LoginProvider implements IProvider {
   public constructor(private readonly accountProvider = new AccountProvider()) {
-    this.getAccount = this.accountProvider.getAccountByPhone.bind(this.accountProvider);
+    this.getAccountByPhone = this.accountProvider.getAccountByPhone.bind(this.accountProvider);
   }
 
-  public readonly getAccount: typeof this.accountProvider.getAccountByPhone;
+  public readonly getAccountByPhone: typeof this.accountProvider.getAccountByPhone;
 }

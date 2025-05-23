@@ -6,10 +6,13 @@ import { ServiceModel } from "../models/ServiceModel";
 import { ServiceQueries } from "../queries/ServiceQueries";
 
 export class ServiceProvider implements IProvider {
-  public async getServices(businessId: number): Promise<ProviderResponse<ServiceModel[]>> {
+  public async getActiveServices(businessId: number): Promise<ProviderResponse<ServiceModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(ServiceQueries.GET_SERVICES_$BSID, [businessId]);
+      const results = await DbConstants.POOL.query(ServiceQueries.GET_SERVICES_$BSID_$ISDEL, [
+        businessId,
+        false,
+      ]);
       const record: unknown[] = results.rows;
       return await ResponseUtil.providerResponse(ServiceModel.fromRecords(record));
     } catch (error) {

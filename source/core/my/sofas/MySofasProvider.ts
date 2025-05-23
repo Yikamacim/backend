@@ -18,9 +18,9 @@ export class MySofasProvider implements IProvider {
     private readonly itemProvider = new ItemProvider(),
     private readonly itemMediaProvider = new ItemMediaProvider(),
   ) {
-    this.partialCreateItem = this.itemProvider.partialCreateItem.bind(this.itemProvider);
+    this.partialCreateMyItem = this.itemProvider.partialCreateMyItem.bind(this.itemProvider);
     this.partialUpdateItem = this.itemProvider.partialUpdateItem.bind(this.itemProvider);
-    this.partialDeleteItem = this.itemProvider.partialDeleteItem.bind(this.itemProvider);
+    this.archiveItem = this.itemProvider.archiveItem.bind(this.itemProvider);
     this.getItemMedias = this.itemMediaProvider.getItemMedias.bind(this.itemMediaProvider);
     this.partialCreateItemMedias = this.itemMediaProvider.partialCreateItemMedias.bind(
       this.itemMediaProvider,
@@ -31,17 +31,20 @@ export class MySofasProvider implements IProvider {
   }
 
   public readonly getItemMedias: typeof this.itemMediaProvider.getItemMedias;
+  public readonly archiveItem: typeof this.itemProvider.archiveItem;
 
-  private readonly partialCreateItem: typeof this.itemProvider.partialCreateItem;
+  private readonly partialCreateMyItem: typeof this.itemProvider.partialCreateMyItem;
   private readonly partialUpdateItem: typeof this.itemProvider.partialUpdateItem;
-  private readonly partialDeleteItem: typeof this.itemProvider.partialDeleteItem;
   private readonly partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   private readonly partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
 
-  public async getSofas(accountId: number): Promise<ProviderResponse<SofaViewModel[]>> {
+  public async getMyActiveSofas(accountId: number): Promise<ProviderResponse<SofaViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(SofaViewQueries.GET_SOFAS_$ACID, [accountId]);
+      const results = await DbConstants.POOL.query(SofaViewQueries.GET_SOFAS_$ACID_$ISDEL, [
+        accountId,
+        false,
+      ]);
       const records: unknown[] = results.rows;
       return await ResponseUtil.providerResponse(SofaViewModel.fromRecords(records));
     } catch (error) {
@@ -50,20 +53,29 @@ export class MySofasProvider implements IProvider {
     }
   }
 
-  public async getSofa(
+  public async getMyActiveSofa(
     accountId: number,
     sofaId: number,
   ): Promise<ProviderResponse<SofaViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      return await ResponseUtil.providerResponse(await this.partialGetSofa(accountId, sofaId));
+      const results = await DbConstants.POOL.query(SofaViewQueries.GET_SOFA_$ACID_$SFID_$ISDEL, [
+        accountId,
+        sofaId,
+        false,
+      ]);
+      const record: unknown = results.rows[0];
+      if (!ProtoUtil.isProtovalid(record)) {
+        return null;
+      }
+      return SofaViewModel.fromRecord(record);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async createSofa(
+  public async createMySofa(
     accountId: number,
     name: string,
     description: string,
@@ -74,10 +86,10 @@ export class MySofasProvider implements IProvider {
   ): Promise<ProviderResponse<SofaViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const item = await this.partialCreateItem(accountId, name, description);
+      const item = await this.partialCreateMyItem(accountId, name, description);
       const sofa = await this.partialCreateSofa(item.itemId, isCushioned, sofaType, sofaMaterial);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      const sofaView = await this.partialGetSofa(accountId, sofa.sofaId);
+      const sofaView = await this.partialGetActiveSofa(sofa.sofaId);
       if (sofaView === null) {
         throw new UnexpectedDatabaseStateError("Sofa was not created");
       }
@@ -89,7 +101,6 @@ export class MySofasProvider implements IProvider {
   }
 
   public async updateSofa(
-    accountId: number,
     oldMediaIds: number[],
     sofaId: number,
     itemId: number,
@@ -106,7 +117,7 @@ export class MySofasProvider implements IProvider {
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateSofa(sofaId, isCushioned, sofaType, sofaMaterial);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      const sofaView = await this.partialGetSofa(accountId, sofaId);
+      const sofaView = await this.partialGetActiveSofa(sofaId);
       if (sofaView === null) {
         throw new UnexpectedDatabaseStateError("Sofa was not updated");
       }
@@ -117,29 +128,12 @@ export class MySofasProvider implements IProvider {
     }
   }
 
-  public async deleteSofa(
-    itemId: number,
-    sofaId: number,
-    mediaIds: number[],
-  ): Promise<ProviderResponse<null>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      await this.partialDeleteSofa(sofaId);
-      await this.partialDeleteItemMedias(itemId, mediaIds);
-      await this.partialDeleteItem(itemId);
-      return await ResponseUtil.providerResponse(null);
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
-    }
-  }
-
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialGetSofa(accountId: number, sofaId: number): Promise<SofaViewModel | null> {
-    const results = await DbConstants.POOL.query(SofaViewQueries.GET_SOFA_$ACID_$SFID, [
-      accountId,
+  private async partialGetActiveSofa(sofaId: number): Promise<SofaViewModel | null> {
+    const results = await DbConstants.POOL.query(SofaViewQueries.GET_SOFA_$SFID_$ISDEL, [
       sofaId,
+      false,
     ]);
     const record: unknown = results.rows[0];
     if (!ProtoUtil.isProtovalid(record)) {
@@ -174,9 +168,5 @@ export class MySofasProvider implements IProvider {
     );
     const record: unknown = results.rows[0];
     return SofaModel.fromRecord(record);
-  }
-
-  private async partialDeleteSofa(sofaId: number): Promise<void> {
-    await DbConstants.POOL.query(SofaQueries.DELETE_SOFA_$SFID, [sofaId]);
   }
 }

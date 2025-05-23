@@ -13,6 +13,7 @@ export class CurtainViewModel implements IModel {
     public readonly width: number | null,
     public readonly length: number | null,
     public readonly curtainType: CurtainType | null,
+    public readonly isDeleted: boolean,
   ) {}
 
   public static fromRecord(record: unknown): CurtainViewModel {
@@ -28,6 +29,7 @@ export class CurtainViewModel implements IModel {
       record.width,
       record.length,
       record.curtainType,
+      record.isDeleted,
     );
   }
 
@@ -51,7 +53,8 @@ export class CurtainViewModel implements IModel {
       typeof model.description === "string" &&
       (model.width === null || typeof model.width === "number") &&
       (model.length === null || typeof model.length === "number") &&
-      (model.curtainType === null || Object.values(CurtainType).includes(model.curtainType))
+      (model.curtainType === null || Object.values(CurtainType).includes(model.curtainType)) &&
+      typeof model.isDeleted === "boolean"
     );
   }
 
@@ -59,6 +62,6 @@ export class CurtainViewModel implements IModel {
     if (!Array.isArray(data)) {
       return false;
     }
-    return data.every((item: unknown): boolean => this.isValidModel(item));
+    return data.every((item: unknown) => this.isValidModel(item));
   }
 }

@@ -51,7 +51,7 @@ export class MySofasRequest implements IRequest {
       typeof blueprint.name === "string" &&
       typeof blueprint.description === "string" &&
       Array.isArray(blueprint.mediaIds) &&
-      blueprint.mediaIds.every((mediaId: unknown): boolean => typeof mediaId === "number") &&
+      blueprint.mediaIds.every((mediaId) => typeof mediaId === "number") &&
       (blueprint.isCushioned === null || typeof blueprint.isCushioned === "boolean") &&
       (blueprint.sofaType === null || Object.values(SofaType).includes(blueprint.sofaType)) &&
       (blueprint.sofaMaterial === null ||

@@ -26,7 +26,7 @@ export class ProvincesManager implements IManager {
   public async getProvinces$(
     params: ProvincesParams,
   ): Promise<ManagerResponse<ProvincesResponse | null>> {
-    const province = await this.provider.getProvinceById(parseInt(params.provinceId));
+    const province = await this.provider.getProvince(parseInt(params.provinceId));
     if (province === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),

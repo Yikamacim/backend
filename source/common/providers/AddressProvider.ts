@@ -10,7 +10,7 @@ import { AddressQueries } from "../queries/AddressQueries";
 import { AddressViewQueries } from "../queries/AddressViewQueries";
 
 export class AddressProvider implements IProvider {
-  public async createAddress(
+  public async createMyAddress(
     accountId: number,
     name: string,
     countryId: number,
@@ -37,7 +37,7 @@ export class AddressProvider implements IProvider {
       );
       const record: unknown = results.rows[0];
       return await ResponseUtil.providerResponse(
-        await this.partialGetAddress(AddressModel.fromRecord(record).addressId),
+        await this.partialGetActiveAddress(AddressModel.fromRecord(record).addressId),
       );
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
@@ -72,19 +72,8 @@ export class AddressProvider implements IProvider {
       );
       const record: unknown = results.rows[0];
       return await ResponseUtil.providerResponse(
-        await this.partialGetAddress(AddressModel.fromRecord(record).addressId),
+        await this.partialGetActiveAddress(AddressModel.fromRecord(record).addressId),
       );
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
-    }
-  }
-
-  public async deleteAddress(addressId: number): Promise<ProviderResponse<null>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      await DbConstants.POOL.query(AddressQueries.DELETE_ADDRESS_$ADID, [addressId]);
-      return await ResponseUtil.providerResponse(null);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
@@ -93,8 +82,11 @@ export class AddressProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialGetAddress(addressId: number): Promise<AddressViewModel> {
-    const results = await DbConstants.POOL.query(AddressViewQueries.GET_ADDRESS_$ADID, [addressId]);
+  private async partialGetActiveAddress(addressId: number): Promise<AddressViewModel> {
+    const results = await DbConstants.POOL.query(AddressViewQueries.GET_ADDRESS_$ADID_$ISDEL, [
+      addressId,
+      false,
+    ]);
     const record: unknown = results.rows[0];
     if (!ProtoUtil.isProtovalid(record)) {
       throw new UnexpectedDatabaseStateError("Address was not created");

@@ -50,7 +50,7 @@ export class MyBlanketsRequest implements IRequest {
       typeof blueprint.name === "string" &&
       typeof blueprint.description === "string" &&
       Array.isArray(blueprint.mediaIds) &&
-      blueprint.mediaIds.every((mediaId: unknown): boolean => typeof mediaId === "number") &&
+      blueprint.mediaIds.every((mediaId) => typeof mediaId === "number") &&
       (blueprint.blanketSize === null ||
         Object.values(BlanketSize).includes(blueprint.blanketSize)) &&
       (blueprint.blanketMaterial === null ||

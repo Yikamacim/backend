@@ -10,6 +10,7 @@ export class ChairViewModel implements IModel {
     public readonly name: string,
     public readonly description: string,
     public readonly quantity: number,
+    public readonly isDeleted: boolean,
   ) {}
 
   public static fromRecord(record: unknown): ChairViewModel {
@@ -23,6 +24,7 @@ export class ChairViewModel implements IModel {
       record.name,
       record.description,
       record.quantity,
+      record.isDeleted,
     );
   }
 
@@ -44,7 +46,8 @@ export class ChairViewModel implements IModel {
       typeof model.itemId === "number" &&
       typeof model.name === "string" &&
       typeof model.description === "string" &&
-      typeof model.quantity === "number"
+      typeof model.quantity === "number" &&
+      typeof model.isDeleted === "boolean"
     );
   }
 
@@ -52,6 +55,6 @@ export class ChairViewModel implements IModel {
     if (!Array.isArray(data)) {
       return false;
     }
-    return data.every((item: unknown): boolean => this.isValidModel(item));
+    return data.every((item: unknown) => this.isValidModel(item));
   }
 }

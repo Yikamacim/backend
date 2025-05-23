@@ -15,7 +15,7 @@ export class VerifyManager implements IManager {
   public constructor(private readonly provider = new VerifyProvider()) {}
 
   public async postVerify(request: VerifyRequest): Promise<ManagerResponse<VerifyResponse | null>> {
-    const myAccount = await this.provider.getAccount(request.phone);
+    const myAccount = await this.provider.getAccountByPhone(request.phone);
     if (myAccount === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -67,7 +67,7 @@ export class VerifyManager implements IManager {
   }
 
   public async getVerify$(data: VerifyParams): Promise<ManagerResponse<null>> {
-    const myAccount = await this.provider.getAccount(data.phone);
+    const myAccount = await this.provider.getAccountByPhone(data.phone);
     if (myAccount === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),

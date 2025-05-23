@@ -11,14 +11,14 @@ import { MediaQueries } from "../../../common/queries/MediaQueries";
 import { MediaViewQueries } from "../../../common/queries/MediaViewQueries";
 
 export class MyMediasProvider implements IProvider {
-  public async createMedia(
+  public async createMyMedia(
     accountId: number,
     mediaType: MediaType,
     extension: string,
   ): Promise<ProviderResponse<MediaViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const media = await this.partialCreateMedia(accountId, mediaType, extension);
+      const media = await this.partialMyCreateMedia(accountId, mediaType, extension);
       const mediaView = await this.partialGetMedia(media.mediaId);
       if (mediaView === null) {
         throw new UnexpectedDatabaseStateError(
@@ -42,7 +42,7 @@ export class MyMediasProvider implements IProvider {
     return await ResponseUtil.providerResponse(MediaViewModel.fromRecord(record));
   }
 
-  private async partialCreateMedia(
+  private async partialMyCreateMedia(
     accountId: number,
     mediaType: MediaType,
     extension: string,

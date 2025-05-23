@@ -13,7 +13,7 @@ export class AccountsManager implements IManager {
   public async getAccount(
     params: AccountsParams,
   ): Promise<ManagerResponse<AccountsResponse | null>> {
-    const account = await this.provider.getAccount(params.phone);
+    const account = await this.provider.getAccountByPhone(params.phone);
     if (account === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),

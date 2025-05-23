@@ -15,7 +15,7 @@ export class MyQuiltsManager implements IManager {
   public constructor(private readonly provider = new MyQuiltsProvider()) {}
 
   public async getMyQuilts(payload: TokenPayload): Promise<ManagerResponse<MyQuiltsResponse[]>> {
-    const quilts = await this.provider.getQuilts(payload.accountId);
+    const quilts = await this.provider.getMyActiveQuilts(payload.accountId);
     const responses: MyQuiltsResponse[] = [];
     for (const quilt of quilts) {
       const medias = await this.provider.getItemMedias(quilt.itemId);
@@ -38,7 +38,7 @@ export class MyQuiltsManager implements IManager {
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }
-    const quilt = await this.provider.createQuilt(
+    const quilt = await this.provider.createMyQuilt(
       payload.accountId,
       request.name,
       request.description,
@@ -59,7 +59,7 @@ export class MyQuiltsManager implements IManager {
     payload: TokenPayload,
     params: MyQuiltsParams,
   ): Promise<ManagerResponse<MyQuiltsResponse | null>> {
-    const quilt = await this.provider.getQuilt(payload.accountId, parseInt(params.quiltId));
+    const quilt = await this.provider.getMyActiveQuilt(payload.accountId, parseInt(params.quiltId));
     if (quilt === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -83,7 +83,7 @@ export class MyQuiltsManager implements IManager {
     params: MyQuiltsParams,
     request: MyQuiltsRequest,
   ): Promise<ManagerResponse<MyQuiltsResponse | null>> {
-    const quilt = await this.provider.getQuilt(payload.accountId, parseInt(params.quiltId));
+    const quilt = await this.provider.getMyActiveQuilt(payload.accountId, parseInt(params.quiltId));
     if (quilt === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -102,8 +102,7 @@ export class MyQuiltsManager implements IManager {
       return checkMediasResult.get();
     }
     const oldMedias = await this.provider.getItemMedias(quilt.itemId);
-    const updatedQuilt = await this.provider.updateQuilt(
-      payload.accountId,
+    const updatedQuilt = await this.provider.updateMyQuilt(
       oldMedias.map((oldMedia) => oldMedia.mediaId),
       quilt.quiltId,
       quilt.itemId,
@@ -126,7 +125,7 @@ export class MyQuiltsManager implements IManager {
     payload: TokenPayload,
     params: MyQuiltsParams,
   ): Promise<ManagerResponse<null>> {
-    const quilt = await this.provider.getQuilt(payload.accountId, parseInt(params.quiltId));
+    const quilt = await this.provider.getMyActiveQuilt(payload.accountId, parseInt(params.quiltId));
     if (quilt === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -136,9 +135,8 @@ export class MyQuiltsManager implements IManager {
       );
     }
     const medias = await this.provider.getItemMedias(quilt.itemId);
-    await this.provider.deleteQuilt(
+    await this.provider.archiveItem(
       quilt.itemId,
-      quilt.quiltId,
       medias.map((media) => media.mediaId),
     );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);

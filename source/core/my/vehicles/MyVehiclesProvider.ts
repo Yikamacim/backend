@@ -17,9 +17,9 @@ export class MyVehiclesProvider implements IProvider {
     private readonly itemProvider = new ItemProvider(),
     private readonly itemMediaProvider = new ItemMediaProvider(),
   ) {
-    this.partialCreateItem = this.itemProvider.partialCreateItem.bind(this.itemProvider);
+    this.partialCreateMyItem = this.itemProvider.partialCreateMyItem.bind(this.itemProvider);
     this.partialUpdateItem = this.itemProvider.partialUpdateItem.bind(this.itemProvider);
-    this.partialDeleteItem = this.itemProvider.partialDeleteItem.bind(this.itemProvider);
+    this.archiveItem = this.itemProvider.archiveItem.bind(this.itemProvider);
     this.getItemMedias = this.itemMediaProvider.getItemMedias.bind(this.itemMediaProvider);
     this.partialCreateItemMedias = this.itemMediaProvider.partialCreateItemMedias.bind(
       this.itemMediaProvider,
@@ -30,18 +30,21 @@ export class MyVehiclesProvider implements IProvider {
   }
 
   public readonly getItemMedias: typeof this.itemMediaProvider.getItemMedias;
+  public readonly archiveItem: typeof this.itemProvider.archiveItem;
 
-  private readonly partialCreateItem: typeof this.itemProvider.partialCreateItem;
+  private readonly partialCreateMyItem: typeof this.itemProvider.partialCreateMyItem;
   private readonly partialUpdateItem: typeof this.itemProvider.partialUpdateItem;
-  private readonly partialDeleteItem: typeof this.itemProvider.partialDeleteItem;
   private readonly partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   private readonly partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
 
-  public async getVehicles(accountId: number): Promise<ProviderResponse<VehicleViewModel[]>> {
+  public async getMyActiveVehicles(
+    accountId: number,
+  ): Promise<ProviderResponse<VehicleViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(VehicleViewQueries.GET_VEHICLES_$ACID, [
+      const results = await DbConstants.POOL.query(VehicleViewQueries.GET_VEHICLES_$ACID_$ISDEL, [
         accountId,
+        false,
       ]);
       const records: unknown[] = results.rows;
       return await ResponseUtil.providerResponse(VehicleViewModel.fromRecords(records));
@@ -51,22 +54,28 @@ export class MyVehiclesProvider implements IProvider {
     }
   }
 
-  public async getVehicle(
+  public async getMyActiveVehicle(
     accountId: number,
     vehicleId: number,
   ): Promise<ProviderResponse<VehicleViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      return await ResponseUtil.providerResponse(
-        await this.partialGetVehicle(accountId, vehicleId),
+      const results = await DbConstants.POOL.query(
+        VehicleViewQueries.GET_VEHICLE_$ACID_$VHID_$ISDEL,
+        [accountId, vehicleId, false],
       );
+      const record: unknown = results.rows[0];
+      if (!ProtoUtil.isProtovalid(record)) {
+        return null;
+      }
+      return VehicleViewModel.fromRecord(record);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async createVehicle(
+  public async createMyVehicle(
     accountId: number,
     name: string,
     description: string,
@@ -77,10 +86,10 @@ export class MyVehiclesProvider implements IProvider {
   ): Promise<ProviderResponse<VehicleViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const item = await this.partialCreateItem(accountId, name, description);
+      const item = await this.partialCreateMyItem(accountId, name, description);
       const vehicle = await this.partialCreateVehicle(item.itemId, brand, model, vehicleType);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      const vehicleView = await this.partialGetVehicle(accountId, vehicle.vehicleId);
+      const vehicleView = await this.partialGetActiveVehicle(vehicle.vehicleId);
       if (vehicleView === null) {
         throw new UnexpectedDatabaseStateError("Vehicle was not created");
       }
@@ -92,7 +101,6 @@ export class MyVehiclesProvider implements IProvider {
   }
 
   public async updateVehicle(
-    accountId: number,
     oldMediaIds: number[],
     vehicleId: number,
     itemId: number,
@@ -109,7 +117,7 @@ export class MyVehiclesProvider implements IProvider {
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateVehicle(vehicleId, brand, model, vehicleType);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      const vehicleView = await this.partialGetVehicle(accountId, vehicleId);
+      const vehicleView = await this.partialGetActiveVehicle(vehicleId);
       if (vehicleView === null) {
         throw new UnexpectedDatabaseStateError("Vehicle was not updated");
       }
@@ -120,32 +128,12 @@ export class MyVehiclesProvider implements IProvider {
     }
   }
 
-  public async deleteVehicle(
-    itemId: number,
-    vehicleId: number,
-    mediaIds: number[],
-  ): Promise<ProviderResponse<null>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      await this.partialDeleteVehicle(vehicleId);
-      await this.partialDeleteItemMedias(itemId, mediaIds);
-      await this.partialDeleteItem(itemId);
-      return await ResponseUtil.providerResponse(null);
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
-    }
-  }
-
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialGetVehicle(
-    accountId: number,
-    vehicleId: number,
-  ): Promise<VehicleViewModel | null> {
-    const results = await DbConstants.POOL.query(VehicleViewQueries.GET_VEHICLE_$ACID_$VHID, [
-      accountId,
+  private async partialGetActiveVehicle(vehicleId: number): Promise<VehicleViewModel | null> {
+    const results = await DbConstants.POOL.query(VehicleViewQueries.GET_VEHICLE_$VHID_$ISDEL, [
       vehicleId,
+      false,
     ]);
     const record: unknown = results.rows[0];
     if (!ProtoUtil.isProtovalid(record)) {
@@ -180,9 +168,5 @@ export class MyVehiclesProvider implements IProvider {
     );
     const record: unknown = results.rows[0];
     return VehicleModel.fromRecord(record);
-  }
-
-  private async partialDeleteVehicle(vehicleId: number): Promise<void> {
-    await DbConstants.POOL.query(VehicleQueries.DELETE_VEHICLE_$VHID, [vehicleId]);
   }
 }

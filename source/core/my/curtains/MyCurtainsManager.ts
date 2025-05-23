@@ -17,7 +17,7 @@ export class MyCurtainsManager implements IManager {
   public async getMyCurtains(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyCurtainsResponse[]>> {
-    const curtains = await this.provider.getCurtains(payload.accountId);
+    const curtains = await this.provider.getMyActiveCurtains(payload.accountId);
     const responses: MyCurtainsResponse[] = [];
     for (const curtain of curtains) {
       const medias = await this.provider.getItemMedias(curtain.itemId);
@@ -40,7 +40,7 @@ export class MyCurtainsManager implements IManager {
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }
-    const curtain = await this.provider.createCurtain(
+    const curtain = await this.provider.createMyCurtain(
       payload.accountId,
       request.name,
       request.description,
@@ -62,7 +62,10 @@ export class MyCurtainsManager implements IManager {
     payload: TokenPayload,
     params: MyCurtainsParams,
   ): Promise<ManagerResponse<MyCurtainsResponse | null>> {
-    const curtain = await this.provider.getCurtain(payload.accountId, parseInt(params.curtainId));
+    const curtain = await this.provider.getMyActiveCurtain(
+      payload.accountId,
+      parseInt(params.curtainId),
+    );
     if (curtain === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -86,7 +89,10 @@ export class MyCurtainsManager implements IManager {
     params: MyCurtainsParams,
     request: MyCurtainsRequest,
   ): Promise<ManagerResponse<MyCurtainsResponse | null>> {
-    const curtain = await this.provider.getCurtain(payload.accountId, parseInt(params.curtainId));
+    const curtain = await this.provider.getMyActiveCurtain(
+      payload.accountId,
+      parseInt(params.curtainId),
+    );
     if (curtain === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -106,7 +112,6 @@ export class MyCurtainsManager implements IManager {
     }
     const oldMedias = await this.provider.getItemMedias(curtain.itemId);
     const updatedCurtain = await this.provider.updateCurtain(
-      payload.accountId,
       oldMedias.map((oldMedia) => oldMedia.mediaId),
       curtain.curtainId,
       curtain.itemId,
@@ -130,7 +135,10 @@ export class MyCurtainsManager implements IManager {
     payload: TokenPayload,
     params: MyCurtainsParams,
   ): Promise<ManagerResponse<null>> {
-    const curtain = await this.provider.getCurtain(payload.accountId, parseInt(params.curtainId));
+    const curtain = await this.provider.getMyActiveCurtain(
+      payload.accountId,
+      parseInt(params.curtainId),
+    );
     if (curtain === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -140,9 +148,8 @@ export class MyCurtainsManager implements IManager {
       );
     }
     const medias = await this.provider.getItemMedias(curtain.itemId);
-    await this.provider.deleteCurtain(
+    await this.provider.archiveItem(
       curtain.itemId,
-      curtain.curtainId,
       medias.map((media) => media.mediaId),
     );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);

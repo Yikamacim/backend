@@ -22,7 +22,7 @@ export class SessionProvider implements IProvider {
     }
   }
 
-  public async getSessions(accountId: number): Promise<ProviderResponse<SessionModel[]>> {
+  public async getMySessions(accountId: number): Promise<ProviderResponse<SessionModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(SessionQueries.GET_SESSIONS_$ACID, [accountId]);

@@ -21,7 +21,7 @@ export class SignupManager implements IManager {
         null,
       );
     }
-    const account = await this.provider.getAccount(request.phone);
+    const account = await this.provider.getAccountByPhone(request.phone);
     if (account !== null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),

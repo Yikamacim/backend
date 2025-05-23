@@ -16,14 +16,16 @@ export class AuthProvider implements IProvider {
     private readonly accountProvider = new AccountProvider(),
     private readonly sessionProvider = new SessionProvider(),
   ) {
-    this.getAccount = this.accountProvider.getAccountById.bind(this.accountProvider);
+    this.getAccount = this.accountProvider.getAccount.bind(this.accountProvider);
     this.getSession = this.sessionProvider.getSession.bind(this.accountProvider);
   }
 
-  public readonly getAccount: typeof this.accountProvider.getAccountById;
+  public readonly getAccount: typeof this.accountProvider.getAccount;
   public readonly getSession: typeof this.sessionProvider.getSession;
 
-  public async createOrUpdateSession(sessionData: SessionData): Promise<ProviderResponse<Tokens>> {
+  public async createOrUpdateMySession(
+    sessionData: SessionData,
+  ): Promise<ProviderResponse<Tokens>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const sessionResults = await DbConstants.POOL.query(SessionQueries.GET_SESSIONS_$ACID, [
@@ -38,9 +40,9 @@ export class AuthProvider implements IProvider {
       // Check if session is found
       if (session === undefined) {
         // Session not found, create one
-        const tokens = await this.partialCreateSession(sessionData);
+        const tokens = await this.partialCreateMySession(sessionData);
         // If account has more than max sessions, delete the oldest one
-        await this.partialEliminateSessionIfNecessary(sessions);
+        await this.partialPruneMySessions(sessions);
         return await ResponseUtil.providerResponse(tokens);
       } else {
         // Session found, update it
@@ -67,7 +69,7 @@ export class AuthProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialCreateSession(sessionData: SessionData): Promise<Tokens> {
+  private async partialCreateMySession(sessionData: SessionData): Promise<Tokens> {
     const sessionResults = await DbConstants.POOL.query(
       SessionQueries.INSERT_SESSION_RT_$ACID_$DVNM_$SKEY,
       [sessionData.accountId, sessionData.deviceName, sessionData.sessionKey],
@@ -92,7 +94,7 @@ export class AuthProvider implements IProvider {
     return tokens;
   }
 
-  private async partialEliminateSessionIfNecessary(sessions: SessionModel[]): Promise<void> {
+  private async partialPruneMySessions(sessions: SessionModel[]): Promise<void> {
     const sessionCount = sessions.length + 1;
     // If account has more than max sessions, delete the oldest one
     if (sessionCount > SessionConstants.MAX_SESSION_COUNT) {

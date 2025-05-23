@@ -16,9 +16,9 @@ export class MyChairsProvider implements IProvider {
     private readonly itemProvider = new ItemProvider(),
     private readonly itemMediaProvider = new ItemMediaProvider(),
   ) {
-    this.partialCreateItem = this.itemProvider.partialCreateItem.bind(this.itemProvider);
+    this.partialCreateMyItem = this.itemProvider.partialCreateMyItem.bind(this.itemProvider);
     this.partialUpdateItem = this.itemProvider.partialUpdateItem.bind(this.itemProvider);
-    this.partialDeleteItem = this.itemProvider.partialDeleteItem.bind(this.itemProvider);
+    this.archiveItem = this.itemProvider.archiveItem.bind(this.itemProvider);
     this.getItemMedias = this.itemMediaProvider.getItemMedias.bind(this.itemMediaProvider);
     this.partialCreateItemMedias = this.itemMediaProvider.partialCreateItemMedias.bind(
       this.itemMediaProvider,
@@ -29,17 +29,20 @@ export class MyChairsProvider implements IProvider {
   }
 
   public readonly getItemMedias: typeof this.itemMediaProvider.getItemMedias;
+  public readonly archiveItem: typeof this.itemProvider.archiveItem;
 
-  private readonly partialCreateItem: typeof this.itemProvider.partialCreateItem;
+  private readonly partialCreateMyItem: typeof this.itemProvider.partialCreateMyItem;
   private readonly partialUpdateItem: typeof this.itemProvider.partialUpdateItem;
-  private readonly partialDeleteItem: typeof this.itemProvider.partialDeleteItem;
   private readonly partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   private readonly partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
 
-  public async getChairs(accountId: number): Promise<ProviderResponse<ChairViewModel[]>> {
+  public async getMyActiveChairs(accountId: number): Promise<ProviderResponse<ChairViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(ChairViewQueries.GET_CHAIRS_$ACID, [accountId]);
+      const results = await DbConstants.POOL.query(ChairViewQueries.GET_CHAIRS_$ACID_$ISDEL, [
+        accountId,
+        false,
+      ]);
       const records: unknown[] = results.rows;
       return await ResponseUtil.providerResponse(ChairViewModel.fromRecords(records));
     } catch (error) {
@@ -48,20 +51,29 @@ export class MyChairsProvider implements IProvider {
     }
   }
 
-  public async getChair(
+  public async getMyActiveChair(
     accountId: number,
     chairId: number,
   ): Promise<ProviderResponse<ChairViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      return await ResponseUtil.providerResponse(await this.partialGetChair(accountId, chairId));
+      const results = await DbConstants.POOL.query(ChairViewQueries.GET_CHAIR_$ACID_$CHID_$ISDEL, [
+        accountId,
+        chairId,
+        false,
+      ]);
+      const record: unknown = results.rows[0];
+      if (!ProtoUtil.isProtovalid(record)) {
+        return null;
+      }
+      return ChairViewModel.fromRecord(record);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async createChair(
+  public async createMyChair(
     accountId: number,
     name: string,
     description: string,
@@ -70,10 +82,10 @@ export class MyChairsProvider implements IProvider {
   ): Promise<ProviderResponse<ChairViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const item = await this.partialCreateItem(accountId, name, description);
+      const item = await this.partialCreateMyItem(accountId, name, description);
       const chair = await this.partialCreateChair(item.itemId, quantity);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      const chairView = await this.partialGetChair(accountId, chair.chairId);
+      const chairView = await this.partialGetActiveChair(chair.chairId);
       if (chairView === null) {
         throw new UnexpectedDatabaseStateError("Chair was not created");
       }
@@ -85,7 +97,6 @@ export class MyChairsProvider implements IProvider {
   }
 
   public async updateChair(
-    accountId: number,
     oldMediaIds: number[],
     chairId: number,
     itemId: number,
@@ -100,7 +111,7 @@ export class MyChairsProvider implements IProvider {
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateChair(chairId, quantity);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      const chairView = await this.partialGetChair(accountId, chairId);
+      const chairView = await this.partialGetActiveChair(chairId);
       if (chairView === null) {
         throw new UnexpectedDatabaseStateError("Chair was not updated");
       }
@@ -111,32 +122,12 @@ export class MyChairsProvider implements IProvider {
     }
   }
 
-  public async deleteChair(
-    itemId: number,
-    chairId: number,
-    mediaIds: number[],
-  ): Promise<ProviderResponse<null>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      await this.partialDeleteChair(chairId);
-      await this.partialDeleteItemMedias(itemId, mediaIds);
-      await this.partialDeleteItem(itemId);
-      return await ResponseUtil.providerResponse(null);
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
-    }
-  }
-
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialGetChair(
-    accountId: number,
-    chairId: number,
-  ): Promise<ChairViewModel | null> {
-    const results = await DbConstants.POOL.query(ChairViewQueries.GET_CHAIR_$ACID_$SFID, [
-      accountId,
+  private async partialGetActiveChair(chairId: number): Promise<ChairViewModel | null> {
+    const results = await DbConstants.POOL.query(ChairViewQueries.GET_CHAIR_$CHID_$ISDEL, [
       chairId,
+      false,
     ]);
     const record: unknown = results.rows[0];
     if (!ProtoUtil.isProtovalid(record)) {
@@ -161,9 +152,5 @@ export class MyChairsProvider implements IProvider {
     ]);
     const record: unknown = results.rows[0];
     return ChairModel.fromRecord(record);
-  }
-
-  private async partialDeleteChair(chairId: number): Promise<void> {
-    await DbConstants.POOL.query(ChairQueries.DELETE_CHAIR_$CHID, [chairId]);
   }
 }

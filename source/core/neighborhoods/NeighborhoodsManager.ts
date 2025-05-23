@@ -28,7 +28,7 @@ export class NeighborhoodsManager implements IManager {
   public async getNeighborhoods$(
     params: NeighborhoodsParams,
   ): Promise<ManagerResponse<NeighborhoodsResponse | null>> {
-    const neighborhood = await this.provider.getNeighborhoodById(parseInt(params.neighborhoodId));
+    const neighborhood = await this.provider.getNeighborhood(parseInt(params.neighborhoodId));
     if (neighborhood === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),

@@ -8,13 +8,20 @@ export class ItemModel implements IModel {
     public readonly accountId: number,
     public readonly name: string,
     public readonly description: string,
+    public readonly isDeleted: boolean,
   ) {}
 
   public static fromRecord(record: unknown): ItemModel {
     if (!this.isValidModel(record)) {
       throw new ModelMismatchError(record);
     }
-    return new ItemModel(record.itemId, record.accountId, record.name, record.description);
+    return new ItemModel(
+      record.itemId,
+      record.accountId,
+      record.name,
+      record.description,
+      record.isDeleted,
+    );
   }
 
   public static fromRecords(records: unknown[]): ItemModel[] {
@@ -33,7 +40,8 @@ export class ItemModel implements IModel {
       typeof model.itemId === "number" &&
       typeof model.accountId === "number" &&
       typeof model.name === "string" &&
-      typeof model.description === "string"
+      typeof model.description === "string" &&
+      typeof model.isDeleted === "boolean"
     );
   }
 
@@ -41,6 +49,6 @@ export class ItemModel implements IModel {
     if (!Array.isArray(data)) {
       return false;
     }
-    return data.every((item: unknown): boolean => this.isValidModel(item));
+    return data.every((item: unknown) => this.isValidModel(item));
   }
 }

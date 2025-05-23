@@ -23,7 +23,7 @@ export class NeighborhoodsProvider implements IProvider {
     }
   }
 
-  public async getNeighborhoodById(
+  public async getNeighborhood(
     neighborhoodId: number,
   ): Promise<ProviderResponse<NeighborhoodModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);

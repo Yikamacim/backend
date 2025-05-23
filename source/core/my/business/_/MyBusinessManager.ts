@@ -18,7 +18,7 @@ export class MyBusinessManager implements IManager {
   public async getMyBusiness(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyBusinessResponse | null>> {
-    const business = await this.provider.getBusinessByAccountId(payload.accountId);
+    const business = await this.provider.getMyBusiness(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -57,7 +57,7 @@ export class MyBusinessManager implements IManager {
     payload: TokenPayload,
     request: MyBusinessRequest,
   ): Promise<ManagerResponse<MyBusinessResponse | null>> {
-    if ((await this.provider.getBusinessByAccountId(payload.accountId)) !== null) {
+    if ((await this.provider.getMyBusiness(payload.accountId)) !== null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -81,7 +81,7 @@ export class MyBusinessManager implements IManager {
       }
       mediaData = await MediaHelper.mediaToMediaData(media);
     }
-    const business = await this.provider.createBusiness(
+    const business = await this.provider.createMyBusiness(
       payload.accountId,
       request.name,
       request.mediaId,
@@ -102,7 +102,7 @@ export class MyBusinessManager implements IManager {
     payload: TokenPayload,
     request: MyBusinessRequest,
   ): Promise<ManagerResponse<MyBusinessResponse | null>> {
-    const business = await this.provider.getBusinessByAccountId(payload.accountId);
+    const business = await this.provider.getMyBusiness(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -149,7 +149,7 @@ export class MyBusinessManager implements IManager {
       }
     }
     const updatedBusiness = await this.provider.updateBusiness(
-      payload.accountId,
+      business.businessId,
       request.name,
       request.mediaId,
       business.addressId,

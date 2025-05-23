@@ -14,7 +14,7 @@ export class MyBusinessBankManager implements IManager {
   public async getMyBusinessBank(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyBusinessBankResponse | null>> {
-    const business = await this.provider.getBusinessByAccountId(payload.accountId);
+    const business = await this.provider.getMyBusiness(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -44,7 +44,7 @@ export class MyBusinessBankManager implements IManager {
     payload: TokenPayload,
     request: MyBusinessBankRequest,
   ): Promise<ManagerResponse<MyBusinessBankResponse | null>> {
-    const business = await this.provider.getBusinessByAccountId(payload.accountId);
+    const business = await this.provider.getMyBusiness(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -86,7 +86,7 @@ export class MyBusinessBankManager implements IManager {
     payload: TokenPayload,
     request: MyBusinessBankRequest,
   ): Promise<ManagerResponse<MyBusinessBankResponse | null>> {
-    const business = await this.provider.getBusinessByAccountId(payload.accountId);
+    const business = await this.provider.getMyBusiness(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),

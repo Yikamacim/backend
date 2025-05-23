@@ -13,6 +13,7 @@ export class QuiltViewModel implements IModel {
     public readonly description: string,
     public readonly quiltSize: QuiltSize | null,
     public readonly quiltMaterial: QuiltMaterial | null,
+    public readonly isDeleted: boolean,
   ) {}
 
   public static fromRecord(record: unknown): QuiltViewModel {
@@ -27,6 +28,7 @@ export class QuiltViewModel implements IModel {
       record.description,
       record.quiltSize,
       record.quiltMaterial,
+      record.isDeleted,
     );
   }
 
@@ -49,7 +51,9 @@ export class QuiltViewModel implements IModel {
       typeof model.name === "string" &&
       typeof model.description === "string" &&
       (model.quiltSize === null || Object.values(QuiltSize).includes(model.quiltSize)) &&
-      (model.quiltMaterial === null || Object.values(QuiltMaterial).includes(model.quiltMaterial))
+      (model.quiltMaterial === null ||
+        Object.values(QuiltMaterial).includes(model.quiltMaterial)) &&
+      typeof model.isDeleted === "boolean"
     );
   }
 
@@ -57,6 +61,6 @@ export class QuiltViewModel implements IModel {
     if (!Array.isArray(data)) {
       return false;
     }
-    return data.every((item: unknown): boolean => this.isValidModel(item));
+    return data.every((item: unknown) => this.isValidModel(item));
   }
 }

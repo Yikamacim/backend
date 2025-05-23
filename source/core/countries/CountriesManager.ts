@@ -23,7 +23,7 @@ export class CountriesManager implements IManager {
   public async getCountries$(
     params: CountriesParams,
   ): Promise<ManagerResponse<CountriesResponse | null>> {
-    const country = await this.provider.getCountryById(parseInt(params.countryId));
+    const country = await this.provider.getCountry(parseInt(params.countryId));
     if (country === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),

@@ -18,9 +18,9 @@ export class MyQuiltsProvider implements IProvider {
     private readonly itemProvider = new ItemProvider(),
     private readonly itemMediaProvider = new ItemMediaProvider(),
   ) {
-    this.partialCreateItem = this.itemProvider.partialCreateItem.bind(this.itemProvider);
+    this.partialCreateMyItem = this.itemProvider.partialCreateMyItem.bind(this.itemProvider);
     this.partialUpdateItem = this.itemProvider.partialUpdateItem.bind(this.itemProvider);
-    this.partialDeleteItem = this.itemProvider.partialDeleteItem.bind(this.itemProvider);
+    this.archiveItem = this.itemProvider.archiveItem.bind(this.itemProvider);
     this.getItemMedias = this.itemMediaProvider.getItemMedias.bind(this.itemMediaProvider);
     this.partialCreateItemMedias = this.itemMediaProvider.partialCreateItemMedias.bind(
       this.itemMediaProvider,
@@ -31,17 +31,20 @@ export class MyQuiltsProvider implements IProvider {
   }
 
   public readonly getItemMedias: typeof this.itemMediaProvider.getItemMedias;
+  public readonly archiveItem: typeof this.itemProvider.archiveItem;
 
-  private readonly partialCreateItem: typeof this.itemProvider.partialCreateItem;
+  private readonly partialCreateMyItem: typeof this.itemProvider.partialCreateMyItem;
   private readonly partialUpdateItem: typeof this.itemProvider.partialUpdateItem;
-  private readonly partialDeleteItem: typeof this.itemProvider.partialDeleteItem;
   private readonly partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   private readonly partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
 
-  public async getQuilts(accountId: number): Promise<ProviderResponse<QuiltViewModel[]>> {
+  public async getMyActiveQuilts(accountId: number): Promise<ProviderResponse<QuiltViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(QuiltViewQueries.GET_QUILTS_$ACID, [accountId]);
+      const results = await DbConstants.POOL.query(QuiltViewQueries.GET_QUILTS_$ACID_$ISDEL, [
+        accountId,
+        false,
+      ]);
       const records: unknown[] = results.rows;
       return await ResponseUtil.providerResponse(QuiltViewModel.fromRecords(records));
     } catch (error) {
@@ -50,20 +53,29 @@ export class MyQuiltsProvider implements IProvider {
     }
   }
 
-  public async getQuilt(
+  public async getMyActiveQuilt(
     accountId: number,
     quiltId: number,
   ): Promise<ProviderResponse<QuiltViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      return await ResponseUtil.providerResponse(await this.partialGetQuilt(accountId, quiltId));
+      const results = await DbConstants.POOL.query(QuiltViewQueries.GET_QUILT_$ACID_$QLID_$ISDEL, [
+        accountId,
+        quiltId,
+        false,
+      ]);
+      const record: unknown = results.rows[0];
+      if (!ProtoUtil.isProtovalid(record)) {
+        return null;
+      }
+      return QuiltViewModel.fromRecord(record);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async createQuilt(
+  public async createMyQuilt(
     accountId: number,
     name: string,
     description: string,
@@ -73,10 +85,10 @@ export class MyQuiltsProvider implements IProvider {
   ): Promise<ProviderResponse<QuiltViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const item = await this.partialCreateItem(accountId, name, description);
+      const item = await this.partialCreateMyItem(accountId, name, description);
       const quilt = await this.partialCreateQuilt(item.itemId, quiltSize, quiltMaterial);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      const quiltView = await this.partialGetQuilt(accountId, quilt.quiltId);
+      const quiltView = await this.partialGetActiveQuilt(quilt.quiltId);
       if (quiltView === null) {
         throw new UnexpectedDatabaseStateError("Quilt was not created");
       }
@@ -87,8 +99,7 @@ export class MyQuiltsProvider implements IProvider {
     }
   }
 
-  public async updateQuilt(
-    accountId: number,
+  public async updateMyQuilt(
     oldMediaIds: number[],
     quiltId: number,
     itemId: number,
@@ -104,7 +115,7 @@ export class MyQuiltsProvider implements IProvider {
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateQuilt(quiltId, quiltSize, quiltMaterial);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      const quiltView = await this.partialGetQuilt(accountId, quiltId);
+      const quiltView = await this.partialGetActiveQuilt(quiltId);
       if (quiltView === null) {
         throw new UnexpectedDatabaseStateError("Quilt was not updated");
       }
@@ -115,32 +126,12 @@ export class MyQuiltsProvider implements IProvider {
     }
   }
 
-  public async deleteQuilt(
-    itemId: number,
-    quiltId: number,
-    mediaIds: number[],
-  ): Promise<ProviderResponse<null>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      await this.partialDeleteQuilt(quiltId);
-      await this.partialDeleteItemMedias(itemId, mediaIds);
-      await this.partialDeleteItem(itemId);
-      return await ResponseUtil.providerResponse(null);
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
-    }
-  }
-
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialGetQuilt(
-    accountId: number,
-    quiltId: number,
-  ): Promise<QuiltViewModel | null> {
-    const results = await DbConstants.POOL.query(QuiltViewQueries.GET_QUILT_$ACID_$QLID, [
-      accountId,
+  private async partialGetActiveQuilt(quiltId: number): Promise<QuiltViewModel | null> {
+    const results = await DbConstants.POOL.query(QuiltViewQueries.GET_QUILT_$QLID_$ISDEL, [
       quiltId,
+      false,
     ]);
     const record: unknown = results.rows[0];
     if (!ProtoUtil.isProtovalid(record)) {
@@ -175,9 +166,5 @@ export class MyQuiltsProvider implements IProvider {
     ]);
     const record: unknown = results.rows[0];
     return QuiltModel.fromRecord(record);
-  }
-
-  private async partialDeleteQuilt(quiltId: number): Promise<void> {
-    await DbConstants.POOL.query(QuiltQueries.DELETE_QUILT_$QLID, [quiltId]);
   }
 }

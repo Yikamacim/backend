@@ -17,7 +17,7 @@ export class MyBlanketsManager implements IManager {
   public async getMyBlankets(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyBlanketsResponse[]>> {
-    const blankets = await this.provider.getBlankets(payload.accountId);
+    const blankets = await this.provider.getMyActiveBlankets(payload.accountId);
     const responses: MyBlanketsResponse[] = [];
     for (const myBlanket of blankets) {
       const medias = await this.provider.getItemMedias(myBlanket.itemId);
@@ -40,7 +40,7 @@ export class MyBlanketsManager implements IManager {
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }
-    const blanket = await this.provider.createBlanket(
+    const blanket = await this.provider.createMyBlanket(
       payload.accountId,
       request.name,
       request.description,
@@ -61,7 +61,10 @@ export class MyBlanketsManager implements IManager {
     payload: TokenPayload,
     params: MyBlanketsParams,
   ): Promise<ManagerResponse<MyBlanketsResponse | null>> {
-    const blanket = await this.provider.getBlanket(payload.accountId, parseInt(params.blanketId));
+    const blanket = await this.provider.getMyActiveBlanket(
+      payload.accountId,
+      parseInt(params.blanketId),
+    );
     if (blanket === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -85,7 +88,10 @@ export class MyBlanketsManager implements IManager {
     params: MyBlanketsParams,
     request: MyBlanketsRequest,
   ): Promise<ManagerResponse<MyBlanketsResponse | null>> {
-    const blanket = await this.provider.getBlanket(payload.accountId, parseInt(params.blanketId));
+    const blanket = await this.provider.getMyActiveBlanket(
+      payload.accountId,
+      parseInt(params.blanketId),
+    );
     if (blanket === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -105,7 +111,6 @@ export class MyBlanketsManager implements IManager {
     }
     const oldMedias = await this.provider.getItemMedias(blanket.itemId);
     const updatedBlanket = await this.provider.updateBlanket(
-      payload.accountId,
       oldMedias.map((oldMedia) => oldMedia.mediaId),
       blanket.blanketId,
       blanket.itemId,
@@ -128,7 +133,10 @@ export class MyBlanketsManager implements IManager {
     payload: TokenPayload,
     params: MyBlanketsParams,
   ): Promise<ManagerResponse<null>> {
-    const blanket = await this.provider.getBlanket(payload.accountId, parseInt(params.blanketId));
+    const blanket = await this.provider.getMyActiveBlanket(
+      payload.accountId,
+      parseInt(params.blanketId),
+    );
     if (blanket === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -138,9 +146,8 @@ export class MyBlanketsManager implements IManager {
       );
     }
     const medias = await this.provider.getItemMedias(blanket.itemId);
-    await this.provider.deleteBlanket(
+    await this.provider.archiveItem(
       blanket.itemId,
-      blanket.blanketId,
       medias.map((media) => media.mediaId),
     );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);

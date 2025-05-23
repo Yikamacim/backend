@@ -11,13 +11,13 @@ export class VerifyProvider implements IProvider {
     private readonly accountProvider = new AccountProvider(),
     private readonly verificationProvider = new VerificationProvider(),
   ) {
-    this.getAccount = this.accountProvider.getAccountByPhone.bind(this.accountProvider);
+    this.getAccountByPhone = this.accountProvider.getAccountByPhone.bind(this.accountProvider);
     this.getVerification = this.verificationProvider.getVerification.bind(
       this.verificationProvider,
     );
   }
 
-  public readonly getAccount: typeof this.accountProvider.getAccountByPhone;
+  public readonly getAccountByPhone: typeof this.accountProvider.getAccountByPhone;
   public readonly getVerification: typeof this.verificationProvider.getVerification;
 
   public async verifyAccount(accountId: number): Promise<ProviderResponse<null>> {

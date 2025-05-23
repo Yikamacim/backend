@@ -52,6 +52,6 @@ export class SessionModel implements IModel {
     if (!Array.isArray(data)) {
       return false;
     }
-    return data.every((obj: unknown): boolean => SessionModel.isValidModel(obj));
+    return data.every((obj: unknown) => SessionModel.isValidModel(obj));
   }
 }

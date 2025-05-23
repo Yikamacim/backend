@@ -13,6 +13,7 @@ export class BlanketViewModel implements IModel {
     public readonly description: string,
     public readonly blanketSize: BlanketSize | null,
     public readonly blanketMaterial: BlanketMaterial | null,
+    public readonly isDeleted: boolean,
   ) {}
 
   public static fromRecord(record: unknown): BlanketViewModel {
@@ -27,6 +28,7 @@ export class BlanketViewModel implements IModel {
       record.description,
       record.blanketSize,
       record.blanketMaterial,
+      record.isDeleted,
     );
   }
 
@@ -50,7 +52,8 @@ export class BlanketViewModel implements IModel {
       typeof model.description === "string" &&
       (model.blanketSize === null || Object.values(BlanketSize).includes(model.blanketSize)) &&
       (model.blanketMaterial === null ||
-        Object.values(BlanketMaterial).includes(model.blanketMaterial))
+        Object.values(BlanketMaterial).includes(model.blanketMaterial)) &&
+      typeof model.isDeleted === "boolean"
     );
   }
 
@@ -58,6 +61,6 @@ export class BlanketViewModel implements IModel {
     if (!Array.isArray(data)) {
       return false;
     }
-    return data.every((item: unknown): boolean => this.isValidModel(item));
+    return data.every((item: unknown) => this.isValidModel(item));
   }
 }

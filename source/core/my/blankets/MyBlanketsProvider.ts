@@ -18,9 +18,9 @@ export class MyBlanketsProvider implements IProvider {
     private readonly itemProvider = new ItemProvider(),
     private readonly itemMediaProvider = new ItemMediaProvider(),
   ) {
-    this.partialCreateItem = this.itemProvider.partialCreateItem.bind(this.itemProvider);
+    this.partialCreateMyItem = this.itemProvider.partialCreateMyItem.bind(this.itemProvider);
     this.partialUpdateItem = this.itemProvider.partialUpdateItem.bind(this.itemProvider);
-    this.partialDeleteItem = this.itemProvider.partialDeleteItem.bind(this.itemProvider);
+    this.archiveItem = this.itemProvider.archiveItem.bind(this.itemProvider);
     this.getItemMedias = this.itemMediaProvider.getItemMedias.bind(this.itemMediaProvider);
     this.partialCreateItemMedias = this.itemMediaProvider.partialCreateItemMedias.bind(
       this.itemMediaProvider,
@@ -31,18 +31,21 @@ export class MyBlanketsProvider implements IProvider {
   }
 
   public readonly getItemMedias: typeof this.itemMediaProvider.getItemMedias;
+  public readonly archiveItem: typeof this.itemProvider.archiveItem;
 
-  private readonly partialCreateItem: typeof this.itemProvider.partialCreateItem;
+  private readonly partialCreateMyItem: typeof this.itemProvider.partialCreateMyItem;
   private readonly partialUpdateItem: typeof this.itemProvider.partialUpdateItem;
-  private readonly partialDeleteItem: typeof this.itemProvider.partialDeleteItem;
   private readonly partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   private readonly partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
 
-  public async getBlankets(accountId: number): Promise<ProviderResponse<BlanketViewModel[]>> {
+  public async getMyActiveBlankets(
+    accountId: number,
+  ): Promise<ProviderResponse<BlanketViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(BlanketViewQueries.GET_BLANKETS_$ACID, [
+      const results = await DbConstants.POOL.query(BlanketViewQueries.GET_BLANKETS_$ACID_$ISDEL, [
         accountId,
+        false,
       ]);
       const records: unknown[] = results.rows;
       return await ResponseUtil.providerResponse(BlanketViewModel.fromRecords(records));
@@ -52,22 +55,28 @@ export class MyBlanketsProvider implements IProvider {
     }
   }
 
-  public async getBlanket(
+  public async getMyActiveBlanket(
     accountId: number,
     blanketId: number,
   ): Promise<ProviderResponse<BlanketViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      return await ResponseUtil.providerResponse(
-        await this.partialGetBlanket(accountId, blanketId),
+      const results = await DbConstants.POOL.query(
+        BlanketViewQueries.GET_BLANKET_$ACID_$BLID_$ISDEL,
+        [accountId, blanketId, false],
       );
+      const record: unknown = results.rows[0];
+      if (!ProtoUtil.isProtovalid(record)) {
+        return null;
+      }
+      return BlanketViewModel.fromRecord(record);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async createBlanket(
+  public async createMyBlanket(
     accountId: number,
     name: string,
     description: string,
@@ -77,10 +86,10 @@ export class MyBlanketsProvider implements IProvider {
   ): Promise<ProviderResponse<BlanketViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const item = await this.partialCreateItem(accountId, name, description);
+      const item = await this.partialCreateMyItem(accountId, name, description);
       const blanket = await this.partialCreateBlanket(item.itemId, blanketSize, blanketMaterial);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      const blanketView = await this.partialGetBlanket(accountId, blanket.blanketId);
+      const blanketView = await this.partialGetActiveBlanket(blanket.blanketId);
       if (blanketView === null) {
         throw new UnexpectedDatabaseStateError("Blanket was not created");
       }
@@ -92,7 +101,6 @@ export class MyBlanketsProvider implements IProvider {
   }
 
   public async updateBlanket(
-    accountId: number,
     oldMediaIds: number[],
     blanketId: number,
     itemId: number,
@@ -108,7 +116,7 @@ export class MyBlanketsProvider implements IProvider {
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateBlanket(blanketId, blanketSize, blanketMaterial);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      const blanketView = await this.partialGetBlanket(accountId, blanketId);
+      const blanketView = await this.partialGetActiveBlanket(blanketId);
       if (blanketView === null) {
         throw new UnexpectedDatabaseStateError("Blanket was not updated");
       }
@@ -119,32 +127,12 @@ export class MyBlanketsProvider implements IProvider {
     }
   }
 
-  public async deleteBlanket(
-    itemId: number,
-    blanketId: number,
-    mediaIds: number[],
-  ): Promise<ProviderResponse<null>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      await this.partialDeleteBlanket(blanketId);
-      await this.partialDeleteItemMedias(itemId, mediaIds);
-      await this.partialDeleteItem(itemId);
-      return await ResponseUtil.providerResponse(null);
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
-    }
-  }
-
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialGetBlanket(
-    accountId: number,
-    blanketId: number,
-  ): Promise<BlanketViewModel | null> {
-    const results = await DbConstants.POOL.query(BlanketViewQueries.GET_BLANKET_$ACID_$BLID, [
-      accountId,
+  private async partialGetActiveBlanket(blanketId: number): Promise<BlanketViewModel | null> {
+    const results = await DbConstants.POOL.query(BlanketViewQueries.GET_BLANKET_$BLID_$ISDEL, [
       blanketId,
+      false,
     ]);
     const record: unknown = results.rows[0];
     if (!ProtoUtil.isProtovalid(record)) {
@@ -177,9 +165,5 @@ export class MyBlanketsProvider implements IProvider {
     );
     const record: unknown = results.rows[0];
     return BlanketModel.fromRecord(record);
-  }
-
-  private async partialDeleteBlanket(blanketId: number): Promise<void> {
-    await DbConstants.POOL.query(BlanketQueries.DELETE_BLANKET_$BLID, [blanketId]);
   }
 }

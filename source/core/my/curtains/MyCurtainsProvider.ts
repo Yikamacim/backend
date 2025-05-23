@@ -17,9 +17,9 @@ export class MyCurtainsProvider implements IProvider {
     private readonly itemProvider = new ItemProvider(),
     private readonly itemMediaProvider = new ItemMediaProvider(),
   ) {
-    this.partialCreateItem = this.itemProvider.partialCreateItem.bind(this.itemProvider);
+    this.partialCreateMyItem = this.itemProvider.partialCreateMyItem.bind(this.itemProvider);
     this.partialUpdateItem = this.itemProvider.partialUpdateItem.bind(this.itemProvider);
-    this.partialDeleteItem = this.itemProvider.partialDeleteItem.bind(this.itemProvider);
+    this.archiveItem = this.itemProvider.archiveItem.bind(this.itemProvider);
     this.getItemMedias = this.itemMediaProvider.getItemMedias.bind(this.itemMediaProvider);
     this.partialCreateItemMedias = this.itemMediaProvider.partialCreateItemMedias.bind(
       this.itemMediaProvider,
@@ -30,18 +30,21 @@ export class MyCurtainsProvider implements IProvider {
   }
 
   public readonly getItemMedias: typeof this.itemMediaProvider.getItemMedias;
+  public readonly archiveItem: typeof this.itemProvider.archiveItem;
 
-  private readonly partialCreateItem: typeof this.itemProvider.partialCreateItem;
+  private readonly partialCreateMyItem: typeof this.itemProvider.partialCreateMyItem;
   private readonly partialUpdateItem: typeof this.itemProvider.partialUpdateItem;
-  private readonly partialDeleteItem: typeof this.itemProvider.partialDeleteItem;
   private readonly partialCreateItemMedias: typeof this.itemMediaProvider.partialCreateItemMedias;
   private readonly partialDeleteItemMedias: typeof this.itemMediaProvider.partialDeleteItemMedias;
 
-  public async getCurtains(accountId: number): Promise<ProviderResponse<CurtainViewModel[]>> {
+  public async getMyActiveCurtains(
+    accountId: number,
+  ): Promise<ProviderResponse<CurtainViewModel[]>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(CurtainViewQueries.GET_CURTAINS_$ACID, [
+      const results = await DbConstants.POOL.query(CurtainViewQueries.GET_CURTAINS_$ACID_$ISDEL, [
         accountId,
+        false,
       ]);
       const records: unknown[] = results.rows;
       return await ResponseUtil.providerResponse(CurtainViewModel.fromRecords(records));
@@ -51,22 +54,28 @@ export class MyCurtainsProvider implements IProvider {
     }
   }
 
-  public async getCurtain(
+  public async getMyActiveCurtain(
     accountId: number,
     curtainId: number,
   ): Promise<ProviderResponse<CurtainViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      return await ResponseUtil.providerResponse(
-        await this.partialGetCurtain(accountId, curtainId),
+      const results = await DbConstants.POOL.query(
+        CurtainViewQueries.GET_CURTAIN_$ACID_$CRID_$ISDEL,
+        [accountId, curtainId, false],
       );
+      const record: unknown = results.rows[0];
+      if (!ProtoUtil.isProtovalid(record)) {
+        return null;
+      }
+      return CurtainViewModel.fromRecord(record);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async createCurtain(
+  public async createMyCurtain(
     accountId: number,
     name: string,
     description: string,
@@ -77,10 +86,10 @@ export class MyCurtainsProvider implements IProvider {
   ): Promise<ProviderResponse<CurtainViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const item = await this.partialCreateItem(accountId, name, description);
+      const item = await this.partialCreateMyItem(accountId, name, description);
       const curtain = await this.partialCreateCurtain(item.itemId, width, length, curtainType);
       await this.partialCreateItemMedias(item.itemId, mediaIds);
-      const curtainView = await this.partialGetCurtain(accountId, curtain.curtainId);
+      const curtainView = await this.partialGetActiveCurtain(curtain.curtainId);
       if (curtainView === null) {
         throw new UnexpectedDatabaseStateError("Curtain was not created");
       }
@@ -92,7 +101,6 @@ export class MyCurtainsProvider implements IProvider {
   }
 
   public async updateCurtain(
-    accountId: number,
     oldMediaIds: number[],
     carpetId: number,
     itemId: number,
@@ -109,7 +117,7 @@ export class MyCurtainsProvider implements IProvider {
       await this.partialUpdateItem(itemId, name, description);
       await this.partialUpdateCurtain(carpetId, width, length, curtainType);
       await this.partialCreateItemMedias(itemId, mediaIds);
-      const curtainView = await this.partialGetCurtain(accountId, carpetId);
+      const curtainView = await this.partialGetActiveCurtain(carpetId);
       if (curtainView === null) {
         throw new UnexpectedDatabaseStateError("Curtain was not updated");
       }
@@ -120,32 +128,12 @@ export class MyCurtainsProvider implements IProvider {
     }
   }
 
-  public async deleteCurtain(
-    itemId: number,
-    curtainId: number,
-    mediaIds: number[],
-  ): Promise<ProviderResponse<null>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      await this.partialDeleteCurtain(curtainId);
-      await this.partialDeleteItemMedias(itemId, mediaIds);
-      await this.partialDeleteItem(itemId);
-      return await ResponseUtil.providerResponse(null);
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
-    }
-  }
-
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialGetCurtain(
-    accountId: number,
-    curtainId: number,
-  ): Promise<CurtainViewModel | null> {
-    const results = await DbConstants.POOL.query(CurtainViewQueries.GET_CURTAIN_$ACID_$CRID, [
-      accountId,
+  private async partialGetActiveCurtain(curtainId: number): Promise<CurtainViewModel | null> {
+    const results = await DbConstants.POOL.query(CurtainViewQueries.GET_CURTAIN_$CRID_$ISDEL, [
       curtainId,
+      false,
     ]);
     const record: unknown = results.rows[0];
     if (!ProtoUtil.isProtovalid(record)) {
@@ -180,9 +168,5 @@ export class MyCurtainsProvider implements IProvider {
     );
     const record: unknown = results.rows[0];
     return CurtainModel.fromRecord(record);
-  }
-
-  private async partialDeleteCurtain(curtainId: number): Promise<void> {
-    await DbConstants.POOL.query(CurtainQueries.DELETE_CURTAIN_$CRID, [curtainId]);
   }
 }

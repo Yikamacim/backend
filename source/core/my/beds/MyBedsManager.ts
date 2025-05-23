@@ -15,7 +15,7 @@ export class MyBedsManager implements IManager {
   public constructor(private readonly provider = new MyBedsProvider()) {}
 
   public async getMyBeds(payload: TokenPayload): Promise<ManagerResponse<MyBedsResponse[]>> {
-    const beds = await this.provider.getMyBeds(payload.accountId);
+    const beds = await this.provider.getMyActiveBeds(payload.accountId);
     const responses: MyBedsResponse[] = [];
     for (const bed of beds) {
       const medias = await this.provider.getItemMedias(bed.itemId);
@@ -38,7 +38,7 @@ export class MyBedsManager implements IManager {
     if (checkMediasResult.isLeft()) {
       return checkMediasResult.get();
     }
-    const bed = await this.provider.createBed(
+    const bed = await this.provider.createMyBed(
       payload.accountId,
       request.name,
       request.description,
@@ -58,7 +58,7 @@ export class MyBedsManager implements IManager {
     payload: TokenPayload,
     params: MyBedsParams,
   ): Promise<ManagerResponse<MyBedsResponse | null>> {
-    const bed = await this.provider.getBed(payload.accountId, parseInt(params.bedId));
+    const bed = await this.provider.getMyActiveBed(payload.accountId, parseInt(params.bedId));
     if (bed === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -82,7 +82,7 @@ export class MyBedsManager implements IManager {
     params: MyBedsParams,
     request: MyBedsRequest,
   ): Promise<ManagerResponse<MyBedsResponse | null>> {
-    const bed = await this.provider.getBed(payload.accountId, parseInt(params.bedId));
+    const bed = await this.provider.getMyActiveBed(payload.accountId, parseInt(params.bedId));
     if (bed === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -102,7 +102,6 @@ export class MyBedsManager implements IManager {
     }
     const oldMedias = await this.provider.getItemMedias(bed.itemId);
     const updatedBed = await this.provider.updateBed(
-      payload.accountId,
       oldMedias.map((oldMedia) => oldMedia.mediaId),
       bed.bedId,
       bed.itemId,
@@ -124,7 +123,7 @@ export class MyBedsManager implements IManager {
     payload: TokenPayload,
     params: MyBedsParams,
   ): Promise<ManagerResponse<null>> {
-    const bed = await this.provider.getBed(payload.accountId, parseInt(params.bedId));
+    const bed = await this.provider.getMyActiveBed(payload.accountId, parseInt(params.bedId));
     if (bed === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -134,9 +133,8 @@ export class MyBedsManager implements IManager {
       );
     }
     const medias = await this.provider.getItemMedias(bed.itemId);
-    await this.provider.deleteBed(
+    await this.provider.archiveItem(
       bed.itemId,
-      bed.bedId,
       medias.map((media) => media.mediaId),
     );
     return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], null);

@@ -70,7 +70,7 @@ export class AuthHandler implements IHandler {
   }
 
   public async generate(sessionData: SessionData): Promise<Tokens> {
-    return await this.provider.createOrUpdateSession(sessionData);
+    return await this.provider.createOrUpdateMySession(sessionData);
   }
 
   public async refresh(payload: TokenPayload): Promise<Tokens> {
@@ -78,7 +78,7 @@ export class AuthHandler implements IHandler {
     if (session === null) {
       throw new UnexpectedAuthError();
     }
-    return await this.provider.createOrUpdateSession({
+    return await this.provider.createOrUpdateMySession({
       accountId: payload.accountId,
       accountType: payload.accountType,
       deviceName: session.deviceName,

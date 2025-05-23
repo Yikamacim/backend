@@ -50,7 +50,7 @@ export class MyCarpetsRequest implements IRequest {
       typeof blueprint.name === "string" &&
       typeof blueprint.description === "string" &&
       Array.isArray(blueprint.mediaIds) &&
-      blueprint.mediaIds.every((mediaId: unknown): boolean => typeof mediaId === "number") &&
+      blueprint.mediaIds.every((mediaId) => typeof mediaId === "number") &&
       (blueprint.width === null || typeof blueprint.width === "number") &&
       (blueprint.length === null || typeof blueprint.length === "number") &&
       (blueprint.carpetMaterial === null ||

@@ -16,7 +16,7 @@ export class MyBusinessOpenManager implements IManager {
   public async putMyBusinessOpen(
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyBusinessOpenResponse | null>> {
-    const business = await this.provider.getBusinessByAccountId(payload.accountId);
+    const business = await this.provider.getMyBusiness(payload.accountId);
     if (business === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -77,7 +77,7 @@ export class MyBusinessOpenManager implements IManager {
         null,
       );
     }
-    const services = await this.provider.getServices(business.businessId);
+    const services = await this.provider.getActiveServices(business.businessId);
     if (services.length === 0) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
@@ -86,15 +86,14 @@ export class MyBusinessOpenManager implements IManager {
         null,
       );
     }
-    const updatedBusiness = await this.provider.openBusiness(
-      payload.accountId,
+    const openedBusiness = await this.provider.openBusiness(
       business.businessId,
     );
     let mediaData: MediaData | null = null;
-    if (updatedBusiness.mediaId !== null) {
+    if (openedBusiness.mediaId !== null) {
       const media = await this.provider.getBusinessMedia(
-        updatedBusiness.businessId,
-        updatedBusiness.mediaId,
+        openedBusiness.businessId,
+        openedBusiness.mediaId,
       );
       if (media === null) {
         return ResponseUtil.managerResponse(
@@ -110,7 +109,7 @@ export class MyBusinessOpenManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBusinessOpenResponse.fromModel(updatedBusiness, mediaData),
+      MyBusinessOpenResponse.fromModel(openedBusiness, mediaData),
     );
   }
 }

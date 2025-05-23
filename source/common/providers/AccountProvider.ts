@@ -7,7 +7,7 @@ import { AccountQueries } from "../../common/queries/AccountQueries";
 import { AccountModel } from "../models/AccountModel";
 
 export class AccountProvider implements IProvider {
-  public async getAccountById(accountId: number): Promise<ProviderResponse<AccountModel | null>> {
+  public async getAccount(accountId: number): Promise<ProviderResponse<AccountModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(AccountQueries.GET_ACCOUNT_$ACID, [accountId]);

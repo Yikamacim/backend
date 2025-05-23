@@ -43,7 +43,7 @@ export class MyBusinessApprovalRequest implements IRequest {
     const blueprint = obj as MyBusinessApprovalRequest;
     return (
       Array.isArray(blueprint.mediaIds) &&
-      blueprint.mediaIds.every((mediaId: unknown): boolean => typeof mediaId === "number") &&
+      blueprint.mediaIds.every((mediaId) => typeof mediaId === "number") &&
       (blueprint.message === null || typeof blueprint.message === "string")
     );
   }

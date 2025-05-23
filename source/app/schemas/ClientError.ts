@@ -6,6 +6,7 @@ import { BusinessRules } from "../../common/rules/BusinessRules";
 import { ChairRules } from "../../common/rules/ChairRules";
 import { ContactRules } from "../../common/rules/ContactRules";
 import { ItemRules } from "../../common/rules/ItemRules";
+import { OrderRules } from "../../common/rules/OrderRules";
 import { SearchRules } from "../../common/rules/SearchRules";
 import { ServiceRules } from "../../common/rules/ServiceRules";
 import { SessionRules } from "../../common/rules/SessionRules";
@@ -81,6 +82,7 @@ export enum ClientErrorCode {
   INVALID_SERVICE_TITLE_LENGTH = 60019,
   INVALID_SERVICE_DESCRIPTION_LENGTH = 60020,
   INVALID_SEARCH_QUERY_LENGTH = 60021,
+  INVALID_ORDER_NOTE_LENGTH = 60022,
   //  *  7XXXX: Format errors
   INVALID_PHONE_CONTENT = 70001,
   INVALID_PASSWORD_CONTENT = 70002,
@@ -109,6 +111,8 @@ export enum ClientErrorCode {
   INVALID_SERVICE_UNIT_PRICE = 70025,
   INVALID_SEARCH_QUERY_CONTENT = 70026,
   DUPLICATE_SERVICE_CATEGORIES = 70027,
+  INVALID_ORDER_NOTE_CONTENT = 70028,
+  DUPLICATE_ITEM_IDS = 70029,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -207,6 +211,8 @@ export enum ClientErrorCode {
   BUSINESS_ALREADY_CLOSED = 82700,
   //  *  *  828XX: /businesses/:businessId errors
   NO_BUSINESS_FOUND = 82800,
+  //  *  *  829XX: /my/orders errors
+  INVALID_ORDER_ID = 82900,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -269,6 +275,7 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_SERVICE_TITLE_LENGTH]: `Provided service title wasn't in the length range of ${ServiceRules.TITLE_MIN_LENGTH} to ${ServiceRules.TITLE_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_SERVICE_DESCRIPTION_LENGTH]: `Provided service description wasn't in the length range of ${ServiceRules.DESCRIPTION_MIN_LENGTH} to ${ServiceRules.DESCRIPTION_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_SEARCH_QUERY_LENGTH]: `Provided search query wasn't in the length range of ${SearchRules.QUERY_MIN_LENGTH} to ${SearchRules.QUERY_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_ORDER_NOTE_LENGTH]: `Provided order note wasn't in the length range of ${OrderRules.NOTE_MIN_LENGTH} to ${OrderRules.NOTE_MAX_LENGTH}.`,
   //  *  7XXXX: Content errors
   [ClientErrorCode.INVALID_PHONE_CONTENT]: "Provided phone contained invalid characters.",
   [ClientErrorCode.INVALID_PASSWORD_CONTENT]:
@@ -313,6 +320,8 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
     "Provided search query contained invalid characters.",
   [ClientErrorCode.DUPLICATE_SERVICE_CATEGORIES]:
     "Provided service categories contained duplicates.",
+  [ClientErrorCode.INVALID_ORDER_NOTE_CONTENT]: "Provided order note contained invalid characters.",
+  [ClientErrorCode.DUPLICATE_ITEM_IDS]: "Provided item ids contained duplicates.",
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -414,6 +423,8 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.BUSINESS_ALREADY_CLOSED]: "Business is already closed.",
   //  *  *  828XX: /businesses/:businessId errors
   [ClientErrorCode.NO_BUSINESS_FOUND]: "No business was found with the provided id.",
+  //  *  *  829XX: /my/orders errors
+  [ClientErrorCode.INVALID_ORDER_ID]: "Provided order id was invalid.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

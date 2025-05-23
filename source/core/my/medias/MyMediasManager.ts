@@ -19,7 +19,7 @@ export class MyMediasManager implements IManager {
     params: MyMediasUploadParams,
     queries: MyMediasUploadQueries,
   ): Promise<ManagerResponse<MyMediasUploadResponse>> {
-    const media = await this.provider.createMedia(
+    const media = await this.provider.createMyMedia(
       payload.accountId,
       params.mediaType.toUpperCase() as MediaType,
       queries.extension,
