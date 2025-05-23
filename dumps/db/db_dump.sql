@@ -5,7 +5,7 @@
 -- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
 -- Dumped by pg_dump version 16.8 (Debian 16.8-1.pgdg120+1)
 
--- Started on 2025-05-23 02:21:16 UTC
+-- Started on 2025-05-23 03:49:55 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -961,8 +961,8 @@ ALTER SEQUENCE public."Business_businessId_seq" OWNED BY public."Business"."busi
 CREATE TABLE public."Card" (
     "cardId" integer NOT NULL,
     "accountId" integer NOT NULL,
-    name character varying(64) NOT NULL,
-    "holderName" character varying(128) NOT NULL,
+    name character varying(32) NOT NULL,
+    owner character varying(256) NOT NULL,
     number character varying(16) NOT NULL,
     "expirationMonth" smallint NOT NULL,
     "expirationYear" smallint NOT NULL,
@@ -1474,9 +1474,9 @@ ALTER SEQUENCE public."Neighborhood_neighborhoodId_seq" OWNED BY public."Neighbo
 CREATE TABLE public."Order" (
     "orderId" integer NOT NULL,
     "businessId" integer NOT NULL,
-    "serviceId" integer,
+    "serviceId" integer NOT NULL,
     "accountId" integer NOT NULL,
-    "addressId" integer,
+    "addressId" integer NOT NULL,
     "orderState" public."OrderState" DEFAULT 'INITIATED'::public."OrderState" NOT NULL,
     price integer,
     "createdAt" timestamp without time zone DEFAULT now() NOT NULL,
@@ -2786,7 +2786,7 @@ COPY public."BusinessMedia" ("businessId", "mediaId", "isMain") FROM stdin;
 -- Data for Name: Card; Type: TABLE DATA; Schema: public; Owner: UYikamacim
 --
 
-COPY public."Card" ("cardId", "accountId", name, "holderName", number, "expirationMonth", "expirationYear", cvv, "isDefault", "isDeleted") FROM stdin;
+COPY public."Card" ("cardId", "accountId", name, owner, number, "expirationMonth", "expirationYear", cvv, "isDefault", "isDeleted") FROM stdin;
 \.
 
 
@@ -78457,7 +78457,7 @@ ALTER TABLE ONLY public."Vehicle"
     ADD CONSTRAINT "Vehicle_Item_fk" FOREIGN KEY ("itemId") REFERENCES public."Item"("itemId");
 
 
--- Completed on 2025-05-23 02:21:16 UTC
+-- Completed on 2025-05-23 03:49:55 UTC
 
 --
 -- PostgreSQL database dump complete
