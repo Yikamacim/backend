@@ -1,5 +1,4 @@
 import type { ProviderResponse } from "../../../@types/responses";
-import type { SessionData } from "../../../@types/sessions";
 import type { TokenPayload, Tokens } from "../../../@types/tokens";
 import { DbConstants } from "../../../app/constants/DbConstants";
 import type { IProvider } from "../../../app/interfaces/IProvider";
@@ -8,6 +7,7 @@ import { SessionModel } from "../../../common/models/SessionModel";
 import { AccountProvider } from "../../../common/providers/AccountProvider";
 import { SessionProvider } from "../../../common/providers/SessionProvider";
 import { SessionQueries } from "../../../common/queries/SessionQueries";
+import type { SessionBundle } from "../@types/session";
 import { SessionConstants } from "../app/constants/SessionConstants";
 import { TokenHelper } from "../app/helpers/TokenHelper";
 
@@ -23,31 +23,29 @@ export class AuthProvider implements IProvider {
   public readonly getAccount: typeof this.accountProvider.getAccount;
   public readonly getSession: typeof this.sessionProvider.getSession;
 
-  public async createOrUpdateMySession(
-    sessionData: SessionData,
-  ): Promise<ProviderResponse<Tokens>> {
+  public async createOrUpdateMySession(bundle: SessionBundle): Promise<ProviderResponse<Tokens>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const sessionResults = await DbConstants.POOL.query(SessionQueries.GET_SESSIONS_$ACID, [
-        sessionData.accountId,
+        bundle.accountId,
       ]);
       const sessionRecords: unknown[] = sessionResults.rows;
       const sessions = SessionModel.fromRecords(sessionRecords);
       // Try to find session
       const session = sessions.find(
-        (session: SessionModel) => session.sessionKey === sessionData.sessionKey,
+        (session: SessionModel) => session.sessionKey === bundle.sessionKey,
       );
       // Check if session is found
       if (session === undefined) {
         // Session not found, create one
-        const tokens = await this.partialCreateMySession(sessionData);
+        const tokens = await this.partialCreateMySession(bundle);
         // If account has more than max sessions, delete the oldest one
         await this.partialPruneMySessions(sessions);
         return await ResponseUtil.providerResponse(tokens);
       } else {
         // Session found, update it
         return await ResponseUtil.providerResponse(
-          await this.partialUpdateSession(sessionData, session),
+          await this.partialUpdateSession(bundle, session),
         );
       }
     } catch (error) {
@@ -69,17 +67,17 @@ export class AuthProvider implements IProvider {
 
   // >-----------------------------------< PARTIAL METHODS >------------------------------------< //
 
-  private async partialCreateMySession(sessionData: SessionData): Promise<Tokens> {
+  private async partialCreateMySession(bundle: SessionBundle): Promise<Tokens> {
     const sessionResults = await DbConstants.POOL.query(
       SessionQueries.INSERT_SESSION_RT_$ACID_$DVNM_$SKEY,
-      [sessionData.accountId, sessionData.deviceName, sessionData.sessionKey],
+      [bundle.accountId, bundle.deviceName, bundle.sessionKey],
     );
     const sessionRecord: unknown = sessionResults.rows[0];
     const session = SessionModel.fromRecord(sessionRecord);
     // Create payload
     const payload: TokenPayload = {
-      accountId: sessionData.accountId,
-      accountType: sessionData.accountType,
+      accountId: bundle.accountId,
+      accountType: bundle.accountType,
       sessionId: session.sessionId,
     };
     // Generate tokens
@@ -87,7 +85,7 @@ export class AuthProvider implements IProvider {
     // Update session
     await DbConstants.POOL.query(SessionQueries.UPDATE_SESSION_$SSID_$DVNM_$RTOKEN, [
       session.sessionId,
-      sessionData.deviceName,
+      bundle.deviceName,
       tokens.refreshToken,
     ]);
     // Return tokens
@@ -107,13 +105,13 @@ export class AuthProvider implements IProvider {
   }
 
   private async partialUpdateSession(
-    sessionData: SessionData,
+    bundle: SessionBundle,
     session: SessionModel,
   ): Promise<Tokens> {
     // Create payload
     const payload: TokenPayload = {
-      accountId: sessionData.accountId,
-      accountType: sessionData.accountType,
+      accountId: bundle.accountId,
+      accountType: bundle.accountType,
       sessionId: session.sessionId,
     };
     // Generate tokens
@@ -121,7 +119,7 @@ export class AuthProvider implements IProvider {
     // Update session
     await DbConstants.POOL.query(SessionQueries.UPDATE_SESSION_$SSID_$DVNM_$RTOKEN, [
       session.sessionId,
-      sessionData.deviceName,
+      bundle.deviceName,
       tokens.refreshToken,
     ]);
     // Return tokens

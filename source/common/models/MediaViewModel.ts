@@ -1,13 +1,13 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { MediaBase } from "../bases/MediaBase";
-import { MediaType } from "../enums/MediaType";
+import { EMediaType } from "../enums/EMediaType";
 
 export class MediaViewModel extends MediaBase implements IModel {
   protected constructor(
     mediaId: number,
     public readonly accountId: number,
-    mediaType: MediaType,
+    mediaType: EMediaType,
     extension: string,
     public readonly isUsed: boolean,
     public readonly createdAt: Date,

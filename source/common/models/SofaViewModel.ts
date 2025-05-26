@@ -1,8 +1,8 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { SofaMaterial } from "../enums/SofaMaterial";
-import { SofaType } from "../enums/SofaType";
+import { ESofaMaterial } from "../enums/ESofaMaterial";
+import { ESofaType } from "../enums/ESofaType";
 
 export class SofaViewModel implements IModel {
   protected constructor(
@@ -12,8 +12,8 @@ export class SofaViewModel implements IModel {
     public readonly name: string,
     public readonly description: string,
     public readonly isCushioned: boolean | null,
-    public readonly sofaType: SofaType | null,
-    public readonly sofaMaterial: SofaMaterial | null,
+    public readonly sofaType: ESofaType | null,
+    public readonly sofaMaterial: ESofaMaterial | null,
     public readonly isDeleted: boolean,
   ) {}
 
@@ -53,8 +53,8 @@ export class SofaViewModel implements IModel {
       typeof model.name === "string" &&
       typeof model.description === "string" &&
       (model.isCushioned === null || typeof model.isCushioned === "boolean") &&
-      (model.sofaType === null || Object.values(SofaType).includes(model.sofaType)) &&
-      (model.sofaMaterial === null || Object.values(SofaMaterial).includes(model.sofaMaterial)) &&
+      (model.sofaType === null || Object.values(ESofaType).includes(model.sofaType)) &&
+      (model.sofaMaterial === null || Object.values(ESofaMaterial).includes(model.sofaMaterial)) &&
       typeof model.isDeleted === "boolean"
     );
   }

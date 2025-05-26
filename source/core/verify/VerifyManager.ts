@@ -4,6 +4,7 @@ import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
 import { DateUtil } from "../../app/utils/DateUtil";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import { AccountEntity } from "../../common/entities/AccountEntity";
 import { SmsConstants } from "../../modules/sms/app/constants/SmsConstants";
 import { SmsModule } from "../../modules/sms/module";
 import type { VerifyParams } from "./schemas/VerifyParams";
@@ -15,8 +16,8 @@ export class VerifyManager implements IManager {
   public constructor(private readonly provider = new VerifyProvider()) {}
 
   public async postVerify(request: VerifyRequest): Promise<ManagerResponse<VerifyResponse | null>> {
-    const myAccount = await this.provider.getAccountByPhone(request.phone);
-    if (myAccount === null) {
+    const account = await this.provider.getAccountByPhone(request.phone);
+    if (account === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
@@ -24,7 +25,7 @@ export class VerifyManager implements IManager {
         null,
       );
     }
-    if (myAccount.isVerified) {
+    if (account.isVerified) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.FORBIDDEN),
         null,
@@ -57,12 +58,12 @@ export class VerifyManager implements IManager {
         null,
       );
     }
-    await this.provider.verifyAccount(myAccount.accountId);
+    await this.provider.verifyAccount(account.accountId);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      VerifyResponse.fromModel(myAccount),
+      VerifyResponse.fromEntity(new AccountEntity(account)),
     );
   }
 

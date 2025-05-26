@@ -3,6 +3,7 @@ import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
+import { AboutEntity } from "../../../common/entities/AboutEntity";
 import { BusinessesAboutProvider } from "./BusinessesAboutProvider";
 import type { BusinessesAboutParams } from "./schemas/BusinessesAboutParams";
 import { BusinessesAboutResponse } from "./schemas/BusinessesAboutResponse";
@@ -27,7 +28,7 @@ export class BusinessesAboutManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      BusinessesAboutResponse.fromModel(business, hours),
+      BusinessesAboutResponse.fromEntity(new AboutEntity(business, hours)),
     );
   }
 }

@@ -8,7 +8,7 @@ import { FailureMiddleware } from "./app/middlewares/FailureMiddleware";
 import { LoggerMiddleware } from "./app/middlewares/LoggerMiddleware";
 import { MethodMiddleware } from "./app/middlewares/MethodMiddleware";
 import { PoolTest } from "./app/tests/PoolTest";
-import { AccountType } from "./common/enums/AccountType";
+import { EAccountType } from "./common/enums/EAccountType";
 import { EndpointsBuilder } from "./core/_internal/endpoints/EndpointsBuilder";
 import { PurgeBuilder } from "./core/_internal/purge/PurgeBuilder";
 import { RecordsBuilder } from "./core/_internal/records/RecordsBuilder";
@@ -165,145 +165,145 @@ app.use(
 app.use(
   // admin/approvals
   AdminApprovalsBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.ADMIN]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.ADMIN]).bind(AuthMiddleware),
   new AdminApprovalsBuilder().router,
 );
 app.use(
   // my/addresses
   MyAddressesBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.USER]).bind(AuthMiddleware),
   new MyAddressesBuilder().router,
 );
 app.use(
   // my/beds
   MyBedsBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.USER]).bind(AuthMiddleware),
   new MyBedsBuilder().router,
 );
 app.use(
   // my/blankets
   MyBlanketsBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.USER]).bind(AuthMiddleware),
   new MyBlanketsBuilder().router,
 );
 app.use(
   // my/business
   MyBusinessBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
   new MyBusinessBuilder().router,
 );
 app.use(
   // my/business/approval
   MyBusinessApprovalBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
   new MyBusinessApprovalBuilder().router,
 );
 app.use(
   // my/business/areas
   MyBusinessAreasBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
   new MyBusinessAreasBuilder().router,
 );
 app.use(
   // my/business/bank
   MyBusinessBankBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
   new MyBusinessBankBuilder().router,
 );
 app.use(
   // my/business/close
   MyBusinessCloseBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
   new MyBusinessCloseBuilder().router,
 );
 app.use(
   // my/business/hours
   MyBusinessHoursBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
   new MyBusinessHoursBuilder().router,
 );
 app.use(
   // my/business/medias
   MyBusinessMediasBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
   new MyBusinessMediasBuilder().router,
 );
 app.use(
   // my/business/open
   MyBusinessOpenBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
   new MyBusinessOpenBuilder().router,
 );
 app.use(
   // my/business/services
   MyBusinessServicesBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.BUSINESS]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
   new MyBusinessServicesBuilder().router,
 );
 app.use(
   // my/cards
   MyCardsBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.USER]).bind(AuthMiddleware),
   new MyCardsBuilder().router,
 );
 app.use(
   // my/carpets
   MyCarpetsBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.USER]).bind(AuthMiddleware),
   new MyCarpetsBuilder().router,
 );
 app.use(
   // my/chairs
   MyChairsBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.USER]).bind(AuthMiddleware),
   new MyChairsBuilder().router,
 );
 app.use(
   // my/curtains
   MyCurtainsBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.USER]).bind(AuthMiddleware),
   new MyCurtainsBuilder().router,
 );
 app.use(
   // my/medias
   MyMediasBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.USER, AccountType.BUSINESS]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.USER, EAccountType.BUSINESS]).bind(AuthMiddleware),
   new MyMediasBuilder().router,
 );
 app.use(
   // my/quilts
   MyQuiltsBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.USER]).bind(AuthMiddleware),
   new MyQuiltsBuilder().router,
 );
 app.use(
   // my/sessions
   MySessionsBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth(Object.values(EAccountType)).bind(AuthMiddleware),
   new MySessionsBuilder().router,
 );
 app.use(
   // my/sofas
   MySofasBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.USER]).bind(AuthMiddleware),
   new MySofasBuilder().router,
 );
 app.use(
   // my/vehicles
   MyVehiclesBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth([AccountType.USER]).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth([EAccountType.USER]).bind(AuthMiddleware),
   new MyVehiclesBuilder().router,
 );
 app.use(
   // logout
   LogoutBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth(Object.values(EAccountType)).bind(AuthMiddleware),
   new LogoutBuilder().router,
 );
 app.use(
   // refresh
   RefreshBuilder.BASE_ROUTE,
-  AuthMiddleware.verifyAuth(Object.values(AccountType)).bind(AuthMiddleware),
+  AuthMiddleware.verifyAuth(Object.values(EAccountType)).bind(AuthMiddleware),
   new RefreshBuilder().router,
 );
 

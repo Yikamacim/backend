@@ -1,5 +1,5 @@
 import type { IResponse } from "../../../app/interfaces/IResponse";
-import type { ProvinceModel } from "../../../common/models/ProvinceModel";
+import type { ProvinceEntity } from "../../../common/entities/ProvinceEntity";
 
 export class ProvincesResponse implements IResponse {
   private constructor(
@@ -8,11 +8,15 @@ export class ProvincesResponse implements IResponse {
     public readonly name: string,
   ) {}
 
-  public static fromModel(model: ProvinceModel): ProvincesResponse {
-    return new ProvincesResponse(model.provinceId, model.countryId, model.name);
+  public static fromEntity(entity: ProvinceEntity): ProvincesResponse {
+    return new ProvincesResponse(
+      entity.model.provinceId,
+      entity.model.countryId,
+      entity.model.name,
+    );
   }
 
-  public static fromModels(models: ProvinceModel[]): ProvincesResponse[] {
-    return models.map((model: ProvinceModel) => ProvincesResponse.fromModel(model));
+  public static fromEntities(entities: ProvinceEntity[]): ProvincesResponse[] {
+    return entities.map((entity) => this.fromEntity(entity));
   }
 }

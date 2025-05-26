@@ -1,6 +1,6 @@
 import type { MiddlewareResponse } from "../../@types/responses";
 import type { ExpressNextFunction, ExpressRequest } from "../../@types/wrappers";
-import type { AccountType } from "../../common/enums/AccountType";
+import type { EAccountType } from "../../common/enums/EAccountType";
 import { AuthModule } from "../../modules/auth/module";
 import { LocalsConstants } from "../constants/LocalsConstants";
 import { ClientError, ClientErrorCode } from "../schemas/ClientError";
@@ -9,7 +9,7 @@ import { HeadersUtil } from "../utils/HeadersUtil";
 import { ResponseUtil } from "../utils/ResponseUtil";
 
 export class AuthMiddleware {
-  public static verifyAuth(allowedAccountTypes: AccountType[]) {
+  public static verifyAuth(allowedAccountTypes: EAccountType[]) {
     return async (
       req: ExpressRequest,
       res: MiddlewareResponse,

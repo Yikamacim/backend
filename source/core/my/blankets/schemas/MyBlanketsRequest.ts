@@ -4,8 +4,8 @@ import type { IRequest } from "../../../../app/interfaces/IRequest";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
-import { BlanketMaterial } from "../../../../common/enums/BlanketMaterial";
-import { BlanketSize } from "../../../../common/enums/BlanketSize";
+import { EBlanketMaterial } from "../../../../common/enums/EBlanketMaterial";
+import { EBlanketSize } from "../../../../common/enums/EBlanketSize";
 import { ItemDescriptionValidator } from "../../../../common/validators/ItemDescriptionValidator";
 import { ItemNameValidator } from "../../../../common/validators/ItemNameValidator";
 import { MediaIdsValidator } from "../../../../common/validators/MediaIdsValidator";
@@ -15,8 +15,8 @@ export class MyBlanketsRequest implements IRequest {
     public readonly name: string,
     public readonly description: string,
     public readonly mediaIds: number[],
-    public readonly blanketSize: BlanketSize | null,
-    public readonly blanketMaterial: BlanketMaterial | null,
+    public readonly blanketSize: EBlanketSize | null,
+    public readonly blanketMaterial: EBlanketMaterial | null,
   ) {}
 
   public static parse(req: ExpressRequest): ParserResponse<MyBlanketsRequest | null> {
@@ -52,9 +52,9 @@ export class MyBlanketsRequest implements IRequest {
       Array.isArray(blueprint.mediaIds) &&
       blueprint.mediaIds.every((mediaId) => typeof mediaId === "number") &&
       (blueprint.blanketSize === null ||
-        Object.values(BlanketSize).includes(blueprint.blanketSize)) &&
+        Object.values(EBlanketSize).includes(blueprint.blanketSize)) &&
       (blueprint.blanketMaterial === null ||
-        Object.values(BlanketMaterial).includes(blueprint.blanketMaterial))
+        Object.values(EBlanketMaterial).includes(blueprint.blanketMaterial))
     );
   }
 }

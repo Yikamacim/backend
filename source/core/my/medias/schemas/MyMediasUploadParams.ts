@@ -4,7 +4,7 @@ import type { IParams } from "../../../../app/interfaces/IParams";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
-import { MediaType } from "../../../../common/enums/MediaType";
+import { EMediaType } from "../../../../common/enums/EMediaType";
 
 export class MyMediasUploadParams implements IParams {
   private constructor(public readonly mediaType: string) {}
@@ -29,7 +29,7 @@ export class MyMediasUploadParams implements IParams {
     const blueprintData: MyMediasUploadParams = protovalidData;
     // >----------< PHYSICAL VALIDATION >----------<
     const clientErrors: ClientError[] = [];
-    if (!Object.values(MediaType).includes(blueprintData.mediaType.toUpperCase() as MediaType)) {
+    if (!Object.values(EMediaType).includes(blueprintData.mediaType.toUpperCase() as EMediaType)) {
       clientErrors.push(new ClientError(ClientErrorCode.INVALID_MEDIA_TYPE));
     }
     const validatedData = blueprintData;

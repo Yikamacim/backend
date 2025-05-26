@@ -4,7 +4,8 @@ import type { IManager } from "../../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
-import { ApprovalState } from "../../../../common/enums/ApprovalState";
+import { ApprovalEntity } from "../../../../common/entities/ApprovalEntity";
+import { EApprovalState } from "../../../../common/enums/EApprovalState";
 import { MediaHelper } from "../../../../common/helpers/MediaHelper";
 import { ApprovalMediaRules } from "../../../../common/rules/ApprovalMediaRules";
 import { MyBusinessApprovalProvider } from "./MyBusinessApprovalProvider";
@@ -31,17 +32,17 @@ export class MyBusinessApprovalManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_APPROVAL_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.APPROVAL_NOT_FOUND)],
         null,
       );
     }
     const approvalMedias = await this.provider.getApprovalMedias(business.businessId);
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(approvalMedias);
+    const mediaEntities = await MediaHelper.mediasToEntities(approvalMedias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBusinessApprovalResponse.fromModel(approval, mediaDatas),
+      MyBusinessApprovalResponse.fromEntity(new ApprovalEntity(approval, mediaEntities)),
     );
   }
 
@@ -66,21 +67,21 @@ export class MyBusinessApprovalManager implements IManager {
         null,
       );
     }
-    const businessApproval = await this.provider.getApproval(business.businessId);
-    if (businessApproval !== null) {
-      if (businessApproval.approvalState === ApprovalState.APPROVED) {
+    const currentApproval = await this.provider.getApproval(business.businessId);
+    if (currentApproval !== null) {
+      if (currentApproval.approvalState === EApprovalState.APPROVED) {
         return ResponseUtil.managerResponse(
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          [new ClientError(ClientErrorCode.BUSINESS_APPROVAL_ALREADY_APPROVED)],
+          [new ClientError(ClientErrorCode.APPROVAL_ALREADY_APPROVED)],
           null,
         );
       }
-      if (businessApproval.approvalState === ApprovalState.PENDING) {
+      if (currentApproval.approvalState === EApprovalState.PENDING) {
         return ResponseUtil.managerResponse(
           new HttpStatus(HttpStatusCode.BAD_REQUEST),
           null,
-          [new ClientError(ClientErrorCode.BUSINESS_APPROVAL_ALREADY_PENDING)],
+          [new ClientError(ClientErrorCode.APPROVAL_ALREADY_PENDING)],
           null,
         );
       }
@@ -102,12 +103,12 @@ export class MyBusinessApprovalManager implements IManager {
       request.message,
       medias.map((media) => media.mediaId),
     );
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyBusinessApprovalResponse.fromModel(approval, mediaDatas),
+      MyBusinessApprovalResponse.fromEntity(new ApprovalEntity(approval, mediaEntities)),
     );
   }
 
@@ -129,12 +130,12 @@ export class MyBusinessApprovalManager implements IManager {
         null,
       );
     }
-    const businessApproval = await this.provider.getApproval(business.businessId);
-    if (businessApproval === null) {
+    const approval = await this.provider.getApproval(business.businessId);
+    if (approval === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_APPROVAL_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.APPROVAL_NOT_FOUND)],
         null,
       );
     }

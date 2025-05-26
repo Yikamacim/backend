@@ -1,6 +1,6 @@
 import type { TokenPayload } from "../../@types/tokens";
 import type { ExpressResponse } from "../../@types/wrappers";
-import { AccountType } from "../../common/enums/AccountType";
+import { EAccountType } from "../../common/enums/EAccountType";
 import { LocalsConstants } from "../constants/LocalsConstants";
 import type { IHelper } from "../interfaces/IHelper";
 import { UnexpectedAuthError } from "../schemas/ServerError";
@@ -20,7 +20,7 @@ export class PayloadHelper implements IHelper {
     const payload = obj as TokenPayload;
     return (
       typeof payload.accountId === "number" &&
-      Object.values(AccountType).includes(payload.accountType) &&
+      Object.values(EAccountType).includes(payload.accountType) &&
       typeof payload.sessionId === "number"
     );
   }

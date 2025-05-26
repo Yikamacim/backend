@@ -1,18 +1,18 @@
 import jwt from "jsonwebtoken";
-import type { SessionData } from "../../../@types/sessions";
-import type { Token, TokenPayload, Tokens } from "../../../@types/tokens";
+import type { TokenPayload, Tokens } from "../../../@types/tokens";
 import { EnvironmentHelper } from "../../../app/helpers/EnvironmentHelper";
 import { PayloadHelper } from "../../../app/helpers/PayloadHelper";
 import type { IHandler } from "../../../app/interfaces/IHandler";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { UnexpectedAuthError } from "../../../app/schemas/ServerError";
+import type { SessionBundle } from "../@types/session";
 import { TokenHelper } from "../app/helpers/TokenHelper";
 import { AuthProvider } from "./AuthProvider";
 
 export class AuthHandler implements IHandler {
   public constructor(private readonly provider = new AuthProvider()) {}
 
-  public async verify(token: Token): Promise<ClientError[]> {
+  public async verify(token: string): Promise<ClientError[]> {
     try {
       const payload = jwt.verify(token, EnvironmentHelper.get().jwtSecret);
       if (!PayloadHelper.isValidPayload(payload)) {
@@ -65,12 +65,12 @@ export class AuthHandler implements IHandler {
   /**
    * Call AuthHandler.verify before calling this method.
    */
-  public getPayload(token: Token): TokenPayload {
+  public getPayload(token: string): TokenPayload {
     return jwt.verify(token, EnvironmentHelper.get().jwtSecret) as TokenPayload;
   }
 
-  public async generate(sessionData: SessionData): Promise<Tokens> {
-    return await this.provider.createOrUpdateMySession(sessionData);
+  public async generate(bundle: SessionBundle): Promise<Tokens> {
+    return await this.provider.createOrUpdateMySession(bundle);
   }
 
   public async refresh(payload: TokenPayload): Promise<Tokens> {

@@ -4,6 +4,7 @@ import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
+import { SessionEntity } from "../../../common/entities/SessionEntity";
 import { MySessionsProvider } from "./MySessionsProvider";
 import type { MySessionsParams } from "./schemas/MySessionsParams";
 import { MySessionsResponse } from "./schemas/MySessionsResponse";
@@ -15,11 +16,14 @@ export class MySessionsManager implements IManager {
     payload: TokenPayload,
   ): Promise<ManagerResponse<MySessionsResponse[]>> {
     const sessions = await this.provider.getSessions(payload.accountId);
+    const entities = sessions.map(
+      (session) => new SessionEntity(session, session.sessionId === payload.sessionId),
+    );
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MySessionsResponse.fromModels(sessions, payload.sessionId),
+      MySessionsResponse.fromEntities(entities),
     );
   }
 

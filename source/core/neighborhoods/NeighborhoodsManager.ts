@@ -3,6 +3,7 @@ import type { IManager } from "../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import { NeighborhoodEntity } from "../../common/entities/NeighborhoodEntity";
 import { NeighborhoodsProvider } from "./NeighborhoodsProvider";
 import type { NeighborhoodsParams } from "./schemas/NeighborhoodsParams";
 import type { NeighborhoodsQueries } from "./schemas/NeighborhoodsQueries";
@@ -17,11 +18,14 @@ export class NeighborhoodsManager implements IManager {
     const neighborhoods = await this.provider.getNeighborhoodsByDistrictId(
       parseInt(queries.districtId),
     );
+    const entities = neighborhoods.map((neighborhood) => {
+      return new NeighborhoodEntity(neighborhood);
+    });
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      NeighborhoodsResponse.fromModels(neighborhoods),
+      NeighborhoodsResponse.fromEntities(entities),
     );
   }
 
@@ -41,7 +45,7 @@ export class NeighborhoodsManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      NeighborhoodsResponse.fromModel(neighborhood),
+      NeighborhoodsResponse.fromEntity(new NeighborhoodEntity(neighborhood)),
     );
   }
 }

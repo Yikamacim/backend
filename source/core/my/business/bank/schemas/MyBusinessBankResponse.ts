@@ -1,5 +1,5 @@
 import type { IResponse } from "../../../../../app/interfaces/IResponse";
-import type { BankAccountModel } from "../../../../../common/models/BankAccountModel";
+import type { BankAccountEntity } from "../../../../../common/entities/BankAccountEntity";
 
 export class MyBusinessBankResponse implements IResponse {
   private constructor(
@@ -8,7 +8,11 @@ export class MyBusinessBankResponse implements IResponse {
     public readonly balance: number,
   ) {}
 
-  public static fromModel(model: BankAccountModel): MyBusinessBankResponse {
-    return new MyBusinessBankResponse(model.owner, model.iban, model.balance);
+  public static fromEntity(entity: BankAccountEntity): MyBusinessBankResponse {
+    return new MyBusinessBankResponse(entity.model.owner, entity.model.iban, entity.model.balance);
+  }
+
+  public static fromEntities(entities: BankAccountEntity[]): MyBusinessBankResponse[] {
+    return entities.map((entity) => MyBusinessBankResponse.fromEntity(entity));
   }
 }

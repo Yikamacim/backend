@@ -1,0 +1,6 @@
+export enum EOrderState {
+  INITIATED = "INITIATED",
+  OFFERED = "OFFERED",
+  CANCELLED = "CANCELLED",
+  COMPLETED = "COMPLETED",
+}

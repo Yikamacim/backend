@@ -1,10 +1,13 @@
-import type { MediaData } from "../../../../@types/medias";
+import type { TodayHours } from "../../../../@types/hours";
 import type { ManagerResponse } from "../../../../@types/responses";
 import type { TokenPayload } from "../../../../@types/tokens";
 import type { IManager } from "../../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
+import { BusinessEntity } from "../../../../common/entities/BusinessEntity";
+import type { MediaEntity } from "../../../../common/entities/MediaEntity";
+import { HoursHelper } from "../../../../common/helpers/HoursHelper";
 import { MediaHelper } from "../../../../common/helpers/MediaHelper";
 import { MyBusinessCloseProvider } from "./MyBusinessCloseProvider";
 import { MyBusinessCloseResponse } from "./schemas/MyBusinessCloseResponse";
@@ -33,7 +36,7 @@ export class MyBusinessCloseManager implements IManager {
       );
     }
     const closedBusiness = await this.provider.closeBusiness(business.businessId);
-    let mediaData: MediaData | null = null;
+    let mediaEntity: MediaEntity | null = null;
     if (closedBusiness.mediaId !== null) {
       const media = await this.provider.getBusinessMedia(
         closedBusiness.businessId,
@@ -43,17 +46,28 @@ export class MyBusinessCloseManager implements IManager {
         return ResponseUtil.managerResponse(
           new HttpStatus(HttpStatusCode.NOT_FOUND),
           null,
-          [new ClientError(ClientErrorCode.BUSINESS_MEDIA_NOT_FOUND)],
+          [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
           null,
         );
       }
-      mediaData = await MediaHelper.mediaToMediaData(media);
+      mediaEntity = await MediaHelper.mediaToEntity(media);
+    }
+    const allServiceCategories = (
+      await this.provider.getActiveServices(closedBusiness.businessId)
+    ).map((service) => service.serviceCategory);
+    const serviceCategories = [...new Set(allServiceCategories)];
+    let todayHours: TodayHours | null = null;
+    const hours = await this.provider.getHours(business.businessId);
+    if (hours !== null) {
+      todayHours = HoursHelper.getTodayHours(hours);
     }
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBusinessCloseResponse.fromModel(closedBusiness, mediaData),
+      MyBusinessCloseResponse.fromEntity(
+        new BusinessEntity(closedBusiness, mediaEntity, serviceCategories, todayHours),
+      ),
     );
   }
 }

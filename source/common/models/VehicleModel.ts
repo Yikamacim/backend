@@ -1,7 +1,7 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { VehicleType } from "../enums/VehicleType";
+import { EVehicleType } from "../enums/EVehicleType";
 
 export class VehicleModel implements IModel {
   protected constructor(
@@ -9,7 +9,7 @@ export class VehicleModel implements IModel {
     public readonly itemId: number,
     public readonly brand: string | null,
     public readonly model: string | null,
-    public readonly vehicleType: VehicleType | null,
+    public readonly vehicleType: EVehicleType | null,
   ) {}
 
   public static fromRecord(record: unknown): VehicleModel {
@@ -42,7 +42,7 @@ export class VehicleModel implements IModel {
       typeof model.itemId === "number" &&
       (model.brand === null || typeof model.brand === "string") &&
       (model.model === null || typeof model.model === "string") &&
-      (model.vehicleType === null || Object.values(VehicleType).includes(model.vehicleType))
+      (model.vehicleType === null || Object.values(EVehicleType).includes(model.vehicleType))
     );
   }
 

@@ -4,8 +4,8 @@ import type { IProvider } from "../../../app/interfaces/IProvider";
 import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import type { SofaMaterial } from "../../../common/enums/SofaMaterial";
-import type { SofaType } from "../../../common/enums/SofaType";
+import type { ESofaMaterial } from "../../../common/enums/ESofaMaterial";
+import type { ESofaType } from "../../../common/enums/ESofaType";
 import { SofaModel } from "../../../common/models/SofaModel";
 import { SofaViewModel } from "../../../common/models/SofaViewModel";
 import { ItemMediaProvider } from "../../../common/providers/ItemMediaProvider";
@@ -81,8 +81,8 @@ export class MySofasProvider implements IProvider {
     description: string,
     mediaIds: number[],
     isCushioned: boolean | null,
-    sofaType: SofaType | null,
-    sofaMaterial: SofaMaterial | null,
+    sofaType: ESofaType | null,
+    sofaMaterial: ESofaMaterial | null,
   ): Promise<ProviderResponse<SofaViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
@@ -108,8 +108,8 @@ export class MySofasProvider implements IProvider {
     description: string,
     mediaIds: number[],
     isCushioned: boolean | null,
-    sofaType: SofaType | null,
-    sofaMaterial: SofaMaterial | null,
+    sofaType: ESofaType | null,
+    sofaMaterial: ESofaMaterial | null,
   ): Promise<ProviderResponse<SofaViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
@@ -145,8 +145,8 @@ export class MySofasProvider implements IProvider {
   private async partialCreateSofa(
     itemId: number,
     isCushioned: boolean | null,
-    sofaType: SofaType | null,
-    sofaMaterial: SofaMaterial | null,
+    sofaType: ESofaType | null,
+    sofaMaterial: ESofaMaterial | null,
   ): Promise<SofaModel> {
     const results = await DbConstants.POOL.query(
       SofaQueries.INSERT_SOFA_RT_$ITID_$ISCH_$SFTP_$SMAT,
@@ -159,8 +159,8 @@ export class MySofasProvider implements IProvider {
   private async partialUpdateSofa(
     sofaId: number,
     isCushioned: boolean | null,
-    sofaType: SofaType | null,
-    sofaMaterial: SofaMaterial | null,
+    sofaType: ESofaType | null,
+    sofaMaterial: ESofaMaterial | null,
   ): Promise<SofaModel> {
     const results = await DbConstants.POOL.query(
       SofaQueries.UPDATE_SOFA_RT_$SFID_$ISCH_$SFTP_$SMAT,

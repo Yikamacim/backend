@@ -1,8 +1,8 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { QuiltMaterial } from "../enums/QuiltMaterial";
-import { QuiltSize } from "../enums/QuiltSize";
+import { EQuiltMaterial } from "../enums/EQuiltMaterial";
+import { EQuiltSize } from "../enums/EQuiltSize";
 
 export class QuiltViewModel implements IModel {
   protected constructor(
@@ -11,8 +11,8 @@ export class QuiltViewModel implements IModel {
     public readonly itemId: number,
     public readonly name: string,
     public readonly description: string,
-    public readonly quiltSize: QuiltSize | null,
-    public readonly quiltMaterial: QuiltMaterial | null,
+    public readonly quiltSize: EQuiltSize | null,
+    public readonly quiltMaterial: EQuiltMaterial | null,
     public readonly isDeleted: boolean,
   ) {}
 
@@ -50,9 +50,9 @@ export class QuiltViewModel implements IModel {
       typeof model.itemId === "number" &&
       typeof model.name === "string" &&
       typeof model.description === "string" &&
-      (model.quiltSize === null || Object.values(QuiltSize).includes(model.quiltSize)) &&
+      (model.quiltSize === null || Object.values(EQuiltSize).includes(model.quiltSize)) &&
       (model.quiltMaterial === null ||
-        Object.values(QuiltMaterial).includes(model.quiltMaterial)) &&
+        Object.values(EQuiltMaterial).includes(model.quiltMaterial)) &&
       typeof model.isDeleted === "boolean"
     );
   }

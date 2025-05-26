@@ -23,13 +23,14 @@ export class BusinessesMediasManager implements IManager {
         null,
       );
     }
-    const businessMedias = await this.provider.getBusinessMedias(business.businessId);
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(businessMedias);
+    const entities = await MediaHelper.mediasToEntities(
+      await this.provider.getBusinessMedias(business.businessId),
+    );
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      BusinessesMediasResponse.fromModels(mediaDatas),
+      BusinessesMediasResponse.fromEntities(entities),
     );
   }
 }

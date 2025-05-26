@@ -1,8 +1,8 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { BlanketMaterial } from "../enums/BlanketMaterial";
-import { BlanketSize } from "../enums/BlanketSize";
+import { EBlanketMaterial } from "../enums/EBlanketMaterial";
+import { EBlanketSize } from "../enums/EBlanketSize";
 
 export class BlanketViewModel implements IModel {
   protected constructor(
@@ -11,8 +11,8 @@ export class BlanketViewModel implements IModel {
     public readonly itemId: number,
     public readonly name: string,
     public readonly description: string,
-    public readonly blanketSize: BlanketSize | null,
-    public readonly blanketMaterial: BlanketMaterial | null,
+    public readonly blanketSize: EBlanketSize | null,
+    public readonly blanketMaterial: EBlanketMaterial | null,
     public readonly isDeleted: boolean,
   ) {}
 
@@ -50,9 +50,9 @@ export class BlanketViewModel implements IModel {
       typeof model.itemId === "number" &&
       typeof model.name === "string" &&
       typeof model.description === "string" &&
-      (model.blanketSize === null || Object.values(BlanketSize).includes(model.blanketSize)) &&
+      (model.blanketSize === null || Object.values(EBlanketSize).includes(model.blanketSize)) &&
       (model.blanketMaterial === null ||
-        Object.values(BlanketMaterial).includes(model.blanketMaterial)) &&
+        Object.values(EBlanketMaterial).includes(model.blanketMaterial)) &&
       typeof model.isDeleted === "boolean"
     );
   }

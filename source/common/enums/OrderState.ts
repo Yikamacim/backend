@@ -1,6 +1,0 @@
-export enum OrderState {
-  INITIATED = "INITIATED",
-  OFFERED = "OFFERED",
-  CANCELLED = "CANCELLED",
-  COMPLETED = "COMPLETED",
-}

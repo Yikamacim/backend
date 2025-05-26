@@ -4,7 +4,7 @@ import type { IRequest } from "../../../../app/interfaces/IRequest";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
-import { VehicleType } from "../../../../common/enums/VehicleType";
+import { EVehicleType } from "../../../../common/enums/EVehicleType";
 import { ItemDescriptionValidator } from "../../../../common/validators/ItemDescriptionValidator";
 import { ItemNameValidator } from "../../../../common/validators/ItemNameValidator";
 import { MediaIdsValidator } from "../../../../common/validators/MediaIdsValidator";
@@ -18,7 +18,7 @@ export class MyVehiclesRequest implements IRequest {
     public readonly mediaIds: number[],
     public readonly brand: string | null,
     public readonly model: string | null,
-    public readonly vehicleType: VehicleType | null,
+    public readonly vehicleType: EVehicleType | null,
   ) {}
 
   public static parse(req: ExpressRequest): ParserResponse<MyVehiclesRequest | null> {
@@ -61,7 +61,8 @@ export class MyVehiclesRequest implements IRequest {
       blueprint.mediaIds.every((mediaId) => typeof mediaId === "number") &&
       (blueprint.brand === null || typeof blueprint.brand === "string") &&
       (blueprint.model === null || typeof blueprint.model === "string") &&
-      (blueprint.vehicleType === null || Object.values(VehicleType).includes(blueprint.vehicleType))
+      (blueprint.vehicleType === null ||
+        Object.values(EVehicleType).includes(blueprint.vehicleType))
     );
   }
 }

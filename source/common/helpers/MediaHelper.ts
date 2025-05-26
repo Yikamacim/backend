@@ -1,4 +1,3 @@
-import type { MediaData } from "../../@types/medias";
 import type { ManagerResponse } from "../../@types/responses";
 import type { Either } from "../../app/concepts/Either";
 import { Left } from "../../app/concepts/Left";
@@ -10,20 +9,21 @@ import { FileUtil } from "../../app/utils/FileUtil";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
 import { BucketModule } from "../../modules/bucket/module";
 import type { MediaBase } from "../bases/MediaBase";
-import type { MediaType } from "../enums/MediaType";
+import type { MediaEntity } from "../entities/MediaEntity";
+import type { EMediaType } from "../enums/EMediaType";
 import type { MediaViewModel } from "../models/MediaViewModel";
 import { MediaProvider } from "../providers/MediaProvider";
 
 export class MediaHelper implements IHelper {
-  public static async mediasToMediaDatas(medias: MediaBase[]): Promise<MediaData[]> {
-    const mediaDatas: MediaData[] = [];
+  public static async mediasToEntities(medias: MediaBase[]): Promise<MediaEntity[]> {
+    const entities: MediaEntity[] = [];
     for (const media of medias) {
-      mediaDatas.push(await MediaHelper.mediaToMediaData(media));
+      entities.push(await MediaHelper.mediaToEntity(media));
     }
-    return mediaDatas;
+    return entities;
   }
 
-  public static async mediaToMediaData(media: MediaBase): Promise<MediaData> {
+  public static async mediaToEntity(media: MediaBase): Promise<MediaEntity> {
     return {
       mediaId: media.mediaId,
       mediaType: media.mediaType,
@@ -78,7 +78,7 @@ export class MediaHelper implements IHelper {
 
   public static async checkMedias(
     medias: MediaViewModel[],
-    allowedMediaTypes: MediaType[],
+    allowedMediaTypes: EMediaType[],
   ): Promise<Either<ManagerResponse<null>, null>> {
     for (const media of medias) {
       const checkMediaResult = await MediaHelper.checkMedia(media, allowedMediaTypes);
@@ -91,7 +91,7 @@ export class MediaHelper implements IHelper {
 
   public static async checkMedia(
     media: MediaViewModel,
-    allowedMediaTypes: MediaType[],
+    allowedMediaTypes: EMediaType[],
   ): Promise<Either<ManagerResponse<null>, null>> {
     if (!allowedMediaTypes.includes(media.mediaType)) {
       return Left.of(

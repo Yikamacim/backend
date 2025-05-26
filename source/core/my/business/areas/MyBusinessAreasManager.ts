@@ -4,6 +4,7 @@ import type { IManager } from "../../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
+import { AreaEntity } from "../../../../common/entities/AreaEntity";
 import { MyBusinessAreasProvider } from "./MyBusinessAreasProvider";
 import type { MyBusinessAreasParams } from "./schemas/MyBusinessAreasParams";
 import type { MyBusinessAreasRequest } from "./schemas/MyBusinessAreasRequest";
@@ -24,12 +25,13 @@ export class MyBusinessAreasManager implements IManager {
         null,
       );
     }
-    const businessAreas = await this.provider.getBusinessAreas(business.businessId);
+    const areas = await this.provider.getBusinessAreas(business.businessId);
+    const entities = areas.map((area) => new AreaEntity(area));
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBusinessAreasResponse.fromModels(businessAreas),
+      MyBusinessAreasResponse.fromEntities(entities),
     );
   }
 
@@ -54,12 +56,12 @@ export class MyBusinessAreasManager implements IManager {
         null,
       );
     }
-    const businessAreas = await this.provider.getBusinessAreas(business.businessId);
-    if (businessAreas.some((area) => area.neighborhoodId === request.neighborhoodId)) {
+    const areas = await this.provider.getBusinessAreas(business.businessId);
+    if (areas.some((area) => area.neighborhoodId === request.neighborhoodId)) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_AREA_ALREADY_EXISTS)],
+        [new ClientError(ClientErrorCode.AREA_ALREADY_EXISTS)],
         null,
       );
     }
@@ -71,7 +73,7 @@ export class MyBusinessAreasManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyBusinessAreasResponse.fromModel(area),
+      MyBusinessAreasResponse.fromEntity(new AreaEntity(area)),
     );
   }
 

@@ -4,6 +4,7 @@ import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
+import { CardEntity } from "../../../common/entities/CardEntity";
 import { MyCardsProvider } from "./MyCardsProvider";
 import type { MyCardsParams } from "./schemas/MyCardsParams";
 import type { MyCardsRequest } from "./schemas/MyCardsRequest";
@@ -14,11 +15,12 @@ export class MyCardsManager implements IManager {
 
   public async getMyCards(payload: TokenPayload): Promise<ManagerResponse<MyCardsResponse[]>> {
     const cards = await this.provider.getMyActiveCards(payload.accountId);
+    const entities = cards.map((card) => new CardEntity(card));
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyCardsResponse.fromModels(cards),
+      MyCardsResponse.fromEntities(entities),
     );
   }
 
@@ -43,7 +45,7 @@ export class MyCardsManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyCardsResponse.fromModel(card),
+      MyCardsResponse.fromEntity(new CardEntity(card)),
     );
   }
 
@@ -64,7 +66,7 @@ export class MyCardsManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyCardsResponse.fromModel(card),
+      MyCardsResponse.fromEntity(new CardEntity(card)),
     );
   }
 
@@ -99,7 +101,7 @@ export class MyCardsManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyCardsResponse.fromModel(updatedCard),
+      MyCardsResponse.fromEntity(new CardEntity(updatedCard)),
     );
   }
 

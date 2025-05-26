@@ -2,7 +2,7 @@ import type { ProviderResponse } from "../../@types/responses";
 import { DbConstants } from "../../app/constants/DbConstants";
 import type { IProvider } from "../../app/interfaces/IProvider";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
-import type { AccountType } from "../../common/enums/AccountType";
+import type { EAccountType } from "../../common/enums/EAccountType";
 import { AccountModel } from "../../common/models/AccountModel";
 import { AccountProvider } from "../../common/providers/AccountProvider";
 import { AccountQueries } from "../../common/queries/AccountQueries";
@@ -19,7 +19,7 @@ export class SignupProvider implements IProvider {
     password: string,
     name: string,
     surname: string,
-    accountType: AccountType,
+    accountType: EAccountType,
   ): Promise<ProviderResponse<AccountModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {

@@ -1,13 +1,13 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { ApprovalState } from "../enums/ApprovalState";
+import { EApprovalState } from "../enums/EApprovalState";
 
 export class ApprovalModel implements IModel {
   protected constructor(
     public readonly businessId: number,
     public readonly message: string | null,
-    public readonly approvalState: ApprovalState,
+    public readonly approvalState: EApprovalState,
     public readonly reason: string | null,
     public readonly createdAt: Date,
   ) {}
@@ -40,7 +40,7 @@ export class ApprovalModel implements IModel {
     return (
       typeof model.businessId === "number" &&
       typeof model.message === "string" &&
-      Object.values(ApprovalState).includes(model.approvalState) &&
+      Object.values(EApprovalState).includes(model.approvalState) &&
       (model.reason === null || typeof model.reason === "string") &&
       model.createdAt instanceof Date
     );

@@ -4,8 +4,8 @@ import type { IProvider } from "../../../app/interfaces/IProvider";
 import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import type { QuiltMaterial } from "../../../common/enums/QuiltMaterial";
-import type { QuiltSize } from "../../../common/enums/QuiltSize";
+import type { EQuiltMaterial } from "../../../common/enums/EQuiltMaterial";
+import type { EQuiltSize } from "../../../common/enums/EQuiltSize";
 import { QuiltModel } from "../../../common/models/QuiltModel";
 import { QuiltViewModel } from "../../../common/models/QuiltViewModel";
 import { ItemMediaProvider } from "../../../common/providers/ItemMediaProvider";
@@ -80,8 +80,8 @@ export class MyQuiltsProvider implements IProvider {
     name: string,
     description: string,
     mediaIds: number[],
-    quiltSize: QuiltSize | null,
-    quiltMaterial: QuiltMaterial | null,
+    quiltSize: EQuiltSize | null,
+    quiltMaterial: EQuiltMaterial | null,
   ): Promise<ProviderResponse<QuiltViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
@@ -106,8 +106,8 @@ export class MyQuiltsProvider implements IProvider {
     name: string,
     description: string,
     mediaIds: number[],
-    quiltSize: QuiltSize | null,
-    quiltMaterial: QuiltMaterial | null,
+    quiltSize: EQuiltSize | null,
+    quiltMaterial: EQuiltMaterial | null,
   ): Promise<ProviderResponse<QuiltViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
@@ -142,8 +142,8 @@ export class MyQuiltsProvider implements IProvider {
 
   private async partialCreateQuilt(
     itemId: number,
-    quiltSize: QuiltSize | null,
-    quiltMaterial: QuiltMaterial | null,
+    quiltSize: EQuiltSize | null,
+    quiltMaterial: EQuiltMaterial | null,
   ): Promise<QuiltModel> {
     const results = await DbConstants.POOL.query(QuiltQueries.INSERT_QUILT_RT_$ITID_$QLSZ_$QMAT, [
       itemId,
@@ -156,8 +156,8 @@ export class MyQuiltsProvider implements IProvider {
 
   private async partialUpdateQuilt(
     quiltId: number,
-    quiltSize: QuiltSize | null,
-    quiltMaterial: QuiltMaterial | null,
+    quiltSize: EQuiltSize | null,
+    quiltMaterial: EQuiltMaterial | null,
   ): Promise<QuiltModel> {
     const results = await DbConstants.POOL.query(QuiltQueries.UPDATE_QUILT_RT_$QLID_$QLSZ_$QMAT, [
       quiltId,

@@ -1,15 +1,13 @@
-import type { AccountType } from "../common/enums/AccountType";
-
-export type Token = string;
+import type { EAccountType } from "../common/enums/EAccountType";
 
 export type Tokens = {
-  accessToken: Token;
-  refreshToken: Token;
+  accessToken: string;
+  refreshToken: string;
 };
 
 export type TokenPayload = {
   accountId: number;
-  accountType: AccountType;
+  accountType: EAccountType;
   sessionId: number;
 };
 

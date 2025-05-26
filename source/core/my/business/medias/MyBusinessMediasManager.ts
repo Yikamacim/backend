@@ -1,10 +1,10 @@
-import type { MediaData } from "../../../../@types/medias";
 import type { ManagerResponse } from "../../../../@types/responses";
 import type { TokenPayload } from "../../../../@types/tokens";
 import type { IManager } from "../../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
+import type { MediaEntity } from "../../../../common/entities/MediaEntity";
 import { MediaHelper } from "../../../../common/helpers/MediaHelper";
 import { BusinessMediaRules } from "../../../../common/rules/BusinessMediaRules";
 import { MyBusinessMediasProvider } from "./MyBusinessMediasProvider";
@@ -27,13 +27,13 @@ export class MyBusinessMediasManager implements IManager {
         null,
       );
     }
-    const businessMedias = await this.provider.getBusinessMedias(business.businessId);
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(businessMedias);
+    const medias = await this.provider.getBusinessMedias(business.businessId);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBusinessMediasResponse.fromModels(mediaDatas),
+      MyBusinessMediasResponse.fromEntities(mediaEntities),
     );
   }
 
@@ -50,7 +50,7 @@ export class MyBusinessMediasManager implements IManager {
         null,
       );
     }
-    let mediaData: MediaData | null = null;
+    let mediaEntity: MediaEntity | null = null;
     const findMediaResult = await MediaHelper.findMyMedia(payload.accountId, request.mediaId);
     if (findMediaResult.isLeft()) {
       return findMediaResult.get();
@@ -60,13 +60,13 @@ export class MyBusinessMediasManager implements IManager {
     if (checkMediaResult.isLeft()) {
       return checkMediaResult.get();
     }
-    mediaData = await MediaHelper.mediaToMediaData(media);
+    mediaEntity = await MediaHelper.mediaToEntity(media);
     await this.provider.createBusinessMedia(business.businessId, request.mediaId);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyBusinessMediasResponse.fromModel(mediaData),
+      MyBusinessMediasResponse.fromEntity(mediaEntity),
     );
   }
 
@@ -95,12 +95,12 @@ export class MyBusinessMediasManager implements IManager {
         null,
       );
     }
-    const mediaData = await MediaHelper.mediaToMediaData(media);
+    const mediaEntity = await MediaHelper.mediaToEntity(media);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBusinessMediasResponse.fromModel(mediaData),
+      MyBusinessMediasResponse.fromEntity(mediaEntity),
     );
   }
 

@@ -1,0 +1,17 @@
+export enum ECarpetMaterial {
+  WOOL = "WOOL",
+  POLYESTER = "POLYESTER",
+  ACRYLIC = "ACRYLIC",
+  VISCOSE = "VISCOSE",
+  BAMBOO = "BAMBOO",
+  SILK = "SILK",
+  COTTON = "COTTON",
+  JUTE = "JUTE",
+  SISAL = "SISAL",
+  LEATHER = "LEATHER",
+  NEPAL = "NEPAL",
+  HANDMADE = "HANDMADE",
+  SHAGGY = "SHAGGY",
+  STEP = "STEP",
+  PATCHWORK = "PATCHWORK",
+}

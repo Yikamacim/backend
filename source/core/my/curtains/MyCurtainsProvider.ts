@@ -4,7 +4,7 @@ import type { IProvider } from "../../../app/interfaces/IProvider";
 import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import type { CurtainType } from "../../../common/enums/CurtainType";
+import type { ECurtainType } from "../../../common/enums/ECurtainType";
 import { CurtainModel } from "../../../common/models/CurtainModel";
 import { CurtainViewModel } from "../../../common/models/CurtainViewModel";
 import { ItemMediaProvider } from "../../../common/providers/ItemMediaProvider";
@@ -82,7 +82,7 @@ export class MyCurtainsProvider implements IProvider {
     mediaIds: number[],
     width: number | null,
     length: number | null,
-    curtainType: CurtainType | null,
+    curtainType: ECurtainType | null,
   ): Promise<ProviderResponse<CurtainViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
@@ -109,7 +109,7 @@ export class MyCurtainsProvider implements IProvider {
     mediaIds: number[],
     width: number | null,
     length: number | null,
-    curtainType: CurtainType | null,
+    curtainType: ECurtainType | null,
   ): Promise<ProviderResponse<CurtainViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
@@ -146,7 +146,7 @@ export class MyCurtainsProvider implements IProvider {
     itemId: number,
     width: number | null,
     length: number | null,
-    curtainType: CurtainType | null,
+    curtainType: ECurtainType | null,
   ): Promise<CurtainModel> {
     const results = await DbConstants.POOL.query(
       CurtainQueries.INSERT_CURTAIN_RT_$ITID_$WIDTH_$LENGTH_$CTYP,
@@ -160,7 +160,7 @@ export class MyCurtainsProvider implements IProvider {
     curtainId: number,
     width: number | null,
     length: number | null,
-    curtainType: CurtainType | null,
+    curtainType: ECurtainType | null,
   ): Promise<CurtainModel> {
     const results = await DbConstants.POOL.query(
       CurtainQueries.UPDATE_CURTAIN_RT_$CPID_$WIDTH_$LENGTH_$CTYP,

@@ -2,7 +2,7 @@ import type { ProviderResponse } from "../../../../@types/responses";
 import { DbConstants } from "../../../../app/constants/DbConstants";
 import type { IProvider } from "../../../../app/interfaces/IProvider";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
-import type { ServiceCategory } from "../../../../common/enums/ServiceCategory";
+import type { EServiceCategory } from "../../../../common/enums/EServiceCategory";
 import { ServiceModel } from "../../../../common/models/ServiceModel";
 import { BusinessProvider } from "../../../../common/providers/BusinessProvider";
 import { MediaProvider } from "../../../../common/providers/MediaProvider";
@@ -49,7 +49,7 @@ export class MyBusinessServicesProvider implements IProvider {
     businessId: number,
     title: string,
     mediaId: number | null,
-    serviceCategory: ServiceCategory,
+    serviceCategory: EServiceCategory,
     description: string,
     unitPrice: number,
   ): Promise<ProviderResponse<ServiceModel>> {
@@ -71,7 +71,7 @@ export class MyBusinessServicesProvider implements IProvider {
     serviceId: number,
     title: string,
     mediaId: number | null,
-    serviceCategory: ServiceCategory,
+    serviceCategory: EServiceCategory,
     description: string,
     unitPrice: number,
   ): Promise<ProviderResponse<ServiceModel>> {

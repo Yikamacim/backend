@@ -1,16 +1,16 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { SofaMaterial } from "../enums/SofaMaterial";
-import { SofaType } from "../enums/SofaType";
+import { ESofaMaterial } from "../enums/ESofaMaterial";
+import { ESofaType } from "../enums/ESofaType";
 
 export class SofaModel implements IModel {
   protected constructor(
     public readonly sofaId: number,
     public readonly itemId: number,
     public readonly isCushioned: boolean | null,
-    public readonly sofaType: SofaType | null,
-    public readonly sofaMaterial: SofaMaterial | null,
+    public readonly sofaType: ESofaType | null,
+    public readonly sofaMaterial: ESofaMaterial | null,
   ) {}
 
   public static fromRecord(record: unknown): SofaModel {
@@ -42,8 +42,8 @@ export class SofaModel implements IModel {
       typeof model.sofaId === "number" &&
       typeof model.itemId === "number" &&
       (model.isCushioned === null || typeof model.isCushioned === "boolean") &&
-      (model.sofaType === null || Object.values(SofaType).includes(model.sofaType)) &&
-      (model.sofaMaterial === null || Object.values(SofaMaterial).includes(model.sofaMaterial))
+      (model.sofaType === null || Object.values(ESofaType).includes(model.sofaType)) &&
+      (model.sofaMaterial === null || Object.values(ESofaMaterial).includes(model.sofaMaterial))
     );
   }
 

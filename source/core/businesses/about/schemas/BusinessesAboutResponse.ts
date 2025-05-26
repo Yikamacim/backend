@@ -1,6 +1,5 @@
 import type { IResponse } from "../../../../app/interfaces/IResponse";
-import type { BusinessViewModel } from "../../../../common/models/BusinessViewModel";
-import type { HoursModel } from "../../../../common/models/HoursModel";
+import type { AboutEntity } from "../../../../common/entities/AboutEntity";
 
 export class BusinessesAboutResponse implements IResponse {
   private constructor(
@@ -35,25 +34,26 @@ export class BusinessesAboutResponse implements IResponse {
     } | null,
   ) {}
 
-  public static fromModel(
-    model: BusinessViewModel,
-    hours: HoursModel | null,
-  ): BusinessesAboutResponse {
+  public static fromEntity(entity: AboutEntity): BusinessesAboutResponse {
     return new BusinessesAboutResponse(
-      model.phone,
-      model.email,
+      entity.model.phone,
+      entity.model.email,
       {
-        countryId: model.countryId,
-        countryName: model.countryName,
-        provinceId: model.provinceId,
-        provinceName: model.provinceName,
-        districtId: model.districtId,
-        districtName: model.districtName,
-        neighborhoodId: model.neighborhoodId,
-        neighborhoodName: model.neighborhoodName,
-        explicitAddress: model.explicitAddress,
+        countryId: entity.model.countryId,
+        countryName: entity.model.countryName,
+        provinceId: entity.model.provinceId,
+        provinceName: entity.model.provinceName,
+        districtId: entity.model.districtId,
+        districtName: entity.model.districtName,
+        neighborhoodId: entity.model.neighborhoodId,
+        neighborhoodName: entity.model.neighborhoodName,
+        explicitAddress: entity.model.explicitAddress,
       },
-      hours,
+      entity.hours,
     );
+  }
+
+  public static fromEntities(entities: AboutEntity[]): BusinessesAboutResponse[] {
+    return entities.map((entity) => this.fromEntity(entity));
   }
 }

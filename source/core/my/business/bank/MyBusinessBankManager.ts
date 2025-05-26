@@ -4,6 +4,7 @@ import type { IManager } from "../../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
+import { BankAccountEntity } from "../../../../common/entities/BankAccountEntity";
 import { MyBusinessBankProvider } from "./MyBusinessBankProvider";
 import type { MyBusinessBankRequest } from "./schemas/MyBusinessBankRequest";
 import { MyBusinessBankResponse } from "./schemas/MyBusinessBankResponse";
@@ -36,7 +37,7 @@ export class MyBusinessBankManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBusinessBankResponse.fromModel(bankAccount),
+      MyBusinessBankResponse.fromEntity(new BankAccountEntity(bankAccount)),
     );
   }
 
@@ -78,7 +79,7 @@ export class MyBusinessBankManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyBusinessBankResponse.fromModel(bankAccount),
+      MyBusinessBankResponse.fromEntity(new BankAccountEntity(bankAccount)),
     );
   }
 
@@ -121,7 +122,7 @@ export class MyBusinessBankManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBusinessBankResponse.fromModel(updatedBankAccount),
+      MyBusinessBankResponse.fromEntity(new BankAccountEntity(updatedBankAccount)),
     );
   }
 }

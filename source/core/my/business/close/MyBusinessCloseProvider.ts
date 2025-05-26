@@ -6,22 +6,31 @@ import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
 import { BusinessViewModel } from "../../../../common/models/BusinessViewModel";
 import { BusinessMediaProvider } from "../../../../common/providers/BusinessMediaProvider";
 import { BusinessProvider } from "../../../../common/providers/BusinessProvider";
+import { HoursProvider } from "../../../../common/providers/HoursProvider";
+import { ServiceProvider } from "../../../../common/providers/ServiceProvider";
 import { BusinessQueries } from "../../../../common/queries/BusinessQueries";
 
 export class MyBusinessCloseProvider implements IProvider {
   public constructor(
     private readonly businessProvider = new BusinessProvider(),
     private readonly businessMediaProvider = new BusinessMediaProvider(),
+    private readonly serviceProvider = new ServiceProvider(),
+    private readonly hoursProvider = new HoursProvider(),
   ) {
     this.getMyBusiness = this.businessProvider.getMyBusiness.bind(this.businessProvider);
     this.getBusinessMedia = this.businessMediaProvider.getBusinessMedia.bind(
       this.businessMediaProvider,
     );
+    this.getActiveServices = this.serviceProvider.getActiveServices.bind(this.serviceProvider);
+    this.getHours = this.hoursProvider.getHours.bind(this.hoursProvider);
     this.partialGetBusiness = this.businessProvider.partialGetBusiness.bind(this.businessProvider);
   }
 
   public readonly getMyBusiness: typeof this.businessProvider.getMyBusiness;
   public readonly getBusinessMedia: typeof this.businessMediaProvider.getBusinessMedia;
+
+  public readonly getActiveServices: typeof this.serviceProvider.getActiveServices;
+  public readonly getHours: typeof this.hoursProvider.getHours;
 
   private readonly partialGetBusiness: typeof this.businessProvider.partialGetBusiness;
 

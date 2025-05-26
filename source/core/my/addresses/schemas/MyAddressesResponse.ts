@@ -1,5 +1,5 @@
 import type { IResponse } from "../../../../app/interfaces/IResponse";
-import type { AddressViewModel } from "../../../../common/models/AddressViewModel";
+import type { AddressEntity } from "../../../../common/entities/AddressEntity";
 
 export class MyAddressesResponse implements IResponse {
   private constructor(
@@ -17,24 +17,24 @@ export class MyAddressesResponse implements IResponse {
     public readonly isDefault: boolean,
   ) {}
 
-  public static fromModel(model: AddressViewModel): MyAddressesResponse {
+  public static fromEntity(entity: AddressEntity): MyAddressesResponse {
     return new MyAddressesResponse(
-      model.addressId,
-      model.name,
-      model.countryId,
-      model.countryName,
-      model.provinceId,
-      model.provinceName,
-      model.districtId,
-      model.districtName,
-      model.neighborhoodId,
-      model.neighborhoodName,
-      model.explicitAddress,
-      model.isDefault,
+      entity.model.addressId,
+      entity.model.name,
+      entity.model.countryId,
+      entity.model.countryName,
+      entity.model.provinceId,
+      entity.model.provinceName,
+      entity.model.districtId,
+      entity.model.districtName,
+      entity.model.neighborhoodId,
+      entity.model.neighborhoodName,
+      entity.model.explicitAddress,
+      entity.model.isDefault,
     );
   }
 
-  public static fromModels(models: AddressViewModel[]): MyAddressesResponse[] {
-    return models.map((model: AddressViewModel) => MyAddressesResponse.fromModel(model));
+  public static fromEntities(entities: AddressEntity[]): MyAddressesResponse[] {
+    return entities.map((entity) => MyAddressesResponse.fromEntity(entity));
   }
 }

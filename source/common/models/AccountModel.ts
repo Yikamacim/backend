@@ -1,7 +1,7 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { AccountType } from "../enums/AccountType";
+import { EAccountType } from "../enums/EAccountType";
 
 export class AccountModel implements IModel {
   protected constructor(
@@ -10,7 +10,7 @@ export class AccountModel implements IModel {
     public readonly password: string,
     public readonly name: string,
     public readonly surname: string,
-    public readonly accountType: AccountType,
+    public readonly accountType: EAccountType,
     public readonly isVerified: boolean,
   ) {}
 
@@ -47,7 +47,7 @@ export class AccountModel implements IModel {
       typeof model.password === "string" &&
       typeof model.name === "string" &&
       typeof model.surname === "string" &&
-      Object.values(AccountType).includes(model.accountType) &&
+      Object.values(EAccountType).includes(model.accountType) &&
       typeof model.isVerified === "boolean"
     );
   }

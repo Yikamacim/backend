@@ -4,6 +4,7 @@ import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
+import { ChairEntity } from "../../../common/entities/ChairEntity";
 import { MediaHelper } from "../../../common/helpers/MediaHelper";
 import { ItemMediaRules } from "../../../common/rules/ItemMediaRules";
 import { MyChairsProvider } from "./MyChairsProvider";
@@ -16,13 +17,19 @@ export class MyChairsManager implements IManager {
 
   public async getMyChairs(payload: TokenPayload): Promise<ManagerResponse<MyChairsResponse[]>> {
     const chairs = await this.provider.getMyActiveChairs(payload.accountId);
-    const responses: MyChairsResponse[] = [];
-    for (const chair of chairs) {
-      const medias = await this.provider.getItemMedias(chair.itemId);
-      const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
-      responses.push(MyChairsResponse.fromModel(chair, mediaDatas));
-    }
-    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
+    const entities = await Promise.all(
+      chairs.map(async (chair) => {
+        const medias = await this.provider.getItemMedias(chair.itemId);
+        const mediaEntities = await MediaHelper.mediasToEntities(medias);
+        return new ChairEntity(chair, mediaEntities);
+      }),
+    );
+    return ResponseUtil.managerResponse(
+      new HttpStatus(HttpStatusCode.OK),
+      null,
+      [],
+      MyChairsResponse.fromEntities(entities),
+    );
   }
 
   public async postMyChairs(
@@ -45,12 +52,12 @@ export class MyChairsManager implements IManager {
       request.mediaIds,
       request.quantity,
     );
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyChairsResponse.fromModel(chair, mediaDatas),
+      MyChairsResponse.fromEntity(new ChairEntity(chair, mediaEntities)),
     );
   }
 
@@ -68,12 +75,12 @@ export class MyChairsManager implements IManager {
       );
     }
     const medias = await this.provider.getItemMedias(chair.itemId);
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyChairsResponse.fromModel(chair, mediaDatas),
+      MyChairsResponse.fromEntity(new ChairEntity(chair, mediaEntities)),
     );
   }
 
@@ -110,12 +117,12 @@ export class MyChairsManager implements IManager {
       request.mediaIds,
       request.quantity,
     );
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyChairsResponse.fromModel(updatedChair, mediaDatas),
+      MyChairsResponse.fromEntity(new ChairEntity(updatedChair, mediaEntities)),
     );
   }
 

@@ -1,20 +1,25 @@
-import type { MediaData } from "../../../../../@types/medias";
 import type { IResponse } from "../../../../../app/interfaces/IResponse";
-import type { MediaType } from "../../../../../common/enums/MediaType";
+import type { MediaEntity } from "../../../../../common/entities/MediaEntity";
+import type { EMediaType } from "../../../../../common/enums/EMediaType";
 
 export class MyBusinessMediasResponse implements IResponse {
   private constructor(
     public readonly mediaId: number,
-    public readonly mediaType: MediaType,
+    public readonly mediaType: EMediaType,
     public readonly extension: string,
     public readonly url: string,
   ) {}
 
-  public static fromModel(media: MediaData): MyBusinessMediasResponse {
-    return new MyBusinessMediasResponse(media.mediaId, media.mediaType, media.extension, media.url);
+  public static fromEntity(entity: MediaEntity): MyBusinessMediasResponse {
+    return new MyBusinessMediasResponse(
+      entity.mediaId,
+      entity.mediaType,
+      entity.extension,
+      entity.url,
+    );
   }
 
-  public static fromModels(medias: MediaData[]): MyBusinessMediasResponse[] {
-    return medias.map((model: MediaData) => MyBusinessMediasResponse.fromModel(model));
+  public static fromEntities(entities: MediaEntity[]): MyBusinessMediasResponse[] {
+    return entities.map((entity) => this.fromEntity(entity));
   }
 }

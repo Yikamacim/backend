@@ -4,8 +4,8 @@ import type { IRequest } from "../../../../app/interfaces/IRequest";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
-import { SofaMaterial } from "../../../../common/enums/SofaMaterial";
-import { SofaType } from "../../../../common/enums/SofaType";
+import { ESofaMaterial } from "../../../../common/enums/ESofaMaterial";
+import { ESofaType } from "../../../../common/enums/ESofaType";
 import { ItemDescriptionValidator } from "../../../../common/validators/ItemDescriptionValidator";
 import { ItemNameValidator } from "../../../../common/validators/ItemNameValidator";
 import { MediaIdsValidator } from "../../../../common/validators/MediaIdsValidator";
@@ -16,8 +16,8 @@ export class MySofasRequest implements IRequest {
     public readonly description: string,
     public readonly mediaIds: number[],
     public readonly isCushioned: boolean | null,
-    public readonly sofaType: SofaType | null,
-    public readonly sofaMaterial: SofaMaterial | null,
+    public readonly sofaType: ESofaType | null,
+    public readonly sofaMaterial: ESofaMaterial | null,
   ) {}
 
   public static parse(req: ExpressRequest): ParserResponse<MySofasRequest | null> {
@@ -53,9 +53,9 @@ export class MySofasRequest implements IRequest {
       Array.isArray(blueprint.mediaIds) &&
       blueprint.mediaIds.every((mediaId) => typeof mediaId === "number") &&
       (blueprint.isCushioned === null || typeof blueprint.isCushioned === "boolean") &&
-      (blueprint.sofaType === null || Object.values(SofaType).includes(blueprint.sofaType)) &&
+      (blueprint.sofaType === null || Object.values(ESofaType).includes(blueprint.sofaType)) &&
       (blueprint.sofaMaterial === null ||
-        Object.values(SofaMaterial).includes(blueprint.sofaMaterial))
+        Object.values(ESofaMaterial).includes(blueprint.sofaMaterial))
     );
   }
 }

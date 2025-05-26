@@ -1,7 +1,7 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { VehicleType } from "../enums/VehicleType";
+import { EVehicleType } from "../enums/EVehicleType";
 
 export class VehicleViewModel implements IModel {
   protected constructor(
@@ -12,7 +12,7 @@ export class VehicleViewModel implements IModel {
     public readonly description: string,
     public readonly brand: string | null,
     public readonly model: string | null,
-    public readonly vehicleType: VehicleType | null,
+    public readonly vehicleType: EVehicleType | null,
     public readonly isDeleted: boolean,
   ) {}
 
@@ -53,7 +53,7 @@ export class VehicleViewModel implements IModel {
       typeof model.description === "string" &&
       (model.brand === null || typeof model.brand === "string") &&
       (model.model === null || typeof model.model === "string") &&
-      (model.vehicleType === null || Object.values(VehicleType).includes(model.vehicleType)) &&
+      (model.vehicleType === null || Object.values(EVehicleType).includes(model.vehicleType)) &&
       typeof model.isDeleted === "boolean"
     );
   }

@@ -4,7 +4,7 @@ import type { IRequest } from "../../../../../app/interfaces/IRequest";
 import { ClientError, ClientErrorCode } from "../../../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../../app/utils/ResponseUtil";
-import { ServiceCategory } from "../../../../../common/enums/ServiceCategory";
+import { EServiceCategory } from "../../../../../common/enums/EServiceCategory";
 import { ServiceDescriptionValidator } from "../../../../../common/validators/ServiceDescriptionValidator";
 import { ServiceTitleValidator } from "../../../../../common/validators/ServiceTitleValidator";
 import { ServiceUnitPriceValidator } from "../../../../../common/validators/ServiceUnitPriceValidator";
@@ -13,7 +13,7 @@ export class MyBusinessServicesRequest implements IRequest {
   public constructor(
     public readonly title: string,
     public readonly mediaId: number | null,
-    public readonly serviceCategory: ServiceCategory,
+    public readonly serviceCategory: EServiceCategory,
     public readonly description: string,
     public readonly unitPrice: number,
   ) {}
@@ -48,7 +48,7 @@ export class MyBusinessServicesRequest implements IRequest {
     return (
       typeof blueprint.title === "string" &&
       (blueprint.mediaId === null || typeof blueprint.mediaId === "number") &&
-      Object.values(ServiceCategory).includes(blueprint.serviceCategory) &&
+      Object.values(EServiceCategory).includes(blueprint.serviceCategory) &&
       typeof blueprint.description === "string" &&
       typeof blueprint.unitPrice === "number"
     );

@@ -4,7 +4,7 @@ import type { IProvider } from "../../../app/interfaces/IProvider";
 import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import type { MediaType } from "../../../common/enums/MediaType";
+import type { EMediaType } from "../../../common/enums/EMediaType";
 import { MediaModel } from "../../../common/models/MediaModel";
 import { MediaViewModel } from "../../../common/models/MediaViewModel";
 import { MediaQueries } from "../../../common/queries/MediaQueries";
@@ -13,7 +13,7 @@ import { MediaViewQueries } from "../../../common/queries/MediaViewQueries";
 export class MyMediasProvider implements IProvider {
   public async createMyMedia(
     accountId: number,
-    mediaType: MediaType,
+    mediaType: EMediaType,
     extension: string,
   ): Promise<ProviderResponse<MediaViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
@@ -44,7 +44,7 @@ export class MyMediasProvider implements IProvider {
 
   private async partialMyCreateMedia(
     accountId: number,
-    mediaType: MediaType,
+    mediaType: EMediaType,
     extension: string,
   ): Promise<MediaModel> {
     const results = await DbConstants.POOL.query(MediaQueries.INSERT_MEDIA_RT_$ACID_$MTYP_$EXTN, [

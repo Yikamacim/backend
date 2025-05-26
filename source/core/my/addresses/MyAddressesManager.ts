@@ -4,6 +4,7 @@ import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
+import { AddressEntity } from "../../../common/entities/AddressEntity";
 import { MyAddressesProvider } from "./MyAddressesProvider";
 import type { MyAddressesParams } from "./schemas/MyAddressesParams";
 import type { MyAddressesRequest } from "./schemas/MyAddressesRequest";
@@ -16,11 +17,12 @@ export class MyAddressesManager implements IManager {
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyAddressesResponse[]>> {
     const addresses = await this.provider.getMyActiveAddresses(payload.accountId);
+    const entities = addresses.map((address) => new AddressEntity(address));
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyAddressesResponse.fromModels(addresses),
+      MyAddressesResponse.fromEntities(entities),
     );
   }
 
@@ -48,7 +50,7 @@ export class MyAddressesManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyAddressesResponse.fromModel(address),
+      MyAddressesResponse.fromEntity(new AddressEntity(address)),
     );
   }
 
@@ -72,7 +74,7 @@ export class MyAddressesManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyAddressesResponse.fromModel(address),
+      MyAddressesResponse.fromEntity(new AddressEntity(address)),
     );
   }
 
@@ -114,7 +116,7 @@ export class MyAddressesManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyAddressesResponse.fromModel(updatedAddress),
+      MyAddressesResponse.fromEntity(new AddressEntity(updatedAddress)),
     );
   }
 

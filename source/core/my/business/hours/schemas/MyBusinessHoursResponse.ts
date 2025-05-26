@@ -1,5 +1,5 @@
 import type { IResponse } from "../../../../../app/interfaces/IResponse";
-import type { HoursModel } from "../../../../../common/models/HoursModel";
+import type { HoursEntity } from "../../../../../common/entities/HoursEntity";
 
 export class MyBusinessHoursResponse implements IResponse {
   private constructor(
@@ -19,22 +19,26 @@ export class MyBusinessHoursResponse implements IResponse {
     public readonly sundayTo: string | null,
   ) {}
 
-  public static fromModel(model: HoursModel): MyBusinessHoursResponse {
+  public static fromEntity(entity: HoursEntity): MyBusinessHoursResponse {
     return new MyBusinessHoursResponse(
-      model.mondayFrom,
-      model.mondayTo,
-      model.tuesdayFrom,
-      model.tuesdayTo,
-      model.wednesdayFrom,
-      model.wednesdayTo,
-      model.thursdayFrom,
-      model.thursdayTo,
-      model.fridayFrom,
-      model.fridayTo,
-      model.saturdayFrom,
-      model.saturdayTo,
-      model.sundayFrom,
-      model.sundayTo,
+      entity.model.mondayFrom,
+      entity.model.mondayTo,
+      entity.model.tuesdayFrom,
+      entity.model.tuesdayTo,
+      entity.model.wednesdayFrom,
+      entity.model.wednesdayTo,
+      entity.model.thursdayFrom,
+      entity.model.thursdayTo,
+      entity.model.fridayFrom,
+      entity.model.fridayTo,
+      entity.model.saturdayFrom,
+      entity.model.saturdayTo,
+      entity.model.sundayFrom,
+      entity.model.sundayTo,
     );
+  }
+
+  public static fromEntities(entities: HoursEntity[]): MyBusinessHoursResponse[] {
+    return entities.map((entity) => MyBusinessHoursResponse.fromEntity(entity));
   }
 }

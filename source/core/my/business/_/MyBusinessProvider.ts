@@ -10,12 +10,16 @@ import { AddressProvider } from "../../../../common/providers/AddressProvider";
 import { ApprovalProvider } from "../../../../common/providers/ApprovalProvider";
 import { BusinessMediaProvider } from "../../../../common/providers/BusinessMediaProvider";
 import { BusinessProvider } from "../../../../common/providers/BusinessProvider";
+import { HoursProvider } from "../../../../common/providers/HoursProvider";
+import { ServiceProvider } from "../../../../common/providers/ServiceProvider";
 import { BusinessQueries } from "../../../../common/queries/BusinessQueries";
 
 export class MyBusinessProvider implements IProvider {
   public constructor(
     private readonly businessProvider = new BusinessProvider(),
     private readonly businessMediaProvider = new BusinessMediaProvider(),
+    private readonly serviceProvider = new ServiceProvider(),
+    private readonly hoursProvider = new HoursProvider(),
     private readonly addressProvider = new AddressProvider(),
     private readonly approvalProvider = new ApprovalProvider(),
   ) {
@@ -23,6 +27,8 @@ export class MyBusinessProvider implements IProvider {
     this.getBusinessMedia = this.businessMediaProvider.getBusinessMedia.bind(
       this.businessMediaProvider,
     );
+    this.getActiveServices = this.serviceProvider.getActiveServices.bind(this.serviceProvider);
+    this.getHours = this.hoursProvider.getHours.bind(this.hoursProvider);
     this.getApproval = this.approvalProvider.getApproval.bind(this.approvalProvider);
     this.updateApproval = this.approvalProvider.updateApproval.bind(this.approvalProvider);
     this.partialGetBusiness = this.businessProvider.partialGetBusiness.bind(this.businessProvider);
@@ -37,6 +43,8 @@ export class MyBusinessProvider implements IProvider {
 
   public readonly getMyBusiness: typeof this.businessProvider.getMyBusiness;
   public readonly getBusinessMedia: typeof this.businessMediaProvider.getBusinessMedia;
+  public readonly getActiveServices: typeof this.serviceProvider.getActiveServices;
+  public readonly getHours: typeof this.hoursProvider.getHours;
   public readonly getApproval: typeof this.approvalProvider.getApproval;
   public readonly updateApproval: typeof this.approvalProvider.updateApproval;
 

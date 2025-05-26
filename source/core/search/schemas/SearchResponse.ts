@@ -1,12 +1,17 @@
-import type { MediaData } from "../../../@types/medias";
 import type { IResponse } from "../../../app/interfaces/IResponse";
-import type { BusinessServiceViewModel } from "../../../common/models/BusinessServiceViewModel";
+import type { SearchEntity } from "../../../common/entities/SearchEntity";
+import type { EMediaType } from "../../../common/enums/EMediaType";
 
 export class SearchResponse implements IResponse {
   private constructor(
     public readonly businessId: number,
     public readonly name: string,
-    public readonly media: MediaData | null,
+    public readonly media: {
+      readonly mediaId: number;
+      readonly mediaType: EMediaType;
+      readonly extension: string;
+      readonly url: string;
+    } | null,
     public readonly address: {
       readonly countryName: string;
       readonly provinceName: string;
@@ -18,23 +23,24 @@ export class SearchResponse implements IResponse {
     public readonly reviewsCount: number,
   ) {}
 
-  public static fromModel(
-    model: BusinessServiceViewModel,
-    media: MediaData | null,
-  ): SearchResponse {
+  public static fromEntity(entity: SearchEntity): SearchResponse {
     return new SearchResponse(
-      model.businessId,
-      model.name,
-      media,
+      entity.model.businessId,
+      entity.model.name,
+      entity.media,
       {
-        countryName: model.countryName,
-        provinceName: model.provinceName,
-        districtName: model.districtName,
-        neighborhoodName: model.neighborhoodName,
+        countryName: entity.model.countryName,
+        provinceName: entity.model.provinceName,
+        districtName: entity.model.districtName,
+        neighborhoodName: entity.model.neighborhoodName,
       },
-      model.isOpen,
-      model.stars,
-      model.reviewsCount,
+      entity.model.isOpen,
+      entity.model.stars,
+      entity.model.reviewsCount,
     );
+  }
+
+  public static fromEntities(entities: SearchEntity[]): SearchResponse[] {
+    return entities.map((entity) => this.fromEntity(entity));
   }
 }

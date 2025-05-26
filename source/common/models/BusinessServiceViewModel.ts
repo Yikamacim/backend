@@ -1,7 +1,7 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { ServiceCategory } from "../enums/ServiceCategory";
+import { EServiceCategory } from "../enums/EServiceCategory";
 
 export class BusinessServiceViewModel implements IModel {
   protected constructor(
@@ -16,7 +16,7 @@ export class BusinessServiceViewModel implements IModel {
     public readonly stars: number | null,
     public readonly reviewsCount: number,
     public readonly serviceTitle: string,
-    public readonly serviceCategory: ServiceCategory,
+    public readonly serviceCategory: EServiceCategory,
     public readonly isDeleted: boolean,
   ) {}
 
@@ -65,7 +65,7 @@ export class BusinessServiceViewModel implements IModel {
       (model.stars === null || typeof model.stars === "number") &&
       typeof model.reviewsCount === "number" &&
       typeof model.serviceTitle === "string" &&
-      Object.values(ServiceCategory).includes(model.serviceCategory) &&
+      Object.values(EServiceCategory).includes(model.serviceCategory) &&
       typeof model.isDeleted === "boolean"
     );
   }

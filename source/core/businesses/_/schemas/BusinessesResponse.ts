@@ -1,15 +1,19 @@
-import type { TodayHours } from "../../../../@types/hours";
-import type { MediaData } from "../../../../@types/medias";
 import type { IResponse } from "../../../../app/interfaces/IResponse";
-import type { ApprovalState } from "../../../../common/enums/ApprovalState";
-import type { ServiceCategory } from "../../../../common/enums/ServiceCategory";
-import type { BusinessViewModel } from "../../../../common/models/BusinessViewModel";
+import type { BusinessEntity } from "../../../../common/entities/BusinessEntity";
+import type { EApprovalState } from "../../../../common/enums/EApprovalState";
+import type { EMediaType } from "../../../../common/enums/EMediaType";
+import type { EServiceCategory } from "../../../../common/enums/EServiceCategory";
 
 export class BusinessesResponse implements IResponse {
   private constructor(
     public readonly businessId: number,
     public readonly name: string,
-    public readonly media: MediaData | null,
+    public readonly media: {
+      readonly mediaId: number;
+      readonly mediaType: EMediaType;
+      readonly extension: string;
+      readonly url: string;
+    } | null,
     public readonly address: {
       readonly countryName: string;
       readonly provinceName: string;
@@ -20,34 +24,36 @@ export class BusinessesResponse implements IResponse {
     public readonly isOpen: boolean,
     public readonly stars: number | null,
     public readonly reviewsCount: number,
-    public readonly approvalState: ApprovalState | null,
-    public readonly serviceCategories: ServiceCategory[],
-    public readonly todayHours: TodayHours | null,
+    public readonly approvalState: EApprovalState | null,
+    public readonly serviceCategories: EServiceCategory[],
+    public readonly hoursToday: {
+      readonly from: string | null;
+      readonly to: string | null;
+    } | null,
   ) {}
 
-  public static fromModel(
-    model: BusinessViewModel,
-    media: MediaData | null,
-    serviceCategories: ServiceCategory[],
-    todayHours: TodayHours | null,
-  ): BusinessesResponse {
+  public static fromEntity(entity: BusinessEntity): BusinessesResponse {
     return new BusinessesResponse(
-      model.businessId,
-      model.name,
-      media,
+      entity.model.businessId,
+      entity.model.name,
+      entity.media,
       {
-        countryName: model.countryName,
-        provinceName: model.provinceName,
-        districtName: model.districtName,
-        neighborhoodName: model.neighborhoodName,
+        countryName: entity.model.countryName,
+        provinceName: entity.model.provinceName,
+        districtName: entity.model.districtName,
+        neighborhoodName: entity.model.neighborhoodName,
       },
-      model.description,
-      model.isOpen,
-      model.stars,
-      model.reviewsCount,
-      model.approvalState,
-      serviceCategories,
-      todayHours,
+      entity.model.description,
+      entity.model.isOpen,
+      entity.model.stars,
+      entity.model.reviewsCount,
+      entity.model.approvalState,
+      entity.serviceCategories,
+      entity.todayHours,
     );
+  }
+
+  public static fromEntities(entities: BusinessEntity[]): BusinessesResponse[] {
+    return entities.map((entity) => this.fromEntity(entity));
   }
 }

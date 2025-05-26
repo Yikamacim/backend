@@ -4,7 +4,7 @@ import type { IRequest } from "../../../app/interfaces/IRequest";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import { AccountType } from "../../../common/enums/AccountType";
+import { EAccountType } from "../../../common/enums/EAccountType";
 import { DeviceNameValidator } from "../../../common/validators/DeviceNameValidator";
 import { NameValidator } from "../../../common/validators/NameValidator";
 import { PasswordValidator } from "../../../common/validators/PasswordValidator";
@@ -18,7 +18,7 @@ export class SignupRequest implements IRequest {
     public readonly password: string,
     public readonly name: string,
     public readonly surname: string,
-    public readonly accountType: AccountType,
+    public readonly accountType: EAccountType,
     public readonly deviceName: string,
     public readonly sessionKey: string,
   ) {}
@@ -58,7 +58,7 @@ export class SignupRequest implements IRequest {
       typeof blueprint.password === "string" &&
       typeof blueprint.name === "string" &&
       typeof blueprint.surname === "string" &&
-      Object.values(AccountType).includes(blueprint.accountType) &&
+      Object.values(EAccountType).includes(blueprint.accountType) &&
       typeof blueprint.deviceName === "string" &&
       typeof blueprint.sessionKey === "string"
     );

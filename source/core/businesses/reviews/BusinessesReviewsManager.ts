@@ -3,6 +3,8 @@ import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
+import { ReviewEntity } from "../../../common/entities/ReviewEntity";
+import { ReviewHelper } from "../../../common/helpers/ReviewHelper";
 import { BusinessesReviewsProvider } from "./BusinessesReviewsProvider";
 import type { BusinessesReviewsParams } from "./schemas/BusinessesReviewsParams";
 import { BusinessesReviewsResponse } from "./schemas/BusinessesReviewsResponse";
@@ -24,14 +26,14 @@ export class BusinessesReviewsManager implements IManager {
     }
     const reviews = await this.provider.getReviews(business.businessId);
     reviews.forEach((review) => {
-      review.name = review.name[0] + "*".repeat(review.name.length - 1);
-      review.surname = review.surname[0] + "*".repeat(review.surname.length - 1);
+      ReviewHelper.obfuscate(review);
     });
+    const entities = reviews.map((review) => new ReviewEntity(review));
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      BusinessesReviewsResponse.fromModels(reviews),
+      BusinessesReviewsResponse.fromEntities(entities),
     );
   }
 }

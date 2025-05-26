@@ -1,5 +1,5 @@
 import type { IResponse } from "../../../app/interfaces/IResponse";
-import type { AreaViewModel } from "../../../common/models/AreaViewModel";
+import type { AreaEntity } from "../../../common/entities/AreaEntity";
 
 export class AreasResponse implements IResponse {
   private constructor(
@@ -11,24 +11,24 @@ export class AreasResponse implements IResponse {
     public readonly districtName: string,
     public readonly neighborhoodId: number,
     public readonly neighborhoodName: string,
-    public readonly areas: string,
+    public readonly area: string,
   ) {}
 
-  public static fromModel(model: AreaViewModel): AreasResponse {
+  public static fromEntity(entity: AreaEntity): AreasResponse {
     return new AreasResponse(
-      model.countryId,
-      model.countryName,
-      model.provinceId,
-      model.provinceName,
-      model.districtId,
-      model.districtName,
-      model.neighborhoodId,
-      model.neighborhoodName,
-      model.area,
+      entity.model.countryId,
+      entity.model.countryName,
+      entity.model.provinceId,
+      entity.model.provinceName,
+      entity.model.districtId,
+      entity.model.districtName,
+      entity.model.neighborhoodId,
+      entity.model.neighborhoodName,
+      entity.model.area,
     );
   }
 
-  public static fromModels(models: AreaViewModel[]): AreasResponse[] {
-    return models.map((model: AreaViewModel) => AreasResponse.fromModel(model));
+  public static fromEntities(entities: AreaEntity[]): AreasResponse[] {
+    return entities.map((entity) => this.fromEntity(entity));
   }
 }

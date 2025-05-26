@@ -4,7 +4,7 @@ import type { IProvider } from "../../../app/interfaces/IProvider";
 import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import type { VehicleType } from "../../../common/enums/VehicleType";
+import type { EVehicleType } from "../../../common/enums/EVehicleType";
 import { VehicleModel } from "../../../common/models/VehicleModel";
 import { VehicleViewModel } from "../../../common/models/VehicleViewModel";
 import { ItemMediaProvider } from "../../../common/providers/ItemMediaProvider";
@@ -82,7 +82,7 @@ export class MyVehiclesProvider implements IProvider {
     mediaIds: number[],
     brand: string | null,
     model: string | null,
-    vehicleType: VehicleType | null,
+    vehicleType: EVehicleType | null,
   ): Promise<ProviderResponse<VehicleViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
@@ -109,7 +109,7 @@ export class MyVehiclesProvider implements IProvider {
     mediaIds: number[],
     brand: string | null,
     model: string | null,
-    vehicleType: VehicleType | null,
+    vehicleType: EVehicleType | null,
   ): Promise<ProviderResponse<VehicleViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
@@ -146,7 +146,7 @@ export class MyVehiclesProvider implements IProvider {
     itemId: number,
     brand: string | null,
     model: string | null,
-    vehicleType: VehicleType | null,
+    vehicleType: EVehicleType | null,
   ): Promise<VehicleModel> {
     const results = await DbConstants.POOL.query(
       VehicleQueries.INSERT_VEHICLE_RT_$ITID_$BRAND_$MODEL_$VHTP,
@@ -160,7 +160,7 @@ export class MyVehiclesProvider implements IProvider {
     vehicleId: number,
     brand: string | null,
     model: string | null,
-    vehicleType: VehicleType | null,
+    vehicleType: EVehicleType | null,
   ): Promise<VehicleModel> {
     const results = await DbConstants.POOL.query(
       VehicleQueries.UPDATE_VEHICLE_RT_$CPID_$BRAND_$MODEL_$VHTP,

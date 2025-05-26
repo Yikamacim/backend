@@ -6,14 +6,14 @@ import { ArrayUtil } from "../../../app/utils/ArrayUtil";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { StringUtil } from "../../../app/utils/StringUtil";
-import { ServiceCategory } from "../../../common/enums/ServiceCategory";
+import { EServiceCategory } from "../../../common/enums/EServiceCategory";
 import { SearchQueryValidator } from "../../../common/validators/SearchQueryValidator";
 
 export class SearchQueries implements IQueries {
   private constructor(
     public readonly query: string,
     public readonly neighborhoodId: string,
-    public readonly serviceCategory: ServiceCategory[],
+    public readonly serviceCategory: EServiceCategory[],
   ) {}
 
   public static parse(req: ExpressRequest): ParserResponse<SearchQueries | null> {
@@ -61,7 +61,7 @@ export class SearchQueries implements IQueries {
       typeof blueprint.query === "string" &&
       typeof blueprint.neighborhoodId === "string" &&
       blueprint.serviceCategory.every((category) =>
-        Object.values(ServiceCategory).includes(category),
+        Object.values(EServiceCategory).includes(category),
       )
     );
   }

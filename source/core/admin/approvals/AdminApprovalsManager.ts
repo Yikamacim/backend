@@ -3,7 +3,8 @@ import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import { ApprovalState } from "../../../common/enums/ApprovalState";
+import { ApprovalEntity } from "../../../common/entities/ApprovalEntity";
+import { EApprovalState } from "../../../common/enums/EApprovalState";
 import { MediaHelper } from "../../../common/helpers/MediaHelper";
 import { AdminApprovalsProvider } from "./AdminApprovalsProvider";
 import type { AdminApprovalsParams } from "./schemas/AdminApprovalsParams";
@@ -15,13 +16,22 @@ export class AdminApprovalsManager implements IManager {
 
   public async getAdminApprovals(): Promise<ManagerResponse<AdminApprovalsResponse[]>> {
     const approvals = await this.provider.getPendingApprovals();
-    const responses: AdminApprovalsResponse[] = [];
-    for (const approval of approvals) {
-      const medias = await this.provider.getApprovalMedias(approval.businessId);
-      const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
-      responses.push(AdminApprovalsResponse.fromModel(approval, mediaDatas));
-    }
-    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
+    const entities = await Promise.all(
+      approvals.map(async (approval) => {
+        return new ApprovalEntity(
+          approval,
+          await MediaHelper.mediasToEntities(
+            await this.provider.getApprovalMedias(approval.businessId),
+          ),
+        );
+      }),
+    );
+    return ResponseUtil.managerResponse(
+      new HttpStatus(HttpStatusCode.OK),
+      null,
+      [],
+      AdminApprovalsResponse.fromEntities(entities),
+    );
   }
 
   public async getAdminApprovals$(
@@ -32,17 +42,17 @@ export class AdminApprovalsManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_APPROVAL_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.APPROVAL_NOT_FOUND)],
         null,
       );
     }
     const medias = await this.provider.getApprovalMedias(approvals.businessId);
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      AdminApprovalsResponse.fromModel(approvals, mediaDatas),
+      AdminApprovalsResponse.fromEntity(new ApprovalEntity(approvals, mediaEntities)),
     );
   }
 
@@ -55,22 +65,22 @@ export class AdminApprovalsManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_APPROVAL_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.APPROVAL_NOT_FOUND)],
         null,
       );
     }
     const updatedApproval = await this.provider.updateApproval(
       approval.businessId,
-      request.isApproved ? ApprovalState.APPROVED : ApprovalState.REJECTED,
+      request.isApproved ? EApprovalState.APPROVED : EApprovalState.REJECTED,
       request.reason,
     );
     const medias = await this.provider.getApprovalMedias(approval.businessId);
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      AdminApprovalsResponse.fromModel(updatedApproval, mediaDatas),
+      AdminApprovalsResponse.fromEntity(new ApprovalEntity(updatedApproval, mediaEntities)),
     );
   }
 }

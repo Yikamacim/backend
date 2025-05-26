@@ -4,6 +4,7 @@ import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
+import { BlanketEntity } from "../../../common/entities/BlanketEntity";
 import { MediaHelper } from "../../../common/helpers/MediaHelper";
 import { ItemMediaRules } from "../../../common/rules/ItemMediaRules";
 import { MyBlanketsProvider } from "./MyBlanketsProvider";
@@ -18,13 +19,19 @@ export class MyBlanketsManager implements IManager {
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyBlanketsResponse[]>> {
     const blankets = await this.provider.getMyActiveBlankets(payload.accountId);
-    const responses: MyBlanketsResponse[] = [];
-    for (const myBlanket of blankets) {
-      const medias = await this.provider.getItemMedias(myBlanket.itemId);
-      const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
-      responses.push(MyBlanketsResponse.fromModel(myBlanket, mediaDatas));
-    }
-    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
+    const entities = await Promise.all(
+      blankets.map(async (myBlanket) => {
+        const medias = await this.provider.getItemMedias(myBlanket.itemId);
+        const mediaEntites = await MediaHelper.mediasToEntities(medias);
+        return new BlanketEntity(myBlanket, mediaEntites);
+      }),
+    );
+    return ResponseUtil.managerResponse(
+      new HttpStatus(HttpStatusCode.OK),
+      null,
+      [],
+      MyBlanketsResponse.fromEntities(entities),
+    );
   }
 
   public async postMyBlankets(
@@ -48,12 +55,12 @@ export class MyBlanketsManager implements IManager {
       request.blanketSize,
       request.blanketMaterial,
     );
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyBlanketsResponse.fromModel(blanket, mediaDatas),
+      MyBlanketsResponse.fromEntity(new BlanketEntity(blanket, mediaEntities)),
     );
   }
 
@@ -74,12 +81,12 @@ export class MyBlanketsManager implements IManager {
       );
     }
     const medias = await this.provider.getItemMedias(blanket.itemId);
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBlanketsResponse.fromModel(blanket, mediaDatas),
+      MyBlanketsResponse.fromEntity(new BlanketEntity(blanket, mediaEntities)),
     );
   }
 
@@ -120,12 +127,12 @@ export class MyBlanketsManager implements IManager {
       request.blanketSize,
       request.blanketMaterial,
     );
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBlanketsResponse.fromModel(updatedBlanket, mediaDatas),
+      MyBlanketsResponse.fromEntity(new BlanketEntity(updatedBlanket, mediaEntities)),
     );
   }
 

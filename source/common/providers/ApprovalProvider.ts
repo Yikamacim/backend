@@ -3,7 +3,7 @@ import { DbConstants } from "../../app/constants/DbConstants";
 import type { IProvider } from "../../app/interfaces/IProvider";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
-import { ApprovalState } from "../enums/ApprovalState";
+import { EApprovalState } from "../enums/EApprovalState";
 import { ApprovalModel } from "../models/ApprovalModel";
 import { ApprovalQueries } from "../queries/ApprovalQueries";
 
@@ -12,7 +12,7 @@ export class ApprovalProvider implements IProvider {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(ApprovalQueries.GET_APPROVALS_$STATE, [
-        ApprovalState.PENDING,
+        EApprovalState.PENDING,
       ]);
       const records: unknown[] = results.rows;
       return await ResponseUtil.providerResponse(ApprovalModel.fromRecords(records));
@@ -41,7 +41,7 @@ export class ApprovalProvider implements IProvider {
 
   public async updateApproval(
     businessId: number,
-    approvalState: ApprovalState,
+    approvalState: EApprovalState,
     reason: string | null,
   ): Promise<ProviderResponse<ApprovalModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);

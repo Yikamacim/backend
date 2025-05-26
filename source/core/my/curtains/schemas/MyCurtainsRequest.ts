@@ -4,7 +4,7 @@ import type { IRequest } from "../../../../app/interfaces/IRequest";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
-import { CurtainType } from "../../../../common/enums/CurtainType";
+import { ECurtainType } from "../../../../common/enums/ECurtainType";
 import { ItemDescriptionValidator } from "../../../../common/validators/ItemDescriptionValidator";
 import { ItemNameValidator } from "../../../../common/validators/ItemNameValidator";
 import { MediaIdsValidator } from "../../../../common/validators/MediaIdsValidator";
@@ -16,7 +16,7 @@ export class MyCurtainsRequest implements IRequest {
     public readonly mediaIds: number[],
     public readonly width: number | null,
     public readonly length: number | null,
-    public readonly curtainType: CurtainType | null,
+    public readonly curtainType: ECurtainType | null,
   ) {}
 
   public static parse(req: ExpressRequest): ParserResponse<MyCurtainsRequest | null> {
@@ -53,7 +53,8 @@ export class MyCurtainsRequest implements IRequest {
       blueprint.mediaIds.every((mediaId) => typeof mediaId === "number") &&
       (blueprint.width === null || typeof blueprint.width === "number") &&
       (blueprint.length === null || typeof blueprint.length === "number") &&
-      (blueprint.curtainType === null || Object.values(CurtainType).includes(blueprint.curtainType))
+      (blueprint.curtainType === null ||
+        Object.values(ECurtainType).includes(blueprint.curtainType))
     );
   }
 }

@@ -4,6 +4,7 @@ import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
+import { CarpetEntity } from "../../../common/entities/CarpetEntity";
 import { MediaHelper } from "../../../common/helpers/MediaHelper";
 import { ItemMediaRules } from "../../../common/rules/ItemMediaRules";
 import { MyCarpetsProvider } from "./MyCarpetsProvider";
@@ -16,13 +17,19 @@ export class MyCarpetsManager implements IManager {
 
   public async getMyCarpets(payload: TokenPayload): Promise<ManagerResponse<MyCarpetsResponse[]>> {
     const carpets = await this.provider.getMyActiveCarpets(payload.accountId);
-    const responses: MyCarpetsResponse[] = [];
-    for (const carpet of carpets) {
-      const medias = await this.provider.getItemMedias(carpet.itemId);
-      const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
-      responses.push(MyCarpetsResponse.fromModel(carpet, mediaDatas));
-    }
-    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
+    const entities = await Promise.all(
+      carpets.map(async (carpet) => {
+        const medias = await this.provider.getItemMedias(carpet.itemId);
+        const mediaEntities = await MediaHelper.mediasToEntities(medias);
+        return new CarpetEntity(carpet, mediaEntities);
+      }),
+    );
+    return ResponseUtil.managerResponse(
+      new HttpStatus(HttpStatusCode.OK),
+      null,
+      [],
+      MyCarpetsResponse.fromEntities(entities),
+    );
   }
 
   public async postMyCarpets(
@@ -47,12 +54,12 @@ export class MyCarpetsManager implements IManager {
       request.length,
       request.carpetMaterial,
     );
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyCarpetsResponse.fromModel(carpet, mediaDatas),
+      MyCarpetsResponse.fromEntity(new CarpetEntity(carpet, mediaEntities)),
     );
   }
 
@@ -73,12 +80,12 @@ export class MyCarpetsManager implements IManager {
       );
     }
     const medias = await this.provider.getItemMedias(carpet.itemId);
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyCarpetsResponse.fromModel(carpet, mediaDatas),
+      MyCarpetsResponse.fromEntity(new CarpetEntity(carpet, mediaEntities)),
     );
   }
 
@@ -120,12 +127,12 @@ export class MyCarpetsManager implements IManager {
       request.length,
       request.carpetMaterial,
     );
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyCarpetsResponse.fromModel(updatedCarpet, mediaDatas),
+      MyCarpetsResponse.fromEntity(new CarpetEntity(updatedCarpet, mediaEntities)),
     );
   }
 

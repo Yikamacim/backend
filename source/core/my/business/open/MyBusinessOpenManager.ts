@@ -1,11 +1,14 @@
-import type { MediaData } from "../../../../@types/medias";
+import type { TodayHours } from "../../../../@types/hours";
 import type { ManagerResponse } from "../../../../@types/responses";
 import type { TokenPayload } from "../../../../@types/tokens";
 import type { IManager } from "../../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
-import { ApprovalState } from "../../../../common/enums/ApprovalState";
+import { BusinessEntity } from "../../../../common/entities/BusinessEntity";
+import type { MediaEntity } from "../../../../common/entities/MediaEntity";
+import { EApprovalState } from "../../../../common/enums/EApprovalState";
+import { HoursHelper } from "../../../../common/helpers/HoursHelper";
 import { MediaHelper } from "../../../../common/helpers/MediaHelper";
 import { MyBusinessOpenProvider } from "./MyBusinessOpenProvider";
 import { MyBusinessOpenResponse } from "./schemas/MyBusinessOpenResponse";
@@ -42,7 +45,7 @@ export class MyBusinessOpenManager implements IManager {
         null,
       );
     }
-    if (approval.approvalState !== ApprovalState.APPROVED) {
+    if (approval.approvalState !== EApprovalState.APPROVED) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -86,10 +89,8 @@ export class MyBusinessOpenManager implements IManager {
         null,
       );
     }
-    const openedBusiness = await this.provider.openBusiness(
-      business.businessId,
-    );
-    let mediaData: MediaData | null = null;
+    const openedBusiness = await this.provider.openBusiness(business.businessId);
+    let mediaEntity: MediaEntity | null = null;
     if (openedBusiness.mediaId !== null) {
       const media = await this.provider.getBusinessMedia(
         openedBusiness.businessId,
@@ -99,17 +100,25 @@ export class MyBusinessOpenManager implements IManager {
         return ResponseUtil.managerResponse(
           new HttpStatus(HttpStatusCode.NOT_FOUND),
           null,
-          [new ClientError(ClientErrorCode.BUSINESS_MEDIA_NOT_FOUND)],
+          [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
           null,
         );
       }
-      mediaData = await MediaHelper.mediaToMediaData(media);
+      mediaEntity = await MediaHelper.mediaToEntity(media);
+    }
+    const allServiceCategories = services.map((service) => service.serviceCategory);
+    const serviceCategories = [...new Set(allServiceCategories)];
+    let todayHours: TodayHours | null = null;
+    if (hours !== null) {
+      todayHours = HoursHelper.getTodayHours(hours);
     }
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBusinessOpenResponse.fromModel(openedBusiness, mediaData),
+      MyBusinessOpenResponse.fromEntity(
+        new BusinessEntity(business, mediaEntity, serviceCategories, todayHours),
+      ),
     );
   }
 }

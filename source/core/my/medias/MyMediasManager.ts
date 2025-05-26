@@ -4,7 +4,8 @@ import type { IManager } from "../../../app/interfaces/IManager";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { FileUtil } from "../../../app/utils/FileUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import type { MediaType } from "../../../common/enums/MediaType";
+import { UploadEntity } from "../../../common/entities/UploadEntity";
+import type { EMediaType } from "../../../common/enums/EMediaType";
 import { BucketModule } from "../../../modules/bucket/module";
 import { MyMediasProvider } from "./MyMediasProvider";
 import type { MyMediasUploadParams } from "./schemas/MyMediasUploadParams";
@@ -21,20 +22,18 @@ export class MyMediasManager implements IManager {
   ): Promise<ManagerResponse<MyMediasUploadResponse>> {
     const media = await this.provider.createMyMedia(
       payload.accountId,
-      params.mediaType.toUpperCase() as MediaType,
+      params.mediaType.toUpperCase() as EMediaType,
       queries.extension,
+    );
+    const uploadUrl = await BucketModule.instance.getUploadUrl(
+      FileUtil.getName(media.mediaId.toString(), media.extension),
+      media.mediaType,
     );
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyMediasUploadResponse.fromModel(
-        media.mediaId,
-        await BucketModule.instance.getUploadUrl(
-          FileUtil.getName(media.mediaId.toString(), media.extension),
-          media.mediaType,
-        ),
-      ),
+      MyMediasUploadResponse.fromEntity(new UploadEntity(media.mediaId, uploadUrl)),
     );
   }
 }

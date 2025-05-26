@@ -1,5 +1,5 @@
 import type { IResponse } from "../../../app/interfaces/IResponse";
-import type { NeighborhoodModel } from "../../../common/models/NeighborhoodModel";
+import type { NeighborhoodEntity } from "../../../common/entities/NeighborhoodEntity";
 
 export class NeighborhoodsResponse implements IResponse {
   private constructor(
@@ -9,16 +9,16 @@ export class NeighborhoodsResponse implements IResponse {
     public readonly postalCode: string,
   ) {}
 
-  public static fromModel(model: NeighborhoodModel): NeighborhoodsResponse {
+  public static fromEntity(entity: NeighborhoodEntity): NeighborhoodsResponse {
     return new NeighborhoodsResponse(
-      model.neighborhoodId,
-      model.districtId,
-      model.name,
-      model.postalCode,
+      entity.model.neighborhoodId,
+      entity.model.districtId,
+      entity.model.name,
+      entity.model.postalCode,
     );
   }
 
-  public static fromModels(models: NeighborhoodModel[]): NeighborhoodsResponse[] {
-    return models.map((model: NeighborhoodModel) => NeighborhoodsResponse.fromModel(model));
+  public static fromEntities(entities: NeighborhoodEntity[]): NeighborhoodsResponse[] {
+    return entities.map((entity) => this.fromEntity(entity));
   }
 }

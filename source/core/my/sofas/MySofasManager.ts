@@ -4,6 +4,7 @@ import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
+import { SofaEntity } from "../../../common/entities/SofaEntity";
 import { MediaHelper } from "../../../common/helpers/MediaHelper";
 import { ItemMediaRules } from "../../../common/rules/ItemMediaRules";
 import { MySofasProvider } from "./MySofasProvider";
@@ -16,13 +17,19 @@ export class MySofasManager implements IManager {
 
   public async getMySofas(payload: TokenPayload): Promise<ManagerResponse<MySofasResponse[]>> {
     const sofas = await this.provider.getMyActiveSofas(payload.accountId);
-    const responses: MySofasResponse[] = [];
-    for (const mySofa of sofas) {
-      const medias = await this.provider.getItemMedias(mySofa.itemId);
-      const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
-      responses.push(MySofasResponse.fromModel(mySofa, mediaDatas));
-    }
-    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
+    const entities = await Promise.all(
+      sofas.map(async (mySofa) => {
+        const medias = await this.provider.getItemMedias(mySofa.itemId);
+        const mediaEntities = await MediaHelper.mediasToEntities(medias);
+        return new SofaEntity(mySofa, mediaEntities);
+      }),
+    );
+    return ResponseUtil.managerResponse(
+      new HttpStatus(HttpStatusCode.OK),
+      null,
+      [],
+      MySofasResponse.fromEntities(entities),
+    );
   }
 
   public async postMySofas(
@@ -47,12 +54,12 @@ export class MySofasManager implements IManager {
       request.sofaType,
       request.sofaMaterial,
     );
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MySofasResponse.fromModel(sofa, mediaDatas),
+      MySofasResponse.fromEntity(new SofaEntity(sofa, mediaEntities)),
     );
   }
 
@@ -70,12 +77,12 @@ export class MySofasManager implements IManager {
       );
     }
     const medias = await this.provider.getItemMedias(sofa.itemId);
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MySofasResponse.fromModel(sofa, mediaDatas),
+      MySofasResponse.fromEntity(new SofaEntity(sofa, mediaEntities)),
     );
   }
 
@@ -114,12 +121,12 @@ export class MySofasManager implements IManager {
       request.sofaType,
       request.sofaMaterial,
     );
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MySofasResponse.fromModel(updatedSofa, mediaDatas),
+      MySofasResponse.fromEntity(new SofaEntity(updatedSofa, mediaEntities)),
     );
   }
 

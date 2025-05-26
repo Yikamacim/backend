@@ -12,7 +12,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { EnvironmentHelper } from "../../../app/helpers/EnvironmentHelper";
 import { LogHelper } from "../../../app/helpers/LogHelper";
 import type { IHandler } from "../../../app/interfaces/IHandler";
-import type { MediaType } from "../../../common/enums/MediaType";
+import type { EMediaType } from "../../../common/enums/EMediaType";
 import { BucketConstants } from "../app/constants/BucketConstants";
 import { ContentUtil } from "../app/utils/ContentUtil";
 
@@ -32,7 +32,7 @@ export class BucketHandler implements IHandler {
     });
   }
 
-  public async getUploadUrl(name: string, mediaType: MediaType): Promise<PresignedPost> {
+  public async getUploadUrl(name: string, mediaType: EMediaType): Promise<PresignedPost> {
     return await createPresignedPost(this.s3Client, {
       Bucket: this.bucketName,
       Key: name,

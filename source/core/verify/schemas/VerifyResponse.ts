@@ -1,29 +1,29 @@
 import type { IResponse } from "../../../app/interfaces/IResponse";
-import type { AccountType } from "../../../common/enums/AccountType";
-import type { AccountModel } from "../../../common/models/AccountModel";
+import type { AccountEntity } from "../../../common/entities/AccountEntity";
+import type { EAccountType } from "../../../common/enums/EAccountType";
 
 export class VerifyResponse implements IResponse {
-  public constructor(
+  private constructor(
     public readonly accountId: number,
     public readonly phone: string,
     public readonly name: string,
     public readonly surname: string,
-    public readonly accountType: AccountType,
+    public readonly accountType: EAccountType,
     public readonly isVerified: boolean,
   ) {}
 
-  public static fromModel(model: AccountModel): VerifyResponse {
+  public static fromEntity(entity: AccountEntity): VerifyResponse {
     return new VerifyResponse(
-      model.accountId,
-      model.phone,
-      model.name,
-      model.surname,
-      model.accountType,
-      model.isVerified,
+      entity.model.accountId,
+      entity.model.phone,
+      entity.model.name,
+      entity.model.surname,
+      entity.model.accountType,
+      entity.model.isVerified,
     );
   }
 
-  public static fromModels(models: AccountModel[]): VerifyResponse[] {
-    return models.map((model: AccountModel) => VerifyResponse.fromModel(model));
+  public static fromEntities(entities: AccountEntity[]): VerifyResponse[] {
+    return entities.map((entity) => this.fromEntity(entity));
   }
 }

@@ -1,6 +1,5 @@
 import type { IncomingHttpHeaders } from "http";
 import type { ParserResponse } from "../../@types/responses";
-import type { Token } from "../../@types/tokens";
 import type { ExpressRequest } from "../../@types/wrappers";
 import { AuthValidator } from "../../common/validators/AuthValidator";
 import type { IUtil } from "../interfaces/IUtil";
@@ -9,7 +8,7 @@ import { ProtoUtil } from "./ProtoUtil";
 import { ResponseUtil } from "./ResponseUtil";
 
 export class HeadersUtil implements IUtil {
-  public static parseToken(req: ExpressRequest): ParserResponse<Token | null> {
+  public static parseToken(req: ExpressRequest): ParserResponse<string | null> {
     const preliminaryData: unknown = req.headers;
     // >----------< EXISTENCE VALIDATION >----------<
     if (!ProtoUtil.isProtovalid(preliminaryData)) {
@@ -24,7 +23,7 @@ export class HeadersUtil implements IUtil {
     // >----------< PHYSICAL VALIDATION >----------<
     const clientErrors: ClientError[] = [];
     AuthValidator.validate(blueprintData, clientErrors);
-    const validatedData: Token = blueprintData.split(" ")[1]!;
+    const validatedData = blueprintData.split(" ")[1]!;
     // >----------< RETURN >----------<
     return ResponseUtil.parserResponse(clientErrors, validatedData);
   }

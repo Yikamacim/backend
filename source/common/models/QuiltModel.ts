@@ -1,15 +1,15 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { QuiltMaterial } from "../enums/QuiltMaterial";
-import { QuiltSize } from "../enums/QuiltSize";
+import { EQuiltMaterial } from "../enums/EQuiltMaterial";
+import { EQuiltSize } from "../enums/EQuiltSize";
 
 export class QuiltModel implements IModel {
   protected constructor(
     public readonly quiltId: number,
     public readonly itemId: number,
-    public readonly quiltSize: QuiltSize | null,
-    public readonly quiltMaterial: QuiltMaterial | null,
+    public readonly quiltSize: EQuiltSize | null,
+    public readonly quiltMaterial: EQuiltMaterial | null,
   ) {}
 
   public static fromRecord(record: unknown): QuiltModel {
@@ -34,8 +34,8 @@ export class QuiltModel implements IModel {
     return (
       typeof model.quiltId === "number" &&
       typeof model.itemId === "number" &&
-      (model.quiltSize === null || Object.values(QuiltSize).includes(model.quiltSize)) &&
-      (model.quiltMaterial === null || Object.values(QuiltMaterial).includes(model.quiltMaterial))
+      (model.quiltSize === null || Object.values(EQuiltSize).includes(model.quiltSize)) &&
+      (model.quiltMaterial === null || Object.values(EQuiltMaterial).includes(model.quiltMaterial))
     );
   }
 

@@ -1,6 +1,6 @@
 import type { IResponse } from "../../../app/interfaces/IResponse";
-import type { AccountType } from "../../../common/enums/AccountType";
-import type { AccountModel } from "../../../common/models/AccountModel";
+import type { AccountEntity } from "../../../common/entities/AccountEntity";
+import type { EAccountType } from "../../../common/enums/EAccountType";
 
 export class LoginResponse implements IResponse {
   public constructor(
@@ -8,22 +8,22 @@ export class LoginResponse implements IResponse {
     public readonly phone: string,
     public readonly name: string,
     public readonly surname: string,
-    public readonly accountType: AccountType,
+    public readonly accountType: EAccountType,
     public readonly isVerified: boolean,
   ) {}
 
-  public static fromModel(model: AccountModel): LoginResponse {
+  public static fromEntity(entity: AccountEntity): LoginResponse {
     return new LoginResponse(
-      model.accountId,
-      model.phone,
-      model.name,
-      model.surname,
-      model.accountType,
-      model.isVerified,
+      entity.model.accountId,
+      entity.model.phone,
+      entity.model.name,
+      entity.model.surname,
+      entity.model.accountType,
+      entity.model.isVerified,
     );
   }
 
-  public static fromModels(models: AccountModel[]): LoginResponse[] {
-    return models.map((model: AccountModel) => LoginResponse.fromModel(model));
+  public static fromEntities(entities: AccountEntity[]): LoginResponse[] {
+    return entities.map((entity) => this.fromEntity(entity));
   }
 }

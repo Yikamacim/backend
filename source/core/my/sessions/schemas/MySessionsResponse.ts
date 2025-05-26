@@ -1,5 +1,5 @@
 import type { IResponse } from "../../../../app/interfaces/IResponse";
-import type { SessionModel } from "../../../../common/models/SessionModel";
+import type { SessionEntity } from "../../../../common/entities/SessionEntity";
 
 export class MySessionsResponse implements IResponse {
   private constructor(
@@ -9,18 +9,16 @@ export class MySessionsResponse implements IResponse {
     public readonly isCurrent: boolean,
   ) {}
 
-  public static fromModel(model: SessionModel, currentSessionId: number): MySessionsResponse {
+  public static fromEntity(entity: SessionEntity): MySessionsResponse {
     return new MySessionsResponse(
-      model.sessionId,
-      model.deviceName,
-      model.lastActivityDate,
-      model.sessionId === currentSessionId,
+      entity.model.sessionId,
+      entity.model.deviceName,
+      entity.model.lastActivityDate,
+      entity.isCurrent,
     );
   }
 
-  public static fromModels(models: SessionModel[], currentSessionId: number): MySessionsResponse[] {
-    return models.map((model: SessionModel) =>
-      MySessionsResponse.fromModel(model, currentSessionId),
-    );
+  public static fromEntities(entities: SessionEntity[]): MySessionsResponse[] {
+    return entities.map((entity) => MySessionsResponse.fromEntity(entity));
   }
 }

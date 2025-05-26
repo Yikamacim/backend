@@ -1,9 +1,10 @@
-import type { MediaData } from "../../../@types/medias";
 import type { ManagerResponse } from "../../../@types/responses";
 import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
+import type { MediaEntity } from "../../../common/entities/MediaEntity";
+import { ServiceEntity } from "../../../common/entities/ServiceEntity";
 import { MediaHelper } from "../../../common/helpers/MediaHelper";
 import { BusinessesServicesProvider } from "./BusinessesServicesProvider";
 import type { BusinessesServicesParams } from "./schemas/BusinessesServicesParams";
@@ -25,9 +26,9 @@ export class BusinessesServicesManager implements IManager {
       );
     }
     const services = await this.provider.getActiveServices(business.businessId);
-    const responses: BusinessesServicesResponse[] = [];
+    const entities: ServiceEntity[] = [];
     for (const service of services) {
-      let mediaData: MediaData | null = null;
+      let mediaEntity: MediaEntity | null = null;
       if (service.mediaId !== null) {
         const media = await this.provider.getMedia(service.mediaId);
         if (media === null) {
@@ -38,10 +39,15 @@ export class BusinessesServicesManager implements IManager {
             null,
           );
         }
-        mediaData = await MediaHelper.mediaToMediaData(media);
+        mediaEntity = await MediaHelper.mediaToEntity(media);
       }
-      responses.push(BusinessesServicesResponse.fromModel(service, mediaData));
+      entities.push(new ServiceEntity(service, mediaEntity));
     }
-    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
+    return ResponseUtil.managerResponse(
+      new HttpStatus(HttpStatusCode.OK),
+      null,
+      [],
+      BusinessesServicesResponse.fromEntities(entities),
+    );
   }
 }

@@ -1,0 +1,6 @@
+export enum EApprovalState {
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+  OBSOLETE = "OBSOLETE",
+}

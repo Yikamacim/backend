@@ -4,7 +4,8 @@ import type { IManager } from "../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
-import { AccountType } from "../../common/enums/AccountType";
+import { AccountEntity } from "../../common/entities/AccountEntity";
+import { EAccountType } from "../../common/enums/EAccountType";
 import { SignupProvider } from "./SignupProvider";
 import type { SignupRequest } from "./schemas/SignupRequest";
 import { SignupResponse } from "./schemas/SignupResponse";
@@ -13,7 +14,7 @@ export class SignupManager implements IManager {
   public constructor(private readonly provider = new SignupProvider()) {}
 
   public async postSignup(request: SignupRequest): Promise<ManagerResponse<SignupResponse | null>> {
-    if (request.accountType === AccountType.ADMIN) {
+    if (request.accountType === EAccountType.ADMIN) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.FORBIDDEN),
         null,
@@ -21,8 +22,7 @@ export class SignupManager implements IManager {
         null,
       );
     }
-    const account = await this.provider.getAccountByPhone(request.phone);
-    if (account !== null) {
+    if ((await this.provider.getAccountByPhone(request.phone)) !== null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -30,7 +30,7 @@ export class SignupManager implements IManager {
         null,
       );
     }
-    const myAccount = await this.provider.createAccount(
+    const account = await this.provider.createAccount(
       request.phone,
       await EncryptionHelper.encrypt(request.password),
       request.name,
@@ -41,7 +41,7 @@ export class SignupManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      SignupResponse.fromModel(myAccount),
+      SignupResponse.fromEntity(new AccountEntity(account)),
     );
   }
 }

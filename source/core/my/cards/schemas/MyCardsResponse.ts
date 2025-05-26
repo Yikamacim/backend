@@ -1,5 +1,5 @@
 import type { IResponse } from "../../../../app/interfaces/IResponse";
-import type { CardModel } from "../../../../common/models/CardModel";
+import type { CardEntity } from "../../../../common/entities/CardEntity";
 
 export class MyCardsResponse implements IResponse {
   private constructor(
@@ -13,20 +13,20 @@ export class MyCardsResponse implements IResponse {
     public readonly isDefault: boolean,
   ) {}
 
-  public static fromModel(model: CardModel): MyCardsResponse {
+  public static fromEntity(entity: CardEntity): MyCardsResponse {
     return new MyCardsResponse(
-      model.cardId,
-      model.name,
-      model.owner,
-      model.number,
-      model.expirationMonth,
-      model.expirationYear,
-      model.cvv,
-      model.isDefault,
+      entity.model.cardId,
+      entity.model.name,
+      entity.model.owner,
+      entity.model.number,
+      entity.model.expirationMonth,
+      entity.model.expirationYear,
+      entity.model.cvv,
+      entity.model.isDefault,
     );
   }
 
-  public static fromModels(models: CardModel[]): MyCardsResponse[] {
-    return models.map((model: CardModel) => MyCardsResponse.fromModel(model));
+  public static fromEntities(entities: CardEntity[]): MyCardsResponse[] {
+    return entities.map((entity) => MyCardsResponse.fromEntity(entity));
   }
 }

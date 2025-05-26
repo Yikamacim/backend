@@ -1,29 +1,35 @@
-import type { MediaData } from "../../../../../@types/medias";
 import type { IResponse } from "../../../../../app/interfaces/IResponse";
-import type { ServiceCategory } from "../../../../../common/enums/ServiceCategory";
-import type { ServiceModel } from "../../../../../common/models/ServiceModel";
+import type { ServiceEntity } from "../../../../../common/entities/ServiceEntity";
+import type { EMediaType } from "../../../../../common/enums/EMediaType";
+import type { EServiceCategory } from "../../../../../common/enums/EServiceCategory";
 
 export class MyBusinessServicesResponse implements IResponse {
   private constructor(
     public readonly serviceId: number,
     public readonly title: string,
-    public readonly media: MediaData | null,
-    public readonly serviceCategory: ServiceCategory,
+    public readonly media: {
+      readonly mediaId: number;
+      readonly mediaType: EMediaType;
+      readonly extension: string;
+      readonly url: string;
+    } | null,
+    public readonly serviceCategory: EServiceCategory,
     public readonly description: string,
     public readonly unitPrice: number,
   ) {}
 
-  public static fromModel(
-    model: ServiceModel,
-    media: MediaData | null,
-  ): MyBusinessServicesResponse {
+  public static fromEntity(entity: ServiceEntity): MyBusinessServicesResponse {
     return new MyBusinessServicesResponse(
-      model.serviceId,
-      model.title,
-      media,
-      model.serviceCategory,
-      model.description,
-      model.unitPrice,
+      entity.model.serviceId,
+      entity.model.title,
+      entity.media,
+      entity.model.serviceCategory,
+      entity.model.description,
+      entity.model.unitPrice,
     );
+  }
+
+  public static fromEntities(entities: ServiceEntity[]): MyBusinessServicesResponse[] {
+    return entities.map((entity) => this.fromEntity(entity));
   }
 }

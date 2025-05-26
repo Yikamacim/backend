@@ -3,6 +3,7 @@ import type { IManager } from "../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import { AccountEntity } from "../../common/entities/AccountEntity";
 import { AccountsProvider } from "./AccountsProvider";
 import type { AccountsParams } from "./schemas/AccountsParams";
 import { AccountsResponse } from "./schemas/AccountsResponse";
@@ -26,7 +27,7 @@ export class AccountsManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      AccountsResponse.fromModel(account),
+      AccountsResponse.fromEntity(new AccountEntity(account)),
     );
   }
 }

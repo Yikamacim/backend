@@ -1,4 +1,4 @@
-import type { MediaType } from "../../common/enums/MediaType";
+import type { EMediaType } from "../../common/enums/EMediaType";
 import type { IResponse } from "../interfaces/IResponse";
 
 export class ServerError implements IResponse {
@@ -62,7 +62,7 @@ export class CorruptedRouteInfoError extends Error {
 }
 
 export class UnexpectedMediaTypeError extends Error {
-  public constructor(public readonly mediaType: MediaType) {
+  public constructor(public readonly mediaType: EMediaType) {
     super(`Media type "${mediaType}" is not expected. Contact with the developers.`);
     this.name = "UnexpectedMediaTypeError";
   }

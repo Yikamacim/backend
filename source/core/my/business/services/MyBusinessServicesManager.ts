@@ -1,10 +1,11 @@
-import type { MediaData } from "../../../../@types/medias";
 import type { ManagerResponse } from "../../../../@types/responses";
 import type { TokenPayload } from "../../../../@types/tokens";
 import type { IManager } from "../../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
+import type { MediaEntity } from "../../../../common/entities/MediaEntity";
+import { ServiceEntity } from "../../../../common/entities/ServiceEntity";
 import { MediaHelper } from "../../../../common/helpers/MediaHelper";
 import { ServiceMediaRules } from "../../../../common/rules/ServiceMediaRules";
 import { MyBusinessServicesProvider } from "./MyBusinessServicesProvider";
@@ -28,9 +29,9 @@ export class MyBusinessServicesManager implements IManager {
       );
     }
     const services = await this.provider.getActiveServices(business.businessId);
-    const responses: MyBusinessServicesResponse[] = [];
+    const entities: ServiceEntity[] = [];
     for (const service of services) {
-      let mediaData: MediaData | null = null;
+      let mediaEntity: MediaEntity | null = null;
       if (service.mediaId !== null) {
         const media = await this.provider.getMedia(service.mediaId);
         if (media === null) {
@@ -41,11 +42,16 @@ export class MyBusinessServicesManager implements IManager {
             null,
           );
         }
-        mediaData = await MediaHelper.mediaToMediaData(media);
+        mediaEntity = await MediaHelper.mediaToEntity(media);
       }
-      responses.push(MyBusinessServicesResponse.fromModel(service, mediaData));
+      entities.push(new ServiceEntity(service, mediaEntity));
     }
-    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
+    return ResponseUtil.managerResponse(
+      new HttpStatus(HttpStatusCode.OK),
+      null,
+      [],
+      MyBusinessServicesResponse.fromEntities(entities),
+    );
   }
 
   public async postMyBusinessServices(
@@ -69,7 +75,7 @@ export class MyBusinessServicesManager implements IManager {
         null,
       );
     }
-    let mediaData: MediaData | null = null;
+    let mediaEntity: MediaEntity | null = null;
     if (request.mediaId !== null) {
       const findMediaResult = await MediaHelper.findMyMedia(payload.accountId, request.mediaId);
       if (findMediaResult.isLeft()) {
@@ -80,7 +86,7 @@ export class MyBusinessServicesManager implements IManager {
       if (checkMediaResult.isLeft()) {
         return checkMediaResult.get();
       }
-      mediaData = await MediaHelper.mediaToMediaData(media);
+      mediaEntity = await MediaHelper.mediaToEntity(media);
     }
     const service = await this.provider.createService(
       business.businessId,
@@ -94,7 +100,7 @@ export class MyBusinessServicesManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyBusinessServicesResponse.fromModel(service, mediaData),
+      MyBusinessServicesResponse.fromEntity(new ServiceEntity(service, mediaEntity)),
     );
   }
 
@@ -120,7 +126,7 @@ export class MyBusinessServicesManager implements IManager {
         null,
       );
     }
-    let mediaData: MediaData | null = null;
+    let mediaEntity: MediaEntity | null = null;
     if (service.mediaId !== null) {
       const media = await this.provider.getMedia(service.mediaId);
       if (media === null) {
@@ -131,13 +137,13 @@ export class MyBusinessServicesManager implements IManager {
           null,
         );
       }
-      mediaData = await MediaHelper.mediaToMediaData(media);
+      mediaEntity = await MediaHelper.mediaToEntity(media);
     }
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBusinessServicesResponse.fromModel(service, mediaData),
+      MyBusinessServicesResponse.fromEntity(new ServiceEntity(service, mediaEntity)),
     );
   }
 
@@ -172,7 +178,15 @@ export class MyBusinessServicesManager implements IManager {
         null,
       );
     }
-    let mediaData: MediaData | null = null;
+    if (request.serviceCategory !== service.serviceCategory) {
+      return ResponseUtil.managerResponse(
+        new HttpStatus(HttpStatusCode.BAD_REQUEST),
+        null,
+        [new ClientError(ClientErrorCode.SERVICE_CATEGORY_CANT_BE_CHANGED)],
+        null,
+      );
+    }
+    let mediaEntity: MediaEntity | null = null;
     if (request.mediaId !== null) {
       if (request.mediaId !== service.mediaId) {
         const mediaResult = await MediaHelper.findMyMedia(payload.accountId, request.mediaId);
@@ -187,7 +201,7 @@ export class MyBusinessServicesManager implements IManager {
         if (checkMediaResult.isLeft()) {
           return checkMediaResult.get();
         }
-        mediaData = await MediaHelper.mediaToMediaData(media);
+        mediaEntity = await MediaHelper.mediaToEntity(media);
       } else {
         const media = await this.provider.getMedia(service.mediaId);
         if (media === null) {
@@ -198,7 +212,7 @@ export class MyBusinessServicesManager implements IManager {
             null,
           );
         }
-        mediaData = await MediaHelper.mediaToMediaData(media);
+        mediaEntity = await MediaHelper.mediaToEntity(media);
       }
     }
     const updatedService = await this.provider.updateService(
@@ -213,7 +227,7 @@ export class MyBusinessServicesManager implements IManager {
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyBusinessServicesResponse.fromModel(updatedService, mediaData),
+      MyBusinessServicesResponse.fromEntity(new ServiceEntity(updatedService, mediaEntity)),
     );
   }
 

@@ -1,24 +1,33 @@
-import type { MediaData } from "../../../../@types/medias";
 import type { IResponse } from "../../../../app/interfaces/IResponse";
-import type { BedSize } from "../../../../common/enums/BedSize";
-import type { BedViewModel } from "../../../../common/models/BedViewModel";
+import type { BedEntity } from "../../../../common/entities/BedEntity";
+import type { EBedSize } from "../../../../common/enums/EBedSize";
+import type { EMediaType } from "../../../../common/enums/EMediaType";
 
 export class MyBedsResponse implements IResponse {
   private constructor(
     public readonly bedId: number,
     public readonly name: string,
     public readonly description: string,
-    public readonly medias: MediaData[],
-    public readonly bedSize: BedSize | null,
+    public readonly medias: {
+      readonly mediaId: number;
+      readonly mediaType: EMediaType;
+      readonly extension: string;
+      readonly url: string;
+    }[],
+    public readonly bedSize: EBedSize | null,
   ) {}
 
-  public static fromModel(model: BedViewModel, mediaDatas: MediaData[]): MyBedsResponse {
+  public static fromEntity(entity: BedEntity): MyBedsResponse {
     return new MyBedsResponse(
-      model.bedId,
-      model.name,
-      model.description,
-      mediaDatas,
-      model.bedSize,
+      entity.model.bedId,
+      entity.model.name,
+      entity.model.description,
+      entity.medias,
+      entity.model.bedSize,
     );
+  }
+
+  public static fromEntities(entities: BedEntity[]): MyBedsResponse[] {
+    return entities.map((entity) => this.fromEntity(entity));
   }
 }

@@ -200,16 +200,17 @@ export enum ClientErrorCode {
   INVALID_MEDIA_ID = 82100,
   BUSINESS_MEDIA_NOT_FOUND = 82101,
   //  *  *  822XX: /my/business/areas errors
-  BUSINESS_AREA_ALREADY_EXISTS = 82200,
+  AREA_ALREADY_EXISTS = 82200,
   // *  *  823XX: /my/business/approval errors
-  BUSINESS_APPROVAL_NOT_FOUND = 82300,
-  BUSINESS_APPROVAL_ALREADY_APPROVED = 82301,
-  BUSINESS_APPROVAL_ALREADY_PENDING = 82302,
+  APPROVAL_NOT_FOUND = 82300,
+  APPROVAL_ALREADY_APPROVED = 82301,
+  APPROVAL_ALREADY_PENDING = 82302,
   //  *  *  824XX: /admin/approvals errors
   INVALID_BUSINESS_ID = 82400,
   // *  *  825XX: /my/business/services errors
   INVALID_SERVICE_ID = 82500,
   SERVICE_NOT_FOUND = 82501,
+  SERVICE_CATEGORY_CANT_BE_CHANGED = 82502,
   //  *  *  826XX: /my/business/open errors
   BUSINESS_ALREADY_OPEN = 82600,
   BUSINESS_DOESNT_HAVE_APPROVAL = 82601,
@@ -426,17 +427,18 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_MEDIA_ID]: "Provided media id was invalid.",
   [ClientErrorCode.BUSINESS_MEDIA_NOT_FOUND]: "Business doesn't have a media with the provided id.",
   //  *  *  822XX: /my/business/areas errors
-  [ClientErrorCode.BUSINESS_AREA_ALREADY_EXISTS]:
-    "Business already has an area with the provided id.",
+  [ClientErrorCode.AREA_ALREADY_EXISTS]: "Business already has an area with the provided id.",
   // *  *  823XX: /my/business/approval errors
-  [ClientErrorCode.BUSINESS_APPROVAL_NOT_FOUND]: "Business doesn't have an approval.",
-  [ClientErrorCode.BUSINESS_APPROVAL_ALREADY_APPROVED]: "Business approval is already approved.",
-  [ClientErrorCode.BUSINESS_APPROVAL_ALREADY_PENDING]: "Business approval is already pending.",
+  [ClientErrorCode.APPROVAL_NOT_FOUND]: "Business doesn't have an approval.",
+  [ClientErrorCode.APPROVAL_ALREADY_APPROVED]: "Business approval is already approved.",
+  [ClientErrorCode.APPROVAL_ALREADY_PENDING]: "Business approval is already pending.",
   //  *  *  824XX: /admin/approvals errors
   [ClientErrorCode.INVALID_BUSINESS_ID]: "Provided business id was invalid.",
   // *  *  825XX: /my/business/services errors
   [ClientErrorCode.INVALID_SERVICE_ID]: "Provided service id was invalid.",
   [ClientErrorCode.SERVICE_NOT_FOUND]: "Account doesn't have a service with the provided id.",
+  [ClientErrorCode.SERVICE_CATEGORY_CANT_BE_CHANGED]:
+    "Service category can't be changed after creation.",
   //  *  *  826XX: /my/business/open errors
   [ClientErrorCode.BUSINESS_ALREADY_OPEN]: "Business is already open.",
   [ClientErrorCode.BUSINESS_DOESNT_HAVE_APPROVAL]: "Business doesn't have an approval.",

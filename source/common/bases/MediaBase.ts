@@ -1,12 +1,12 @@
 import type { IBase } from "../../app/interfaces/IBase";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { MediaType } from "../enums/MediaType";
+import { EMediaType } from "../enums/EMediaType";
 
 export class MediaBase implements IBase {
   protected constructor(
     public readonly mediaId: number,
-    public readonly mediaType: MediaType,
+    public readonly mediaType: EMediaType,
     public readonly extension: string,
   ) {}
 
@@ -31,7 +31,7 @@ export class MediaBase implements IBase {
     const model = data as MediaBase;
     return (
       typeof model.mediaId === "number" &&
-      Object.values(MediaType).includes(model.mediaType) &&
+      Object.values(EMediaType).includes(model.mediaType) &&
       typeof model.extension === "string"
     );
   }

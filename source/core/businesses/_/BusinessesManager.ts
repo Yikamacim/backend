@@ -1,14 +1,12 @@
-import type { TodayHours } from "../../../@types/hours";
-import type { MediaData } from "../../../@types/medias";
 import type { ManagerResponse } from "../../../@types/responses";
 import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
-import { UnexpectedWeekdayError } from "../../../app/schemas/ServerError";
-import { DateUtil } from "../../../app/utils/DateUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
+import { BusinessEntity } from "../../../common/entities/BusinessEntity";
+import type { MediaEntity } from "../../../common/entities/MediaEntity";
+import { HoursHelper } from "../../../common/helpers/HoursHelper";
 import { MediaHelper } from "../../../common/helpers/MediaHelper";
-import type { HoursModel } from "../../../common/models/HoursModel";
 import { BusinessesProvider } from "./BusinessesProvider";
 import type { BusinessesParams } from "./schemas/BusinessesParams";
 import { BusinessesResponse } from "./schemas/BusinessesResponse";
@@ -28,7 +26,7 @@ export class BusinessesManager implements IManager {
         null,
       );
     }
-    let mediaData: MediaData | null = null;
+    let mediaEntity: MediaEntity | null = null;
     if (business.mediaId !== null) {
       const media = await this.provider.getBusinessMedia(business.businessId, business.mediaId);
       if (media === null) {
@@ -39,65 +37,27 @@ export class BusinessesManager implements IManager {
           null,
         );
       }
-      mediaData = await MediaHelper.mediaToMediaData(media);
+      mediaEntity = await MediaHelper.mediaToEntity(media);
     }
     const allServiceCategories = (await this.provider.getActiveServices(business.businessId)).map(
       (service) => service.serviceCategory,
     );
     const serviceCategories = [...new Set(allServiceCategories)];
-    let todayHours: TodayHours | null = null;
+    let hoursToday: {
+      readonly from: string | null;
+      readonly to: string | null;
+    } | null = null;
     const hours = await this.provider.getHours(business.businessId);
     if (hours !== null) {
-      todayHours = BusinessesManager.getTodayHours(hours);
+      hoursToday = HoursHelper.getTodayHours(hours);
     }
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      BusinessesResponse.fromModel(business, mediaData, serviceCategories, todayHours),
+      BusinessesResponse.fromEntity(
+        new BusinessEntity(business, mediaEntity, serviceCategories, hoursToday),
+      ),
     );
-  }
-
-  private static getTodayHours(hours: HoursModel): TodayHours {
-    const weekday = DateUtil.getWeekday(new Date());
-    switch (weekday) {
-      case "Monday":
-        return {
-          todayFrom: hours.mondayFrom,
-          todayTo: hours.mondayTo,
-        };
-      case "Tuesday":
-        return {
-          todayFrom: hours.tuesdayFrom,
-          todayTo: hours.tuesdayTo,
-        };
-      case "Wednesday":
-        return {
-          todayFrom: hours.wednesdayFrom,
-          todayTo: hours.wednesdayTo,
-        };
-      case "Thursday":
-        return {
-          todayFrom: hours.thursdayFrom,
-          todayTo: hours.thursdayTo,
-        };
-      case "Friday":
-        return {
-          todayFrom: hours.fridayFrom,
-          todayTo: hours.fridayTo,
-        };
-      case "Saturday":
-        return {
-          todayFrom: hours.saturdayFrom,
-          todayTo: hours.saturdayTo,
-        };
-      case "Sunday":
-        return {
-          todayFrom: hours.sundayFrom,
-          todayTo: hours.sundayTo,
-        };
-      default:
-        throw new UnexpectedWeekdayError(weekday);
-    }
   }
 }

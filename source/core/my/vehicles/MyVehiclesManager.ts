@@ -4,6 +4,7 @@ import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
+import { VehicleEntity } from "../../../common/entities/VehicleEntity";
 import { MediaHelper } from "../../../common/helpers/MediaHelper";
 import { ItemMediaRules } from "../../../common/rules/ItemMediaRules";
 import { MyVehiclesProvider } from "./MyVehiclesProvider";
@@ -18,13 +19,19 @@ export class MyVehiclesManager implements IManager {
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyVehiclesResponse[]>> {
     const vehicles = await this.provider.getMyActiveVehicles(payload.accountId);
-    const responses: MyVehiclesResponse[] = [];
-    for (const myVehicle of vehicles) {
-      const medias = await this.provider.getItemMedias(myVehicle.itemId);
-      const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
-      responses.push(MyVehiclesResponse.fromModel(myVehicle, mediaDatas));
-    }
-    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
+    const entities = await Promise.all(
+      vehicles.map(async (myVehicle) => {
+        const medias = await this.provider.getItemMedias(myVehicle.itemId);
+        const mediaEntities = await MediaHelper.mediasToEntities(medias);
+        return new VehicleEntity(myVehicle, mediaEntities);
+      }),
+    );
+    return ResponseUtil.managerResponse(
+      new HttpStatus(HttpStatusCode.OK),
+      null,
+      [],
+      MyVehiclesResponse.fromEntities(entities),
+    );
   }
 
   public async postMyVehicles(
@@ -49,12 +56,12 @@ export class MyVehiclesManager implements IManager {
       request.model,
       request.vehicleType,
     );
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyVehiclesResponse.fromModel(vehicle, mediaDatas),
+      MyVehiclesResponse.fromEntity(new VehicleEntity(vehicle, mediaEntities)),
     );
   }
 
@@ -75,12 +82,12 @@ export class MyVehiclesManager implements IManager {
       );
     }
     const medias = await this.provider.getItemMedias(vehicle.itemId);
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyVehiclesResponse.fromModel(vehicle, mediaDatas),
+      MyVehiclesResponse.fromEntity(new VehicleEntity(vehicle, mediaEntities)),
     );
   }
 
@@ -122,12 +129,12 @@ export class MyVehiclesManager implements IManager {
       request.model,
       request.vehicleType,
     );
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyVehiclesResponse.fromModel(updatedVehicle, mediaDatas),
+      MyVehiclesResponse.fromEntity(new VehicleEntity(updatedVehicle, mediaEntities)),
     );
   }
 

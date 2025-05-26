@@ -4,7 +4,7 @@ import type { IProvider } from "../../../app/interfaces/IProvider";
 import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import type { BedSize } from "../../../common/enums/BedSize";
+import type { EBedSize } from "../../../common/enums/EBedSize";
 import { BedModel } from "../../../common/models/BedModel";
 import { BedViewModel } from "../../../common/models/BedViewModel";
 import { ItemMediaProvider } from "../../../common/providers/ItemMediaProvider";
@@ -79,7 +79,7 @@ export class MyBedsProvider implements IProvider {
     name: string,
     description: string,
     mediaIds: number[],
-    bedSize: BedSize | null,
+    bedSize: EBedSize | null,
   ): Promise<ProviderResponse<BedViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
@@ -104,7 +104,7 @@ export class MyBedsProvider implements IProvider {
     name: string,
     description: string,
     mediaIds: number[],
-    bedSize: BedSize | null,
+    bedSize: EBedSize | null,
   ): Promise<ProviderResponse<BedViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
@@ -137,7 +137,7 @@ export class MyBedsProvider implements IProvider {
     return BedViewModel.fromRecord(record);
   }
 
-  private async partialCreateBed(itemId: number, bedSize: BedSize | null): Promise<BedModel> {
+  private async partialCreateBed(itemId: number, bedSize: EBedSize | null): Promise<BedModel> {
     const results = await DbConstants.POOL.query(BedQueries.INSERT_BED_RT_$ITID_$BDSZ, [
       itemId,
       bedSize,
@@ -146,7 +146,7 @@ export class MyBedsProvider implements IProvider {
     return BedModel.fromRecord(record);
   }
 
-  private async partialUpdateBed(bedId: number, bedSize: BedSize | null): Promise<BedModel> {
+  private async partialUpdateBed(bedId: number, bedSize: EBedSize | null): Promise<BedModel> {
     const results = await DbConstants.POOL.query(BedQueries.UPDATE_BED_RT_$BDID_$BDSZ, [
       bedId,
       bedSize,

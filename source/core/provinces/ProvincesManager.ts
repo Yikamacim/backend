@@ -3,6 +3,7 @@ import type { IManager } from "../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import { ProvinceEntity } from "../../common/entities/ProvinceEntity";
 import { ProvincesProvider } from "./ProvincesProvider";
 import type { ProvincesParams } from "./schemas/ProvincesParams";
 import type { ProvincesQueries } from "./schemas/ProvincesQueries";
@@ -15,11 +16,14 @@ export class ProvincesManager implements IManager {
     queries: ProvincesQueries,
   ): Promise<ManagerResponse<ProvincesResponse[]>> {
     const provinces = await this.provider.getProvincesByCountryId(parseInt(queries.countryId));
+    const entities = provinces.map((province) => {
+      return new ProvinceEntity(province);
+    });
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      ProvincesResponse.fromModels(provinces),
+      ProvincesResponse.fromEntities(entities),
     );
   }
 
@@ -39,7 +43,7 @@ export class ProvincesManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      ProvincesResponse.fromModel(province),
+      ProvincesResponse.fromEntity(new ProvinceEntity(province)),
     );
   }
 }

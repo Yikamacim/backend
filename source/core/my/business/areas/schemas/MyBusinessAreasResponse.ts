@@ -1,5 +1,5 @@
 import type { IResponse } from "../../../../../app/interfaces/IResponse";
-import type { BusinessAreaViewModel } from "../../../../../common/models/BusinessAreaViewModel";
+import type { AreaEntity } from "../../../../../common/entities/AreaEntity";
 
 export class MyBusinessAreasResponse implements IResponse {
   private constructor(
@@ -14,21 +14,21 @@ export class MyBusinessAreasResponse implements IResponse {
     public readonly area: string,
   ) {}
 
-  public static fromModel(model: BusinessAreaViewModel): MyBusinessAreasResponse {
+  public static fromEntity(entity: AreaEntity): MyBusinessAreasResponse {
     return new MyBusinessAreasResponse(
-      model.countryId,
-      model.countryName,
-      model.provinceId,
-      model.provinceName,
-      model.districtId,
-      model.districtName,
-      model.neighborhoodId,
-      model.neighborhoodName,
-      model.area,
+      entity.model.countryId,
+      entity.model.countryName,
+      entity.model.provinceId,
+      entity.model.provinceName,
+      entity.model.districtId,
+      entity.model.districtName,
+      entity.model.neighborhoodId,
+      entity.model.neighborhoodName,
+      entity.model.area,
     );
   }
 
-  public static fromModels(models: BusinessAreaViewModel[]): MyBusinessAreasResponse[] {
-    return models.map((model: BusinessAreaViewModel) => MyBusinessAreasResponse.fromModel(model));
+  public static fromEntities(entities: AreaEntity[]): MyBusinessAreasResponse[] {
+    return entities.map((entity: AreaEntity) => MyBusinessAreasResponse.fromEntity(entity));
   }
 }

@@ -1,15 +1,15 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { BlanketMaterial } from "../enums/BlanketMaterial";
-import { BlanketSize } from "../enums/BlanketSize";
+import { EBlanketMaterial } from "../enums/EBlanketMaterial";
+import { EBlanketSize } from "../enums/EBlanketSize";
 
 export class BlanketModel implements IModel {
   protected constructor(
     public readonly blanketId: number,
     public readonly itemId: number,
-    public readonly blanketSize: BlanketSize | null,
-    public readonly blanketMaterial: BlanketMaterial | null,
+    public readonly blanketSize: EBlanketSize | null,
+    public readonly blanketMaterial: EBlanketMaterial | null,
   ) {}
 
   public static fromRecord(record: unknown): BlanketModel {
@@ -39,9 +39,9 @@ export class BlanketModel implements IModel {
     return (
       typeof model.blanketId === "number" &&
       typeof model.itemId === "number" &&
-      (model.blanketSize === null || Object.values(BlanketSize).includes(model.blanketSize)) &&
+      (model.blanketSize === null || Object.values(EBlanketSize).includes(model.blanketSize)) &&
       (model.blanketMaterial === null ||
-        Object.values(BlanketMaterial).includes(model.blanketMaterial))
+        Object.values(EBlanketMaterial).includes(model.blanketMaterial))
     );
   }
 

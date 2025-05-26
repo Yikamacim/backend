@@ -4,8 +4,8 @@ import type { IProvider } from "../../../app/interfaces/IProvider";
 import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import type { BlanketMaterial } from "../../../common/enums/BlanketMaterial";
-import type { BlanketSize } from "../../../common/enums/BlanketSize";
+import type { EBlanketMaterial } from "../../../common/enums/EBlanketMaterial";
+import type { EBlanketSize } from "../../../common/enums/EBlanketSize";
 import { BlanketModel } from "../../../common/models/BlanketModel";
 import { BlanketViewModel } from "../../../common/models/BlanketViewModel";
 import { ItemMediaProvider } from "../../../common/providers/ItemMediaProvider";
@@ -81,8 +81,8 @@ export class MyBlanketsProvider implements IProvider {
     name: string,
     description: string,
     mediaIds: number[],
-    blanketSize: BlanketSize | null,
-    blanketMaterial: BlanketMaterial | null,
+    blanketSize: EBlanketSize | null,
+    blanketMaterial: EBlanketMaterial | null,
   ): Promise<ProviderResponse<BlanketViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
@@ -107,8 +107,8 @@ export class MyBlanketsProvider implements IProvider {
     name: string,
     description: string,
     mediaIds: number[],
-    blanketSize: BlanketSize | null,
-    blanketMaterial: BlanketMaterial | null,
+    blanketSize: EBlanketSize | null,
+    blanketMaterial: EBlanketMaterial | null,
   ): Promise<ProviderResponse<BlanketViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
@@ -143,8 +143,8 @@ export class MyBlanketsProvider implements IProvider {
 
   private async partialCreateBlanket(
     itemId: number,
-    blanketSize: BlanketSize | null,
-    blanketMaterial: BlanketMaterial | null,
+    blanketSize: EBlanketSize | null,
+    blanketMaterial: EBlanketMaterial | null,
   ): Promise<BlanketModel> {
     const results = await DbConstants.POOL.query(
       BlanketQueries.INSERT_BLANKET_RT_$ITID_$QLSZ_$QMAT,
@@ -156,8 +156,8 @@ export class MyBlanketsProvider implements IProvider {
 
   private async partialUpdateBlanket(
     blanketId: number,
-    blanketSize: BlanketSize | null,
-    blanketMaterial: BlanketMaterial | null,
+    blanketSize: EBlanketSize | null,
+    blanketMaterial: EBlanketMaterial | null,
   ): Promise<BlanketModel> {
     const results = await DbConstants.POOL.query(
       BlanketQueries.UPDATE_BLANKET_RT_$BLID_$BLSZ_$BMAT,

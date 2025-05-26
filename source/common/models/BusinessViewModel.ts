@@ -1,7 +1,7 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { ApprovalState } from "../enums/ApprovalState";
+import { EApprovalState } from "../enums/EApprovalState";
 
 export class BusinessViewModel implements IModel {
   protected constructor(
@@ -25,7 +25,7 @@ export class BusinessViewModel implements IModel {
     public readonly isOpen: boolean,
     public readonly stars: number | null,
     public readonly reviewsCount: number,
-    public readonly approvalState: ApprovalState | null,
+    public readonly approvalState: EApprovalState | null,
   ) {}
 
   public static fromRecord(record: unknown): BusinessViewModel {
@@ -90,7 +90,7 @@ export class BusinessViewModel implements IModel {
       typeof model.isOpen === "boolean" &&
       (model.stars === null || typeof model.stars === "number") &&
       typeof model.reviewsCount === "number" &&
-      (model.approvalState === null || Object.values(ApprovalState).includes(model.approvalState))
+      (model.approvalState === null || Object.values(EApprovalState).includes(model.approvalState))
     );
   }
 

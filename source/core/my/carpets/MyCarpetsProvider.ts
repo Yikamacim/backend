@@ -4,7 +4,7 @@ import type { IProvider } from "../../../app/interfaces/IProvider";
 import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
-import type { CarpetMaterial } from "../../../common/enums/CarpetMaterial";
+import type { ECarpetMaterial } from "../../../common/enums/ECarpetMaterial";
 import { CarpetModel } from "../../../common/models/CarpetModel";
 import { CarpetViewModel } from "../../../common/models/CarpetViewModel";
 import { ItemMediaProvider } from "../../../common/providers/ItemMediaProvider";
@@ -80,7 +80,7 @@ export class MyCarpetsProvider implements IProvider {
     mediaIds: number[],
     width: number | null,
     length: number | null,
-    carpetMaterial: CarpetMaterial | null,
+    carpetMaterial: ECarpetMaterial | null,
   ): Promise<ProviderResponse<CarpetViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
@@ -107,7 +107,7 @@ export class MyCarpetsProvider implements IProvider {
     mediaIds: number[],
     width: number | null,
     length: number | null,
-    carpetMaterial: CarpetMaterial | null,
+    carpetMaterial: ECarpetMaterial | null,
   ): Promise<ProviderResponse<CarpetViewModel>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
@@ -144,7 +144,7 @@ export class MyCarpetsProvider implements IProvider {
     itemId: number,
     width: number | null,
     length: number | null,
-    carpetMaterial: CarpetMaterial | null,
+    carpetMaterial: ECarpetMaterial | null,
   ): Promise<CarpetModel> {
     const results = await DbConstants.POOL.query(
       CarpetQueries.INSERT_CARPET_RT_$ITID_$WIDTH_$LENGTH_$CMAT,
@@ -158,7 +158,7 @@ export class MyCarpetsProvider implements IProvider {
     carpetId: number,
     width: number | null,
     length: number | null,
-    carpetMaterial: CarpetMaterial | null,
+    carpetMaterial: ECarpetMaterial | null,
   ): Promise<CarpetModel> {
     const results = await DbConstants.POOL.query(
       CarpetQueries.UPDATE_CARPET_RT_$CPID_$WIDTH_$LENGTH_$CMAT,

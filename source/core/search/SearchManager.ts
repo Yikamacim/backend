@@ -3,6 +3,7 @@ import type { IManager } from "../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import { SearchEntity } from "../../common/entities/SearchEntity";
 import { MediaHelper } from "../../common/helpers/MediaHelper";
 import type { SearchQueries } from "./schemas/SearchQueries";
 import { SearchResponse } from "./schemas/SearchResponse";
@@ -31,10 +32,10 @@ export class SearchManager implements IManager {
       seen.add(businessAndService.businessId);
       return true;
     });
-    const responses: SearchResponse[] = [];
+    const entities: SearchEntity[] = [];
     for (const business of businesses) {
       if (business.mediaId === null) {
-        responses.push(SearchResponse.fromModel(business, null));
+        entities.push(new SearchEntity(business, null));
         continue;
       }
       const media = await this.provider.getBusinessMedia(business.businessId, business.mediaId);
@@ -46,9 +47,14 @@ export class SearchManager implements IManager {
           null,
         );
       }
-      const mediaDatas = await MediaHelper.mediaToMediaData(media);
-      responses.push(SearchResponse.fromModel(business, mediaDatas));
+      const mediaEntity = await MediaHelper.mediaToEntity(media);
+      entities.push(new SearchEntity(business, mediaEntity));
     }
-    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
+    return ResponseUtil.managerResponse(
+      new HttpStatus(HttpStatusCode.OK),
+      null,
+      [],
+      SearchResponse.fromEntities(entities),
+    );
   }
 }

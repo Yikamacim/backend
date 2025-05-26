@@ -4,6 +4,7 @@ import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
+import { QuiltEntity } from "../../../common/entities/QuiltEntity";
 import { MediaHelper } from "../../../common/helpers/MediaHelper";
 import { ItemMediaRules } from "../../../common/rules/ItemMediaRules";
 import { MyQuiltsProvider } from "./MyQuiltsProvider";
@@ -16,13 +17,19 @@ export class MyQuiltsManager implements IManager {
 
   public async getMyQuilts(payload: TokenPayload): Promise<ManagerResponse<MyQuiltsResponse[]>> {
     const quilts = await this.provider.getMyActiveQuilts(payload.accountId);
-    const responses: MyQuiltsResponse[] = [];
-    for (const quilt of quilts) {
-      const medias = await this.provider.getItemMedias(quilt.itemId);
-      const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
-      responses.push(MyQuiltsResponse.fromModel(quilt, mediaDatas));
-    }
-    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
+    const entities = await Promise.all(
+      quilts.map(async (quilt) => {
+        const medias = await this.provider.getItemMedias(quilt.itemId);
+        const mediaEntities = await MediaHelper.mediasToEntities(medias);
+        return new QuiltEntity(quilt, mediaEntities);
+      }),
+    );
+    return ResponseUtil.managerResponse(
+      new HttpStatus(HttpStatusCode.OK),
+      null,
+      [],
+      MyQuiltsResponse.fromEntities(entities),
+    );
   }
 
   public async postMyQuilts(
@@ -46,12 +53,12 @@ export class MyQuiltsManager implements IManager {
       request.quiltSize,
       request.quiltMaterial,
     );
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyQuiltsResponse.fromModel(quilt, mediaDatas),
+      MyQuiltsResponse.fromEntity(new QuiltEntity(quilt, mediaEntities)),
     );
   }
 
@@ -69,12 +76,12 @@ export class MyQuiltsManager implements IManager {
       );
     }
     const medias = await this.provider.getItemMedias(quilt.itemId);
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyQuiltsResponse.fromModel(quilt, mediaDatas),
+      MyQuiltsResponse.fromEntity(new QuiltEntity(quilt, mediaEntities)),
     );
   }
 
@@ -112,12 +119,12 @@ export class MyQuiltsManager implements IManager {
       request.quiltSize,
       request.quiltMaterial,
     );
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyQuiltsResponse.fromModel(updatedQuilt, mediaDatas),
+      MyQuiltsResponse.fromEntity(new QuiltEntity(updatedQuilt, mediaEntities)),
     );
   }
 

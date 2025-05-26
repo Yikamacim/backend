@@ -4,8 +4,8 @@ import type { IRequest } from "../../../../app/interfaces/IRequest";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
-import { QuiltMaterial } from "../../../../common/enums/QuiltMaterial";
-import { QuiltSize } from "../../../../common/enums/QuiltSize";
+import { EQuiltMaterial } from "../../../../common/enums/EQuiltMaterial";
+import { EQuiltSize } from "../../../../common/enums/EQuiltSize";
 import { ItemDescriptionValidator } from "../../../../common/validators/ItemDescriptionValidator";
 import { ItemNameValidator } from "../../../../common/validators/ItemNameValidator";
 import { MediaIdsValidator } from "../../../../common/validators/MediaIdsValidator";
@@ -15,8 +15,8 @@ export class MyQuiltsRequest implements IRequest {
     public readonly name: string,
     public readonly description: string,
     public readonly mediaIds: number[],
-    public readonly quiltSize: QuiltSize | null,
-    public readonly quiltMaterial: QuiltMaterial | null,
+    public readonly quiltSize: EQuiltSize | null,
+    public readonly quiltMaterial: EQuiltMaterial | null,
   ) {}
 
   public static parse(req: ExpressRequest): ParserResponse<MyQuiltsRequest | null> {
@@ -51,9 +51,9 @@ export class MyQuiltsRequest implements IRequest {
       typeof blueprint.description === "string" &&
       Array.isArray(blueprint.mediaIds) &&
       blueprint.mediaIds.every((mediaId) => typeof mediaId === "number") &&
-      (blueprint.quiltSize === null || Object.values(QuiltSize).includes(blueprint.quiltSize)) &&
+      (blueprint.quiltSize === null || Object.values(EQuiltSize).includes(blueprint.quiltSize)) &&
       (blueprint.quiltMaterial === null ||
-        Object.values(QuiltMaterial).includes(blueprint.quiltMaterial))
+        Object.values(EQuiltMaterial).includes(blueprint.quiltMaterial))
     );
   }
 }

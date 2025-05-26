@@ -4,6 +4,7 @@ import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
+import { BedEntity } from "../../../common/entities/BedEntity";
 import { MediaHelper } from "../../../common/helpers/MediaHelper";
 import { ItemMediaRules } from "../../../common/rules/ItemMediaRules";
 import { MyBedsProvider } from "./MyBedsProvider";
@@ -16,13 +17,19 @@ export class MyBedsManager implements IManager {
 
   public async getMyBeds(payload: TokenPayload): Promise<ManagerResponse<MyBedsResponse[]>> {
     const beds = await this.provider.getMyActiveBeds(payload.accountId);
-    const responses: MyBedsResponse[] = [];
-    for (const bed of beds) {
-      const medias = await this.provider.getItemMedias(bed.itemId);
-      const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
-      responses.push(MyBedsResponse.fromModel(bed, mediaDatas));
-    }
-    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
+    const entities = await Promise.all(
+      beds.map(async (bed) => {
+        const medias = await this.provider.getItemMedias(bed.itemId);
+        const mediaEntites = await MediaHelper.mediasToEntities(medias);
+        return new BedEntity(bed, mediaEntites);
+      }),
+    );
+    return ResponseUtil.managerResponse(
+      new HttpStatus(HttpStatusCode.OK),
+      null,
+      [],
+      MyBedsResponse.fromEntities(entities),
+    );
   }
 
   public async postMyBeds(
@@ -45,12 +52,12 @@ export class MyBedsManager implements IManager {
       request.mediaIds,
       request.bedSize,
     );
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyBedsResponse.fromModel(bed, mediaDatas),
+      MyBedsResponse.fromEntity(new BedEntity(bed, mediaEntities)),
     );
   }
 
@@ -68,12 +75,12 @@ export class MyBedsManager implements IManager {
       );
     }
     const medias = await this.provider.getItemMedias(bed.itemId);
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBedsResponse.fromModel(bed, mediaDatas),
+      MyBedsResponse.fromEntity(new BedEntity(bed, mediaEntities)),
     );
   }
 
@@ -110,12 +117,12 @@ export class MyBedsManager implements IManager {
       request.mediaIds,
       request.bedSize,
     );
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyBedsResponse.fromModel(updatedBed, mediaDatas),
+      MyBedsResponse.fromEntity(new BedEntity(updatedBed, mediaEntities)),
     );
   }
 

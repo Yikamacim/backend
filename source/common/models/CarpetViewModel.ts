@@ -1,7 +1,7 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { CarpetMaterial } from "../enums/CarpetMaterial";
+import { ECarpetMaterial } from "../enums/ECarpetMaterial";
 
 export class CarpetViewModel implements IModel {
   protected constructor(
@@ -12,7 +12,7 @@ export class CarpetViewModel implements IModel {
     public readonly description: string,
     public readonly width: number | null,
     public readonly length: number | null,
-    public readonly carpetMaterial: CarpetMaterial | null,
+    public readonly carpetMaterial: ECarpetMaterial | null,
     public readonly isDeleted: boolean,
   ) {}
 
@@ -54,7 +54,7 @@ export class CarpetViewModel implements IModel {
       (model.width === null || typeof model.width === "number") &&
       (model.length === null || typeof model.length === "number") &&
       (model.carpetMaterial === null ||
-        Object.values(CarpetMaterial).includes(model.carpetMaterial)) &&
+        Object.values(ECarpetMaterial).includes(model.carpetMaterial)) &&
       typeof model.isDeleted === "boolean"
     );
   }

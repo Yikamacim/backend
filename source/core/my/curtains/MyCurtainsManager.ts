@@ -4,6 +4,7 @@ import type { IManager } from "../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
+import { CurtainEntity } from "../../../common/entities/CurtainEntity";
 import { MediaHelper } from "../../../common/helpers/MediaHelper";
 import { ItemMediaRules } from "../../../common/rules/ItemMediaRules";
 import { MyCurtainsProvider } from "./MyCurtainsProvider";
@@ -18,13 +19,19 @@ export class MyCurtainsManager implements IManager {
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyCurtainsResponse[]>> {
     const curtains = await this.provider.getMyActiveCurtains(payload.accountId);
-    const responses: MyCurtainsResponse[] = [];
-    for (const curtain of curtains) {
-      const medias = await this.provider.getItemMedias(curtain.itemId);
-      const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
-      responses.push(MyCurtainsResponse.fromModel(curtain, mediaDatas));
-    }
-    return ResponseUtil.managerResponse(new HttpStatus(HttpStatusCode.OK), null, [], responses);
+    const entities = await Promise.all(
+      curtains.map(async (curtain) => {
+        const medias = await this.provider.getItemMedias(curtain.itemId);
+        const mediaEntities = await MediaHelper.mediasToEntities(medias);
+        return new CurtainEntity(curtain, mediaEntities);
+      }),
+    );
+    return ResponseUtil.managerResponse(
+      new HttpStatus(HttpStatusCode.OK),
+      null,
+      [],
+      MyCurtainsResponse.fromEntities(entities),
+    );
   }
 
   public async postMyCurtains(
@@ -49,12 +56,12 @@ export class MyCurtainsManager implements IManager {
       request.length,
       request.curtainType,
     );
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.CREATED),
       null,
       [],
-      MyCurtainsResponse.fromModel(curtain, mediaDatas),
+      MyCurtainsResponse.fromEntity(new CurtainEntity(curtain, mediaEntities)),
     );
   }
 
@@ -75,12 +82,12 @@ export class MyCurtainsManager implements IManager {
       );
     }
     const medias = await this.provider.getItemMedias(curtain.itemId);
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyCurtainsResponse.fromModel(curtain, mediaDatas),
+      MyCurtainsResponse.fromEntity(new CurtainEntity(curtain, mediaEntities)),
     );
   }
 
@@ -122,12 +129,12 @@ export class MyCurtainsManager implements IManager {
       request.length,
       request.curtainType,
     );
-    const mediaDatas = await MediaHelper.mediasToMediaDatas(medias);
+    const mediaEntities = await MediaHelper.mediasToEntities(medias);
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyCurtainsResponse.fromModel(updatedCurtain, mediaDatas),
+      MyCurtainsResponse.fromEntity(new CurtainEntity(updatedCurtain, mediaEntities)),
     );
   }
 

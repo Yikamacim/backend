@@ -1,13 +1,13 @@
 import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { BedSize } from "../enums/BedSize";
+import { EBedSize } from "../enums/EBedSize";
 
 export class BedModel implements IModel {
   protected constructor(
     public readonly bedId: number,
     public readonly itemId: number,
-    public readonly bedSize: BedSize | null,
+    public readonly bedSize: EBedSize | null,
   ) {}
 
   public static fromRecord(record: unknown): BedModel {
@@ -32,7 +32,7 @@ export class BedModel implements IModel {
     return (
       typeof model.bedId === "number" &&
       typeof model.itemId === "number" &&
-      (model.bedSize === null || Object.values(BedSize).includes(model.bedSize))
+      (model.bedSize === null || Object.values(EBedSize).includes(model.bedSize))
     );
   }
 

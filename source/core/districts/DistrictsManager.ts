@@ -3,6 +3,7 @@ import type { IManager } from "../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import { DistrictEntity } from "../../common/entities/DistrictEntity";
 import { DistrictsProvider } from "./DistrictsProvider";
 import type { DistrictsParams } from "./schemas/DistrictsParams";
 import type { DistrictsQueries } from "./schemas/DistrictsQueries";
@@ -15,11 +16,14 @@ export class DistrictsManager implements IManager {
     queries: DistrictsQueries,
   ): Promise<ManagerResponse<DistrictsResponse[]>> {
     const districts = await this.provider.getDistrictsByProvinceId(parseInt(queries.provinceId));
+    const entities = districts.map((district) => {
+      return new DistrictEntity(district);
+    });
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      DistrictsResponse.fromModels(districts),
+      DistrictsResponse.fromEntities(entities),
     );
   }
 
@@ -39,7 +43,7 @@ export class DistrictsManager implements IManager {
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      DistrictsResponse.fromModel(district),
+      DistrictsResponse.fromEntity(new DistrictEntity(district)),
     );
   }
 }

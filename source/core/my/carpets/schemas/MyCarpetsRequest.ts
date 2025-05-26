@@ -4,7 +4,7 @@ import type { IRequest } from "../../../../app/interfaces/IRequest";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
-import { CarpetMaterial } from "../../../../common/enums/CarpetMaterial";
+import { ECarpetMaterial } from "../../../../common/enums/ECarpetMaterial";
 import { ItemDescriptionValidator } from "../../../../common/validators/ItemDescriptionValidator";
 import { ItemNameValidator } from "../../../../common/validators/ItemNameValidator";
 import { MediaIdsValidator } from "../../../../common/validators/MediaIdsValidator";
@@ -16,7 +16,7 @@ export class MyCarpetsRequest implements IRequest {
     public readonly mediaIds: number[],
     public readonly width: number | null,
     public readonly length: number | null,
-    public readonly carpetMaterial: CarpetMaterial | null,
+    public readonly carpetMaterial: ECarpetMaterial | null,
   ) {}
 
   public static parse(req: ExpressRequest): ParserResponse<MyCarpetsRequest | null> {
@@ -54,7 +54,7 @@ export class MyCarpetsRequest implements IRequest {
       (blueprint.width === null || typeof blueprint.width === "number") &&
       (blueprint.length === null || typeof blueprint.length === "number") &&
       (blueprint.carpetMaterial === null ||
-        Object.values(CarpetMaterial).includes(blueprint.carpetMaterial))
+        Object.values(ECarpetMaterial).includes(blueprint.carpetMaterial))
     );
   }
 }
