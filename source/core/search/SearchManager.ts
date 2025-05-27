@@ -43,7 +43,7 @@ export class SearchManager implements IManager {
         return ResponseUtil.managerResponse(
           new HttpStatus(HttpStatusCode.NOT_FOUND),
           null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
+          [new ClientError(ClientErrorCode.HAS_NO_MEDIA_WITH_ID)],
           null,
         );
       }

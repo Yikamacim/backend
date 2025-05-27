@@ -2,42 +2,40 @@ import type { ProviderResponse } from "../../@types/responses";
 import { DbConstants } from "../../app/constants/DbConstants";
 import type { IProvider } from "../../app/interfaces/IProvider";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { CarpetViewModel } from "../models/CarpetViewModel";
-import { CarpetViewQueries } from "../queries/CarpetViewQueries";
+import { SofaViewModel } from "../models/SofaViewModel";
+import { SofaViewQueries } from "../queries/SofaViewQueries";
 
-export class CarpetProvider implements IProvider {
-  public async getMyCarpet(
+export class SofaProvider implements IProvider {
+  public async getMySofa(
     accountId: number,
-    carpetId: number,
-  ): Promise<ProviderResponse<CarpetViewModel | null>> {
+    sofaId: number,
+  ): Promise<ProviderResponse<SofaViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(CarpetViewQueries.GET_CARPET_$ACID_$CPID, [
+      const results = await DbConstants.POOL.query(SofaViewQueries.GET_SOFA_$ACID_$SFID, [
         accountId,
-        carpetId,
+        sofaId,
       ]);
       const record: unknown = results.rows[0];
       if (!ProtoUtil.isProtovalid(record)) {
         return null;
       }
-      return CarpetViewModel.fromRecord(record);
+      return SofaViewModel.fromRecord(record);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async getCarpetByItemId(
-    itemId: number,
-  ): Promise<ProviderResponse<CarpetViewModel | null>> {
+  public async getSofaByItemId(itemId: number): Promise<ProviderResponse<SofaViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(CarpetViewQueries.GET_CARPET_$ITID, [itemId]);
+      const results = await DbConstants.POOL.query(SofaViewQueries.GET_SOFA_$ITID, [itemId]);
       const record: unknown = results.rows[0];
       if (!ProtoUtil.isProtovalid(record)) {
         return null;
       }
-      return CarpetViewModel.fromRecord(record);
+      return SofaViewModel.fromRecord(record);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;

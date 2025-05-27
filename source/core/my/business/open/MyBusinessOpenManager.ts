@@ -24,7 +24,7 @@ export class MyBusinessOpenManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_BUSINESS)],
         null,
       );
     }
@@ -41,7 +41,7 @@ export class MyBusinessOpenManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_DOESNT_HAVE_APPROVAL)],
+        [new ClientError(ClientErrorCode.BUSINESS_HAS_NO_APPROVAL)],
         null,
       );
     }
@@ -58,7 +58,7 @@ export class MyBusinessOpenManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_DOESNT_HAVE_BANK_ACCOUNT)],
+        [new ClientError(ClientErrorCode.BUSINESS_HAS_NO_BANK_ACCOUNT)],
         null,
       );
     }
@@ -67,7 +67,7 @@ export class MyBusinessOpenManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_DOESNT_HAVE_AREA)],
+        [new ClientError(ClientErrorCode.BUSINESS_HAS_NO_AREA)],
         null,
       );
     }
@@ -76,7 +76,7 @@ export class MyBusinessOpenManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_DOESNT_HAVE_HOURS)],
+        [new ClientError(ClientErrorCode.BUSINESS_HAS_NO_HOURS)],
         null,
       );
     }
@@ -85,7 +85,7 @@ export class MyBusinessOpenManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_DOESNT_HAVE_SERVICES)],
+        [new ClientError(ClientErrorCode.BUSINESS_HAS_NO_SERVICES)],
         null,
       );
     }
@@ -100,7 +100,7 @@ export class MyBusinessOpenManager implements IManager {
         return ResponseUtil.managerResponse(
           new HttpStatus(HttpStatusCode.NOT_FOUND),
           null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
+          [new ClientError(ClientErrorCode.HAS_NO_MEDIA_WITH_ID)],
           null,
         );
       }

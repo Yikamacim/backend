@@ -58,7 +58,7 @@ export class MyCardsManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.CARD_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_CARD_WITH_ID)],
         null,
       );
     }
@@ -80,7 +80,7 @@ export class MyCardsManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.CARD_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_CARD_WITH_ID)],
         null,
       );
     }
@@ -114,7 +114,7 @@ export class MyCardsManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.CARD_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_CARD_WITH_ID)],
         null,
       );
     }

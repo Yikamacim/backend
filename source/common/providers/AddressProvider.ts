@@ -10,6 +10,27 @@ import { AddressQueries } from "../queries/AddressQueries";
 import { AddressViewQueries } from "../queries/AddressViewQueries";
 
 export class AddressProvider implements IProvider {
+  public async getMyActiveAddress(
+    accountId: number,
+    addressId: number,
+  ): Promise<ProviderResponse<AddressViewModel | null>> {
+    await DbConstants.POOL.query(DbConstants.BEGIN);
+    try {
+      const results = await DbConstants.POOL.query(
+        AddressViewQueries.GET_ADDRESS_$ACID_$ADID_$ISDEL,
+        [accountId, addressId, false],
+      );
+      const record: unknown = results.rows[0];
+      if (!ProtoUtil.isProtovalid(record)) {
+        return await ResponseUtil.providerResponse(null);
+      }
+      return await ResponseUtil.providerResponse(AddressViewModel.fromRecord(record));
+    } catch (error) {
+      await DbConstants.POOL.query(DbConstants.ROLLBACK);
+      throw error;
+    }
+  }
+
   public async createMyAddress(
     accountId: number,
     name: string,

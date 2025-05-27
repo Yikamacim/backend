@@ -7,6 +7,7 @@ import { HttpStatus, HttpStatusCode } from "../../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
 import { AuthModule } from "../../../../modules/auth/module";
 import { MyOrdersManager } from "./MyOrdersManager";
+import { MyOrdersParams } from "./schemas/MyOrdersParams";
 import type { MyOrdersResponse } from "./schemas/MyOrdersResponse";
 
 export class MyOrdersController implements IController {
@@ -14,7 +15,7 @@ export class MyOrdersController implements IController {
 
   public async getMyOrders(
     _: ExpressRequest,
-    res: ControllerResponse<MyOrdersResponse[], Tokens | null>,
+    res: ControllerResponse<MyOrdersResponse[] | null, Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
@@ -46,9 +47,9 @@ export class MyOrdersController implements IController {
     }
   }
 
-  public async deleteMyOrders$(
+  public async getMyOrders$(
     req: ExpressRequest,
-    res: ControllerResponse<null, Tokens | null>,
+    res: ControllerResponse<MyOrdersResponse | null, Tokens | null>,
     next: ExpressNextFunction,
   ): Promise<typeof res | void> {
     try {
@@ -67,7 +68,7 @@ export class MyOrdersController implements IController {
         );
       }
       // >----------< LOGIC >----------<
-      const out = await this.manager.deleteMyOrders$(payload, params.data);
+      const out = await this.manager.getMyOrders$(payload, params.data);
       // >----------< RESPONSE >----------<
       if (!out.httpStatus.isSuccess()) {
         return ResponseUtil.controllerResponse(

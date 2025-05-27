@@ -77,7 +77,7 @@ export class MyVehiclesManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.VEHICLE_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_VEHICLE_WITH_ID)],
         null,
       );
     }
@@ -104,7 +104,7 @@ export class MyVehiclesManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.VEHICLE_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_VEHICLE_WITH_ID)],
         null,
       );
     }
@@ -150,7 +150,7 @@ export class MyVehiclesManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.VEHICLE_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_VEHICLE_WITH_ID)],
         null,
       );
     }

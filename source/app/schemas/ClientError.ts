@@ -134,7 +134,7 @@ export enum ClientErrorCode {
   FORBIDDEN_ACCOUNT_TYPE = 80100,
   ACCOUNT_ALREADY_EXISTS = 80101,
   //  *  *  802XX: /my/sessions errors
-  SESSION_NOT_FOUND = 80200,
+  HAS_NO_SESSION_WITH_ID = 80200,
   CANNOT_DELETE_CURRENT_SESSION = 80201,
   //  *  *  803XX: /verify errors
   PHONE_ALREADY_VERIFIED = 80300,
@@ -156,43 +156,43 @@ export enum ClientErrorCode {
   NO_PROVINCE_FOUND = 80701,
   //  *  *  808XX: /my/addresses errors
   INVALID_ADDRESS_ID = 80800,
-  ADDRESS_NOT_FOUND = 80801,
+  HAS_NO_ADDRESS_WITH_ID = 80801,
   CANNOT_DELETE_DEFAULT_ADDRESS = 80802,
   //  *  *  809XX: /my/medias errors
   INVALID_MEDIA_TYPE = 80900,
   //  *  *  810XX: /my/carpets errors
   INVALID_CARPET_ID = 81000,
-  CARPET_NOT_FOUND = 81001,
-  MEDIA_NOT_FOUND = 81002,
+  HAS_NO_CARPET_WITH_ID = 81001,
+  HAS_NO_MEDIA_WITH_ID = 81002,
   MEDIA_NOT_UPLOADED = 81004,
   //  *  *  811XX: /my/vehicles errors
   INVALID_VEHICLE_ID = 81100,
-  VEHICLE_NOT_FOUND = 81101,
+  HAS_NO_VEHICLE_WITH_ID = 81101,
   //  *  *  812XX: /my/curtains errors
   INVALID_CURTAIN_ID = 81200,
-  CURTAIN_NOT_FOUND = 81201,
+  HAS_NO_CURTAIN_WITH_ID = 81201,
   //  *  *  813XX: /my/beds errors
   INVALID_BED_ID = 81300,
-  BED_NOT_FOUND = 81301,
+  HAS_NO_BED_WITH_ID = 81301,
   //  *  *  814XX: /my/sofas errors
   INVALID_SOFA_ID = 81400,
-  SOFA_NOT_FOUND = 81401,
+  HAS_NO_SOFA_WITH_ID = 81401,
   //  *  *  815XX: /my/chairs errors
   INVALID_CHAIR_ID = 81500,
-  CHAIR_NOT_FOUND = 81501,
+  HAS_NO_CHAIR_WITH_ID = 81501,
   //  *  *  816XX: /my/quilts errors
   INVALID_QUILT_ID = 81600,
-  QUILT_NOT_FOUND = 81601,
+  HAS_NO_QUILT_WITH_ID = 81601,
   //  *  *  817XX: /my/blankets errors
-  INVALID_BLANKET_ID = 81700,
+  HAS_NO_BLANKET_WITH_ID = 81700,
   BLANKET_NOT_FOUND = 81701,
   //  *  *  818XX: /my/business errors
-  BUSINESS_NOT_FOUND = 81800,
+  HAS_NO_BUSINESS = 81800,
   BUSINESS_ALREADY_EXISTS = 81801,
   BUSINESS_IS_OPEN = 81802,
   //  *  *  819XX: /my/business/hours errors
-  BUSINESS_HOURS_NOT_FOUND = 81900,
-  BUSINESS_HOURS_ALREADY_EXISTS = 81901,
+  HOURS_NOT_FOUND = 81900,
+  HOURS_ALREADY_EXISTS = 81901,
   //  *  *  820XX: /my/business/bank errors
   BANK_ACCOUNT_NOT_FOUND = 82000,
   BANK_ACCOUNT_ALREADY_EXISTS = 82001,
@@ -213,22 +213,26 @@ export enum ClientErrorCode {
   SERVICE_CATEGORY_CANT_BE_CHANGED = 82502,
   //  *  *  826XX: /my/business/open errors
   BUSINESS_ALREADY_OPEN = 82600,
-  BUSINESS_DOESNT_HAVE_APPROVAL = 82601,
+  BUSINESS_HAS_NO_APPROVAL = 82601,
   BUSINESS_NOT_APPROVED = 82602,
-  BUSINESS_DOESNT_HAVE_BANK_ACCOUNT = 82603,
-  BUSINESS_DOESNT_HAVE_AREA = 82604,
-  BUSINESS_DOESNT_HAVE_HOURS = 82605,
-  BUSINESS_DOESNT_HAVE_SERVICES = 82606,
+  BUSINESS_HAS_NO_BANK_ACCOUNT = 82603,
+  BUSINESS_HAS_NO_AREA = 82604,
+  BUSINESS_HAS_NO_HOURS = 82605,
+  BUSINESS_HAS_NO_SERVICES = 82606,
   //  *  *  827XX: /my/business/close errors
   BUSINESS_ALREADY_CLOSED = 82700,
   //  *  *  828XX: /businesses/:businessId errors
-  NO_BUSINESS_FOUND = 82800,
+  BUSINESS_NOT_FOUND = 82800,
   //  *  *  829XX: /my/cards errors
   INVALID_CARD_ID = 82900,
-  CARD_NOT_FOUND = 82901,
+  HAS_NO_CARD_WITH_ID = 82901,
   CANNOT_DELETE_DEFAULT_CARD = 82902,
   //  *  *  830XX: /my/orders errors
   INVALID_ORDER_ID = 83000,
+  HAS_NO_ORDER_WITH_ID = 83001,
+  BUSINESS_IS_CLOSED = 83002,
+  HAS_NO_CARD = 83003,
+  BUSINESS_DOESNT_SERVE_AREA = 83004,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -359,7 +363,7 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.FORBIDDEN_ACCOUNT_TYPE]: "Provided account type can't be signed up.",
   [ClientErrorCode.ACCOUNT_ALREADY_EXISTS]: "An account already exists with the provided phone.",
   //  *  *  802XX: /my/sessions errors
-  [ClientErrorCode.SESSION_NOT_FOUND]:
+  [ClientErrorCode.HAS_NO_SESSION_WITH_ID]:
     "Account doesn't have a session with the provided session id.",
   [ClientErrorCode.CANNOT_DELETE_CURRENT_SESSION]:
     "Current session can't be deleted. Use logout instead.",
@@ -383,43 +387,43 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.NO_PROVINCE_FOUND]: "No province was found with the provided id.",
   //  *  *  808XX: /my/addresses errors
   [ClientErrorCode.INVALID_ADDRESS_ID]: "Provided address id was invalid.",
-  [ClientErrorCode.ADDRESS_NOT_FOUND]: "Account doesn't have an address with the provided id.",
+  [ClientErrorCode.HAS_NO_ADDRESS_WITH_ID]: "Account doesn't have an address with the provided id.",
   [ClientErrorCode.CANNOT_DELETE_DEFAULT_ADDRESS]: "Default address can't be deleted.",
   //  *  *  809XX: /my/medias errors
   [ClientErrorCode.INVALID_MEDIA_TYPE]: "Provided media type was invalid.",
   //  *  *  810XX: /my/carpets errors
   [ClientErrorCode.INVALID_CARPET_ID]: "Provided carpet id was invalid.",
-  [ClientErrorCode.CARPET_NOT_FOUND]: "Account doesn't have a carpet with the provided id.",
-  [ClientErrorCode.MEDIA_NOT_FOUND]: "Account doesn't have a media with the provided id.",
+  [ClientErrorCode.HAS_NO_CARPET_WITH_ID]: "Account doesn't have a carpet with the provided id.",
+  [ClientErrorCode.HAS_NO_MEDIA_WITH_ID]: "Account doesn't have a media with the provided id.",
   [ClientErrorCode.MEDIA_NOT_UPLOADED]: "Media wasn't uploaded to the bucket.",
   //  *  *  811XX: /my/vehicles errors
   [ClientErrorCode.INVALID_VEHICLE_ID]: "Provided vehicle id was invalid.",
-  [ClientErrorCode.VEHICLE_NOT_FOUND]: "Account doesn't have a vehicle with the provided id.",
+  [ClientErrorCode.HAS_NO_VEHICLE_WITH_ID]: "Account doesn't have a vehicle with the provided id.",
   //  *  *  812XX: /my/curtains errors
   [ClientErrorCode.INVALID_CURTAIN_ID]: "Provided curtain id was invalid.",
-  [ClientErrorCode.CURTAIN_NOT_FOUND]: "Account doesn't have a curtain with the provided id.",
+  [ClientErrorCode.HAS_NO_CURTAIN_WITH_ID]: "Account doesn't have a curtain with the provided id.",
   //  *  *  813XX: /my/beds errors
   [ClientErrorCode.INVALID_BED_ID]: "Provided bed id was invalid.",
-  [ClientErrorCode.BED_NOT_FOUND]: "Account doesn't have a bed with the provided id.",
+  [ClientErrorCode.HAS_NO_BED_WITH_ID]: "Account doesn't have a bed with the provided id.",
   //  *  *  814XX: /my/sofas errors
   [ClientErrorCode.INVALID_SOFA_ID]: "Provided sofa id was invalid.",
-  [ClientErrorCode.SOFA_NOT_FOUND]: "Account doesn't have a sofa with the provided id.",
+  [ClientErrorCode.HAS_NO_SOFA_WITH_ID]: "Account doesn't have a sofa with the provided id.",
   //  *  *  815XX: /my/chairs errors
   [ClientErrorCode.INVALID_CHAIR_ID]: "Provided chair id was invalid.",
-  [ClientErrorCode.CHAIR_NOT_FOUND]: "Account doesn't have a chair with the provided id.",
+  [ClientErrorCode.HAS_NO_CHAIR_WITH_ID]: "Account doesn't have a chair with the provided id.",
   //  *  *  816XX: /my/quilts errors
   [ClientErrorCode.INVALID_QUILT_ID]: "Provided quilt id was invalid.",
-  [ClientErrorCode.QUILT_NOT_FOUND]: "Account doesn't have a quilt with the provided id.",
+  [ClientErrorCode.HAS_NO_QUILT_WITH_ID]: "Account doesn't have a quilt with the provided id.",
   // *  *  817XX: /my/blankets errors
-  [ClientErrorCode.INVALID_BLANKET_ID]: "Provided blanket id was invalid.",
+  [ClientErrorCode.HAS_NO_BLANKET_WITH_ID]: "Provided blanket id was invalid.",
   [ClientErrorCode.BLANKET_NOT_FOUND]: "Account doesn't have a blanket with the provided id.",
   //  *  *  818XX: /my/business errors
-  [ClientErrorCode.BUSINESS_NOT_FOUND]: "Account doesn't have a business.",
+  [ClientErrorCode.HAS_NO_BUSINESS]: "Account doesn't have a business.",
   [ClientErrorCode.BUSINESS_ALREADY_EXISTS]: "Account already has a business.",
   [ClientErrorCode.BUSINESS_IS_OPEN]: "Business is open. It can't be edited or deleted.",
   //  *  *  819XX: /my/business/hours errors
-  [ClientErrorCode.BUSINESS_HOURS_NOT_FOUND]: "Business doesn't have hours.",
-  [ClientErrorCode.BUSINESS_HOURS_ALREADY_EXISTS]: "Business already has hours.",
+  [ClientErrorCode.HOURS_NOT_FOUND]: "Business doesn't have hours.",
+  [ClientErrorCode.HOURS_ALREADY_EXISTS]: "Business already has hours.",
   //  *  *  820XX: /my/business/bank errors
   [ClientErrorCode.BANK_ACCOUNT_NOT_FOUND]: "Business doesn't have a bank account.",
   [ClientErrorCode.BANK_ACCOUNT_ALREADY_EXISTS]: "Business already has a bank account.",
@@ -436,27 +440,31 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_BUSINESS_ID]: "Provided business id was invalid.",
   // *  *  825XX: /my/business/services errors
   [ClientErrorCode.INVALID_SERVICE_ID]: "Provided service id was invalid.",
-  [ClientErrorCode.SERVICE_NOT_FOUND]: "Account doesn't have a service with the provided id.",
+  [ClientErrorCode.SERVICE_NOT_FOUND]: "Business doesn't have a service with the provided id.",
   [ClientErrorCode.SERVICE_CATEGORY_CANT_BE_CHANGED]:
     "Service category can't be changed after creation.",
   //  *  *  826XX: /my/business/open errors
   [ClientErrorCode.BUSINESS_ALREADY_OPEN]: "Business is already open.",
-  [ClientErrorCode.BUSINESS_DOESNT_HAVE_APPROVAL]: "Business doesn't have an approval.",
+  [ClientErrorCode.BUSINESS_HAS_NO_APPROVAL]: "Business doesn't have an approval.",
   [ClientErrorCode.BUSINESS_NOT_APPROVED]: "Business is not approved.",
-  [ClientErrorCode.BUSINESS_DOESNT_HAVE_BANK_ACCOUNT]: "Business doesn't have a bank account.",
-  [ClientErrorCode.BUSINESS_DOESNT_HAVE_AREA]: "Business doesn't have an area.",
-  [ClientErrorCode.BUSINESS_DOESNT_HAVE_HOURS]: "Business doesn't have work hours.",
-  [ClientErrorCode.BUSINESS_DOESNT_HAVE_SERVICES]: "Business doesn't have services.",
+  [ClientErrorCode.BUSINESS_HAS_NO_BANK_ACCOUNT]: "Business doesn't have a bank account.",
+  [ClientErrorCode.BUSINESS_HAS_NO_AREA]: "Business doesn't have an area.",
+  [ClientErrorCode.BUSINESS_HAS_NO_HOURS]: "Business doesn't have work hours.",
+  [ClientErrorCode.BUSINESS_HAS_NO_SERVICES]: "Business doesn't have services.",
   //  *  *  827XX: /my/business/close errors
   [ClientErrorCode.BUSINESS_ALREADY_CLOSED]: "Business is already closed.",
   //  *  *  828XX: /businesses/:businessId errors
-  [ClientErrorCode.NO_BUSINESS_FOUND]: "No business was found with the provided id.",
+  [ClientErrorCode.BUSINESS_NOT_FOUND]: "No business was found with the provided id.",
   //  *  *  829XX: /my/cards errors
   [ClientErrorCode.INVALID_CARD_ID]: "Provided card id was invalid.",
-  [ClientErrorCode.CARD_NOT_FOUND]: "Account doesn't have a card with the provided id.",
+  [ClientErrorCode.HAS_NO_CARD_WITH_ID]: "Account doesn't have a card with the provided id.",
   [ClientErrorCode.CANNOT_DELETE_DEFAULT_CARD]: "Default card can't be deleted.",
   //  *  *  830XX: /my/orders errors
   [ClientErrorCode.INVALID_ORDER_ID]: "Provided order id was invalid.",
+  [ClientErrorCode.HAS_NO_ORDER_WITH_ID]: "Account doesn't have an order with the provided id.",
+  [ClientErrorCode.BUSINESS_IS_CLOSED]: "Business is closed. It can't be ordered from.",
+  [ClientErrorCode.HAS_NO_CARD]: "Account doesn't have a card to pay with.",
+  [ClientErrorCode.BUSINESS_DOESNT_SERVE_AREA]: "Business doesn't serve this area.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

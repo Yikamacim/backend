@@ -24,15 +24,16 @@ export class MyBusinessServicesProvider implements IProvider {
   public readonly getMedia: typeof this.mediaProvider.getMedia;
   public readonly getActiveServices: typeof this.serviceProvider.getActiveServices;
 
-  public async getService(
+  public async getActiveService(
     businessId: number,
     serviceId: number,
   ): Promise<ProviderResponse<ServiceModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(ServiceQueries.GET_SERVICE_$BSID_$SVID, [
+      const results = await DbConstants.POOL.query(ServiceQueries.GET_SERVICE_$BSID_$SVID_$ISDEL, [
         businessId,
         serviceId,
+        false,
       ]);
       const record: unknown = results.rows[0];
       if (!record) {

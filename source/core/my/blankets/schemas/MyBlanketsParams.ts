@@ -30,7 +30,7 @@ export class MyBlanketsParams implements IParams {
     // >----------< PHYSICAL VALIDATION >----------<
     const clientErrors: ClientError[] = [];
     if (!StringUtil.isIntParsable(blueprintData.blanketId)) {
-      clientErrors.push(new ClientError(ClientErrorCode.INVALID_BLANKET_ID));
+      clientErrors.push(new ClientError(ClientErrorCode.HAS_NO_BLANKET_WITH_ID));
     }
     const validatedData = blueprintData;
     // >----------< RETURN >----------<

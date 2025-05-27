@@ -77,7 +77,7 @@ export class MyCurtainsManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.CURTAIN_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_CURTAIN_WITH_ID)],
         null,
       );
     }
@@ -104,7 +104,7 @@ export class MyCurtainsManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.CURTAIN_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_CURTAIN_WITH_ID)],
         null,
       );
     }
@@ -150,7 +150,7 @@ export class MyCurtainsManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.CURTAIN_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_CURTAIN_WITH_ID)],
         null,
       );
     }

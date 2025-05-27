@@ -23,7 +23,7 @@ export class MyBusinessCloseManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_BUSINESS)],
         null,
       );
     }
@@ -46,7 +46,7 @@ export class MyBusinessCloseManager implements IManager {
         return ResponseUtil.managerResponse(
           new HttpStatus(HttpStatusCode.NOT_FOUND),
           null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
+          [new ClientError(ClientErrorCode.HAS_NO_MEDIA_WITH_ID)],
           null,
         );
       }

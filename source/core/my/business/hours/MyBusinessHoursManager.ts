@@ -20,7 +20,7 @@ export class MyBusinessHoursManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_BUSINESS)],
         null,
       );
     }
@@ -29,7 +29,7 @@ export class MyBusinessHoursManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_HOURS_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HOURS_NOT_FOUND)],
         null,
       );
     }
@@ -50,7 +50,7 @@ export class MyBusinessHoursManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_BUSINESS)],
         null,
       );
     }
@@ -66,7 +66,7 @@ export class MyBusinessHoursManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_HOURS_ALREADY_EXISTS)],
+        [new ClientError(ClientErrorCode.HOURS_ALREADY_EXISTS)],
         null,
       );
     }
@@ -104,7 +104,7 @@ export class MyBusinessHoursManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_BUSINESS)],
         null,
       );
     }
@@ -121,7 +121,7 @@ export class MyBusinessHoursManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_HOURS_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HOURS_NOT_FOUND)],
         null,
       );
     }

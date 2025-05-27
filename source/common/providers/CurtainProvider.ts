@@ -6,10 +6,14 @@ import { CurtainViewModel } from "../models/CurtainViewModel";
 import { CurtainViewQueries } from "../queries/CurtainViewQueries";
 
 export class CurtainProvider implements IProvider {
-  public async getCurtain(curtainId: number): Promise<ProviderResponse<CurtainViewModel | null>> {
+  public async getMyCurtain(
+    accountId: number,
+    curtainId: number,
+  ): Promise<ProviderResponse<CurtainViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(CurtainViewQueries.GET_CURTAIN_$CRID, [
+      const results = await DbConstants.POOL.query(CurtainViewQueries.GET_CURTAIN_$ACID_$CRID, [
+        accountId,
         curtainId,
       ]);
       const record: unknown = results.rows[0];
@@ -23,16 +27,12 @@ export class CurtainProvider implements IProvider {
     }
   }
 
-  public async getMyCurtain(
-    accountId: number,
-    curtainId: number,
+  public async getCurtainByItemId(
+    itemId: number,
   ): Promise<ProviderResponse<CurtainViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(CurtainViewQueries.GET_CURTAIN_$ACID_$CRID, [
-        accountId,
-        curtainId,
-      ]);
+      const results = await DbConstants.POOL.query(CurtainViewQueries.GET_CURTAIN_$ITID, [itemId]);
       const record: unknown = results.rows[0];
       if (!ProtoUtil.isProtovalid(record)) {
         return null;

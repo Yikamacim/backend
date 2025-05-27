@@ -20,4 +20,37 @@ export class ServiceProvider implements IProvider {
       throw error;
     }
   }
+
+  public async getService(serviceId: number): Promise<ProviderResponse<ServiceModel | null>> {
+    await DbConstants.POOL.query(DbConstants.BEGIN);
+    try {
+      const results = await DbConstants.POOL.query(ServiceQueries.GET_SERVICE_$SVID, [serviceId]);
+      const record: unknown[] = results.rows;
+      if (record.length === 0) {
+        return ResponseUtil.providerResponse(null);
+      }
+      return await ResponseUtil.providerResponse(ServiceModel.fromRecord(record[0]));
+    } catch (error) {
+      await DbConstants.POOL.query(DbConstants.ROLLBACK);
+      throw error;
+    }
+  }
+
+  public async getActiveService(serviceId: number): Promise<ProviderResponse<ServiceModel | null>> {
+    await DbConstants.POOL.query(DbConstants.BEGIN);
+    try {
+      const results = await DbConstants.POOL.query(ServiceQueries.GET_SERVICE_$SVID_$ISDEL, [
+        serviceId,
+        false,
+      ]);
+      const record: unknown[] = results.rows;
+      if (record.length === 0) {
+        return ResponseUtil.providerResponse(null);
+      }
+      return await ResponseUtil.providerResponse(ServiceModel.fromRecord(record[0]));
+    } catch (error) {
+      await DbConstants.POOL.query(DbConstants.ROLLBACK);
+      throw error;
+    }
+  }
 }

@@ -70,7 +70,7 @@ export class MyBedsManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BED_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_BED_WITH_ID)],
         null,
       );
     }
@@ -94,7 +94,7 @@ export class MyBedsManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BED_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_BED_WITH_ID)],
         null,
       );
     }
@@ -135,7 +135,7 @@ export class MyBedsManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BED_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_BED_WITH_ID)],
         null,
       );
     }

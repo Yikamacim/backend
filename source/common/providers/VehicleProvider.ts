@@ -2,42 +2,42 @@ import type { ProviderResponse } from "../../@types/responses";
 import { DbConstants } from "../../app/constants/DbConstants";
 import type { IProvider } from "../../app/interfaces/IProvider";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
-import { CarpetViewModel } from "../models/CarpetViewModel";
-import { CarpetViewQueries } from "../queries/CarpetViewQueries";
+import { VehicleViewModel } from "../models/VehicleViewModel";
+import { VehicleViewQueries } from "../queries/VehicleViewQueries";
 
-export class CarpetProvider implements IProvider {
-  public async getMyCarpet(
+export class VehicleProvider implements IProvider {
+  public async getMyVehicle(
     accountId: number,
-    carpetId: number,
-  ): Promise<ProviderResponse<CarpetViewModel | null>> {
+    vehicleId: number,
+  ): Promise<ProviderResponse<VehicleViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(CarpetViewQueries.GET_CARPET_$ACID_$CPID, [
+      const results = await DbConstants.POOL.query(VehicleViewQueries.GET_VEHICLE_$ACID_$VHID, [
         accountId,
-        carpetId,
+        vehicleId,
       ]);
       const record: unknown = results.rows[0];
       if (!ProtoUtil.isProtovalid(record)) {
         return null;
       }
-      return CarpetViewModel.fromRecord(record);
+      return VehicleViewModel.fromRecord(record);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;
     }
   }
 
-  public async getCarpetByItemId(
+  public async getVehicleByItemId(
     itemId: number,
-  ): Promise<ProviderResponse<CarpetViewModel | null>> {
+  ): Promise<ProviderResponse<VehicleViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(CarpetViewQueries.GET_CARPET_$ITID, [itemId]);
+      const results = await DbConstants.POOL.query(VehicleViewQueries.GET_VEHICLE_$ITID, [itemId]);
       const record: unknown = results.rows[0];
       if (!ProtoUtil.isProtovalid(record)) {
         return null;
       }
-      return CarpetViewModel.fromRecord(record);
+      return VehicleViewModel.fromRecord(record);
     } catch (error) {
       await DbConstants.POOL.query(DbConstants.ROLLBACK);
       throw error;

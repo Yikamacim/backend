@@ -24,7 +24,7 @@ export class MyBusinessServicesManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_BUSINESS)],
         null,
       );
     }
@@ -38,7 +38,7 @@ export class MyBusinessServicesManager implements IManager {
           return ResponseUtil.managerResponse(
             new HttpStatus(HttpStatusCode.NOT_FOUND),
             null,
-            [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
+            [new ClientError(ClientErrorCode.HAS_NO_MEDIA_WITH_ID)],
             null,
           );
         }
@@ -63,11 +63,11 @@ export class MyBusinessServicesManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_BUSINESS)],
         null,
       );
     }
-    if (business.isOpen === true) {
+    if (business.isOpen) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -113,11 +113,14 @@ export class MyBusinessServicesManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_BUSINESS)],
         null,
       );
     }
-    const service = await this.provider.getService(business.businessId, parseInt(params.serviceId));
+    const service = await this.provider.getActiveService(
+      business.businessId,
+      parseInt(params.serviceId),
+    );
     if (service === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -133,7 +136,7 @@ export class MyBusinessServicesManager implements IManager {
         return ResponseUtil.managerResponse(
           new HttpStatus(HttpStatusCode.NOT_FOUND),
           null,
-          [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
+          [new ClientError(ClientErrorCode.HAS_NO_MEDIA_WITH_ID)],
           null,
         );
       }
@@ -157,11 +160,11 @@ export class MyBusinessServicesManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_BUSINESS)],
         null,
       );
     }
-    if (business.isOpen === true) {
+    if (business.isOpen) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -169,7 +172,10 @@ export class MyBusinessServicesManager implements IManager {
         null,
       );
     }
-    const service = await this.provider.getService(business.businessId, parseInt(params.serviceId));
+    const service = await this.provider.getActiveService(
+      business.businessId,
+      parseInt(params.serviceId),
+    );
     if (service === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
@@ -208,7 +214,7 @@ export class MyBusinessServicesManager implements IManager {
           return ResponseUtil.managerResponse(
             new HttpStatus(HttpStatusCode.NOT_FOUND),
             null,
-            [new ClientError(ClientErrorCode.MEDIA_NOT_FOUND)],
+            [new ClientError(ClientErrorCode.HAS_NO_MEDIA_WITH_ID)],
             null,
           );
         }
@@ -240,11 +246,11 @@ export class MyBusinessServicesManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_BUSINESS)],
         null,
       );
     }
-    if (business.isOpen === true) {
+    if (business.isOpen) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
@@ -252,7 +258,10 @@ export class MyBusinessServicesManager implements IManager {
         null,
       );
     }
-    const service = await this.provider.getService(business.businessId, parseInt(params.serviceId));
+    const service = await this.provider.getActiveService(
+      business.businessId,
+      parseInt(params.serviceId),
+    );
     if (service === null) {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),

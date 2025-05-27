@@ -25,9 +25,165 @@ import { ChairProvider } from "../providers/ChairProvider";
 import { CurtainProvider } from "../providers/CurtainProvider";
 import { ItemMediaProvider } from "../providers/ItemMediaProvider";
 import { OrderItemProvider } from "../providers/OrderItemProvider";
+import { QuiltProvider } from "../providers/QuiltProvider";
+import { SofaProvider } from "../providers/SofaProvider";
+import { VehicleProvider } from "../providers/VehicleProvider";
 import { MediaHelper } from "./MediaHelper";
 
 export class OrderHelper implements IHelper {
+  public static async findMyOrderItems(
+    accountId: number,
+    orderItemIds: number[],
+    serviceCategory: EServiceCategory,
+  ): Promise<Either<ManagerResponse<null>, number[]>> {
+    switch (serviceCategory) {
+      case EServiceCategory.BED_CLEANING: {
+        const itemIds: number[] = [];
+        for (const bedId of orderItemIds) {
+          const bed = await new BedProvider().getMyBed(accountId, bedId);
+          if (bed === null) {
+            return Left.of(
+              ResponseUtil.managerResponse(
+                new HttpStatus(HttpStatusCode.NOT_FOUND),
+                null,
+                [new ClientError(ClientErrorCode.HAS_NO_BED_WITH_ID)],
+                null,
+              ),
+            );
+          }
+          itemIds.push(bed.itemId);
+        }
+        return Right.of(itemIds);
+      }
+      case EServiceCategory.BLANKET_CLEANING: {
+        const itemIds: number[] = [];
+        for (const blanketId of orderItemIds) {
+          const blanket = await new BlanketProvider().getMyBlanket(accountId, blanketId);
+          if (blanket === null) {
+            return Left.of(
+              ResponseUtil.managerResponse(
+                new HttpStatus(HttpStatusCode.NOT_FOUND),
+                null,
+                [new ClientError(ClientErrorCode.BLANKET_NOT_FOUND)],
+                null,
+              ),
+            );
+          }
+          itemIds.push(blanket.itemId);
+        }
+        return Right.of(itemIds);
+      }
+      case EServiceCategory.CARPET_CLEANING: {
+        const itemIds: number[] = [];
+        for (const carpetId of orderItemIds) {
+          const carpet = await new CarpetProvider().getMyCarpet(accountId, carpetId);
+          if (carpet === null) {
+            return Left.of(
+              ResponseUtil.managerResponse(
+                new HttpStatus(HttpStatusCode.NOT_FOUND),
+                null,
+                [new ClientError(ClientErrorCode.HAS_NO_CARPET_WITH_ID)],
+                null,
+              ),
+            );
+          }
+          itemIds.push(carpet.itemId);
+        }
+        return Right.of(itemIds);
+      }
+      case EServiceCategory.CHAIR_CLEANING: {
+        const itemIds: number[] = [];
+        for (const chairId of orderItemIds) {
+          const chair = await new ChairProvider().getMyChair(accountId, chairId);
+          if (chair === null) {
+            return Left.of(
+              ResponseUtil.managerResponse(
+                new HttpStatus(HttpStatusCode.NOT_FOUND),
+                null,
+                [new ClientError(ClientErrorCode.HAS_NO_CHAIR_WITH_ID)],
+                null,
+              ),
+            );
+          }
+          itemIds.push(chair.itemId);
+        }
+        return Right.of(itemIds);
+      }
+      case EServiceCategory.CURTAIN_CLEANING: {
+        const itemIds: number[] = [];
+        for (const curtainId of orderItemIds) {
+          const curtain = await new CurtainProvider().getMyCurtain(accountId, curtainId);
+          if (curtain === null) {
+            return Left.of(
+              ResponseUtil.managerResponse(
+                new HttpStatus(HttpStatusCode.NOT_FOUND),
+                null,
+                [new ClientError(ClientErrorCode.HAS_NO_CURTAIN_WITH_ID)],
+                null,
+              ),
+            );
+          }
+          itemIds.push(curtain.itemId);
+        }
+        return Right.of(itemIds);
+      }
+      case EServiceCategory.QUILT_CLEANING: {
+        const itemIds: number[] = [];
+        for (const quiltId of orderItemIds) {
+          const quilt = await new QuiltProvider().getMyQuilt(accountId, quiltId);
+          if (quilt === null) {
+            return Left.of(
+              ResponseUtil.managerResponse(
+                new HttpStatus(HttpStatusCode.NOT_FOUND),
+                null,
+                [new ClientError(ClientErrorCode.HAS_NO_QUILT_WITH_ID)],
+                null,
+              ),
+            );
+          }
+          itemIds.push(quilt.itemId);
+        }
+        return Right.of(itemIds);
+      }
+      case EServiceCategory.SOFA_CLEANING: {
+        const itemIds: number[] = [];
+        for (const sofaId of orderItemIds) {
+          const sofa = await new SofaProvider().getMySofa(accountId, sofaId);
+          if (sofa === null) {
+            return Left.of(
+              ResponseUtil.managerResponse(
+                new HttpStatus(HttpStatusCode.NOT_FOUND),
+                null,
+                [new ClientError(ClientErrorCode.HAS_NO_SOFA_WITH_ID)],
+                null,
+              ),
+            );
+          }
+          itemIds.push(sofa.itemId);
+        }
+        return Right.of(itemIds);
+      }
+      case EServiceCategory.VEHICLE_CLEANING: {
+        const itemIds: number[] = [];
+        for (const vehicleId of orderItemIds) {
+          const vehicle = await new VehicleProvider().getMyVehicle(accountId, vehicleId);
+          if (vehicle === null) {
+            return Left.of(
+              ResponseUtil.managerResponse(
+                new HttpStatus(HttpStatusCode.NOT_FOUND),
+                null,
+                [new ClientError(ClientErrorCode.HAS_NO_VEHICLE_WITH_ID)],
+                null,
+              ),
+            );
+          }
+          itemIds.push(vehicle.itemId);
+        }
+        return Right.of(itemIds);
+      }
+    }
+  }
+
   public static async getOrderItems(
     orderId: number,
     serviceCategory: EServiceCategory,
@@ -222,13 +378,13 @@ export class OrderHelper implements IHelper {
   > {
     const beds = [];
     for (const orderItem of orderItems) {
-      const bed = await new BedProvider().getBed(orderItem.itemId);
+      const bed = await new BedProvider().getBedByItemId(orderItem.itemId);
       if (bed === null) {
         return Left.of(
           ResponseUtil.managerResponse(
             new HttpStatus(HttpStatusCode.NOT_FOUND),
             null,
-            [new ClientError(ClientErrorCode.BED_NOT_FOUND)],
+            [new ClientError(ClientErrorCode.HAS_NO_BED_WITH_ID)],
             null,
           ),
         );
@@ -266,7 +422,7 @@ export class OrderHelper implements IHelper {
   > {
     const blankets = [];
     for (const orderItem of orderItems) {
-      const blanket = await new BlanketProvider().getBlanket(orderItem.itemId);
+      const blanket = await new BlanketProvider().getBlanketByItemId(orderItem.itemId);
       if (blanket === null) {
         return Left.of(
           ResponseUtil.managerResponse(
@@ -312,13 +468,13 @@ export class OrderHelper implements IHelper {
   > {
     const carpets = [];
     for (const orderItem of orderItems) {
-      const carpet = await new CarpetProvider().getCarpet(orderItem.itemId);
+      const carpet = await new CarpetProvider().getCarpetByItemId(orderItem.itemId);
       if (carpet === null) {
         return Left.of(
           ResponseUtil.managerResponse(
             new HttpStatus(HttpStatusCode.NOT_FOUND),
             null,
-            [new ClientError(ClientErrorCode.CARPET_NOT_FOUND)],
+            [new ClientError(ClientErrorCode.HAS_NO_CARPET_WITH_ID)],
             null,
           ),
         );
@@ -357,13 +513,13 @@ export class OrderHelper implements IHelper {
   > {
     const chairs = [];
     for (const orderItem of orderItems) {
-      const chair = await new ChairProvider().getChair(orderItem.itemId);
+      const chair = await new ChairProvider().getChairByItemId(orderItem.itemId);
       if (chair === null) {
         return Left.of(
           ResponseUtil.managerResponse(
             new HttpStatus(HttpStatusCode.NOT_FOUND),
             null,
-            [new ClientError(ClientErrorCode.CHAIR_NOT_FOUND)],
+            [new ClientError(ClientErrorCode.HAS_NO_CHAIR_WITH_ID)],
             null,
           ),
         );
@@ -402,13 +558,13 @@ export class OrderHelper implements IHelper {
   > {
     const curtains = [];
     for (const orderItem of orderItems) {
-      const curtain = await new CurtainProvider().getCurtain(orderItem.itemId);
+      const curtain = await new CurtainProvider().getCurtainByItemId(orderItem.itemId);
       if (curtain === null) {
         return Left.of(
           ResponseUtil.managerResponse(
             new HttpStatus(HttpStatusCode.NOT_FOUND),
             null,
-            [new ClientError(ClientErrorCode.CURTAIN_NOT_FOUND)],
+            [new ClientError(ClientErrorCode.HAS_NO_CURTAIN_WITH_ID)],
             null,
           ),
         );
@@ -426,5 +582,144 @@ export class OrderHelper implements IHelper {
       });
     }
     return Right.of(curtains);
+  }
+
+  private static async getQuilts(orderItems: OrderItemModel[]): Promise<
+    Either<
+      ManagerResponse<null>,
+      {
+        readonly quiltId: number;
+        readonly name: string;
+        readonly description: string;
+        readonly medias: {
+          readonly mediaId: number;
+          readonly mediaType: EMediaType;
+          readonly extension: string;
+          readonly url: string;
+        }[];
+        readonly quiltSize: EQuiltSize | null;
+        readonly quiltMaterial: EQuiltMaterial | null;
+      }[]
+    >
+  > {
+    const quilts = [];
+    for (const orderItem of orderItems) {
+      const quilt = await new QuiltProvider().getQuiltByItemId(orderItem.itemId);
+      if (quilt === null) {
+        return Left.of(
+          ResponseUtil.managerResponse(
+            new HttpStatus(HttpStatusCode.NOT_FOUND),
+            null,
+            [new ClientError(ClientErrorCode.HAS_NO_QUILT_WITH_ID)],
+            null,
+          ),
+        );
+      }
+      const medias = await new ItemMediaProvider().getItemMedias(quilt.itemId);
+      const mediaEntites = await MediaHelper.mediasToEntities(medias);
+      quilts.push({
+        quiltId: quilt.quiltId,
+        name: quilt.name,
+        description: quilt.description,
+        medias: mediaEntites,
+        quiltSize: quilt.quiltSize,
+        quiltMaterial: quilt.quiltMaterial,
+      });
+    }
+    return Right.of(quilts);
+  }
+
+  private static async getSofas(orderItems: OrderItemModel[]): Promise<
+    Either<
+      ManagerResponse<null>,
+      {
+        readonly sofaId: number;
+        readonly name: string;
+        readonly description: string;
+        readonly medias: {
+          readonly mediaId: number;
+          readonly mediaType: EMediaType;
+          readonly extension: string;
+          readonly url: string;
+        }[];
+        readonly isCushioned: boolean | null;
+        readonly sofaType: ESofaType | null;
+        readonly sofaMaterial: string | null;
+      }[]
+    >
+  > {
+    const sofas = [];
+    for (const orderItem of orderItems) {
+      const sofa = await new SofaProvider().getSofaByItemId(orderItem.itemId);
+      if (sofa === null) {
+        return Left.of(
+          ResponseUtil.managerResponse(
+            new HttpStatus(HttpStatusCode.NOT_FOUND),
+            null,
+            [new ClientError(ClientErrorCode.HAS_NO_SOFA_WITH_ID)],
+            null,
+          ),
+        );
+      }
+      const medias = await new ItemMediaProvider().getItemMedias(sofa.itemId);
+      const mediaEntites = await MediaHelper.mediasToEntities(medias);
+      sofas.push({
+        sofaId: sofa.sofaId,
+        name: sofa.name,
+        description: sofa.description,
+        medias: mediaEntites,
+        isCushioned: sofa.isCushioned,
+        sofaType: sofa.sofaType,
+        sofaMaterial: sofa.sofaMaterial,
+      });
+    }
+    return Right.of(sofas);
+  }
+
+  private static async getVehicles(orderItems: OrderItemModel[]): Promise<
+    Either<
+      ManagerResponse<null>,
+      {
+        readonly vehicleId: number;
+        readonly name: string;
+        readonly description: string;
+        readonly medias: {
+          readonly mediaId: number;
+          readonly mediaType: EMediaType;
+          readonly extension: string;
+          readonly url: string;
+        }[];
+        readonly brand: string | null;
+        readonly model: string | null;
+        readonly vehicleType: EVehicleType | null;
+      }[]
+    >
+  > {
+    const vehicles = [];
+    for (const orderItem of orderItems) {
+      const vehicle = await new VehicleProvider().getVehicleByItemId(orderItem.itemId);
+      if (vehicle === null) {
+        return Left.of(
+          ResponseUtil.managerResponse(
+            new HttpStatus(HttpStatusCode.NOT_FOUND),
+            null,
+            [new ClientError(ClientErrorCode.HAS_NO_VEHICLE_WITH_ID)],
+            null,
+          ),
+        );
+      }
+      const medias = await new ItemMediaProvider().getItemMedias(vehicle.itemId);
+      const mediaEntites = await MediaHelper.mediasToEntities(medias);
+      vehicles.push({
+        vehicleId: vehicle.vehicleId,
+        name: vehicle.name,
+        description: vehicle.description,
+        medias: mediaEntites,
+        brand: vehicle.brand,
+        model: vehicle.model,
+        vehicleType: vehicle.vehicleType,
+      });
+    }
+    return Right.of(vehicles);
   }
 }

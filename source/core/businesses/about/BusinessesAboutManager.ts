@@ -19,7 +19,7 @@ export class BusinessesAboutManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.NO_BUSINESS_FOUND)],
+        [new ClientError(ClientErrorCode.BUSINESS_NOT_FOUND)],
         null,
       );
     }

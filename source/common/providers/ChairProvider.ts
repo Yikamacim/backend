@@ -6,10 +6,16 @@ import { ChairViewModel } from "../models/ChairViewModel";
 import { ChairViewQueries } from "../queries/ChairViewQueries";
 
 export class ChairProvider implements IProvider {
-  public async getChair(chairId: number): Promise<ProviderResponse<ChairViewModel | null>> {
+  public async getMyChair(
+    accountId: number,
+    chairId: number,
+  ): Promise<ProviderResponse<ChairViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(ChairViewQueries.GET_CHAIR_$CHID, [chairId]);
+      const results = await DbConstants.POOL.query(ChairViewQueries.GET_CHAIR_$ACID_$CHID, [
+        accountId,
+        chairId,
+      ]);
       const record: unknown = results.rows[0];
       if (!ProtoUtil.isProtovalid(record)) {
         return null;
@@ -21,16 +27,10 @@ export class ChairProvider implements IProvider {
     }
   }
 
-  public async getMyChair(
-    accountId: number,
-    chairId: number,
-  ): Promise<ProviderResponse<ChairViewModel | null>> {
+  public async getChairByItemId(itemId: number): Promise<ProviderResponse<ChairViewModel | null>> {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
-      const results = await DbConstants.POOL.query(ChairViewQueries.GET_CHAIR_$ACID_$CHID, [
-        accountId,
-        chairId,
-      ]);
+      const results = await DbConstants.POOL.query(ChairViewQueries.GET_CHAIR_$ITID, [itemId]);
       const record: unknown = results.rows[0];
       if (!ProtoUtil.isProtovalid(record)) {
         return null;

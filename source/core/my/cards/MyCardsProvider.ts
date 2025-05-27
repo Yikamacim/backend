@@ -5,23 +5,15 @@ import { UnexpectedDatabaseStateError } from "../../../app/schemas/ServerError";
 import { ProtoUtil } from "../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../app/utils/ResponseUtil";
 import { CardModel } from "../../../common/models/CardModel";
+import { CardProvider } from "../../../common/providers/CardProvider";
 import { CardQueries } from "../../../common/queries/CardQueries";
 
 export class MyCardsProvider implements IProvider {
-  public async getMyActiveCards(accountId: number): Promise<ProviderResponse<CardModel[]>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      const results = await DbConstants.POOL.query(CardQueries.GET_CARDS_$ACID_$ISDEL, [
-        accountId,
-        false,
-      ]);
-      const records: unknown[] = results.rows;
-      return await ResponseUtil.providerResponse(CardModel.fromRecords(records));
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
-    }
+  public constructor(private readonly cardProvider = new CardProvider()) {
+    this.getMyActiveCards = this.cardProvider.getMyActiveCards.bind(this.cardProvider);
   }
+
+  public getMyActiveCards: typeof this.cardProvider.getMyActiveCards;
 
   public async getMyActiveCard(
     accountId: number,

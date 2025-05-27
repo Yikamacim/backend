@@ -66,7 +66,7 @@ export class MyAddressesManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.ADDRESS_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_ADDRESS_WITH_ID)],
         null,
       );
     }
@@ -91,7 +91,7 @@ export class MyAddressesManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.ADDRESS_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_ADDRESS_WITH_ID)],
         null,
       );
     }
@@ -132,7 +132,7 @@ export class MyAddressesManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.ADDRESS_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.HAS_NO_ADDRESS_WITH_ID)],
         null,
       );
     }

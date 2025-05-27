@@ -3,6 +3,7 @@ import { Method } from "../../../../app/enums/Method";
 import { RouteType } from "../../../../app/enums/RouteType";
 import { RouteHelper } from "../../../../app/helpers/RouteHelper";
 import type { IBuilder } from "../../../../app/interfaces/IBuilder";
+import { MyOrdersController } from "./MyOrdersController";
 
 export class MyOrdersBuilder implements IBuilder {
   public static readonly BASE_ROUTE = "/my/orders";
