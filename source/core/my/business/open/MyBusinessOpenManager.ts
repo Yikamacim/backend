@@ -1,4 +1,3 @@
-import type { TodayHours } from "../../../../@types/hours";
 import type { ManagerResponse } from "../../../../@types/responses";
 import type { TokenPayload } from "../../../../@types/tokens";
 import type { IManager } from "../../../../app/interfaces/IManager";
@@ -24,7 +23,7 @@ export class MyBusinessOpenManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.HAS_NO_BUSINESS)],
+        [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_BUSINESS)],
         null,
       );
     }
@@ -100,7 +99,7 @@ export class MyBusinessOpenManager implements IManager {
         return ResponseUtil.managerResponse(
           new HttpStatus(HttpStatusCode.NOT_FOUND),
           null,
-          [new ClientError(ClientErrorCode.HAS_NO_MEDIA_WITH_ID)],
+          [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_MEDIA_WITH_THIS_ID)],
           null,
         );
       }
@@ -108,16 +107,19 @@ export class MyBusinessOpenManager implements IManager {
     }
     const allServiceCategories = services.map((service) => service.serviceCategory);
     const serviceCategories = [...new Set(allServiceCategories)];
-    let todayHours: TodayHours | null = null;
+    let hoursToday: {
+      readonly from: string | null;
+      readonly to: string | null;
+    } | null = null;
     if (hours !== null) {
-      todayHours = HoursHelper.getTodayHours(hours);
+      hoursToday = HoursHelper.getTodayHours(hours);
     }
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
       MyBusinessOpenResponse.fromEntity(
-        new BusinessEntity(business, mediaEntity, serviceCategories, todayHours),
+        new BusinessEntity(business, mediaEntity, serviceCategories, hoursToday),
       ),
     );
   }

@@ -11,31 +11,11 @@ import { CardQueries } from "../../../common/queries/CardQueries";
 export class MyCardsProvider implements IProvider {
   public constructor(private readonly cardProvider = new CardProvider()) {
     this.getMyActiveCards = this.cardProvider.getMyActiveCards.bind(this.cardProvider);
+    this.getMyActiveCard = this.cardProvider.getMyActiveCard.bind(this.cardProvider);
   }
 
   public getMyActiveCards: typeof this.cardProvider.getMyActiveCards;
-
-  public async getMyActiveCard(
-    accountId: number,
-    cardId: number,
-  ): Promise<ProviderResponse<CardModel | null>> {
-    await DbConstants.POOL.query(DbConstants.BEGIN);
-    try {
-      const results = await DbConstants.POOL.query(CardQueries.GET_CARD_$ACID_$CAID_$ISDEL, [
-        accountId,
-        cardId,
-        false,
-      ]);
-      const record: unknown = results.rows[0];
-      if (!ProtoUtil.isProtovalid(record)) {
-        return await ResponseUtil.providerResponse(null);
-      }
-      return await ResponseUtil.providerResponse(CardModel.fromRecord(record));
-    } catch (error) {
-      await DbConstants.POOL.query(DbConstants.ROLLBACK);
-      throw error;
-    }
-  }
+  public getMyActiveCard: typeof this.cardProvider.getMyActiveCard;
 
   public async createMyCard(
     accountId: number,

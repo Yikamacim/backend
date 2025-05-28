@@ -6,6 +6,8 @@ import type { IHelper } from "../../app/interfaces/IHelper";
 import { ClientError, ClientErrorCode } from "../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../app/utils/ResponseUtil";
+import type { MediaEntity } from "../entities/MediaEntity";
+import { OrderEntity } from "../entities/OrderEntity";
 import type { EBedSize } from "../enums/EBedSize";
 import type { EBlanketMaterial } from "../enums/EBlanketMaterial";
 import type { EBlanketSize } from "../enums/EBlanketSize";
@@ -18,19 +20,92 @@ import { EServiceCategory } from "../enums/EServiceCategory";
 import type { ESofaType } from "../enums/ESofaType";
 import type { EVehicleType } from "../enums/EVehicleType";
 import type { OrderItemModel } from "../models/OrderItemModel";
+import type { OrderViewModel } from "../models/OrderViewModel";
 import { BedProvider } from "../providers/BedProvider";
 import { BlanketProvider } from "../providers/BlanketProvider";
+import { BusinessMediaProvider } from "../providers/BusinessMediaProvider";
 import { CarpetProvider } from "../providers/CarpetProvider";
 import { ChairProvider } from "../providers/ChairProvider";
 import { CurtainProvider } from "../providers/CurtainProvider";
+import { HoursProvider } from "../providers/HoursProvider";
 import { ItemMediaProvider } from "../providers/ItemMediaProvider";
+import { MediaProvider } from "../providers/MediaProvider";
 import { OrderItemProvider } from "../providers/OrderItemProvider";
 import { QuiltProvider } from "../providers/QuiltProvider";
 import { SofaProvider } from "../providers/SofaProvider";
 import { VehicleProvider } from "../providers/VehicleProvider";
+import { HoursHelper } from "./HoursHelper";
 import { MediaHelper } from "./MediaHelper";
 
 export class OrderHelper implements IHelper {
+  public static async orderToEntity(
+    order: OrderViewModel,
+  ): Promise<Either<ManagerResponse<null>, OrderEntity>> {
+    let serviceMediaEntity: MediaEntity | null = null;
+    if (order.serviceMediaId !== null) {
+      const serviceMedia = await new MediaProvider().getMedia(order.serviceMediaId);
+      if (serviceMedia === null) {
+        return Left.of(
+          ResponseUtil.managerResponse(
+            new HttpStatus(HttpStatusCode.NOT_FOUND),
+            null,
+            [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_MEDIA_WITH_THIS_ID)],
+            null,
+          ),
+        );
+      }
+      serviceMediaEntity = await MediaHelper.mediaToEntity(serviceMedia);
+    }
+    let businessMediaEntity: MediaEntity | null = null;
+    if (order.businessMediaId !== null) {
+      const media = await new BusinessMediaProvider().getBusinessMedia(
+        order.businessId,
+        order.businessMediaId,
+      );
+      if (media === null) {
+        return Left.of(
+          ResponseUtil.managerResponse(
+            new HttpStatus(HttpStatusCode.NOT_FOUND),
+            null,
+            [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_MEDIA_WITH_THIS_ID)],
+            null,
+          ),
+        );
+      }
+      businessMediaEntity = await MediaHelper.mediaToEntity(media);
+    }
+    let hoursToday: {
+      readonly from: string | null;
+      readonly to: string | null;
+    } | null = null;
+    const hours = await new HoursProvider().getHours(order.businessId);
+    if (hours !== null) {
+      hoursToday = HoursHelper.getTodayHours(hours);
+    }
+    const itemsResult = await OrderHelper.getOrderItems(order.orderId, order.serviceCategory);
+    if (itemsResult.isLeft()) {
+      return Left.of(itemsResult.get());
+    }
+    const items = itemsResult.get();
+    return Right.of(
+      new OrderEntity(order, serviceMediaEntity, businessMediaEntity, hoursToday, items),
+    );
+  }
+
+  public static async ordersToEntities(
+    orders: OrderViewModel[],
+  ): Promise<Either<ManagerResponse<null>, OrderEntity[]>> {
+    const entities: OrderEntity[] = [];
+    for (const order of orders) {
+      const entityResult = await OrderHelper.orderToEntity(order);
+      if (entityResult.isLeft()) {
+        return Left.of(entityResult.get());
+      }
+      entities.push(entityResult.get());
+    }
+    return Right.of(entities);
+  }
+
   public static async findMyOrderItems(
     accountId: number,
     orderItemIds: number[],
@@ -46,7 +121,7 @@ export class OrderHelper implements IHelper {
               ResponseUtil.managerResponse(
                 new HttpStatus(HttpStatusCode.NOT_FOUND),
                 null,
-                [new ClientError(ClientErrorCode.HAS_NO_BED_WITH_ID)],
+                [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_BED_WITH_THIS_ID)],
                 null,
               ),
             );
@@ -64,7 +139,7 @@ export class OrderHelper implements IHelper {
               ResponseUtil.managerResponse(
                 new HttpStatus(HttpStatusCode.NOT_FOUND),
                 null,
-                [new ClientError(ClientErrorCode.BLANKET_NOT_FOUND)],
+                [new ClientError(ClientErrorCode.ACCOUNT_BLANKET_NOT_FOUND)],
                 null,
               ),
             );
@@ -82,7 +157,7 @@ export class OrderHelper implements IHelper {
               ResponseUtil.managerResponse(
                 new HttpStatus(HttpStatusCode.NOT_FOUND),
                 null,
-                [new ClientError(ClientErrorCode.HAS_NO_CARPET_WITH_ID)],
+                [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_CARPET_WITH_THIS_ID)],
                 null,
               ),
             );
@@ -100,7 +175,7 @@ export class OrderHelper implements IHelper {
               ResponseUtil.managerResponse(
                 new HttpStatus(HttpStatusCode.NOT_FOUND),
                 null,
-                [new ClientError(ClientErrorCode.HAS_NO_CHAIR_WITH_ID)],
+                [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_CHAIR_WITH_THIS_ID)],
                 null,
               ),
             );
@@ -118,7 +193,7 @@ export class OrderHelper implements IHelper {
               ResponseUtil.managerResponse(
                 new HttpStatus(HttpStatusCode.NOT_FOUND),
                 null,
-                [new ClientError(ClientErrorCode.HAS_NO_CURTAIN_WITH_ID)],
+                [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_CURTAIN_WITH_THIS_ID)],
                 null,
               ),
             );
@@ -136,7 +211,7 @@ export class OrderHelper implements IHelper {
               ResponseUtil.managerResponse(
                 new HttpStatus(HttpStatusCode.NOT_FOUND),
                 null,
-                [new ClientError(ClientErrorCode.HAS_NO_QUILT_WITH_ID)],
+                [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_QUILT_WITH_THIS_ID)],
                 null,
               ),
             );
@@ -154,7 +229,7 @@ export class OrderHelper implements IHelper {
               ResponseUtil.managerResponse(
                 new HttpStatus(HttpStatusCode.NOT_FOUND),
                 null,
-                [new ClientError(ClientErrorCode.HAS_NO_SOFA_WITH_ID)],
+                [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_SOFA_WITH_THIS_ID)],
                 null,
               ),
             );
@@ -172,7 +247,7 @@ export class OrderHelper implements IHelper {
               ResponseUtil.managerResponse(
                 new HttpStatus(HttpStatusCode.NOT_FOUND),
                 null,
-                [new ClientError(ClientErrorCode.HAS_NO_VEHICLE_WITH_ID)],
+                [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_VEHICLE_WITH_THIS_ID)],
                 null,
               ),
             );
@@ -184,7 +259,7 @@ export class OrderHelper implements IHelper {
     }
   }
 
-  public static async getOrderItems(
+  private static async getOrderItems(
     orderId: number,
     serviceCategory: EServiceCategory,
   ): Promise<
@@ -384,7 +459,7 @@ export class OrderHelper implements IHelper {
           ResponseUtil.managerResponse(
             new HttpStatus(HttpStatusCode.NOT_FOUND),
             null,
-            [new ClientError(ClientErrorCode.HAS_NO_BED_WITH_ID)],
+            [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_BED_WITH_THIS_ID)],
             null,
           ),
         );
@@ -428,7 +503,7 @@ export class OrderHelper implements IHelper {
           ResponseUtil.managerResponse(
             new HttpStatus(HttpStatusCode.NOT_FOUND),
             null,
-            [new ClientError(ClientErrorCode.BLANKET_NOT_FOUND)],
+            [new ClientError(ClientErrorCode.ACCOUNT_BLANKET_NOT_FOUND)],
             null,
           ),
         );
@@ -474,7 +549,7 @@ export class OrderHelper implements IHelper {
           ResponseUtil.managerResponse(
             new HttpStatus(HttpStatusCode.NOT_FOUND),
             null,
-            [new ClientError(ClientErrorCode.HAS_NO_CARPET_WITH_ID)],
+            [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_CARPET_WITH_THIS_ID)],
             null,
           ),
         );
@@ -519,7 +594,7 @@ export class OrderHelper implements IHelper {
           ResponseUtil.managerResponse(
             new HttpStatus(HttpStatusCode.NOT_FOUND),
             null,
-            [new ClientError(ClientErrorCode.HAS_NO_CHAIR_WITH_ID)],
+            [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_CHAIR_WITH_THIS_ID)],
             null,
           ),
         );
@@ -564,7 +639,7 @@ export class OrderHelper implements IHelper {
           ResponseUtil.managerResponse(
             new HttpStatus(HttpStatusCode.NOT_FOUND),
             null,
-            [new ClientError(ClientErrorCode.HAS_NO_CURTAIN_WITH_ID)],
+            [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_CURTAIN_WITH_THIS_ID)],
             null,
           ),
         );
@@ -610,7 +685,7 @@ export class OrderHelper implements IHelper {
           ResponseUtil.managerResponse(
             new HttpStatus(HttpStatusCode.NOT_FOUND),
             null,
-            [new ClientError(ClientErrorCode.HAS_NO_QUILT_WITH_ID)],
+            [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_QUILT_WITH_THIS_ID)],
             null,
           ),
         );
@@ -656,7 +731,7 @@ export class OrderHelper implements IHelper {
           ResponseUtil.managerResponse(
             new HttpStatus(HttpStatusCode.NOT_FOUND),
             null,
-            [new ClientError(ClientErrorCode.HAS_NO_SOFA_WITH_ID)],
+            [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_SOFA_WITH_THIS_ID)],
             null,
           ),
         );
@@ -703,7 +778,7 @@ export class OrderHelper implements IHelper {
           ResponseUtil.managerResponse(
             new HttpStatus(HttpStatusCode.NOT_FOUND),
             null,
-            [new ClientError(ClientErrorCode.HAS_NO_VEHICLE_WITH_ID)],
+            [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_VEHICLE_WITH_THIS_ID)],
             null,
           ),
         );

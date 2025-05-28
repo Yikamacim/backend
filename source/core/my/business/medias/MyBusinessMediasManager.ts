@@ -23,7 +23,7 @@ export class MyBusinessMediasManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.HAS_NO_BUSINESS)],
+        [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_BUSINESS)],
         null,
       );
     }
@@ -46,7 +46,7 @@ export class MyBusinessMediasManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.HAS_NO_BUSINESS)],
+        [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_BUSINESS)],
         null,
       );
     }
@@ -79,7 +79,7 @@ export class MyBusinessMediasManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.HAS_NO_BUSINESS)],
+        [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_BUSINESS)],
         null,
       );
     }
@@ -113,7 +113,7 @@ export class MyBusinessMediasManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.HAS_NO_BUSINESS)],
+        [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_BUSINESS)],
         null,
       );
     }

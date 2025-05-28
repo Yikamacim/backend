@@ -76,7 +76,7 @@ export class MyBlanketsManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BLANKET_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.ACCOUNT_BLANKET_NOT_FOUND)],
         null,
       );
     }
@@ -103,7 +103,7 @@ export class MyBlanketsManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BLANKET_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.ACCOUNT_BLANKET_NOT_FOUND)],
         null,
       );
     }
@@ -148,7 +148,7 @@ export class MyBlanketsManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.BLANKET_NOT_FOUND)],
+        [new ClientError(ClientErrorCode.ACCOUNT_BLANKET_NOT_FOUND)],
         null,
       );
     }

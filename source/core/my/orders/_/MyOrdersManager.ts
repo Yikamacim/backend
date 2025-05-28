@@ -4,10 +4,6 @@ import type { IManager } from "../../../../app/interfaces/IManager";
 import { ClientError, ClientErrorCode } from "../../../../app/schemas/ClientError";
 import { HttpStatus, HttpStatusCode } from "../../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
-import type { MediaEntity } from "../../../../common/entities/MediaEntity";
-import { OrderEntity } from "../../../../common/entities/OrderEntity";
-import { HoursHelper } from "../../../../common/helpers/HoursHelper";
-import { MediaHelper } from "../../../../common/helpers/MediaHelper";
 import { OrderHelper } from "../../../../common/helpers/OrderHelper";
 import { MyOrdersProvider } from "./MyOrdersProvider";
 import type { MyOrdersParams } from "./schemas/MyOrdersParams";
@@ -21,51 +17,11 @@ export class MyOrdersManager implements IManager {
     payload: TokenPayload,
   ): Promise<ManagerResponse<MyOrdersResponse[] | null>> {
     const orders = await this.provider.getMyOrders(payload.accountId);
-    const entities: OrderEntity[] = [];
-    for (const order of orders) {
-      let serviceMediaEntity: MediaEntity | null = null;
-      if (order.serviceMediaId !== null) {
-        const serviceMedia = await this.provider.getMedia(order.serviceMediaId);
-        if (serviceMedia === null) {
-          return ResponseUtil.managerResponse(
-            new HttpStatus(HttpStatusCode.NOT_FOUND),
-            null,
-            [new ClientError(ClientErrorCode.HAS_NO_MEDIA_WITH_ID)],
-            null,
-          );
-        }
-        serviceMediaEntity = await MediaHelper.mediaToEntity(serviceMedia);
-      }
-      let businessMediaEntity: MediaEntity | null = null;
-      if (order.businessMediaId !== null) {
-        const media = await this.provider.getBusinessMedia(order.businessId, order.businessMediaId);
-        if (media === null) {
-          return ResponseUtil.managerResponse(
-            new HttpStatus(HttpStatusCode.NOT_FOUND),
-            null,
-            [new ClientError(ClientErrorCode.HAS_NO_MEDIA_WITH_ID)],
-            null,
-          );
-        }
-        businessMediaEntity = await MediaHelper.mediaToEntity(media);
-      }
-      let hoursToday: {
-        readonly from: string | null;
-        readonly to: string | null;
-      } | null = null;
-      const hours = await this.provider.getHours(order.businessId);
-      if (hours !== null) {
-        hoursToday = HoursHelper.getTodayHours(hours);
-      }
-      const itemsResult = await OrderHelper.getOrderItems(order.orderId, order.serviceCategory);
-      if (itemsResult.isLeft()) {
-        return itemsResult.get();
-      }
-      const items = itemsResult.get();
-      entities.push(
-        new OrderEntity(order, serviceMediaEntity, businessMediaEntity, hoursToday, items),
-      );
+    const entitiesResult = await OrderHelper.ordersToEntities(orders);
+    if (entitiesResult.isLeft()) {
+      return entitiesResult.get();
     }
+    const entities = entitiesResult.get();
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
@@ -92,7 +48,7 @@ export class MyOrdersManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.HAS_NO_ADDRESS_WITH_ID)],
+        [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_ADDRESS_WITH_THIS_ID)],
         null,
       );
     }
@@ -110,7 +66,7 @@ export class MyOrdersManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.CONFLICT),
         null,
-        [new ClientError(ClientErrorCode.BUSINESS_DOESNT_SERVE_AREA)],
+        [new ClientError(ClientErrorCode.BUSINESS_DOESNT_SERVE_THIS_AREA)],
         null,
       );
     }
@@ -131,7 +87,26 @@ export class MyOrdersManager implements IManager {
       return itemIdsResult.get();
     }
     const itemIds = itemIdsResult.get();
-    const order = await this.provider.createMyOrder();
+    const order = await this.provider.createMyOrder(
+      service.serviceId,
+      address.addressId,
+      payload.accountId,
+      itemIds,
+    );
+    if (request.note !== null) {
+      await this.provider.createMessage(order.orderId, false, request.note);
+    }
+    const entityResult = await OrderHelper.orderToEntity(order);
+    if (entityResult.isLeft()) {
+      return entityResult.get();
+    }
+    const entity = entityResult.get();
+    return ResponseUtil.managerResponse(
+      new HttpStatus(HttpStatusCode.CREATED),
+      null,
+      [],
+      MyOrdersResponse.fromEntity(entity),
+    );
   }
 
   public async getMyOrders$(
@@ -143,56 +118,20 @@ export class MyOrdersManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.HAS_NO_ORDER_WITH_ID)],
+        [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_ORDER_WITH_THIS_ID)],
         null,
       );
     }
-    let serviceMediaEntity: MediaEntity | null = null;
-    if (order.serviceMediaId !== null) {
-      const serviceMedia = await this.provider.getMedia(order.serviceMediaId);
-      if (serviceMedia === null) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.HAS_NO_MEDIA_WITH_ID)],
-          null,
-        );
-      }
-      serviceMediaEntity = await MediaHelper.mediaToEntity(serviceMedia);
+    const entityResult = await OrderHelper.orderToEntity(order);
+    if (entityResult.isLeft()) {
+      return entityResult.get();
     }
-    let businessMediaEntity: MediaEntity | null = null;
-    if (order.businessMediaId !== null) {
-      const media = await this.provider.getBusinessMedia(order.businessId, order.businessMediaId);
-      if (media === null) {
-        return ResponseUtil.managerResponse(
-          new HttpStatus(HttpStatusCode.NOT_FOUND),
-          null,
-          [new ClientError(ClientErrorCode.HAS_NO_MEDIA_WITH_ID)],
-          null,
-        );
-      }
-      businessMediaEntity = await MediaHelper.mediaToEntity(media);
-    }
-    let hoursToday: {
-      readonly from: string | null;
-      readonly to: string | null;
-    } | null = null;
-    const hours = await this.provider.getHours(order.businessId);
-    if (hours !== null) {
-      hoursToday = HoursHelper.getTodayHours(hours);
-    }
-    const itemsResult = await OrderHelper.getOrderItems(order.orderId, order.serviceCategory);
-    if (itemsResult.isLeft()) {
-      return itemsResult.get();
-    }
-    const items = itemsResult.get();
+    const entity = entityResult.get();
     return ResponseUtil.managerResponse(
       new HttpStatus(HttpStatusCode.OK),
       null,
       [],
-      MyOrdersResponse.fromEntity(
-        new OrderEntity(order, serviceMediaEntity, businessMediaEntity, hoursToday, items),
-      ),
+      MyOrdersResponse.fromEntity(entity),
     );
   }
 }

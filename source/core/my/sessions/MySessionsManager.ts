@@ -44,7 +44,7 @@ export class MySessionsManager implements IManager {
       return ResponseUtil.managerResponse(
         new HttpStatus(HttpStatusCode.NOT_FOUND),
         null,
-        [new ClientError(ClientErrorCode.HAS_NO_SESSION_WITH_ID)],
+        [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_SESSION_WITH_THIS_ID)],
         null,
       );
     }

@@ -46,7 +46,7 @@ export class MyBusinessBankProvider implements IProvider {
     await DbConstants.POOL.query(DbConstants.BEGIN);
     try {
       const results = await DbConstants.POOL.query(
-        BankAccountQueries.UPDATE_BANK_ACCOUNT_$BSID_$OWNER_$IBAN_$BLCH,
+        BankAccountQueries.UPDATE_BANK_ACCOUNT_RT_$BSID_$OWNER_$IBAN_$BLCH,
         [businessId, owner, iban, 0],
       );
       const record: unknown = results.rows[0];

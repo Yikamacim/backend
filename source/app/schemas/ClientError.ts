@@ -88,6 +88,7 @@ export enum ClientErrorCode {
   INVALID_CARD_NUMBER_LENGTH = 60024,
   INVALID_CARD_CVV_LENGTH = 60025,
   INVALID_ORDER_NOTE_LENGTH = 60026,
+  INVALID_ORDER_MESSAGE_LENGTH = 60027,
   //  *  7XXXX: Format errors
   INVALID_PHONE_CONTENT = 70001,
   INVALID_PASSWORD_CONTENT = 70002,
@@ -123,7 +124,9 @@ export enum ClientErrorCode {
   INVALID_CARD_EXPIRATION_YEAR_CONTENT = 70032,
   INVALID_CARD_CVV_CONTENT = 70033,
   INVALID_ORDER_NOTE_CONTENT = 70034,
-  DUPLICATE_ITEM_IDS = 70035,
+  INVALID_ORDER_MESSAGE_CONTENT = 70035,
+  DUPLICATE_ITEM_IDS = 70036,
+  INVALID_PRICE_CONTENT = 70037,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -134,7 +137,7 @@ export enum ClientErrorCode {
   FORBIDDEN_ACCOUNT_TYPE = 80100,
   ACCOUNT_ALREADY_EXISTS = 80101,
   //  *  *  802XX: /my/sessions errors
-  HAS_NO_SESSION_WITH_ID = 80200,
+  ACCOUNT_HAS_NO_SESSION_WITH_THIS_ID = 80200,
   CANNOT_DELETE_CURRENT_SESSION = 80201,
   //  *  *  803XX: /verify errors
   PHONE_ALREADY_VERIFIED = 80300,
@@ -156,38 +159,38 @@ export enum ClientErrorCode {
   NO_PROVINCE_FOUND = 80701,
   //  *  *  808XX: /my/addresses errors
   INVALID_ADDRESS_ID = 80800,
-  HAS_NO_ADDRESS_WITH_ID = 80801,
+  ACCOUNT_HAS_NO_ADDRESS_WITH_THIS_ID = 80801,
   CANNOT_DELETE_DEFAULT_ADDRESS = 80802,
   //  *  *  809XX: /my/medias errors
   INVALID_MEDIA_TYPE = 80900,
   //  *  *  810XX: /my/carpets errors
   INVALID_CARPET_ID = 81000,
-  HAS_NO_CARPET_WITH_ID = 81001,
-  HAS_NO_MEDIA_WITH_ID = 81002,
+  ACCOUNT_HAS_NO_CARPET_WITH_THIS_ID = 81001,
+  ACCOUNT_HAS_NO_MEDIA_WITH_THIS_ID = 81002,
   MEDIA_NOT_UPLOADED = 81004,
   //  *  *  811XX: /my/vehicles errors
   INVALID_VEHICLE_ID = 81100,
-  HAS_NO_VEHICLE_WITH_ID = 81101,
+  ACCOUNT_HAS_NO_VEHICLE_WITH_THIS_ID = 81101,
   //  *  *  812XX: /my/curtains errors
   INVALID_CURTAIN_ID = 81200,
-  HAS_NO_CURTAIN_WITH_ID = 81201,
+  ACCOUNT_HAS_NO_CURTAIN_WITH_THIS_ID = 81201,
   //  *  *  813XX: /my/beds errors
   INVALID_BED_ID = 81300,
-  HAS_NO_BED_WITH_ID = 81301,
+  ACCOUNT_HAS_NO_BED_WITH_THIS_ID = 81301,
   //  *  *  814XX: /my/sofas errors
   INVALID_SOFA_ID = 81400,
-  HAS_NO_SOFA_WITH_ID = 81401,
+  ACCOUNT_HAS_NO_SOFA_WITH_THIS_ID = 81401,
   //  *  *  815XX: /my/chairs errors
   INVALID_CHAIR_ID = 81500,
-  HAS_NO_CHAIR_WITH_ID = 81501,
+  ACCOUNT_HAS_NO_CHAIR_WITH_THIS_ID = 81501,
   //  *  *  816XX: /my/quilts errors
   INVALID_QUILT_ID = 81600,
-  HAS_NO_QUILT_WITH_ID = 81601,
+  ACCOUNT_HAS_NO_QUILT_WITH_THIS_ID = 81601,
   //  *  *  817XX: /my/blankets errors
-  HAS_NO_BLANKET_WITH_ID = 81700,
-  BLANKET_NOT_FOUND = 81701,
+  ACCOUNT_HAS_NO_BLANKET_WITH_THIS_ID = 81700,
+  ACCOUNT_BLANKET_NOT_FOUND = 81701,
   //  *  *  818XX: /my/business errors
-  HAS_NO_BUSINESS = 81800,
+  ACCOUNT_HAS_NO_BUSINESS = 81800,
   BUSINESS_ALREADY_EXISTS = 81801,
   BUSINESS_IS_OPEN = 81802,
   //  *  *  819XX: /my/business/hours errors
@@ -225,14 +228,24 @@ export enum ClientErrorCode {
   BUSINESS_NOT_FOUND = 82800,
   //  *  *  829XX: /my/cards errors
   INVALID_CARD_ID = 82900,
-  HAS_NO_CARD_WITH_ID = 82901,
+  ACCOUNT_HAS_NO_CARD_WITH_THIS_ID = 82901,
   CANNOT_DELETE_DEFAULT_CARD = 82902,
   //  *  *  830XX: /my/orders errors
   INVALID_ORDER_ID = 83000,
-  HAS_NO_ORDER_WITH_ID = 83001,
+  ACCOUNT_HAS_NO_ORDER_WITH_THIS_ID = 83001,
   BUSINESS_IS_CLOSED = 83002,
-  HAS_NO_CARD = 83003,
-  BUSINESS_DOESNT_SERVE_AREA = 83004,
+  BUSINESS_DOESNT_SERVE_THIS_AREA = 83003,
+  //  *  *  831XX: /my/business/orders errors
+  BUSINESS_HAS_NO_ORDER_WITH_THIS_ID = 83100,
+  //  *  *  832XX: /my/orders/:orderId/cancel errors
+  ORDER_CANNOT_BE_CANCELED = 83200,
+  //  *  *  833XX: /my/business/orders/:orderId/offer errors
+  OFFER_CANNOT_BE_MADE = 83300,
+  OFFER_CANNOT_BE_WITHDRAWN = 83301,
+  //  *  *  834XX: /my/orders/:orderId/offer errors
+  ORDER_CANNOT_BE_DECLINED = 83400,
+  //  *  *  835XX: /my/orders/:orderId/complete errors
+  ORDER_CANNOT_BE_COMPLETED = 83500,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -300,6 +313,7 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_CARD_NUMBER_LENGTH]: `Provided card number wasn't in the length of ${CardRules.NUMBER_LENGTH}.`,
   [ClientErrorCode.INVALID_CARD_CVV_LENGTH]: `Provided card cvv wasn't in the length of ${CardRules.CVV_LENGTH}.`,
   [ClientErrorCode.INVALID_ORDER_NOTE_LENGTH]: `Provided order note wasn't in the length range of ${OrderRules.NOTE_MIN_LENGTH} to ${OrderRules.NOTE_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_ORDER_MESSAGE_LENGTH]: `Provided order message wasn't in the length range of ${OrderRules.MESSAGE_MIN_LENGTH} to ${OrderRules.MESSAGE_MAX_LENGTH}.`,
   //  *  7XXXX: Content errors
   [ClientErrorCode.INVALID_PHONE_CONTENT]: "Provided phone contained invalid characters.",
   [ClientErrorCode.INVALID_PASSWORD_CONTENT]:
@@ -352,7 +366,10 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_CARD_EXPIRATION_YEAR_CONTENT]: `Provided card expiration year is not in between ${CardRules.EXPIRATION_YEAR_MIN} and ${CardRules.EXPIRATION_YEAR_MAX}.`,
   [ClientErrorCode.INVALID_CARD_CVV_CONTENT]: "Provided card cvv contained invalid characters.",
   [ClientErrorCode.INVALID_ORDER_NOTE_CONTENT]: "Provided order note contained invalid characters.",
+  [ClientErrorCode.INVALID_ORDER_MESSAGE_CONTENT]:
+    "Provided order message contained invalid characters.",
   [ClientErrorCode.DUPLICATE_ITEM_IDS]: "Provided item ids contained duplicates.",
+  [ClientErrorCode.INVALID_PRICE_CONTENT]: `Provided price is not in between ${OrderRules.PRICE_MIN} and ${OrderRules.PRICE_MAX}.`,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -363,7 +380,7 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.FORBIDDEN_ACCOUNT_TYPE]: "Provided account type can't be signed up.",
   [ClientErrorCode.ACCOUNT_ALREADY_EXISTS]: "An account already exists with the provided phone.",
   //  *  *  802XX: /my/sessions errors
-  [ClientErrorCode.HAS_NO_SESSION_WITH_ID]:
+  [ClientErrorCode.ACCOUNT_HAS_NO_SESSION_WITH_THIS_ID]:
     "Account doesn't have a session with the provided session id.",
   [ClientErrorCode.CANNOT_DELETE_CURRENT_SESSION]:
     "Current session can't be deleted. Use logout instead.",
@@ -387,38 +404,48 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.NO_PROVINCE_FOUND]: "No province was found with the provided id.",
   //  *  *  808XX: /my/addresses errors
   [ClientErrorCode.INVALID_ADDRESS_ID]: "Provided address id was invalid.",
-  [ClientErrorCode.HAS_NO_ADDRESS_WITH_ID]: "Account doesn't have an address with the provided id.",
+  [ClientErrorCode.ACCOUNT_HAS_NO_ADDRESS_WITH_THIS_ID]:
+    "Account doesn't have an address with the provided id.",
   [ClientErrorCode.CANNOT_DELETE_DEFAULT_ADDRESS]: "Default address can't be deleted.",
   //  *  *  809XX: /my/medias errors
   [ClientErrorCode.INVALID_MEDIA_TYPE]: "Provided media type was invalid.",
   //  *  *  810XX: /my/carpets errors
   [ClientErrorCode.INVALID_CARPET_ID]: "Provided carpet id was invalid.",
-  [ClientErrorCode.HAS_NO_CARPET_WITH_ID]: "Account doesn't have a carpet with the provided id.",
-  [ClientErrorCode.HAS_NO_MEDIA_WITH_ID]: "Account doesn't have a media with the provided id.",
+  [ClientErrorCode.ACCOUNT_HAS_NO_CARPET_WITH_THIS_ID]:
+    "Account doesn't have a carpet with the provided id.",
+  [ClientErrorCode.ACCOUNT_HAS_NO_MEDIA_WITH_THIS_ID]:
+    "Account doesn't have a media with the provided id.",
   [ClientErrorCode.MEDIA_NOT_UPLOADED]: "Media wasn't uploaded to the bucket.",
   //  *  *  811XX: /my/vehicles errors
   [ClientErrorCode.INVALID_VEHICLE_ID]: "Provided vehicle id was invalid.",
-  [ClientErrorCode.HAS_NO_VEHICLE_WITH_ID]: "Account doesn't have a vehicle with the provided id.",
+  [ClientErrorCode.ACCOUNT_HAS_NO_VEHICLE_WITH_THIS_ID]:
+    "Account doesn't have a vehicle with the provided id.",
   //  *  *  812XX: /my/curtains errors
   [ClientErrorCode.INVALID_CURTAIN_ID]: "Provided curtain id was invalid.",
-  [ClientErrorCode.HAS_NO_CURTAIN_WITH_ID]: "Account doesn't have a curtain with the provided id.",
+  [ClientErrorCode.ACCOUNT_HAS_NO_CURTAIN_WITH_THIS_ID]:
+    "Account doesn't have a curtain with the provided id.",
   //  *  *  813XX: /my/beds errors
   [ClientErrorCode.INVALID_BED_ID]: "Provided bed id was invalid.",
-  [ClientErrorCode.HAS_NO_BED_WITH_ID]: "Account doesn't have a bed with the provided id.",
+  [ClientErrorCode.ACCOUNT_HAS_NO_BED_WITH_THIS_ID]:
+    "Account doesn't have a bed with the provided id.",
   //  *  *  814XX: /my/sofas errors
   [ClientErrorCode.INVALID_SOFA_ID]: "Provided sofa id was invalid.",
-  [ClientErrorCode.HAS_NO_SOFA_WITH_ID]: "Account doesn't have a sofa with the provided id.",
+  [ClientErrorCode.ACCOUNT_HAS_NO_SOFA_WITH_THIS_ID]:
+    "Account doesn't have a sofa with the provided id.",
   //  *  *  815XX: /my/chairs errors
   [ClientErrorCode.INVALID_CHAIR_ID]: "Provided chair id was invalid.",
-  [ClientErrorCode.HAS_NO_CHAIR_WITH_ID]: "Account doesn't have a chair with the provided id.",
+  [ClientErrorCode.ACCOUNT_HAS_NO_CHAIR_WITH_THIS_ID]:
+    "Account doesn't have a chair with the provided id.",
   //  *  *  816XX: /my/quilts errors
   [ClientErrorCode.INVALID_QUILT_ID]: "Provided quilt id was invalid.",
-  [ClientErrorCode.HAS_NO_QUILT_WITH_ID]: "Account doesn't have a quilt with the provided id.",
+  [ClientErrorCode.ACCOUNT_HAS_NO_QUILT_WITH_THIS_ID]:
+    "Account doesn't have a quilt with the provided id.",
   // *  *  817XX: /my/blankets errors
-  [ClientErrorCode.HAS_NO_BLANKET_WITH_ID]: "Provided blanket id was invalid.",
-  [ClientErrorCode.BLANKET_NOT_FOUND]: "Account doesn't have a blanket with the provided id.",
+  [ClientErrorCode.ACCOUNT_HAS_NO_BLANKET_WITH_THIS_ID]: "Provided blanket id was invalid.",
+  [ClientErrorCode.ACCOUNT_BLANKET_NOT_FOUND]:
+    "Account doesn't have a blanket with the provided id.",
   //  *  *  818XX: /my/business errors
-  [ClientErrorCode.HAS_NO_BUSINESS]: "Account doesn't have a business.",
+  [ClientErrorCode.ACCOUNT_HAS_NO_BUSINESS]: "Account doesn't have a business.",
   [ClientErrorCode.BUSINESS_ALREADY_EXISTS]: "Account already has a business.",
   [ClientErrorCode.BUSINESS_IS_OPEN]: "Business is open. It can't be edited or deleted.",
   //  *  *  819XX: /my/business/hours errors
@@ -457,14 +484,32 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.BUSINESS_NOT_FOUND]: "No business was found with the provided id.",
   //  *  *  829XX: /my/cards errors
   [ClientErrorCode.INVALID_CARD_ID]: "Provided card id was invalid.",
-  [ClientErrorCode.HAS_NO_CARD_WITH_ID]: "Account doesn't have a card with the provided id.",
+  [ClientErrorCode.ACCOUNT_HAS_NO_CARD_WITH_THIS_ID]:
+    "Account doesn't have a card with the provided id.",
   [ClientErrorCode.CANNOT_DELETE_DEFAULT_CARD]: "Default card can't be deleted.",
   //  *  *  830XX: /my/orders errors
   [ClientErrorCode.INVALID_ORDER_ID]: "Provided order id was invalid.",
-  [ClientErrorCode.HAS_NO_ORDER_WITH_ID]: "Account doesn't have an order with the provided id.",
+  [ClientErrorCode.ACCOUNT_HAS_NO_ORDER_WITH_THIS_ID]:
+    "Account doesn't have an order with the provided id.",
   [ClientErrorCode.BUSINESS_IS_CLOSED]: "Business is closed. It can't be ordered from.",
-  [ClientErrorCode.HAS_NO_CARD]: "Account doesn't have a card to pay with.",
-  [ClientErrorCode.BUSINESS_DOESNT_SERVE_AREA]: "Business doesn't serve this area.",
+  [ClientErrorCode.BUSINESS_DOESNT_SERVE_THIS_AREA]: "Business doesn't serve this area.",
+  //  *  *  831XX: /my/business/orders errors
+  [ClientErrorCode.BUSINESS_HAS_NO_ORDER_WITH_THIS_ID]:
+    "Business doesn't have an order with the provided id.",
+  //  *  *  832XX: /my/orders/:orderId/cancel errors
+  [ClientErrorCode.ORDER_CANNOT_BE_CANCELED]:
+    "Order can't be canceled. It must be in a cancelable state.",
+  //  *  *  833XX: /my/business/orders/:orderId/offer errors
+  [ClientErrorCode.OFFER_CANNOT_BE_MADE]:
+    "Offer can't be made. Order must be in an offerable state.",
+  [ClientErrorCode.OFFER_CANNOT_BE_WITHDRAWN]:
+    "Offer can't be withdrawn. Order must be in a withdrawable state.",
+  //  *  *  834XX: /my/orders/:orderId/offer errors
+  [ClientErrorCode.ORDER_CANNOT_BE_DECLINED]:
+    "Order can't be declined. It must be in a declinable state.",
+  //  *  *  835XX: /my/orders/:orderId/complete errors
+  [ClientErrorCode.ORDER_CANNOT_BE_COMPLETED]:
+    "Order can't be completed. It must be in a completable state.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

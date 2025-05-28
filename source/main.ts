@@ -35,12 +35,21 @@ import { MyBusinessCloseBuilder } from "./core/my/business/close/MyBusinessClose
 import { MyBusinessHoursBuilder } from "./core/my/business/hours/MyBusinessHoursBuilder";
 import { MyBusinessMediasBuilder } from "./core/my/business/medias/MyBusinessMediasBuilder";
 import { MyBusinessOpenBuilder } from "./core/my/business/open/MyBusinessOpenBuilder";
+import { MyBusinessOrdersBuilder } from "./core/my/business/orders/_/MyBusinessOrdersBuilder";
+import { MyBusinessOrdersCancelBuilder } from "./core/my/business/orders/cancel/MyBusinessOrdersCancelBuilder";
+import { MyBusinessOrdersMessagesBuilder } from "./core/my/business/orders/messages/MyBusinessOrdersMessagesBuilder";
+import { MyBusinessOrdersOfferBuilder } from "./core/my/business/orders/offer/MyBusinessOrdersOfferBuilder";
 import { MyBusinessServicesBuilder } from "./core/my/business/services/MyBusinessServicesBuilder";
 import { MyCardsBuilder } from "./core/my/cards/MyCardsBuilder";
 import { MyCarpetsBuilder } from "./core/my/carpets/MyCarpetsBuilder";
 import { MyChairsBuilder } from "./core/my/chairs/MyChairsBuilder";
 import { MyCurtainsBuilder } from "./core/my/curtains/MyCurtainsBuilder";
 import { MyMediasBuilder } from "./core/my/medias/MyMediasBuilder";
+import { MyOrdersBuilder } from "./core/my/orders/_/MyOrdersBuilder";
+import { MyOrdersCancelBuilder } from "./core/my/orders/cancel/MyOrdersCancelBuilder";
+import { MyOrdersCompleteBuilder } from "./core/my/orders/complete/MyOrdersCompleteBuilder";
+import { MyOrdersMessagesBuilder } from "./core/my/orders/messages/MyOrdersMessagesBuilder";
+import { MyOrdersOfferBuilder } from "./core/my/orders/offer/MyOrdersOfferBuilder";
 import { MyQuiltsBuilder } from "./core/my/quilts/MyQuiltsBuilder";
 import { MySessionsBuilder } from "./core/my/sessions/MySessionsBuilder";
 import { MySofasBuilder } from "./core/my/sofas/MySofasBuilder";
@@ -235,6 +244,30 @@ app.use(
   new MyBusinessOpenBuilder().router,
 );
 app.use(
+  // my/business/orders
+  MyBusinessOrdersBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
+  new MyBusinessOrdersBuilder().router,
+);
+app.use(
+  // my/business/orders/:orderId/cancel
+  MyBusinessOrdersCancelBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
+  new MyBusinessOrdersCancelBuilder().router,
+);
+app.use(
+  // my/business/orders/:orderId/messages
+  MyBusinessOrdersMessagesBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
+  new MyBusinessOrdersMessagesBuilder().router,
+);
+app.use(
+  // my/business/orders/:orderId/offer
+  MyBusinessOrdersOfferBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
+  new MyBusinessOrdersOfferBuilder().router,
+);
+app.use(
   // my/business/services
   MyBusinessServicesBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
@@ -269,6 +302,36 @@ app.use(
   MyMediasBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth([EAccountType.USER, EAccountType.BUSINESS]).bind(AuthMiddleware),
   new MyMediasBuilder().router,
+);
+app.use(
+  // my/orders
+  MyOrdersBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([EAccountType.USER]).bind(AuthMiddleware),
+  new MyOrdersBuilder().router,
+);
+app.use(
+  // my/orders/:orderId/cancel
+  MyOrdersCancelBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([EAccountType.USER]).bind(AuthMiddleware),
+  new MyOrdersCancelBuilder().router,
+);
+app.use(
+  // my/orders/:orderId/complete
+  MyOrdersCompleteBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([EAccountType.USER]).bind(AuthMiddleware),
+  new MyOrdersCompleteBuilder().router,
+);
+app.use(
+  // my/orders/:orderId/messages
+  MyOrdersMessagesBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([EAccountType.USER]).bind(AuthMiddleware),
+  new MyOrdersMessagesBuilder().router,
+);
+app.use(
+  // my/orders/:orderId/offer
+  MyOrdersOfferBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([EAccountType.USER]).bind(AuthMiddleware),
+  new MyOrdersOfferBuilder().router,
 );
 app.use(
   // my/quilts

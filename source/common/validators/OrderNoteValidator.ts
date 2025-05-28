@@ -9,7 +9,7 @@ export class OrderNoteValidator implements IValidator {
       validationErrors.push(new ClientError(ClientErrorCode.INVALID_ORDER_NOTE_LENGTH));
     }
     if (!StringUtil.matchesRegex(data, OrderRules.NOTE_REGEX)) {
-      validationErrors.push(new ClientError(ClientErrorCode.INVALID_NAME_CONTENT));
+      validationErrors.push(new ClientError(ClientErrorCode.INVALID_ORDER_NOTE_CONTENT));
     }
   }
 }

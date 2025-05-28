@@ -19,7 +19,7 @@ export class MyQuiltsResponse implements IResponse {
     public readonly quiltMaterial: EQuiltMaterial | null,
   ) {}
 
-  public static fromEntiity(entity: QuiltEntity): MyQuiltsResponse {
+  public static fromEntity(entity: QuiltEntity): MyQuiltsResponse {
     return new MyQuiltsResponse(
       entity.model.quiltId,
       entity.model.name,
@@ -31,6 +31,6 @@ export class MyQuiltsResponse implements IResponse {
   }
 
   public static fromEntities(entities: QuiltEntity[]): MyQuiltsResponse[] {
-    return entities.map((entity) => MyQuiltsResponse.fromEntiity(entity));
+    return entities.map((entity) => MyQuiltsResponse.fromEntity(entity));
   }
 }
