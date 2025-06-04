@@ -4,7 +4,7 @@ import type { IRequest } from "../../../../../../app/interfaces/IRequest";
 import { ClientError, ClientErrorCode } from "../../../../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../../../app/utils/ResponseUtil";
-import { OrderMessageValidator } from "../../../../../../common/validators/OrderMessageValidator";
+import { MessageValidator } from "../../../../../../common/validators/MessageValidator";
 
 export class MyBusinessOrdersMessagesRequest implements IRequest {
   public constructor(public readonly content: string) {}
@@ -23,7 +23,7 @@ export class MyBusinessOrdersMessagesRequest implements IRequest {
     const blueprintData: MyBusinessOrdersMessagesRequest = protovalidData;
     // >----------< PHYSICAL VALIDATION >----------<
     const clientErrors: ClientError[] = [];
-    OrderMessageValidator.validate(blueprintData.content, clientErrors);
+    MessageValidator.validate(blueprintData.content, clientErrors);
     const validatedData = blueprintData;
     // >----------< RETURN >----------<
     return ResponseUtil.parserResponse(clientErrors, validatedData);

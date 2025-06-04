@@ -31,6 +31,7 @@ export class OrderViewModel implements IModel {
     public readonly customerSurname: string,
     public readonly orderState: EOrderState,
     public readonly price: number | null,
+    public readonly isReviewed: boolean,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
   ) {}
@@ -65,6 +66,7 @@ export class OrderViewModel implements IModel {
       record.customerSurname,
       record.orderState,
       record.price,
+      record.isReviewed,
       record.createdAt,
       record.updatedAt,
     );
@@ -108,6 +110,7 @@ export class OrderViewModel implements IModel {
       typeof model.customerSurname === "string" &&
       Object.values(EOrderState).includes(model.orderState) &&
       (model.price === null || typeof model.price === "number") &&
+      typeof model.isReviewed === "boolean" &&
       model.createdAt instanceof Date &&
       model.updatedAt instanceof Date
     );

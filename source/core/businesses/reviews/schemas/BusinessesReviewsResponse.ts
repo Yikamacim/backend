@@ -8,6 +8,7 @@ export class BusinessesReviewsResponse implements IResponse {
     public readonly surname: string,
     public readonly stars: number,
     public readonly comment: string,
+    public readonly leavedAt: Date,
     public readonly reply: string | null,
   ) {}
 
@@ -18,6 +19,7 @@ export class BusinessesReviewsResponse implements IResponse {
       entity.model.surname,
       entity.model.stars,
       entity.model.comment,
+      entity.model.leavedAt,
       entity.model.reply,
     );
   }

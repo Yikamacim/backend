@@ -2,62 +2,56 @@ import type { IModel } from "../../app/interfaces/IModel";
 import { ModelMismatchError } from "../../app/schemas/ServerError";
 import { ProtoUtil } from "../../app/utils/ProtoUtil";
 
-export class ReviewViewModel implements IModel {
+export class ReviewModel implements IModel {
   protected constructor(
     public readonly reviewId: number,
+    public readonly accountId: number,
     public readonly businessId: number,
     public readonly orderId: number,
-    public name: string,
-    public surname: string,
     public readonly stars: number,
     public readonly comment: string,
     public readonly leavedAt: Date,
-    public readonly reply: string | null,
   ) {}
 
-  public static fromRecord(record: unknown): ReviewViewModel {
+  public static fromRecord(record: unknown): ReviewModel {
     if (!this.isValidModel(record)) {
       throw new ModelMismatchError(record);
     }
-    return new ReviewViewModel(
+    return new ReviewModel(
       record.reviewId,
+      record.accountId,
       record.businessId,
       record.orderId,
-      record.name,
-      record.surname,
       record.stars,
       record.comment,
       record.leavedAt,
-      record.reply,
     );
   }
 
-  public static fromRecords(records: unknown[]): ReviewViewModel[] {
+  public static fromRecords(records: unknown[]): ReviewModel[] {
     if (!this.areValidModels(records)) {
       throw new ModelMismatchError(records);
     }
-    return records.map((record: unknown): ReviewViewModel => this.fromRecord(record));
+    return records.map((record: unknown): ReviewModel => this.fromRecord(record));
   }
 
-  protected static isValidModel(data: unknown): data is ReviewViewModel {
+  protected static isValidModel(data: unknown): data is ReviewModel {
     if (!ProtoUtil.isProtovalid(data) || typeof data !== "object") {
       return false;
     }
-    const model = data as ReviewViewModel;
+    const model = data as ReviewModel;
     return (
       typeof model.reviewId === "number" &&
+      typeof model.accountId === "number" &&
       typeof model.businessId === "number" &&
       typeof model.orderId === "number" &&
-      typeof model.name === "string" &&
-      typeof model.surname === "string" &&
       typeof model.stars === "number" &&
       typeof model.comment === "string" &&
-      model.leavedAt instanceof Date &&
-      (model.reply === null || typeof model.reply === "string")
+      model.leavedAt instanceof Date
     );
   }
 
-  protected static areValidModels(data: unknown[]): data is ReviewViewModel[] {
+  protected static areValidModels(data: unknown[]): data is ReviewModel[] {
     if (!Array.isArray(data)) {
       return false;
     }

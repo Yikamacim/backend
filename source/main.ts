@@ -39,6 +39,7 @@ import { MyBusinessOrdersBuilder } from "./core/my/business/orders/_/MyBusinessO
 import { MyBusinessOrdersCancelBuilder } from "./core/my/business/orders/cancel/MyBusinessOrdersCancelBuilder";
 import { MyBusinessOrdersMessagesBuilder } from "./core/my/business/orders/messages/MyBusinessOrdersMessagesBuilder";
 import { MyBusinessOrdersOfferBuilder } from "./core/my/business/orders/offer/MyBusinessOrdersOfferBuilder";
+import { MyBusinessReviewsBuilder } from "./core/my/business/reviews/MyBusinessReviewsBuilder";
 import { MyBusinessServicesBuilder } from "./core/my/business/services/MyBusinessServicesBuilder";
 import { MyCardsBuilder } from "./core/my/cards/MyCardsBuilder";
 import { MyCarpetsBuilder } from "./core/my/carpets/MyCarpetsBuilder";
@@ -50,6 +51,7 @@ import { MyOrdersCancelBuilder } from "./core/my/orders/cancel/MyOrdersCancelBui
 import { MyOrdersCompleteBuilder } from "./core/my/orders/complete/MyOrdersCompleteBuilder";
 import { MyOrdersMessagesBuilder } from "./core/my/orders/messages/MyOrdersMessagesBuilder";
 import { MyOrdersOfferBuilder } from "./core/my/orders/offer/MyOrdersOfferBuilder";
+import { MyOrdersReviewBuilder } from "./core/my/orders/review/MyOrdersReviewBuilder";
 import { MyQuiltsBuilder } from "./core/my/quilts/MyQuiltsBuilder";
 import { MySessionsBuilder } from "./core/my/sessions/MySessionsBuilder";
 import { MySofasBuilder } from "./core/my/sofas/MySofasBuilder";
@@ -268,6 +270,12 @@ app.use(
   new MyBusinessOrdersOfferBuilder().router,
 );
 app.use(
+  // my/business/reviews
+  MyBusinessReviewsBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
+  new MyBusinessReviewsBuilder().router,
+);
+app.use(
   // my/business/services
   MyBusinessServicesBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
@@ -332,6 +340,12 @@ app.use(
   MyOrdersOfferBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth([EAccountType.USER]).bind(AuthMiddleware),
   new MyOrdersOfferBuilder().router,
+);
+app.use(
+  // my/orders/:orderId/review
+  MyOrdersReviewBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([EAccountType.USER]).bind(AuthMiddleware),
+  new MyOrdersReviewBuilder().router,
 );
 app.use(
   // my/quilts

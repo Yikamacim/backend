@@ -24,7 +24,7 @@ export class BusinessesReviewsManager implements IManager {
         null,
       );
     }
-    const reviews = await this.provider.getReviews(business.businessId);
+    const reviews = await this.provider.getReviewsByBusinessId(business.businessId);
     reviews.forEach((review) => {
       ReviewHelper.obfuscate(review);
     });

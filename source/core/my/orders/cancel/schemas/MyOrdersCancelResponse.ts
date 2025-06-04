@@ -169,6 +169,7 @@ export class MyOrdersCancelResponse implements IResponse {
         }[],
     public readonly orderState: EOrderState,
     public readonly price: number | null,
+    public readonly isReviewed: boolean,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
   ) {}
@@ -210,6 +211,7 @@ export class MyOrdersCancelResponse implements IResponse {
       entity.items,
       entity.model.orderState,
       entity.model.price,
+      entity.model.isReviewed,
       entity.model.createdAt,
       entity.model.updatedAt,
     );

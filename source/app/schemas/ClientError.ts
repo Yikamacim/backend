@@ -7,7 +7,9 @@ import { CardRules } from "../../common/rules/CardRules";
 import { ChairRules } from "../../common/rules/ChairRules";
 import { ContactRules } from "../../common/rules/ContactRules";
 import { ItemRules } from "../../common/rules/ItemRules";
+import { MessageRules } from "../../common/rules/MessageRules";
 import { OrderRules } from "../../common/rules/OrderRules";
+import { ReviewRules } from "../../common/rules/ReviewRules";
 import { SearchRules } from "../../common/rules/SearchRules";
 import { ServiceRules } from "../../common/rules/ServiceRules";
 import { SessionRules } from "../../common/rules/SessionRules";
@@ -88,7 +90,8 @@ export enum ClientErrorCode {
   INVALID_CARD_NUMBER_LENGTH = 60024,
   INVALID_CARD_CVV_LENGTH = 60025,
   INVALID_ORDER_NOTE_LENGTH = 60026,
-  INVALID_ORDER_MESSAGE_LENGTH = 60027,
+  INVALID_MESSAGE_LENGTH = 60027,
+  INVALID_REVIEW_COMMENT_LENGTH = 60028,
   //  *  7XXXX: Format errors
   INVALID_PHONE_CONTENT = 70001,
   INVALID_PASSWORD_CONTENT = 70002,
@@ -124,9 +127,11 @@ export enum ClientErrorCode {
   INVALID_CARD_EXPIRATION_YEAR_CONTENT = 70032,
   INVALID_CARD_CVV_CONTENT = 70033,
   INVALID_ORDER_NOTE_CONTENT = 70034,
-  INVALID_ORDER_MESSAGE_CONTENT = 70035,
+  INVALID_MESSAGE_CONTENT = 70035,
   DUPLICATE_ITEM_IDS = 70036,
   INVALID_PRICE_CONTENT = 70037,
+  INVALID_REVIEW_STARS_CONTENT = 70038,
+  INVALID_REVIEW_COMMENT_CONTENT = 70039,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -246,6 +251,14 @@ export enum ClientErrorCode {
   ORDER_CANNOT_BE_DECLINED = 83400,
   //  *  *  835XX: /my/orders/:orderId/complete errors
   ORDER_CANNOT_BE_COMPLETED = 83500,
+  //  *  *  836XX: /my/orders/:orderId/review errors
+  ORDER_IS_NOT_COMPLETED = 83600,
+  ORDER_IS_ALREADY_REVIEWED = 83601,
+  ORDER_HAS_NO_REVIEW = 83602,
+  //  *  *  837XX: /my/business/reviews errors
+  INVALID_REVIEW_ID = 83700,
+  BUSINESS_HAS_NO_REVIEW_WITH_THIS_ID = 83701,
+  REVIEW_IS_ALREADY_REPLIED = 83702,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -313,7 +326,8 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_CARD_NUMBER_LENGTH]: `Provided card number wasn't in the length of ${CardRules.NUMBER_LENGTH}.`,
   [ClientErrorCode.INVALID_CARD_CVV_LENGTH]: `Provided card cvv wasn't in the length of ${CardRules.CVV_LENGTH}.`,
   [ClientErrorCode.INVALID_ORDER_NOTE_LENGTH]: `Provided order note wasn't in the length range of ${OrderRules.NOTE_MIN_LENGTH} to ${OrderRules.NOTE_MAX_LENGTH}.`,
-  [ClientErrorCode.INVALID_ORDER_MESSAGE_LENGTH]: `Provided order message wasn't in the length range of ${OrderRules.MESSAGE_MIN_LENGTH} to ${OrderRules.MESSAGE_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_MESSAGE_LENGTH]: `Provided message wasn't in the length range of ${MessageRules.CONTENT_MIN_LENGTH} to ${MessageRules.CONTENT_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_REVIEW_COMMENT_LENGTH]: `Provided review comment wasn't in the length range of ${ReviewRules.COMMENT_MIN_LENGTH} to ${ReviewRules.COMMENT_MAX_LENGTH}.`,
   //  *  7XXXX: Content errors
   [ClientErrorCode.INVALID_PHONE_CONTENT]: "Provided phone contained invalid characters.",
   [ClientErrorCode.INVALID_PASSWORD_CONTENT]:
@@ -366,10 +380,12 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_CARD_EXPIRATION_YEAR_CONTENT]: `Provided card expiration year is not in between ${CardRules.EXPIRATION_YEAR_MIN} and ${CardRules.EXPIRATION_YEAR_MAX}.`,
   [ClientErrorCode.INVALID_CARD_CVV_CONTENT]: "Provided card cvv contained invalid characters.",
   [ClientErrorCode.INVALID_ORDER_NOTE_CONTENT]: "Provided order note contained invalid characters.",
-  [ClientErrorCode.INVALID_ORDER_MESSAGE_CONTENT]:
-    "Provided order message contained invalid characters.",
+  [ClientErrorCode.INVALID_MESSAGE_CONTENT]: "Provided message contained invalid characters.",
   [ClientErrorCode.DUPLICATE_ITEM_IDS]: "Provided item ids contained duplicates.",
   [ClientErrorCode.INVALID_PRICE_CONTENT]: `Provided price is not in between ${OrderRules.PRICE_MIN} and ${OrderRules.PRICE_MAX}.`,
+  [ClientErrorCode.INVALID_REVIEW_STARS_CONTENT]: `Provided review stars is not in between ${ReviewRules.STARS_MIN} and ${ReviewRules.STARS_MAX}.`,
+  [ClientErrorCode.INVALID_REVIEW_COMMENT_CONTENT]:
+    "Provided review comment contained invalid characters.",
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -510,6 +526,15 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   //  *  *  835XX: /my/orders/:orderId/complete errors
   [ClientErrorCode.ORDER_CANNOT_BE_COMPLETED]:
     "Order can't be completed. It must be in a completable state.",
+  //  *  *  836XX: /my/orders/:orderId/review errors
+  [ClientErrorCode.ORDER_IS_NOT_COMPLETED]: "Order must be completed to leave a review.",
+  [ClientErrorCode.ORDER_IS_ALREADY_REVIEWED]: "Order has already been reviewed.",
+  [ClientErrorCode.ORDER_HAS_NO_REVIEW]: "Order doesn't have a review.",
+  //  *  *  837XX: /my/business/reviews errors
+  [ClientErrorCode.INVALID_REVIEW_ID]: "Provided review id was invalid.",
+  [ClientErrorCode.BUSINESS_HAS_NO_REVIEW_WITH_THIS_ID]:
+    "Business doesn't have a review with the provided id.",
+  [ClientErrorCode.REVIEW_IS_ALREADY_REPLIED]: "Review has already been replied to.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

@@ -4,12 +4,16 @@ import type { IRequest } from "../../../../../app/interfaces/IRequest";
 import { ClientError, ClientErrorCode } from "../../../../../app/schemas/ClientError";
 import { ProtoUtil } from "../../../../../app/utils/ProtoUtil";
 import { ResponseUtil } from "../../../../../app/utils/ResponseUtil";
-import { MessageValidator } from "../../../../../common/validators/MessageValidator";
+import { ReviewCommentValidator } from "../../../../../common/validators/ReviewCommentValidator";
+import { ReviewStarsValidator } from "../../../../../common/validators/ReviewStarsValidator";
 
-export class MyOrdersMessagesRequest implements IRequest {
-  public constructor(public readonly content: string) {}
+export class MyOrdersReviewRequest implements IRequest {
+  public constructor(
+    public readonly stars: number,
+    public readonly comment: string,
+  ) {}
 
-  public static parse(req: ExpressRequest): ParserResponse<MyOrdersMessagesRequest | null> {
+  public static parse(req: ExpressRequest): ParserResponse<MyOrdersReviewRequest | null> {
     const preliminaryData: unknown = req.body;
     // >----------< EXISTENCE VALIDATION >----------<
     if (!ProtoUtil.isProtovalid(preliminaryData)) {
@@ -17,23 +21,24 @@ export class MyOrdersMessagesRequest implements IRequest {
     }
     const protovalidData: unknown = preliminaryData;
     // >----------< SCHEMATIC VALIDATION >----------<
-    if (!MyOrdersMessagesRequest.isBlueprint(protovalidData)) {
+    if (!MyOrdersReviewRequest.isBlueprint(protovalidData)) {
       return ResponseUtil.parserResponse([new ClientError(ClientErrorCode.INVALID_BODY)], null);
     }
-    const blueprintData: MyOrdersMessagesRequest = protovalidData;
+    const blueprintData: MyOrdersReviewRequest = protovalidData;
     // >----------< PHYSICAL VALIDATION >----------<
     const clientErrors: ClientError[] = [];
-    MessageValidator.validate(blueprintData.content, clientErrors);
+    ReviewStarsValidator.validate(blueprintData.stars, clientErrors);
+    ReviewCommentValidator.validate(blueprintData.comment, clientErrors);
     const validatedData = blueprintData;
     // >----------< RETURN >----------<
     return ResponseUtil.parserResponse(clientErrors, validatedData);
   }
 
-  private static isBlueprint(obj: unknown): obj is MyOrdersMessagesRequest {
+  private static isBlueprint(obj: unknown): obj is MyOrdersReviewRequest {
     if (typeof obj !== "object" || obj === null) {
       return false;
     }
-    const blueprint = obj as MyOrdersMessagesRequest;
-    return typeof blueprint.content === "string";
+    const blueprint = obj as MyOrdersReviewRequest;
+    return typeof blueprint.stars === "number" && typeof blueprint.comment === "string";
   }
 }
