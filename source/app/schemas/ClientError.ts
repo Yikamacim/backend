@@ -3,6 +3,7 @@ import { AddressRules } from "../../common/rules/AddressRules";
 import { ApprovalRules } from "../../common/rules/ApprovalRules";
 import { BankAccountRules } from "../../common/rules/BankAccountRules";
 import { BusinessRules } from "../../common/rules/BusinessRules";
+import { CampaignRules } from "../../common/rules/CampaignRules";
 import { CardRules } from "../../common/rules/CardRules";
 import { ChairRules } from "../../common/rules/ChairRules";
 import { ContactRules } from "../../common/rules/ContactRules";
@@ -92,6 +93,8 @@ export enum ClientErrorCode {
   INVALID_ORDER_NOTE_LENGTH = 60026,
   INVALID_MESSAGE_LENGTH = 60027,
   INVALID_REVIEW_COMMENT_LENGTH = 60028,
+  INVALID_CAMPAIGN_TITLE_LENGTH = 60029,
+  INVALID_CAMPAIGN_DESCRIPTION_LENGTH = 60030,
   //  *  7XXXX: Format errors
   INVALID_PHONE_CONTENT = 70001,
   INVALID_PASSWORD_CONTENT = 70002,
@@ -132,6 +135,8 @@ export enum ClientErrorCode {
   INVALID_PRICE_CONTENT = 70037,
   INVALID_REVIEW_STARS_CONTENT = 70038,
   INVALID_REVIEW_COMMENT_CONTENT = 70039,
+  INVALID_CAMPAIGN_TITLE_CONTENT = 70040,
+  INVALID_CAMPAIGN_DESCRIPTION_CONTENT = 70041,
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -259,6 +264,9 @@ export enum ClientErrorCode {
   INVALID_REVIEW_ID = 83700,
   BUSINESS_HAS_NO_REVIEW_WITH_THIS_ID = 83701,
   REVIEW_IS_ALREADY_REPLIED = 83702,
+  //  *  *  838XX: /my/business/campaigns errors
+  INVALID_CAMPAIGN_ID = 83800,
+  CAMPAIGN_NOT_FOUND = 83801,
   //  *  9XXXX: Catch-all errors
   RESOURCE_NOT_FOUND = 90000,
 }
@@ -328,6 +336,8 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_ORDER_NOTE_LENGTH]: `Provided order note wasn't in the length range of ${OrderRules.NOTE_MIN_LENGTH} to ${OrderRules.NOTE_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_MESSAGE_LENGTH]: `Provided message wasn't in the length range of ${MessageRules.CONTENT_MIN_LENGTH} to ${MessageRules.CONTENT_MAX_LENGTH}.`,
   [ClientErrorCode.INVALID_REVIEW_COMMENT_LENGTH]: `Provided review comment wasn't in the length range of ${ReviewRules.COMMENT_MIN_LENGTH} to ${ReviewRules.COMMENT_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_CAMPAIGN_TITLE_LENGTH]: `Provided campaign title wasn't in the length range of ${CampaignRules.TITLE_MIN_LENGTH} to ${CampaignRules.TITLE_MAX_LENGTH}.`,
+  [ClientErrorCode.INVALID_CAMPAIGN_DESCRIPTION_LENGTH]: `Provided campaign description wasn't in the length range of ${CampaignRules.DESCRIPTION_MIN_LENGTH} to ${CampaignRules.DESCRIPTION_MAX_LENGTH}.`,
   //  *  7XXXX: Content errors
   [ClientErrorCode.INVALID_PHONE_CONTENT]: "Provided phone contained invalid characters.",
   [ClientErrorCode.INVALID_PASSWORD_CONTENT]:
@@ -386,6 +396,10 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.INVALID_REVIEW_STARS_CONTENT]: `Provided review stars is not in between ${ReviewRules.STARS_MIN} and ${ReviewRules.STARS_MAX}.`,
   [ClientErrorCode.INVALID_REVIEW_COMMENT_CONTENT]:
     "Provided review comment contained invalid characters.",
+  [ClientErrorCode.INVALID_CAMPAIGN_TITLE_CONTENT]:
+    "Provided campaign title contained invalid characters.",
+  [ClientErrorCode.INVALID_CAMPAIGN_DESCRIPTION_CONTENT]:
+    "Provided campaign description contained invalid characters.",
 
   // REQUEST ERRORS (8XXXX - 9XXXX)
   //  *  8XXXX: Route errors
@@ -535,6 +549,9 @@ const clientErrorMessages: Record<ClientErrorCode, string> = {
   [ClientErrorCode.BUSINESS_HAS_NO_REVIEW_WITH_THIS_ID]:
     "Business doesn't have a review with the provided id.",
   [ClientErrorCode.REVIEW_IS_ALREADY_REPLIED]: "Review has already been replied to.",
+  //  *  *  838XX: /my/business/campaigns errors
+  [ClientErrorCode.INVALID_CAMPAIGN_ID]: "Provided campaign id was invalid.",
+  [ClientErrorCode.CAMPAIGN_NOT_FOUND]: "Business doesn't have a campaign with the provided id.",
   //  *  9XXXX: Catch-all errors
   [ClientErrorCode.RESOURCE_NOT_FOUND]: "The requested resource couldn't be found.",
 };

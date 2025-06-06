@@ -14,7 +14,7 @@ export class ServiceDescriptionValidator implements IValidator {
     ) {
       validationErrors.push(new ClientError(ClientErrorCode.INVALID_SERVICE_DESCRIPTION_LENGTH));
     }
-    if (!StringUtil.matchesRegex(data, ServiceRules.TITLE_REGEX)) {
+    if (!StringUtil.matchesRegex(data, ServiceRules.DESCRIPTION_REGEX)) {
       validationErrors.push(new ClientError(ClientErrorCode.INVALID_SERVICE_DESCRIPTION_CONTENT));
     }
   }

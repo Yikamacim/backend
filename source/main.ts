@@ -17,6 +17,7 @@ import { AdminApprovalsBuilder } from "./core/admin/approvals/AdminApprovalsBuil
 import { AreasBuilder } from "./core/areas/AreasBuilder";
 import { BusinessesBuilder } from "./core/businesses/_/BusinessesBuilder";
 import { BusinessesAboutBuilder } from "./core/businesses/about/BusinessesAboutBuilder";
+import { BusinessesCampaignsBuilder } from "./core/businesses/campaigns/BusinessesCampaignsBuilder";
 import { BusinessesMediasBuilder } from "./core/businesses/medias/BusinessesMediasBuilder";
 import { BusinessesReviewsBuilder } from "./core/businesses/reviews/BusinessesReviewsBuilder";
 import { BusinessesServicesBuilder } from "./core/businesses/services/BusinessesServicesBuilder";
@@ -31,6 +32,7 @@ import { MyBusinessBuilder } from "./core/my/business/_/MyBusinessBuilder";
 import { MyBusinessApprovalBuilder } from "./core/my/business/approval/MyBusinessApprovalBuilder";
 import { MyBusinessAreasBuilder } from "./core/my/business/areas/MyBusinessAreasBuilder";
 import { MyBusinessBankBuilder } from "./core/my/business/bank/MyBusinessBankBuilder";
+import { MyBusinessCampaignsBuilder } from "./core/my/business/campaigns/MyBusinessCampaignsBuilder";
 import { MyBusinessCloseBuilder } from "./core/my/business/close/MyBusinessCloseBuilder";
 import { MyBusinessHoursBuilder } from "./core/my/business/hours/MyBusinessHoursBuilder";
 import { MyBusinessMediasBuilder } from "./core/my/business/medias/MyBusinessMediasBuilder";
@@ -132,6 +134,11 @@ app.use(
   new BusinessesAboutBuilder().router,
 );
 app.use(
+  // businesses/:businessId/campaigns
+  BusinessesCampaignsBuilder.BASE_ROUTE,
+  new BusinessesCampaignsBuilder().router,
+);
+app.use(
   // businesses/:businessId/medias
   BusinessesMediasBuilder.BASE_ROUTE,
   new BusinessesMediasBuilder().router,
@@ -220,6 +227,12 @@ app.use(
   MyBusinessBankBuilder.BASE_ROUTE,
   AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
   new MyBusinessBankBuilder().router,
+);
+app.use(
+  // my/business/campaigns
+  MyBusinessCampaignsBuilder.BASE_ROUTE,
+  AuthMiddleware.verifyAuth([EAccountType.BUSINESS]).bind(AuthMiddleware),
+  new MyBusinessCampaignsBuilder().router,
 );
 app.use(
   // my/business/close
