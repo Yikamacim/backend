@@ -6,7 +6,7 @@ import { HttpStatus, HttpStatusCode } from "../../../../app/schemas/HttpStatus";
 import { ResponseUtil } from "../../../../app/utils/ResponseUtil";
 import { CampaignEntity } from "../../../../common/entities/CampaignEntity";
 import { MediaHelper } from "../../../../common/helpers/MediaHelper";
-import { ServiceMediaRules } from "../../../../common/rules/ServiceMediaRules";
+import { CampaignMediaRules } from "../../../../common/rules/CampaignMediaRules";
 import { MyBusinessCampaignsProvider } from "./MyBusinessCampaignsProvider";
 import type { MyBusinessCampaignsParams } from "./schemas/MyBusinessCampaignsParams";
 import type { MyBusinessCampaignsRequest } from "./schemas/MyBusinessCampaignsRequest";
@@ -76,7 +76,7 @@ export class MyBusinessCampaignsManager implements IManager {
       return findMediaResult.get();
     }
     const media = findMediaResult.get();
-    const checkMediaResult = await MediaHelper.checkMedia(media, ServiceMediaRules.ALLOWED_TYPES);
+    const checkMediaResult = await MediaHelper.checkMedia(media, CampaignMediaRules.ALLOWED_TYPES);
     if (checkMediaResult.isLeft()) {
       return checkMediaResult.get();
     }
