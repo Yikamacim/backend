@@ -5,7 +5,7 @@
 -- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
 -- Dumped by pg_dump version 16.8 (Debian 16.8-1.pgdg120+1)
 
--- Started on 2025-06-06 10:07:51 UTC
+-- Started on 2025-06-15 20:47:49 UTC
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -78619,7 +78619,7 @@ ALTER TABLE ONLY public."Vehicle"
     ADD CONSTRAINT "Vehicle_Item_fk" FOREIGN KEY ("itemId") REFERENCES public."Item"("itemId");
 
 
--- Completed on 2025-06-06 10:07:51 UTC
+-- Completed on 2025-06-15 20:47:49 UTC
 
 --
 -- PostgreSQL database dump complete
