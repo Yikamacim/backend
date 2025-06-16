@@ -18,7 +18,7 @@ export class TopBusinessesBuilder implements IBuilder {
   private buildRoutes(): void {
     RouteHelper.buildRoute(
       this.router,
-      { baseRoute: TopBusinessesBuilder.BASE_ROUTE, route: "/" },
+      { baseRoute: TopBusinessesBuilder.BASE_ROUTE, route: "/:neighborhoodId" },
       RouteType.PUBLIC,
       Method.GET,
       this.controller.getTopBusinesses.bind(this.controller),
