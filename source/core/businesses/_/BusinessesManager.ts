@@ -33,7 +33,7 @@ export class BusinessesManager implements IManager {
         return ResponseUtil.managerResponse(
           new HttpStatus(HttpStatusCode.NOT_FOUND),
           null,
-          [new ClientError(ClientErrorCode.ACCOUNT_HAS_NO_MEDIA_WITH_THIS_ID)],
+          [new ClientError(ClientErrorCode.BUSINESS_MEDIA_NOT_FOUND)],
           null,
         );
       }

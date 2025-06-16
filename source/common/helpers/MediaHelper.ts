@@ -43,11 +43,11 @@ export class MediaHelper implements IHelper {
     );
     const foundMedias: MediaViewModel[] = [];
     for (const mediaId of mediaIds) {
-      const getMediaResult = await MediaHelper.findMyMedia(accountId, mediaId, myMedias);
-      if (getMediaResult.isLeft()) {
-        return Left.of(getMediaResult.get());
+      const findMyMediaResult = await MediaHelper.findMyMedia(accountId, mediaId, myMedias);
+      if (findMyMediaResult.isLeft()) {
+        return Left.of(findMyMediaResult.get());
       }
-      foundMedias.push(getMediaResult.get());
+      foundMedias.push(findMyMediaResult.get());
     }
     return Right.of(foundMedias);
   }

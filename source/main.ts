@@ -21,6 +21,7 @@ import { BusinessesCampaignsBuilder } from "./core/businesses/campaigns/Business
 import { BusinessesMediasBuilder } from "./core/businesses/medias/BusinessesMediasBuilder";
 import { BusinessesReviewsBuilder } from "./core/businesses/reviews/BusinessesReviewsBuilder";
 import { BusinessesServicesBuilder } from "./core/businesses/services/BusinessesServicesBuilder";
+import { CampaignsBuilder } from "./core/campaigns/CampaignsBuilder";
 import { CountriesBuilder } from "./core/countries/CountriesBuilder";
 import { DistrictsBuilder } from "./core/districts/DistrictsBuilder";
 import { LoginBuilder } from "./core/login/LoginBuilder";
@@ -63,6 +64,7 @@ import { ProvincesBuilder } from "./core/provinces/ProvincesBuilder";
 import { RefreshBuilder } from "./core/refresh/RefreshBuilder";
 import { SearchBuilder } from "./core/search/SearchBuilder";
 import { SignupBuilder } from "./core/signup/SignupBuilder";
+import { TopBusinessesBuilder } from "./core/top/businesses/TopBusinessesBuilder";
 import { VerifyBuilder } from "./core/verify/VerifyBuilder";
 import { PurgeTask } from "./tasks/purge/task";
 
@@ -154,6 +156,11 @@ app.use(
   new BusinessesServicesBuilder().router,
 );
 app.use(
+  // campaigns
+  CampaignsBuilder.BASE_ROUTE,
+  new CampaignsBuilder().router,
+);
+app.use(
   // countries
   CountriesBuilder.BASE_ROUTE,
   new CountriesBuilder().router,
@@ -177,6 +184,11 @@ app.use(
   // search
   SearchBuilder.BASE_ROUTE,
   new SearchBuilder().router,
+);
+app.use(
+  // top/businesses
+  TopBusinessesBuilder.BASE_ROUTE,
+  new TopBusinessesBuilder().router,
 );
 
 // PRIVATE ROUTES
